@@ -18,6 +18,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import cn.qqtheme.framework.picker.NumberPicker;
+import cn.qqtheme.framework.util.ConvertUtils;
 
 /**
  * Created by qindi on 2017/7/3.
@@ -61,11 +62,12 @@ public class InfoFragment extends Fragment {
                 heightPicker.setWidth(heightPicker.getScreenWidthPixels());
                 heightPicker.setDividerVisible(false);
                 heightPicker.setCanceledOnTouchOutside(true);
-                heightPicker.setItemWidth(heightPicker.getScreenWidthPixels());
                 heightPicker.setCycleDisable(false);//不禁用循环
                 //picker.setOffset(2);//偏移量
                 heightPicker.setRange(145, 200, 1);//数字范围
                 heightPicker.setSelectedItem(168);
+                heightPicker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
                 heightPicker.setLabel("cm");
                 heightPicker.setTextColor(getResources().getColor(R.color.colorPink));
                 heightPicker.setDividerColor(Color.parseColor("#ffffff"));
@@ -86,23 +88,24 @@ public class InfoFragment extends Fragment {
                 heightPicker.show();
                 break;
             case R.id.view_test_weight:
-                NumberPicker WeightPicker = new NumberPicker(getActivity());
+                NumberPicker weightPicker = new NumberPicker(getActivity());
 //        picker.setWidth(picker.getScreenWidthPixels());
-                WeightPicker.setCanceledOnTouchOutside(true);
-                WeightPicker.setDividerVisible(false);
-                WeightPicker.setCycleDisable(false);//不禁用循环
+                weightPicker.setCanceledOnTouchOutside(true);
+                weightPicker.setDividerVisible(false);
+                weightPicker.setCycleDisable(false);//不禁用循环
+                weightPicker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 //                picker.setItemWidth(picker.getScreenWidthPixels());
                 //picker.setOffset(2);//偏移量
-                WeightPicker.setRange(30, 150, 1);//数字范围
-                WeightPicker.setSelectedItem(45);
-                WeightPicker.setLabel("kg");
-                WeightPicker.setTextColor(getResources().getColor(R.color.colorPink));
-                WeightPicker.setDividerColor(Color.parseColor("#ffffff"));
-                WeightPicker.setSubmitTextColor(Color.parseColor("#000000"));
-                WeightPicker.setCancelTextColor(Color.parseColor("#000000"));
-                WeightPicker.setTopLineColor(Color.parseColor("#ffffff"));
-                WeightPicker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-                WeightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
+                weightPicker.setRange(30, 150, 1);//数字范围
+                weightPicker.setSelectedItem(45);
+                weightPicker.setLabel("kg");
+                weightPicker.setTextColor(getResources().getColor(R.color.colorPink));
+                weightPicker.setDividerColor(Color.parseColor("#ffffff"));
+                weightPicker.setSubmitTextColor(Color.parseColor("#000000"));
+                weightPicker.setCancelTextColor(Color.parseColor("#000000"));
+                weightPicker.setTopLineColor(Color.parseColor("#ffffff"));
+                weightPicker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                weightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
                     @Override
                     public void onNumberPicked(int index, Number item) {
                         mViewTestWeightText.setText(item.intValue() + " kg");
@@ -112,7 +115,7 @@ public class InfoFragment extends Fragment {
                         }*/
                     }
                 });
-                WeightPicker.show();
+                weightPicker.show();
                 break;
         }
     }

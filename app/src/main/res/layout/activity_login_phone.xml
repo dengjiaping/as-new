@@ -18,7 +18,7 @@
         android:layout_height="148dp"
         android:layout_below="@+id/include"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="41dp"
+        android:layout_marginTop="40dp"
         android:src="@drawable/icon_login"/>
 
     <LinearLayout
@@ -69,13 +69,13 @@
             android:layout_marginTop="15dp"
             android:text="忘记密码?"
             android:textColor="#a0a0a0"
-            android:textSize="13dp"
+            android:textSize="12sp"
             />
 
         <Button
             android:id="@+id/login_btn_ok"
             style="@style/btn_pink"
-            android:layout_alignParentRight="true"
+            android:textSize="14sp"
             android:text="登录"/>
     </LinearLayout>
 

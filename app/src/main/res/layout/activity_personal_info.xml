@@ -15,7 +15,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-            <!--写错了.....  记得改 这句话存在的话 ..说明我忘记了-->
             <include layout="@layout/view_header"/>
 
             <RelativeLayout
@@ -23,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@android:color/white"
+                android:background="@drawable/ripple_with_color"
                 android:gravity="center_vertical">
 
                 <TextView
@@ -63,15 +62,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="昵称"
@@ -101,15 +100,15 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="生日"
@@ -139,15 +138,15 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="身高"
@@ -177,15 +176,15 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="体重"
@@ -210,20 +209,95 @@
                 android:background="#22000000"
                 />
 
+
+            <RelativeLayout
+                android:id="@+id/personal_rl_parity"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_with_color">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="14dp"
+                    android:drawableRight="@drawable/icon_next"
+                    android:gravity="center_vertical"
+                    android:text="胎次"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/personal_tv_parity"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:textColor="#343434"
+                    android:textSize="15sp"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#22000000"
+                />
+            <RelativeLayout
+                android:id="@+id/personal_rl_time"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_with_color">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="14dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="14dp"
+                    android:drawableRight="@drawable/icon_next"
+                    android:gravity="center_vertical"
+                    android:text="产后时间"
+                    android:textSize="15sp"/>
+
+                <TextView
+                    android:id="@+id/personal_tv_time"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="50dp"
+                    android:textColor="#343434"
+                    android:textSize="15sp"/>
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#22000000"
+                />
             <RelativeLayout
                 android:id="@+id/personal_rl_address"
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="所在地"
@@ -254,6 +328,7 @@
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
                 android:layout_marginTop="30dp"
+                android:layout_marginBottom="30dp"
                 android:text="保存"/>
 
         </LinearLayout>

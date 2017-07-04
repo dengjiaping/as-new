@@ -56,8 +56,11 @@ import cn.qqtheme.framework.entity.City;
 import cn.qqtheme.framework.entity.County;
 import cn.qqtheme.framework.entity.Province;
 import cn.qqtheme.framework.picker.DatePicker;
+import cn.qqtheme.framework.picker.DoublePicker;
 import cn.qqtheme.framework.picker.NumberPicker;
+import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
+import cn.qqtheme.framework.widget.WheelView;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -102,6 +105,14 @@ public class PersonalInfoActivity extends AppCompatActivity {
     LinearLayout mPersonalLlOk;
     @BindView(R.id.personal_success)
     LinearLayout mPersonalSuccess;
+    @BindView(R.id.personal_tv_parity)
+    TextView mPersonalTvParity;
+    @BindView(R.id.personal_rl_parity)
+    RelativeLayout mPersonalRlParity;
+    @BindView(R.id.personal_tv_time)
+    TextView mPersonalTvTime;
+    @BindView(R.id.personal_rl_time)
+    RelativeLayout mPersonalRlTime;
 
     private PermissionListener permissionListener;
     private Uri outputUri;
@@ -115,7 +126,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private static final int REQ_ZOOM = 102;
     private String mScaleImgPath; //裁剪图片保存的路径
 
-    private static String URL = "https://www.ruchuapp.com/AppServer/Update_InfoServlet";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -141,7 +151,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         mHeaderTvTitle.setText("我的资料");
     }
 
-    @OnClick({R.id.personal_rl_photo, R.id.personal_rl_name, R.id.personal_rl_birth, R.id.personal_rl_height, R.id.personal_rl_weight, R.id.personal_rl_address, R.id.personal_btn_save,R.id.header_iv_left})
+    @OnClick({R.id.personal_rl_photo,R.id.personal_rl_parity,R.id.personal_rl_time, R.id.personal_rl_name, R.id.personal_rl_birth, R.id.personal_rl_height, R.id.personal_rl_weight, R.id.personal_rl_address, R.id.personal_btn_save, R.id.header_iv_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.personal_rl_photo:
@@ -162,6 +172,12 @@ public class PersonalInfoActivity extends AppCompatActivity {
             case R.id.personal_rl_address:
                 setAddress();
                 break;
+            case R.id.personal_rl_parity:
+                setParity();
+                break;
+            case R.id.personal_rl_time:
+                setTime();
+                break;
             case R.id.personal_btn_save:
                 showOK();
                 break;
@@ -169,6 +185,61 @@ public class PersonalInfoActivity extends AppCompatActivity {
                 finish();
                 break;
         }
+    }
+
+    private void setTime() {
+        final ArrayList<String> firstData = new ArrayList<>();
+        for (int i = 0; i < 37; i++) {
+            firstData.add(i + "月");
+        }
+        final ArrayList<String> secondData = new ArrayList<>();
+        for (int i = 0; i < 31; i++) {
+            secondData.add(i + "天");
+        }
+        final DoublePicker picker = new DoublePicker(PersonalInfoActivity.this, firstData, secondData);
+        picker.setDividerVisible(false);
+        picker.setShadowColor(Color.WHITE, 80);
+        picker.setSelectedIndex(2, 1);
+
+        picker.setTextColor(getResources().getColor(R.color.colorPink));
+        picker.setDividerColor(Color.parseColor("#ffffff"));
+        picker.setSubmitTextColor(Color.parseColor("#000000"));
+        picker.setCancelTextColor(Color.parseColor("#000000"));
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
+        picker.setTopLineColor(Color.parseColor("#ffffff"));
+        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+        picker.setOnPickListener(new DoublePicker.OnPickListener() {
+            @Override
+            public void onPicked(int selectedFirstIndex, int selectedSecondIndex) {
+                mPersonalTvTime.setText(firstData.get(selectedFirstIndex) + "零" + secondData.get(selectedSecondIndex));
+            }
+        });
+        picker.show();
+    }
+
+    private void setParity() {
+        OptionPicker picker = new OptionPicker(PersonalInfoActivity.this, new String[]{"无", "头胎", "二胎", "三胎及以上"});
+        picker.setCanceledOnTouchOutside(false);
+        picker.setDividerRatio(WheelView.DividerConfig.WRAP);
+        picker.setShadowColor(Color.WHITE, 40);
+        picker.setSelectedIndex(0);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+        picker.setCycleDisable(true);
+        picker.setTextSize(14);
+        picker.setTextColor(getResources().getColor(R.color.colorPink));
+        picker.setDividerColor(Color.parseColor("#ffffff"));
+        picker.setSubmitTextColor(Color.parseColor("#000000"));
+        picker.setCancelTextColor(Color.parseColor("#000000"));
+        picker.setTopLineColor(Color.parseColor("#ffffff"));
+        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+        picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
+            @Override
+            public void onOptionPicked(int index, String item) {
+                mPersonalTvParity.setText(item);
+            }
+        });
+        picker.show();
     }
 
     private void showOK() {
@@ -217,11 +288,11 @@ public class PersonalInfoActivity extends AppCompatActivity {
         picker.setCanceledOnTouchOutside(true);
         picker.setDividerVisible(false);
         picker.setCycleDisable(false);//不禁用循环
-        picker.setItemWidth(picker.getScreenWidthPixels());
         //picker.setOffset(2);//偏移量
         picker.setRange(30, 150, 1);//数字范围
         picker.setSelectedItem(45);
         picker.setLabel("Kg");
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
@@ -242,12 +313,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
         picker.setWidth(picker.getScreenWidthPixels());
         picker.setDividerVisible(false);
         picker.setCanceledOnTouchOutside(true);
-        picker.setItemWidth(picker.getScreenWidthPixels());
         picker.setCycleDisable(false);//不禁用循环
         //picker.setOffset(2);//偏移量
         picker.setRange(145, 200, 1);//数字范围
         picker.setSelectedItem(168);
         picker.setLabel("Cm");
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
@@ -266,7 +338,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
     private void setBirth() {
         final DatePicker picker = new DatePicker(this);
         picker.setCanceledOnTouchOutside(true);
-        picker.setUseWeight(true);
+        picker.setUseWeight(false);
+
         picker.setCycleDisable(false);//不禁用循环
         picker.setDividerVisible(false);
         picker.setTopPadding(ConvertUtils.toPx(this, 20));

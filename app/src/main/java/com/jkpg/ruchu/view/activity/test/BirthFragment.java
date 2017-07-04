@@ -58,7 +58,6 @@ public class BirthFragment extends Fragment {
     public void onViewClicked() {
         final DatePicker picker = new DatePicker(getActivity(), DatePicker.YEAR_MONTH);
         picker.setCanceledOnTouchOutside(true);
-        picker.setUseWeight(true);
         picker.setCycleDisable(false);//不禁用循环
         picker.setDividerVisible(false);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));

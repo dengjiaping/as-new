@@ -21,16 +21,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="胎次"
@@ -60,16 +60,16 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
 
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="分娩方式"
@@ -100,16 +100,16 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
 
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="分娩时体重"
@@ -141,16 +141,16 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
 
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="生产时长"
@@ -181,16 +181,16 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
 
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="分娩损伤"
@@ -221,16 +221,16 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@android:color/white">
+                android:background="@drawable/ripple_with_color">
 
                 <TextView
                     android:layout_width="match_parent"
 
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="18dp"
+                    android:layout_marginBottom="14dp"
                     android:layout_marginLeft="22dp"
                     android:layout_marginRight="22dp"
-                    android:layout_marginTop="18dp"
+                    android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
                     android:text="新生儿体重"

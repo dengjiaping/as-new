@@ -22,7 +22,6 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.MainActivity;
 import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
@@ -113,12 +112,14 @@ public class LoginPhoneActivity extends AppCompatActivity {
                                 SPUtils.saveString(UIUtils.getContext(), Constants.PERSONALINFO, s);
                                 if (!login.success) {
                                     ToastUtils.showShort(UIUtils.getContext(), "手机号或密码错误");
-                                } else if (login.birth == "") {
+                                }
+                                // FIXME: 2017/7/4 
+                                /*else if (login.birth == "") {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
-                                } else {
-                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
+                                } */else {
+                                    startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
                                 }

@@ -26,6 +26,7 @@ import butterknife.OnClick;
 import cn.qqtheme.framework.picker.DoublePicker;
 import cn.qqtheme.framework.picker.NumberPicker;
 import cn.qqtheme.framework.picker.OptionPicker;
+import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
 
 /**
@@ -143,6 +144,8 @@ public class MyFilesActivity extends AppCompatActivity {
                 picker.setSelectedIndex(2, 1);
                 picker.setTextColor(getResources().getColor(R.color.colorPink));
                 picker.setDividerColor(Color.parseColor("#ffffff"));
+                picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
                 picker.setSubmitTextColor(Color.parseColor("#000000"));
                 picker.setCancelTextColor(Color.parseColor("#000000"));
                 picker.setTopLineColor(Color.parseColor("#ffffff"));
@@ -186,6 +189,8 @@ public class MyFilesActivity extends AppCompatActivity {
                 picker.setDividerRatio(WheelView.DividerConfig.WRAP);
                 picker.setShadowColor(Color.WHITE, 40);
                 picker.setSelectedIndex(0);
+                picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
                 picker.setCycleDisable(true);
                 picker.setTextSize(14);
                 picker.setTextColor(getResources().getColor(R.color.colorPink));
@@ -253,7 +258,7 @@ public class MyFilesActivity extends AppCompatActivity {
         mView_bearing_tc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSinglePicker(new String[]{"头胎", "二胎", "三胎及以上"}, mView_bearing_tv_tc);
+                showSinglePicker(new String[]{"无", "头胎", "二胎", "三胎及以上"}, mView_bearing_tv_tc);
             }
         });
 
@@ -312,6 +317,8 @@ public class MyFilesActivity extends AppCompatActivity {
         picker.setSelectedIndex(0);
         picker.setCycleDisable(true);
         picker.setTextSize(14);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
@@ -333,10 +340,11 @@ public class MyFilesActivity extends AppCompatActivity {
         picker.setCanceledOnTouchOutside(true);
         picker.setDividerVisible(false);
         picker.setCycleDisable(true);//不禁用循环
-        picker.setItemWidth(picker.getScreenWidthPixels());
         //picker.setOffset(2);//偏移量
         picker.setRange(x, y, 1);//数字范围
         picker.setSelectedItem(z);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+
         picker.setLabel(label);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));

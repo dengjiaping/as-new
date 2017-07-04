@@ -1,50 +1,24 @@
 package com.jkpg.ruchu.view.activity.login;
 
-import android.Manifest;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.callback.StringDialogCallback;
-import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.FileUtils;
-import com.jkpg.ruchu.utils.ImageTools;
-import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.NetworkUtils;
-import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.MainActivity;
-import com.jkpg.ruchu.widget.CircleImageView;
-import com.lzy.okgo.OkGo;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -54,8 +28,6 @@ import cn.qqtheme.framework.picker.DoublePicker;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/11.
@@ -70,10 +42,10 @@ public class PerfectInfoActivity extends AppCompatActivity {
     ImageView mHeaderIvRight;
     @BindView(R.id.header_tv_right)
     TextView mHeaderTvRight;
-    @BindView(R.id.perfect_civ_photo)
+/*    @BindView(R.id.perfect_civ_photo)
     CircleImageView mPerfectCivPhoto;
     @BindView(R.id.perfect_et_name)
-    EditText mPerfectEtName;
+    EditText mPerfectEtName;*/
 
     private static final String TAG = "PerfectInfoActivity";
 
@@ -91,12 +63,14 @@ public class PerfectInfoActivity extends AppCompatActivity {
     @BindView(R.id.perfect_btn_save)
     Button mPerfectBtnSave;
 
+/*
     private PermissionListener permissionListener;
     private Uri outputUri;
     private String imgPath;//拍照完图片保存的路径
     private String mScaleImgPath;
     private boolean hasImage = false;
     private String mNameString;
+*/
 
 
     @Override
@@ -106,10 +80,10 @@ public class PerfectInfoActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initHeader();
 
-        initPhoto();
+        // initPhoto();
     }
 
-    private void initPhoto() {
+  /*  private void initPhoto() {
         String imgPath = SPUtils.getString(UIUtils.getContext(), Constants.PERSONAIMAGE, "");
         if (!StringUtils.isEmpty(imgPath)) {
             Glide
@@ -118,7 +92,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
                     .error(R.drawable.icon_photo)
                     .into(mPerfectCivPhoto);
         }
-    }
+    }*/
 
 
     private void initHeader() {
@@ -128,7 +102,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
     }
 
 
-    @OnClick({R.id.header_iv_left, R.id.header_tv_right, R.id.perfect_civ_photo, R.id.perfect_tv_birth, R.id.perfect_tv_height, R.id.perfect_tv_weight, R.id.perfect_btn_save})
+    @OnClick({R.id.header_iv_left, R.id.header_tv_right, /*R.id.perfect_civ_photo,*/ R.id.perfect_tv_birth, R.id.perfect_tv_height, R.id.perfect_tv_weight, R.id.perfect_btn_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -137,17 +111,17 @@ public class PerfectInfoActivity extends AppCompatActivity {
                 startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
                 finish();
                 break;
-            case R.id.perfect_civ_photo:
+           /* case R.id.perfect_civ_photo:
                 showDialogSelect();
-                break;
+                break;*/
             case R.id.perfect_tv_birth:
                 onYearMonthDayPicker();
                 break;
             case R.id.perfect_tv_height:
-                onNumberHeightPicker();
+                countPicker();
                 break;
             case R.id.perfect_tv_weight:
-                onNumberWeightPicker();
+                timePicker();
                 break;
             case R.id.perfect_btn_save:
                 saveInfo();
@@ -156,7 +130,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
     }
 
     private void saveInfo() {
-        if (mPerfectCivPhoto.getDrawable().getCurrent().getConstantState()
+       /* if (mPerfectCivPhoto.getDrawable().getCurrent().getConstantState()
                 == getResources().getDrawable(R.drawable.icon_photo).getConstantState()) {
             ToastUtils.showShort(UIUtils.getContext(), "请上传你的头像");
             return;
@@ -169,7 +143,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
         if (name.length() > 12) {
             ToastUtils.showShort(UIUtils.getContext(), "专属昵称不能超过十二个字符");
             return;
-        }
+        }*/
         String birth = mPerfectTvBirth.getText().toString();
         if (StringUtils.isEmpty(birth)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入你的生日");
@@ -190,30 +164,8 @@ public class PerfectInfoActivity extends AppCompatActivity {
             return;
         }
 
-        if (!StringUtils.isEmpty(mScaleImgPath)) {
-            // TODO: 2017/6/8  
-            OkGo
-                    .post(AppUrl.UPDATEINFO + "?nick=" + name + "&height=" + height + "&weight=" + weight +
-                            "&birth=" + birth + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                    .tag(this)
-                    .isMultipart(true)
-                    .params("headImg", new File(mScaleImgPath))
-                    .execute(new StringDialogCallback(this) {
-                        @Override
-                        public void onSuccess(String s, Call call, Response response) {
-                            LogUtils.i(s);
-                            ToastUtils.showShort(UIUtils.getContext(), "保存成功");
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
-                            finish();
-                        }
-                    });
-        } else {
-            OkGo
+        // FIXME: 2017/7/4
+           /* OkGo
                     .post(AppUrl.UPDATEINFO + "?username=" + name + "&shengao=" + height + "&tizhong=" + weight +
                             "&birth=" + birth + "&u_tel=" + SPUtils.getString(UIUtils.getContext(), Constants.PHONE, ""))
                     .tag(this)
@@ -230,12 +182,11 @@ public class PerfectInfoActivity extends AppCompatActivity {
                             startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
                             finish();
                         }
-                    });
-        }
+                    });*/
     }
 
-    // 体重
-    private void onNumberWeightPicker() {
+    // 产后时间
+    private void timePicker() {
         final ArrayList<String> firstData = new ArrayList<>();
         for (int i = 0; i < 37; i++) {
             firstData.add(i + "月");
@@ -248,6 +199,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
         picker.setDividerVisible(false);
         picker.setShadowColor(Color.WHITE, 80);
         picker.setSelectedIndex(2, 1);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
@@ -265,37 +217,38 @@ public class PerfectInfoActivity extends AppCompatActivity {
 
     //出生年月
     private void onYearMonthDayPicker() {
-        final DatePicker picker = new DatePicker(this);
+        final DatePicker picker = new DatePicker(PerfectInfoActivity.this, DatePicker.YEAR_MONTH);
         picker.setCanceledOnTouchOutside(true);
-        picker.setUseWeight(true);
         picker.setCycleDisable(false);//不禁用循环
         picker.setDividerVisible(false);
-        picker.setTopPadding(ConvertUtils.toPx(this, 20));
-        picker.setRangeStart(1970, 1, 1);
-        picker.setRangeEnd(2017, 1, 1);
-        picker.setSelectedItem(1990, 5, 20);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+        picker.setRangeStart(1970, 1);
+        picker.setUseWeight(false);
+        picker.setRangeEnd(2017, 1);
+        picker.setSelectedItem(1990, 5);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
         picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-        picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
+        picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
             @Override
-            public void onDatePicked(String year, String month, String day) {
-                mPerfectTvBirth.setText(year + "-" + month + "-" + day);
+            public void onDatePicked(String year, String month) {
+                mPerfectTvBirth.setText(year + "年" + month + "月");
             }
         });
         picker.show();
     }
 
-    //身高
-    private void onNumberHeightPicker() {
+    //胎次
+    private void countPicker() {
         OptionPicker picker = new OptionPicker(PerfectInfoActivity.this, new String[]{"无", "头胎", "二胎", "三胎及以上"});
         picker.setCanceledOnTouchOutside(false);
         picker.setDividerRatio(WheelView.DividerConfig.WRAP);
         picker.setShadowColor(Color.WHITE, 40);
         picker.setSelectedIndex(0);
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setCycleDisable(true);
         picker.setTextSize(14);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
@@ -313,7 +266,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
         picker.show();
     }
 
-    private void showDialogSelect() {
+   /* private void showDialogSelect() {
         new AlertDialog.Builder(this).setTitle("选择图片").setItems(new String[]{"拍照", "相册"}, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -327,15 +280,15 @@ public class PerfectInfoActivity extends AppCompatActivity {
                 }
 
             }
-        })/*.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        })*//*.setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
             }
-        })*/.show();
-    }
+        })*//*.show();
+    }*/
 
-    private void pickPictureFromCamera() {
+   /* private void pickPictureFromCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //如果是6.0或6.0以上，则要申请运行时权限，这里需要申请拍照和写入SD卡的权限
             requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
@@ -350,9 +303,9 @@ public class PerfectInfoActivity extends AppCompatActivity {
             });
             return;
         }
-    }
+    }*/
 
-    private void openCamera() {
+   /* private void openCamera() {
         // 指定调用相机拍照后照片的储存路径
         imgPath = FileUtils.generateImgePath();
         File imgFile = new File(imgPath);
@@ -366,11 +319,13 @@ public class PerfectInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
         startActivityForResult(intent, REQ_TAKE_PHOTO);
-    }
+    }*/
+
+   /* */
 
     /**
      * 申请运行时权限
-     */
+     *//*
     public void requestRuntimePermission(String[] permissions, PermissionListener listener) {
         permissionListener = listener;
         List<String> permissionList = new ArrayList<>();
@@ -400,7 +355,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
     private void pickPictureFromSystem() {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image/*");
+                "image*//*");
         startActivityForResult(intent, REQ_ALBUM);
     }
 
@@ -499,7 +454,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
                 break;
         }
     }
-
+*/
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {

@@ -10,12 +10,14 @@ import android.widget.Toast;
  */
 public class ToastUtils {
 
+
     private ToastUtils() {
         /* cannot be instantiated */
         throw new UnsupportedOperationException("cannot be instantiated");
     }
 
     public static boolean isShow = true;
+    private static Toast mToast;
 
     /**
      * 短时间显示Toast
@@ -24,8 +26,15 @@ public class ToastUtils {
      * @param message
      */
     public static void showShort(Context context, CharSequence message) {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        if (isShow) {
+            if (mToast == null)
+                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            else {
+                mToast.cancel();
+                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            }
+            mToast.show();
+        }
     }
 
     /**
@@ -35,8 +44,15 @@ public class ToastUtils {
      * @param message
      */
     public static void showShort(Context context, int message) {
-        if (isShow)
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
+        if (isShow) {
+            if (mToast == null)
+                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            else {
+                mToast.cancel();
+                mToast = Toast.makeText(context, message, Toast.LENGTH_SHORT);
+            }
+            mToast.show();
+        }
     }
 
     /**

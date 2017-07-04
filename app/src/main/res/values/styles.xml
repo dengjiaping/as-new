@@ -19,8 +19,8 @@
 
     <style name="btn_pink">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">22dp</item>
         <item name="android:background">@drawable/selector_btn_enable_bg</item>
         <item name="android:textColor">@android:color/white</item>
     </style>

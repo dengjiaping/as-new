@@ -7,6 +7,7 @@ import android.os.AsyncTask;
 
 import com.alibaba.fastjson.JSON;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,7 @@ public class AddressPickTask extends AsyncTask<String, Void, ArrayList<Province>
             }
             picker.setSelectedItem(selectedProvince, selectedCity, selectedCounty);
             picker.setOnAddressPickListener(callback);
+            picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
             picker.show();
         } else {
             callback.onAddressInitFailed();
