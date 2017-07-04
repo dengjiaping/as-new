@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorXmlBg"
+
+              android:orientation="vertical">
+
+    <include layout="@layout/view_header"/>
+
+    <com.jkpg.ruchu.widget.NoScrollViewPager
+        android:id="@+id/test_detail_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+    </com.jkpg.ruchu.widget.NoScrollViewPager>
+   <!-- <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>-->
+
+    <Button
+        android:id="@+id/test_detail_btn"
+
+        style="@style/btn_pink"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="22dp"
+        android:text="继续"
+        android:textSize="16sp"/>
+
+    <TextView
+        android:id="@+id/test_detail_back"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:padding="22dp"
+        android:text="返回上一题"
+        android:textColor="@color/colorPink"
+        android:visibility="invisible"/>
+</LinearLayout>

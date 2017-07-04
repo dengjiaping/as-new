@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.jkpg.ruchu.view.activity.my.OpenVipActivity">
+
+    <include layout="@layout/view_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPink"
+        android:paddingBottom="12dp"
+        android:paddingLeft="44dp"
+        android:paddingTop="12dp">
+
+        <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/open_vip_civ_photo"
+
+            android:layout_width="90dp"
+            android:layout_height="90dp"
+            android:src="@drawable/icon_photo"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/open_vip_tv_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:drawablePadding="10dp"
+                android:drawableRight="@drawable/icon_vip1"
+                android:gravity="center"
+                android:text="@string/app_name"
+                android:textColor="@android:color/white"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:id="@+id/open_vip_tv_body"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:drawablePadding="5dp"
+                android:gravity="center"
+                android:text="绑定会员，即送15天会员叠加包"
+                android:textColor="@android:color/white"
+                android:textSize="12sp"
+                />
+
+            <TextView
+                android:id="@+id/open_vip_tv_wx"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/rectangle_gray"
+                android:gravity="center"
+                android:text="去绑定微信"
+                android:textColor="@color/colorPink"
+                />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:gravity="center_horizontal"
+                android:text="开通会员后，将享有所有特权"
+                android:textSize="16sp"
+                />
+
+            <RelativeLayout
+                android:id="@+id/open_vip_rl_30"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:background="@drawable/rectangle_open_vip1">
+
+                <TextView
+                    android:id="@+id/open_vip_tv_30"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="32dp"
+                    android:text="月卡（30天）"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/open_vip_tv_15"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="32dp"
+                    android:text="￥ 15"
+                    android:textSize="16sp"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/open_vip_rl_90"
+
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/rectangle_open_vip2">
+
+                <TextView
+                    android:id="@+id/open_vip_tv_90"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="32dp"
+                    android:text="季卡（90天）"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/open_vip_tv_45"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="32dp"
+                    android:text="￥ 45"
+                    android:textSize="16sp"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/open_vip_rl_180"
+
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/rectangle_open_vip2">
+
+                <TextView
+                    android:id="@+id/open_vip_tv_180"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="32dp"
+                    android:text="半年卡（180天）"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/open_vip_tv_75"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="32dp"
+                    android:text="￥ 75"
+                    android:textSize="16sp"/>
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/open_vip_rl_365"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="22dp"
+                android:background="@drawable/rectangle_open_vip2">
+
+                <TextView
+                    android:id="@+id/open_vip_tv_365"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="32dp"
+                    android:text="年卡（365天）"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/open_vip_tv_135"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="32dp"
+                    android:text="￥ 135"
+                    android:textSize="16sp"/>
+
+            </RelativeLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:elevation="10dp">
+
+        <Button
+            android:id="@+id/open_vip_btn_pay"
+            style="@style/btn_pink"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/shap_rectangle_red"
+            android:text="去支付"/>
+    </LinearLayout>
+</LinearLayout>

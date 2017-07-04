@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login_phone_bg"
+
+    tools:context="com.jkpg.ruchu.view.activity.login.LoginPhoneActivity">
+
+    <include
+        android:id="@+id/include"
+        layout="@layout/view_header"/>
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="86dp"
+        android:layout_height="148dp"
+        android:layout_below="@+id/include"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="41dp"
+        android:src="@drawable/icon_login"/>
+
+    <LinearLayout
+        android:id="@+id/login_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="40dp"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/login_et_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shap_rectangle_white"
+            android:drawableLeft="@drawable/icon_phone"
+            android:drawablePadding="20dp"
+            android:hint="请输入您的手机号"
+            android:inputType="phone"
+            android:lines="1"
+            android:padding="12dp"
+            android:textColorHint="#D7d7d7"
+            android:textSize="14sp"
+            />
+
+        <EditText
+            android:id="@+id/login_et_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shap_rectangle_white"
+            android:drawableLeft="@drawable/icon_password"
+            android:drawablePadding="20dp"
+            android:hint="请输入您的密码 "
+            android:inputType="textPassword"
+            android:lines="1"
+            android:padding="12dp"
+            android:textColorHint="#D7D7D7"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/login_tv_forget"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:layout_marginTop="15dp"
+            android:text="忘记密码?"
+            android:textColor="#a0a0a0"
+            android:textSize="13dp"
+            />
+
+        <Button
+            android:id="@+id/login_btn_ok"
+            style="@style/btn_pink"
+            android:layout_alignParentRight="true"
+            android:text="登录"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/login_btn_register"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="85dp"
+        android:layout_height="35dp"
+        android:layout_below="@+id/login_ll"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/random_bg"
+        android:text="快速注册"
+        android:textColor="#ff5070"/>
+
+
+</RelativeLayout>

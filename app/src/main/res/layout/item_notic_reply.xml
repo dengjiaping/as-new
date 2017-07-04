@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              android:paddingTop="12dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp">
+
+        <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/item_notice_reply_civ"
+            android:layout_width="50dp"
+            android:layout_height="50dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/item_notice_reply_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="我是小可爱"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"/>
+
+                <TextView
+                    android:id="@+id/item_notice_reply_floor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="1楼"
+                    android:textColor="@color/colorGray3"
+                    android:textSize="14sp"/>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/item_notice_reply_baby"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="一胎3月"
+                android:textColor="@color/colorGray3"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/item_notice_reply_body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="一胎3月"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <com.jkpg.ruchu.widget.nineview.NineGridView
+                android:id="@+id/item_notice_reply_nine_view"
+                app:ngv_singleImageSize="90dp"
+                app:ngv_gridSpacing="5dp"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"/>
+
+            <LinearLayout
+                android:id="@+id/item_notice_reply_to"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:background="@drawable/shap_rectangle_gray3"
+                android:orientation="vertical"
+                android:padding="12dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    >
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_name"
+
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="wrap_content"
+                        android:text="你是小可爱"
+                        android:textColor="@color/colorGray3"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_floor"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="1楼"
+                        android:textColor="@color/colorGray3"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_time"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+
+                        android:layout_marginLeft="12dp"
+                        android:text="2017-05-21"
+                        android:textColor="@color/colorGray3"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/item_notice_reply_to_body"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="14sp"/>
+
+                <com.jkpg.ruchu.widget.nineview.NineGridView
+                    android:id="@+id/item_notice_reply_to_nine_view"
+                    android:layout_width="match_parent"
+                    app:ngv_singleImageSize="50dp"
+                    app:ngv_gridSpacing="8dp"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:gravity="center">
+
+                <TextView
+                    android:id="@+id/item_notice_reply_time"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-05-21"/>
+
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        >
+
+                        <CheckBox
+                            android:id="@+id/item_notice_reply_cb_love"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:button="@null"
+                            android:drawableLeft="@drawable/selector_zan_bg"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/select_bd_text_color"/>
+
+                        <TextView
+                            android:id="@+id/item_notice_detail_tv_reply"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginLeft="10dp"
+                            android:drawableLeft="@drawable/huifu2"
+                            android:drawablePadding="5dp"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="@color/colorGray2"/>
+                    </LinearLayout>
+                </RelativeLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="12dp"
+
+        android:background="#22000000"/>
+</LinearLayout>

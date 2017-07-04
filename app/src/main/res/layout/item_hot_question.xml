@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="5dp"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              android:paddingLeft="22dp"
+              android:paddingRight="22dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="问："
+            android:textColor="@android:color/black"/>
+
+        <TextView
+            android:id="@+id/item_question_title"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@android:color/black"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="答："
+            android:textColor="@color/colorGray3"/>
+
+        <TextView
+            android:id="@+id/item_question_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:text="答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答：答："
+            android:textColor="@color/colorGray3"/>
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="5dp">
+
+        <TextView
+            android:id="@+id/item_question_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:text="2018-8-8-8-"
+            android:textColor="@color/colorGray3"
+            android:textSize="12sp"/>
+
+        <TextView
+            android:id="@+id/item_question_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:drawablePadding="5dp"
+            android:drawableRight="@drawable/icon_more"
+            android:text="详情"
+            android:textColor="@color/colorPink"/>
+    </RelativeLayout>
+</LinearLayout>

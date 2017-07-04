@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/view_header"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="30dp"
+        android:text="旧密码"
+        android:textColor="#343434"
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/revise_et_old"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shap_rectangle_white"
+        android:hint="6-16个字符，包含数字和字母"
+        android:inputType="textPassword"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="30dp"
+        android:text="新密码"
+        android:textColor="#343434"
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/revise_et_new_one"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shap_rectangle_white"
+        android:hint="6-16个字符，包含数字和字母"
+        android:inputType="textPassword"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="42dp"
+        android:layout_marginTop="18dp"
+        android:text="再次输入"
+        android:textColor="#343434"
+        android:textSize="15sp"/>
+
+    <EditText
+        android:id="@+id/revise_et_new_two"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="18dp"
+        android:background="@drawable/shap_rectangle_white"
+        android:hint="6-16个字符，包含数字和字母"
+        android:inputType="textPassword"
+        android:textSize="14sp"/>
+
+    <Button
+        android:id="@+id/revise_btn_next"
+        style="@style/btn_pink"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:layout_marginTop="40dp"
+        android:text="重新登陆"
+        />
+</LinearLayout>

@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorXmlBg"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        android:text="请选择盆底肌障碍情况"
+        android:textColor="@android:color/black"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:text="（持续时间）"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"/>
+
+    <RadioGroup
+        android:id="@+id/test_single_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="22dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:padding="22dp">
+
+        <RadioButton
+            android:id="@+id/test_single_rb0"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/selector_test_rb_bg"
+            android:button="@null"
+            android:visibility="gone"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/selector_cb_text_color"
+            android:textSize="16sp"
+            />
+
+        <RadioButton
+            android:id="@+id/test_single_rb1"
+            android:visibility="gone"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/selector_test_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/selector_cb_text_color"
+            android:textSize="16sp"
+            />
+
+        <RadioButton
+            android:id="@+id/test_single_rb2"
+            android:visibility="gone"
+
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/selector_test_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/selector_cb_text_color"
+            android:textSize="16sp"
+            />
+
+        <RadioButton
+            android:id="@+id/test_single_rb3"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/selector_test_rb_bg"
+            android:button="@null"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/selector_cb_text_color"
+            android:textSize="16sp"
+            />
+
+    </RadioGroup>
+    <!-- <Button
+         android:id="@+id/test_detail_btn"
+
+         style="@style/btn_pink"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_margin="22dp"
+         android:text="继续"
+         android:textSize="16sp"/>
+
+     <TextView
+         android:id="@+id/test_detail_back"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:padding="22dp"
+         android:text="返回上一题"
+         android:textColor="@color/colorPink"/>-->
+</LinearLayout>

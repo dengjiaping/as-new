@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/view_header"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="#11888888"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPinkTran"
+                android:drawableRight="@drawable/icon_cancel"
+                android:paddingBottom="5dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="5dp"
+                android:text="请先完成健康测试，在进行训练哦！"
+                android:textSize="10sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="你还未进行测试哦！"
+                android:textSize="30sp"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="150dp"
+            android:background="#11888888"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="您的盆底肌健康度："
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/my_test_tv_grade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="B 级"
+                    android:textColor="@color/colorPink"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/my_test_tv_level"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="产后康复Level2"
+                android:textColor="@color/colorPink"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="12dp"
+                android:gravity="center"
+                android:text="通过测试我们为您量身定做的训练计划"
+                android:textColor="@color/colorGray2"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上次测试时间："
+                    android:textColor="@color/colorGray2"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/my_test_tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2017-5-20"
+                    android:textColor="@color/colorGray2"
+                    android:textSize="18sp"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <ScrollView
+            android:id="@+id/my_test_sl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【注意事项】"/>
+
+                <TextView
+                    android:id="@+id/my_test_tv_body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】【注意事项】"/>
+
+            </LinearLayout>
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/my_test_ll"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="欢迎进入盆底肌健康测试"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:text="      全程约5~7分钟,请耐心完成测试，如初会为你生成一份您的专属测试报告，我们会为您推荐一套适合您的训练方案。"
+                android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/my_test_btn_test"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/menu_1"
+                android:text="健康测试"
+                android:textColor="@color/colorPink"
+                />
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/my_test_ll_btn_again_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:visibility="gone">
+
+        <Button
+            style="@style/btn_pink"
+            android:layout_marginBottom="5dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="5dp"
+            android:text="重新测试"
+            />
+    </LinearLayout>
+</LinearLayout>

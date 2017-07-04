@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+
+    >
+
+    <TextView
+        android:id="@+id/chat_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textColor="@color/colorGray3"
+        android:textSize="12sp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        >
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="72dp"
+            android:layout_marginRight="5dp"
+
+            android:layout_weight="1">
+
+            <TextView
+                android:id="@+id/chat_sms_my"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/reply_my"
+                android:gravity="center_vertical"
+                android:textColor="@android:color/white"/>
+        </RelativeLayout>
+
+        <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/chat_image_my"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginRight="22dp"/>
+
+    </LinearLayout>
+</LinearLayout>

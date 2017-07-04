@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <color name="__picker_pager_bg">#ffffff</color>
+  <color name="__picker_selected_bg">#ffffff</color>
+  <color name="__picker_black_40">#ffffff</color>
+  <color name="__picker_common_primary">#f3f3f3</color>
+
+  <color name="__picker_text_40">#FF5070</color>
+  <color name="__picker_text_80">#FF5070</color>
+  <color name="__picker_text_120">#FF5070</color>
+  <color name="__picker_item_photo_border_selected">#FF5070</color>
+  <color name="__picker_item_photo_border_n">#ffffff</color>
+
+</resources>

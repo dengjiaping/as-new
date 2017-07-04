@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="12dp">
+
+        <Button
+            android:id="@+id/train_count_btn_up"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/selector_btn_up_bg"/>
+
+        <TextView
+            android:id="@+id/train_count_tv_moon"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:text="2017-05"
+            android:textSize="16sp"
+            />
+
+        <Button
+            android:id="@+id/train_count_btn_down"
+
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/selector_btn_down_bg"/>
+    </LinearLayout>
+
+    <com.jkpg.ruchu.widget.Histogram
+        android:id="@+id/train_count_fl_histogram"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1">
+
+    </com.jkpg.ruchu.widget.Histogram>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#22000000"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+
+        android:padding="22dp">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/train_count_tv_time_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本月训练总时间"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/train_count_tv_time_count_number"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="177"
+                    android:textColor="@color/colorPink"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分钟"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/train_count_tv_time_mean"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="本月平均训练时间"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:id="@+id/train_count_tv_time_mean_number"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="177"
+                    android:textColor="@color/colorPink"
+                    android:textSize="20sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="分钟"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <include layout="@layout/view_header"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#11888888"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:text="你已绑定的手机号："/>
+
+        <TextView
+            android:id="@+id/account_manage_tv_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:text="18888888888"
+            android:textColor="@android:color/black"
+            android:textSize="20sp"/>
+
+        <Button
+            android:id="@+id/account_manage_btn_change"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="85dp"
+            android:layout_height="35dp"
+            android:layout_margin="12dp"
+            android:background="@drawable/random_bg"
+            android:text="更改"
+            android:textColor="#ff5070"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/account_manage_tv_pwd"
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:drawableRight="@drawable/icon_next"
+        android:paddingBottom="18dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="18dp"
+        android:text="修改密码"
+        android:textSize="16sp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/wx_min"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="微信"
+            android:textColor="#343434"
+            android:textSize="15sp"/>
+
+        <CheckBox
+            android:id="@+id/account_manage_rb_wx"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="22dp"
+            android:background="@drawable/select_bd_bg"
+            android:button="@null"
+            android:checked="true"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="绑定"
+            android:textColor="@color/select_bd_text_color"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#22000000"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/qq_min"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="22dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="QQ"
+            android:textColor="#343434"
+            android:textSize="15sp"/>
+
+        <CheckBox
+            android:id="@+id/account_manage_rb_qq"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="22dp"
+            android:background="@drawable/select_bd_bg"
+            android:button="@null"
+            android:checked="true"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+
+            android:text="绑定"
+            android:textColor="@color/select_bd_text_color"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#22000000"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/wb_min"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="微博"
+            android:textColor="#343434"
+            android:textSize="15sp"/>
+
+        <CheckBox
+            android:id="@+id/account_manage_rb_wb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="22dp"
+            android:background="@drawable/select_bd_bg"
+            android:button="@null"
+            android:checked="true"
+            android:paddingLeft="12dp"
+            android:paddingRight="12dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:text="绑定"
+
+            android:textColor="@color/select_bd_text_color"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/account_manage_btn_logout"
+            style="@style/btn_pink"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:text="注销"/>
+    </LinearLayout>
+
+</LinearLayout>

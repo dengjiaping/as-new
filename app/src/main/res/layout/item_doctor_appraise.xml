@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@android:color/white"
+              android:orientation="vertical"
+              android:paddingLeft="22dp"
+              android:paddingRight="22dp"
+              >
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        >
+
+        <TextView
+            android:id="@+id/doctor_appraise_name"
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="@color/colorGray3"/>
+
+        <me.zhanghai.android.materialratingbar.MaterialRatingBar
+            android:id="@+id/doctor_appraise_rating"
+            style="@style/Widget.MaterialRatingBar.RatingBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:clickable="false"
+            android:minHeight="18dp"
+            android:isIndicator="true"
+            android:rating="3"
+            app:mrb_secondaryProgressTint="@android:color/darker_gray"
+            app:mrb_progressTint="@color/colorYellow"/>
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/doctor_appraise_time"
+        android:text="@string/app_name"
+
+        android:layout_width="wrap_content"
+
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="5dp"
+        android:textColor="@color/colorGray3"/>
+
+    <TextView
+        android:id="@+id/doctor_appraise_body"
+        android:text="@string/app_name"
+
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginTop="5dp"
+        android:textColor="@android:color/black"/>
+
+    <View
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="#22000000"/>
+
+</LinearLayout>

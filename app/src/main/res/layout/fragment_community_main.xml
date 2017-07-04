@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/colorPink"
+        android:gravity="center">
+
+        <cn.bingoogolapple.badgeview.BGABadgeLinearLayout
+            android:id="@+id/community_main_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="2dp">
+
+            <RadioGroup
+                android:id="@+id/community_main_radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shap_rectangle_white_line"
+                android:orientation="horizontal"
+                >
+
+                <RadioButton
+                    android:id="@+id/community_main_tv_sq"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_community_tv_bg"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                    android:text="社区"
+                    android:textColor="@color/selector_community_tv_color"
+                    android:textSize="16sp"/>
+
+                <cn.bingoogolapple.badgeview.BGABadgeRadioButton
+                    android:id="@+id/community_main_tv_zx"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:background="@drawable/selector_community_tv_bg"
+                    android:button="@null"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="5dp"
+                    android:text="咨询"
+                    android:textColor="@color/selector_community_tv_color"
+                    android:textSize="16sp"/>
+            </RadioGroup>
+        </cn.bingoogolapple.badgeview.BGABadgeLinearLayout>
+    </LinearLayout>
+
+    <!--<FrameLayout
+        android:id="@+id/community_main_frame_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>-->
+    <android.support.v4.view.ViewPager
+        android:id="@+id/community_main_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

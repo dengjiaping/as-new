@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/register_ll_one"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="22dp"
+    android:layout_marginRight="22dp"
+    android:layout_marginTop="100dp"
+    android:orientation="vertical"
+    android:visibility="visible"
+    tools:showIn="@layout/activity_register_phone">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:text="手机号"
+        android:textSize="14sp"/>
+
+    <EditText
+        android:id="@+id/register_et_phone"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/shap_rectangle_white"
+        android:hint="输入您的手机号"
+        android:inputType="phone"
+        android:paddingLeft="20dp"
+        android:textColor="@android:color/black"/>
+
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="34dp">
+
+        <CheckBox
+            android:checked="true"
+            android:id="@+id/register_cb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/register_cb"
+            android:text="我已阅读并同意"
+            android:textSize="13sp"/>
+
+        <TextView
+            android:id="@+id/register_tv_protocol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/textView"
+            android:text="   如初用户协议  "
+            android:textColor="@color/colorPink"
+            android:textSize="13sp"
+            />
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/register_bt_obtain"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@drawable/shap_rectangle_red"
+        android:text="获取验证码"
+        android:textColor="#fff"/>
+</LinearLayout>

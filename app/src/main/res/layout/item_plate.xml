@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="horizontal"
+              android:paddingBottom="12dp"
+              android:gravity="center"
+              android:background="@drawable/ripple_with_color"
+
+              android:paddingTop="12dp">
+
+    <com.jkpg.ruchu.widget.CircleImageView
+        android:id="@+id/plate_civ_photo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="center"
+        android:src="@drawable/icon_photo"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/plate_tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:text="尴尬体感"
+            android:textColor="@color/colorPink"
+            android:textSize="16sp"
+            />
+
+        <TextView
+            android:id="@+id/plate_tv_body"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="3dp"
+            android:text="这是我的难言之隐"
+            android:textColor="@color/colorGray3"
+            android:textSize="14sp"/>
+
+        <TextView
+            android:id="@+id/plate_tv_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shap_rectangle_gray4"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
+            android:paddingLeft="4dp"
+            android:paddingRight="4dp"
+            android:text="22贴"
+            android:textColor="@android:color/white"
+            android:textSize="10sp"/>
+    </LinearLayout>
+
+</LinearLayout>

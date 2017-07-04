@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginLeft="22dp"
+              android:layout_marginRight="22dp"
+              android:background="@drawable/shap_rectangle_white_grayline"
+              android:orientation="vertical"
+              android:paddingLeft="22dp"
+              android:paddingRight="22dp"
+              android:paddingTop="22dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="发帖须知"
+        android:textColor="@color/colorGray3"
+        android:textSize="16sp"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorGrayBG"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="1. hahha \n\n2.haha\n\n3.haha"
+        android:textColor="@color/colorGray3"
+        android:textSize="14sp"/>
+
+    <TextView
+        android:id="@+id/plate_notice_tv_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="15dp"
+        android:text="我知道了"
+        android:textColor="@color/colorPink"
+        android:textSize="16sp"/>
+
+</LinearLayout>
