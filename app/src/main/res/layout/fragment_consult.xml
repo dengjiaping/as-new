@@ -10,10 +10,10 @@
         android:layout_height="match_parent">
 
         <LinearLayout
-            android:descendantFocusability="blocksDescendants"
-
             android:layout_width="match_parent"
+
             android:layout_height="match_parent"
+            android:descendantFocusability="blocksDescendants"
             android:orientation="vertical">
 
 
@@ -27,8 +27,9 @@
                 <LinearLayout
                     android:id="@+id/consult_ll_online"
                     android:layout_width="0dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_with_color"
                     android:gravity="center"
                     android:orientation="vertical">
 
@@ -68,6 +69,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
                         android:layout_weight="1"
+                        android:background="@drawable/ripple_with_color"
                         android:gravity="center"
                         android:orientation="horizontal">
 
@@ -115,13 +117,14 @@
 
                         <TextView
                             android:id="@+id/consult_tv_free"
-
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:background="@drawable/ripple_with_color"
                             android:drawablePadding="5dp"
                             android:drawableTop="@drawable/icon_mfzx"
                             android:gravity="center"
+                            android:paddingTop="12dp"
                             android:text="免费咨询"
                             android:textColor="@android:color/black"/>
 
@@ -132,13 +135,14 @@
 
                         <TextView
                             android:id="@+id/consult_tv_hot"
-
                             android:layout_width="0dp"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:layout_weight="1"
+                            android:background="@drawable/ripple_with_color"
                             android:drawablePadding="5dp"
                             android:drawableTop="@drawable/icon_wd"
                             android:gravity="center"
+                            android:paddingTop="12dp"
                             android:text="热门问答"
                             android:textColor="@android:color/black"/>
 
@@ -153,16 +157,18 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:background="@android:color/white"
-                android:paddingBottom="12dp"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:paddingTop="12dp">
+                >
 
                 <LinearLayout
+                    android:id="@+id/consult_ll_files"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="horizontal">
+                    android:background="@drawable/ripple_with_color"
+                    android:orientation="horizontal"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="22dp"
+                    android:paddingTop="12dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -170,7 +176,6 @@
                         android:src="@drawable/icon_dagl"/>
 
                     <LinearLayout
-                        android:id="@+id/consult_ll_files"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -198,18 +203,23 @@
 
                 <View
                     android:layout_width="0.5dp"
-                    android:layout_height="40dp"
-                    android:layout_marginLeft="5dp"
-                    android:layout_marginRight="5dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
                     android:background="#22000000"
                     />
 
                 <LinearLayout
+                    android:id="@+id/consult_ll_collect"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
+                    android:background="@drawable/ripple_with_color"
                     android:orientation="horizontal"
-                    android:paddingLeft="22dp">
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="12dp">
 
                     <ImageView
                         android:layout_width="40dp"
@@ -217,7 +227,6 @@
                         android:src="@drawable/shoucang"/>
 
                     <LinearLayout
-                        android:id="@+id/consult_ll_collect"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
@@ -273,11 +282,11 @@
                     android:layout_height="match_parent">
 
                     <android.support.v7.widget.RecyclerView
-                        android:nestedScrollingEnabled="false"
                         android:id="@+id/consult_rl_doctor"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                       />
+                        android:nestedScrollingEnabled="false"
+                        />
                 </RelativeLayout>
             </LinearLayout>
         </LinearLayout>

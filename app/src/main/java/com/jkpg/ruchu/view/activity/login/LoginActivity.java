@@ -2,7 +2,6 @@ package com.jkpg.ruchu.view.activity.login;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -128,9 +127,9 @@ public class LoginActivity extends AppCompatActivity {
             mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
         } else {
             ToastUtils.showShort(UIUtils.getContext(), "未安装QQ");
-            Uri uri = Uri.parse("market://details?id=com.tencent.mobileqq");
+           /* Uri uri = Uri.parse("market://details?id=com.tencent.mobileqq");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            startActivity(intent);*/
         }
     }
 
@@ -141,9 +140,9 @@ public class LoginActivity extends AppCompatActivity {
             mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
         } else {
             ToastUtils.showShort(UIUtils.getContext(), "未安装微信");
-            Uri uri = Uri.parse("market://details?id=com.tencent.mm");
+           /* Uri uri = Uri.parse("market://details?id=com.tencent.mm");
             Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            startActivity(intent);
+            startActivity(intent);*/
         }
 
 

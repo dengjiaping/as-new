@@ -148,24 +148,55 @@
         android:text="请先完成健康测试，在进行训练哦！"
         android:textSize="10sp"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/train_bt_test"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:background="@drawable/menu_1"
-            android:text="健康测试"
-            />
+        <LinearLayout
+            android:id="@+id/train_ll_test"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/train_tv_test"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="点击进入我的健康测试"/>
-    </LinearLayout>
+            <Button
+                android:id="@+id/train_bt_test"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/selector_test_btn_bg"
+                android:text="健康测试"
+                android:textColor="@color/select_test_text_color"
+                />
+
+            <TextView
+                android:id="@+id/train_tv_test"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击进入我的健康测试"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/train_ll_train"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/train_bt_train"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:background="@drawable/selector_train_btn_bg"
+                android:text="开始训练"
+                android:textColor="@color/select_train_text_color"
+                />
+
+            <TextView
+                android:id="@+id/train_tv_train"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="点击按钮开始我的训练"/>
+        </LinearLayout>
+    </RelativeLayout>
 </LinearLayout>

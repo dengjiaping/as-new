@@ -80,7 +80,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
     @BindView(R.id.start_train_iv_voice)
     CheckBox mStartTrainIvVoice;
 
-    private List<int[]> charts;       //图表集合
+    private List<float[]> charts;       //图表集合
     private List<Animator> mAnimators = new ArrayList<>();//所有的动画列表
     private String totalTime;         //总时间
     private ArrayList<Line> mLine;    // 点的集合
@@ -96,7 +96,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private AudioManager mAudioManager;
     private boolean isTrain = true;
     private SoundPool mSoundPool;
-    private HashMap<Integer, Integer> soundID = new HashMap<>();
+    private HashMap<Integer, Integer> soundID ;
     private int nowSound;
     private Map<Integer, Boolean> mMap;
     private ChartRLAdapter mAdapter;
@@ -128,16 +128,18 @@ public class StartTrainActivity2 extends AppCompatActivity {
 
     private void initData() {
         charts = new ArrayList<>();
-        charts.add(new int[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new int[]{2, 4, 0, 0, 0, 4, 1, 4, 1, 4, 1, /*4, 1, 4, 2*/});
-        charts.add(new int[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new int[]{2, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 3/*4, 1, 4, 2*/});
+//        charts.add(new float[]{0,0.5f,});
+        charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
+        charts.add(new float[]{2, 4, 0, 0, 0, 4, 1, 4, 1, 4, 1, /*4, 1, 4, 2*/});
+        charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
+        charts.add(new float[]{2, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 3/*4, 1, 4, 2*/});
         if (mTask == null) {
             mTask = new AutoProgressTask();
         }
     }
 
     private void initSound() {
+        soundID = new HashMap<>();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         soundID.put(0, mSoundPool.load(this, R.raw.a, 1));
         soundID.put(1, mSoundPool.load(this, R.raw.b, 1));
@@ -272,7 +274,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
         return axisValues;
     }
 
-    private Line getDottedLine(int[] points) {
+    private Line getDottedLine(float[] points) {
         List<PointValue> pointValues = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
@@ -302,7 +304,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
         public void run() {
 
             timeCount += 100;
-            if (timeCount == 1000) {
+            // FIXME: 2017/7/5
+            if (timeCount == 500) {
                 LogUtils.i("timeCount=" + timeCount);
                 timeCount = 0;
                 if (numLine >= charts.get(numChart).length - 2) {
@@ -342,13 +345,15 @@ public class StartTrainActivity2 extends AppCompatActivity {
                 LineChart lineChart = mLines.get(numLine);
                 lineChart.setLineData(mLine);
                 lineChart.setI(numLine);
-                lineChart.showWithAnimation(1000);
+//                lineChart.showWithAnimation(1000);
+                lineChart.showWithAnimation(500);
+                // FIXME: 2017/7/5
                 mAnimator = lineChart.getAnimator();
                 mAnimators.add(mAnimator);
                 mAnimator.start();
 
                 // sound!!
-                int[] points = charts.get(numChart);
+                float[] points = charts.get(numChart);
                 if (points[numLine] > points[numLine + 1]) {
                     mSoundPool.stop(soundID.get(1));
                     mSoundPool.stop(soundID.get(2));

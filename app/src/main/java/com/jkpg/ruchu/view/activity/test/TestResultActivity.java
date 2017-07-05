@@ -8,23 +8,12 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.TrainPointBean;
-import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.SPUtils;
-import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.train.StartTrainActivity2;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/20.
@@ -66,7 +55,7 @@ public class TestResultActivity extends AppCompatActivity {
                 startActivity(new Intent(TestResultActivity.this, TestReportActivity.class));
                 break;
             case R.id.result_btn_start:
-                OkGo
+               /* OkGo
                         .post(AppUrl.BEGINPRACTICE)
                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .execute(new StringCallback() {
@@ -74,7 +63,6 @@ public class TestResultActivity extends AppCompatActivity {
                             public void onSuccess(String s, Call call, Response response) {
                                 LogUtils.i(s);
                                 TrainPointBean trainPointBean = new Gson().fromJson(s, TrainPointBean.class);
-//                                Intent intent = new Intent(TestResultActivity.this, StartTrainActivity.class);
                                 Intent intent = new Intent(TestResultActivity.this, StartTrainActivity2.class);
                                 Bundle bundle = new Bundle();
                                 bundle.putSerializable("trainPointBean", trainPointBean);
@@ -83,7 +71,8 @@ public class TestResultActivity extends AppCompatActivity {
                                 finish();
 
                             }
-                        });
+                        });*/
+               startActivity(new Intent(TestResultActivity.this, StartTrainActivity2.class));
                 break;
         }
     }

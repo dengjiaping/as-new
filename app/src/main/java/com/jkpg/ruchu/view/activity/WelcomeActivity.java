@@ -9,20 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
-import com.jkpg.ruchu.bean.Login;
-import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.SPUtils;
-import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
-import com.lzy.okgo.OkGo;
-import com.lzy.okgo.callback.StringCallback;
-
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/10.
@@ -44,7 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
         MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                OkGo
+                /*OkGo
                         .post(AppUrl.LOGINSTATUS)
                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .connTimeOut(3000)
@@ -57,10 +46,10 @@ public class WelcomeActivity extends AppCompatActivity {
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
                                     finish();
-                                } /*else if(login.birth.equals("")) {
+                                } *//*else if(login.birth.equals("")) {
                                     startActivity(new Intent(WelcomeActivity.this, PerfectInfoActivity.class));
                                     finish();
-                                } */ else {
+                                } *//* else {
                                     startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
 
@@ -75,6 +64,10 @@ public class WelcomeActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
+
+
+*/
+                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
 
             }
         }, 1000);

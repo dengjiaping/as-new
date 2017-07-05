@@ -26,7 +26,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -34,7 +33,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.AnimationUtil;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -101,10 +99,10 @@ public class PersonalInfoActivity extends AppCompatActivity {
     Button mPersonalBtnSave;
     @BindView(R.id.personal_view)
     ScrollView mPersonalView;
-    @BindView(R.id.personal_ll_ok)
-    LinearLayout mPersonalLlOk;
-    @BindView(R.id.personal_success)
-    LinearLayout mPersonalSuccess;
+   /* @BindView(R.id.personal_ll_ok)
+    LinearLayout mPersonalLlOk;*/
+   /* @BindView(R.id.personal_success)
+    LinearLayout mPersonalSuccess;*/
     @BindView(R.id.personal_tv_parity)
     TextView mPersonalTvParity;
     @BindView(R.id.personal_rl_parity)
@@ -259,9 +257,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
         // TODO: 2017/5/16
 
+        new AlertDialog.Builder(this)
+                .setView(View.inflate(this,R.layout.view_save_success,null))
+                .show();
 
-        mPersonalSuccess.setVisibility(View.VISIBLE);
-        mPersonalLlOk.setAnimation(AnimationUtil.createPanInAnim(2000));
+
+//        mPersonalSuccess.setVisibility(View.VISIBLE);
+//        mPersonalLlOk.setAnimation(AnimationUtil.createPanInAnim(2000));
 
     }
 

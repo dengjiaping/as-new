@@ -37,8 +37,6 @@ public class AccountManagementActivity extends AppCompatActivity {
     CheckBox mAccountManageRbWx;
     @BindView(R.id.account_manage_rb_qq)
     CheckBox mAccountManageRbQq;
-    @BindView(R.id.account_manage_rb_wb)
-    CheckBox mAccountManageRbWb;
     @BindView(R.id.account_manage_btn_logout)
     Button mAccountManageBtnLogout;
 
@@ -54,7 +52,7 @@ public class AccountManagementActivity extends AppCompatActivity {
         mHeaderTvTitle.setText("账号管理");
     }
 
-    @OnClick({R.id.account_manage_btn_logout, R.id.header_iv_left, R.id.account_manage_btn_change, R.id.account_manage_tv_pwd, R.id.account_manage_rb_wx, R.id.account_manage_rb_qq, R.id.account_manage_rb_wb})
+    @OnClick({R.id.account_manage_btn_logout, R.id.header_iv_left, R.id.account_manage_btn_change, R.id.account_manage_tv_pwd, R.id.account_manage_rb_wx, R.id.account_manage_rb_qq})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -71,10 +69,6 @@ public class AccountManagementActivity extends AppCompatActivity {
                 break;
             case R.id.account_manage_rb_qq:
                 mAccountManageRbQq.setText((mAccountManageRbQq.isChecked() ? "绑定" : "未绑定"));
-
-                break;
-            case R.id.account_manage_rb_wb:
-                mAccountManageRbWb.setText((mAccountManageRbWb.isChecked() ? "绑定" : "未绑定"));
 
                 break;
             case R.id.account_manage_btn_logout:

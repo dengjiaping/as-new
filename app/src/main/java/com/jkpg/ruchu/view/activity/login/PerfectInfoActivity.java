@@ -47,13 +47,13 @@ public class PerfectInfoActivity extends AppCompatActivity {
     @BindView(R.id.perfect_et_name)
     EditText mPerfectEtName;*/
 
-    private static final String TAG = "PerfectInfoActivity";
+  /*  private static final String TAG = "PerfectInfoActivity";
 
     private static final String FILE_PROVIDER_AUTHORITY = UIUtils.getPackageName() + ".provider";
 
     private static final int REQ_TAKE_PHOTO = 100;
     private static final int REQ_ALBUM = 101;
-    private static final int REQ_ZOOM = 102;
+    private static final int REQ_ZOOM = 102;*/
     @BindView(R.id.perfect_tv_birth)
     TextView mPerfectTvBirth;
     @BindView(R.id.perfect_tv_height)

@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.consult;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -25,6 +26,7 @@ import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.SearchHistoryAdapter;
 import com.jkpg.ruchu.view.adapter.SelectDoctorVPAdapter;
+import com.jkpg.ruchu.widget.PopupWindow7;
 import com.miguelcatalan.materialsearchview.MaterialSearchView;
 
 import java.util.ArrayList;
@@ -209,7 +211,16 @@ public class SelectDoctorActivity extends AppCompatActivity {
             case R.id.select_doctor_now_doctor:
                 break;
             case R.id.header_iv_address:
-                ToastUtils.showShort(UIUtils.getContext(),"jinan");
+                ToastUtils.showShort(UIUtils.getContext(), "jinan");
+                View viewAddress = View.inflate(this, R.layout.view_select_address, null);
+                PopupWindow7 popupWindow = new PopupWindow7(this);
+                popupWindow.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+                popupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+                popupWindow.setContentView(viewAddress);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                popupWindow.showAsDropDown(mHeaderToolBar);
                 break;
         }
     }

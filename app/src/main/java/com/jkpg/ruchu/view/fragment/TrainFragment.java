@@ -13,9 +13,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
 import com.jkpg.ruchu.view.activity.train.OtherTrainActivity;
+import com.jkpg.ruchu.view.activity.train.StartTrainActivity2;
 import com.jkpg.ruchu.view.activity.train.TestTrainActivity;
 import com.jkpg.ruchu.widget.banner.Banner;
 import com.jkpg.ruchu.widget.banner.BannerConfig;
@@ -60,6 +62,12 @@ public class TrainFragment extends Fragment {
     ImageView mHeaderIvLeft;
     @BindView(R.id.train_tv_test)
     TextView mTrainTvTest;
+    @BindView(R.id.train_ll_test)
+    LinearLayout mTrainLlTest;
+    @BindView(R.id.train_bt_train)
+    Button mTrainBtTrain;
+    @BindView(R.id.train_ll_train)
+    LinearLayout mTrainLlTrain;
 
 
     @Nullable
@@ -81,9 +89,9 @@ public class TrainFragment extends Fragment {
     //初始化训练按钮状态 + 新手提示
     private void initTestBtn() {
         // TODO: 2017/5/18
-        mTrainBtTest.setBackgroundResource(R.drawable.menu_2);
-        mTrainBtTest.setText("开始训练");
-        mTrainTvTest.setText("点击按钮开始我的训练");
+        mTrainTvTip.setVisibility(View.GONE);
+        mTrainLlTest.setVisibility(View.GONE);
+        mTrainLlTrain.setVisibility(View.VISIBLE);
     }
 
     private void initHeader() {
@@ -125,7 +133,7 @@ public class TrainFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.train_ll_new, R.id.train_ll_my, R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
+    @OnClick({R.id.header_iv_right,R.id.train_ll_new, R.id.train_ll_my, R.id.train_bt_train,R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.train_ll_new:
@@ -142,10 +150,15 @@ public class TrainFragment extends Fragment {
                 mTrainTvTip.setVisibility(View.GONE);
                 break;
             case R.id.train_bt_test:
-                //判断 与 训练入口
                 startActivity(new Intent(getActivity(), TestTrainActivity.class));
-//                startActivity(new Intent(getActivity(), StartTrainActivity.class));
 //
+                break;
+            case R.id.train_bt_train:
+                startActivity(new Intent(getActivity(), StartTrainActivity2.class));
+//
+                break;
+            case R.id.header_iv_right:
+                startActivity(new Intent(getActivity(), MySMSActivity.class));
                 break;
         }
     }

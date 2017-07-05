@@ -28,10 +28,10 @@ import butterknife.ButterKnife;
  */
 
 public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartViewHolder> {
-    private List<int[]> charts;
+    private List<float[]> charts;
     private Map<Integer, Boolean> map = new HashMap<>();
 
-    public ChartRLAdapter(List<int[]> charts) {
+    public ChartRLAdapter(List<float[]> charts) {
         this.charts = charts;
         initMap();
     }
@@ -50,7 +50,7 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
 
     @Override
     public void onBindViewHolder(ChartViewHolder holder, int position) {
-        int[] points = charts.get(position);
+        float[] points = charts.get(position);
         initChart(holder, points, points.length);
         if (map.get(position)) {
             holder.mItemChartRL.setBackgroundResource(R.drawable.shap_rectangle_pink);
@@ -62,7 +62,7 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
         }
     }
 
-    private void initChart(ChartViewHolder holder, int[] points, int numberX) {
+    private void initChart(ChartViewHolder holder, float[] points, int numberX) {
         Axis axisX = new Axis(getAxisValuesX(numberX));
         axisX.setAxisColor(Color.parseColor("#00FCA29A")).setTextColor(Color.WHITE)
                 .setHasLines(false).setAxisLineColor(Color.parseColor("#00FCA29A")).setShowText(true).setTextSize(5);
@@ -97,7 +97,7 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
         return axisValues;
     }
 
-    private Line getDottedLine(int[] points) {
+    private Line getDottedLine(float[] points) {
         List<PointValue> pointValues = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));

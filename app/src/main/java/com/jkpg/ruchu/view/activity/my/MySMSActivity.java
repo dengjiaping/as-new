@@ -66,6 +66,7 @@ public class MySMSActivity extends AppCompatActivity {
         recyclerView2.setAdapter(new MyCommentAdapter());
         mViews.add(recyclerView2);
         mViews.add(new View(this));
+        mViews.add(new View(this));
         mTitle = new ArrayList<>();
         mTitle.add("私信");
         mTitle.add("评论");
