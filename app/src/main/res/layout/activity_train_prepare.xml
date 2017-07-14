@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:gravity="center_horizontal"
+              android:orientation="vertical"
+    >
+
+    <include layout="@layout/view_header"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+        <LinearLayout
+            android:layout_centerInParent="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:text="即将进入盆底健康训练"
+                android:textColor="@android:color/black"
+                android:textSize="22sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="请保持身心放松"
+                android:textColor="#f87a6f"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="选择安静舒适的环境"
+
+                android:textColor="#eaa138"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:text="务必要排空膀胱"
+
+                android:textColor="#f87f6f"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginTop="50dp"
+                android:gravity="center"
+                android:text="特别注意：如果在训练过程中，感到不试，请停止训练，可以向医生寻求帮助。"
+                android:textColor="@color/colorGray3"
+                android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/train_prepare_btn"
+                style="@style/btn_pink"
+                android:layout_gravity="center"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="30dp"
+                android:layout_marginRight="22dp"
+                android:layout_marginBottom="8dp"
+                android:text="准备好了"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:layout_marginBottom="22dp"
+        android:id="@+id/train_prepare_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/tip_bg"
+            android:text="如不知道怎么训练，请查看我们为您准备的"
+            android:textColor="@color/colorGray3"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="5dp"
+            android:drawableLeft="@drawable/train_tip_small"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="训练指导"
+            android:textColor="@color/colorPink"
+            android:textSize="16sp"/>
+    </LinearLayout>
+
+</LinearLayout>

@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.leafchart.LeafLineChart;
 import com.jkpg.ruchu.widget.leafchart.bean.Axis;
@@ -27,11 +28,19 @@ import butterknife.ButterKnife;
  * Created by qindi on 2017/5/19.
  */
 
-public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartViewHolder> {
+public class ChartRLAdapter extends RecyclerView.Adapter {
     private List<float[]> charts;
+    private List<float[]> chartsX;
     private Map<Integer, Boolean> map = new HashMap<>();
+    private static final int TYPE_NORMAL = 0;
+    private static final int TYPE_FOOTER = 1;
+    private static final int TYPE_WHITE = 2;
+    private View mNormalView;
+    private View mFootView;
+    private View mWhiteView;
 
-    public ChartRLAdapter(List<float[]> charts) {
+    public ChartRLAdapter(List<float[]> chartsX, List<float[]> charts) {
+        this.chartsX = chartsX;
         this.charts = charts;
         initMap();
     }
@@ -43,26 +52,50 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
     }
 
     @Override
-    public ChartViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(UIUtils.getContext(), R.layout.item_chart, null);
-        return new ChartViewHolder(view);
+    public int getItemViewType(int position) {
+        if (position == getItemCount() - 2) {
+            return TYPE_FOOTER;
+        } else if (position == getItemCount() - 1) {
+            return TYPE_WHITE;
+        }
+        return TYPE_NORMAL;
+
     }
 
     @Override
-    public void onBindViewHolder(ChartViewHolder holder, int position) {
-        float[] points = charts.get(position);
-        initChart(holder, points, points.length);
-        if (map.get(position)) {
-            holder.mItemChartRL.setBackgroundResource(R.drawable.shap_rectangle_pink);
-            holder.mItemChartIvStart.setVisibility(View.GONE);
+    public FootViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == TYPE_NORMAL) {
+            mNormalView = View.inflate(UIUtils.getContext(), R.layout.item_chart, null);
+            return new ChartViewHolder(mNormalView);
+        } else if (viewType == TYPE_WHITE) {
+            mWhiteView = View.inflate(UIUtils.getContext(), R.layout.item_chart_white, null);
+            return new FootViewHolder(mWhiteView);
         } else {
-            holder.mItemChartRL.setBackgroundResource(R.drawable.shap_rectangle_yellow);
-            holder.mItemChartIvStart.setVisibility(View.VISIBLE);
-
+            mFootView = View.inflate(UIUtils.getContext(), R.layout.item_chart_foot, null);
+            return new FootViewHolder(mFootView);
         }
     }
 
-    private void initChart(ChartViewHolder holder, float[] points, int numberX) {
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        if (getItemViewType(position) != TYPE_NORMAL) {
+            return;
+        }
+        ChartViewHolder chartViewHolder = (ChartViewHolder) holder;
+        float[] pointXs = chartsX.get(position);
+        float[] points = charts.get(position);
+        initChart(chartViewHolder, pointXs, points, (int) pointXs[pointXs.length - 1] * 2);
+        if (map.get(position)) {
+            chartViewHolder.mItemChartRL.setBackgroundResource(R.drawable.shap_rectangle_pink);
+            chartViewHolder.mItemChartIvStart.setVisibility(View.GONE);
+        } else {
+            chartViewHolder.mItemChartRL.setBackgroundResource(R.drawable.shap_rectangle_yellow);
+            chartViewHolder.mItemChartIvStart.setVisibility(View.GONE);
+        }
+
+    }
+
+    private void initChart(ChartViewHolder holder, float[] pointsX, float[] points, int numberX) {
         Axis axisX = new Axis(getAxisValuesX(numberX));
         axisX.setAxisColor(Color.parseColor("#00FCA29A")).setTextColor(Color.WHITE)
                 .setHasLines(false).setAxisLineColor(Color.parseColor("#00FCA29A")).setShowText(true).setTextSize(5);
@@ -71,18 +104,28 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
                 .setAxisLineColor(Color.parseColor("#00FCA29A"));
         holder.mItemChartLine.setAxisX(axisX);
         holder.mItemChartLine.setAxisY(axisY);
-        ArrayList<Line> lines1 = new ArrayList<>();
-        lines1.add(getDottedLine(points));
+        ArrayList<Line> line = new ArrayList<>();
+        line.add(getDottedLine(pointsX, points));
 
-        holder.mItemChartLine.setChartData(lines1);
+        holder.mItemChartLine.setChartData(line);
     }
 
     private List<AxisValue> getAxisValuesX(int numberX) {
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i = 0; i < numberX; i++) {
-            AxisValue value = new AxisValue();
-            value.setLabel(i + "");
-            axisValues.add(value);
+        for (int i = 0; i < numberX + 2; i++) {
+            if (numberX + 2 <= 22) {
+                if (i % 2 != 1) {
+                    AxisValue value = new AxisValue();
+                    value.setLabel(i / 2 + " ");
+                    axisValues.add(value);
+                }
+            } else {
+                if (i % 4 == 0) {
+                    AxisValue value = new AxisValue();
+                    value.setLabel(i / 2 + " ");
+                    axisValues.add(value);
+                }
+            }
         }
         return axisValues;
     }
@@ -97,37 +140,62 @@ public class ChartRLAdapter extends RecyclerView.Adapter<ChartRLAdapter.ChartVie
         return axisValues;
     }
 
-    private Line getDottedLine(float[] points) {
+    private Line getDottedLine(float[] pointsX, float[] points) {
         List<PointValue> pointValues = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
-            pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
+            // pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
+            if (i == 0) {
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
+                continue;
+            }
+            if (pointsX[i] - pointsX[i - 1] == 0.5f) {
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
+                continue;
+            }
+            if (pointsX[i] - pointsX[i - 1] != 0.5f) {
+                float v = (pointsX[i] - pointsX[i - 1]) * 2;
+                for (float j = 0; j < v; j++) {
+                    float y = (points[i] - points[i - 1]) / (pointsX[i] - pointsX[i - 1]) * 0.5f;
+                    pointValues.add(new PointValue((.5f * (j + 1) + pointsX[i - 1]) / pointsX[pointsX.length - 1], (y * (j + 1) + points[i - 1]) / 6f));
+                    LogUtils.i("x=" + (.5f * (j + 1) + pointsX[i - 1]) + "y=" + (y * (j + 1) + points[i - 1]));
+                }
+            }
         }
         Line line = new Line(pointValues);
         line.setLineColor(Color.parseColor("#FAD719"))
-                .setLineWidth(1)
-                .setHasPoints(false);
+                .setLineWidth(1);
+                /*.setFill(true)
+                .setFillColor(Color.WHITE)
+                .setHasPoints(false);*/
         return line;
     }
 
     @Override
     public int getItemCount() {
         if (charts != null)
-            return charts.size();
+            return charts.size() + 2;
         return 0;
     }
 
-    public static class ChartViewHolder extends RecyclerView.ViewHolder {
+    class ChartViewHolder extends FootViewHolder {
         @BindView(R.id.item_chart_line)
-        public LeafLineChart mItemChartLine;
+        LeafLineChart mItemChartLine;
         @BindView(R.id.item_chart_iv_start)
-        public ImageView mItemChartIvStart;
+        ImageView mItemChartIvStart;
         @BindView(R.id.item_chart_rl)
-        public RelativeLayout mItemChartRL;
+        RelativeLayout mItemChartRL;
 
 
         ChartViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
+        }
+    }
+    class FootViewHolder extends RecyclerView.ViewHolder {
+        FootViewHolder(View view) {
+            super(view);
         }
     }
 

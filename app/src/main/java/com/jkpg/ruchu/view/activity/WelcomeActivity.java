@@ -68,6 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
 */
                 startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                finish();
 
             }
         }, 1000);

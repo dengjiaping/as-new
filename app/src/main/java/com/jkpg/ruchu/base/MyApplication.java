@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.github.moduth.blockcanary.BlockCanary;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -38,6 +39,7 @@ public class MyApplication extends Application {
         }
         LeakCanary.install(this);
         // Normal app init code...*/
+        BlockCanary.install(this, new AppBlockCanaryContext()).start();
         //上下文
         mContext = getApplicationContext();
 

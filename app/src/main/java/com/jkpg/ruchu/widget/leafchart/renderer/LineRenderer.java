@@ -76,9 +76,7 @@ public class LineRenderer extends AbsRenderer {
         mAnimator = ObjectAnimator.ofFloat(this, "phase", 0.0f, 1.0f);
         mAnimator.setInterpolator(new LinearInterpolator());
         mAnimator.setDuration(duration);
-        //mAnimator.start();
         isShow = true;
-
         mAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {

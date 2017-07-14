@@ -67,8 +67,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchFragment(int tag) {
-        mFt = getSupportFragmentManager().beginTransaction().setCustomAnimations(
-                android.R.anim.fade_in, android.R.anim.fade_out);
+        mFt = getSupportFragmentManager().beginTransaction()/*.setCustomAnimations(
+                android.R.anim.fade_in, android.R.anim.fade_out)*/;
         if (mMyFragment != null)
             mFt.hide(mMyFragment);
         if (mTrainFragment != null)
@@ -128,6 +128,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initBottomNavigationView() {
+//        mMainBottomNavigationView.setItemIconTintList(null);
         mMainBottomNavigationView.enableShiftingMode(false);
         mMainBottomNavigationView.enableItemShiftingMode(false);
         mMainBottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

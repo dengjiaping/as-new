@@ -73,7 +73,7 @@ public class LoginPhoneActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-    @OnClick({R.id.login_tv_forget, R.id.login_btn_ok, R.id.login_btn_register,R.id.header_iv_left})
+    @OnClick({R.id.login_tv_forget, R.id.login_btn_ok, R.id.login_btn_register, R.id.header_iv_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -99,7 +99,9 @@ public class LoginPhoneActivity extends AppCompatActivity {
                     ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
                     return;
                 }
-
+                //md5加密
+               /* mPassword = EncryptUtils.encryptMD5ToString(mPassword);
+                LogUtils.i(mPassword + "-- phone");*/
                 OkGo
                         .post(AppUrl.LOGIN)
                         .tag(this)
@@ -118,7 +120,8 @@ public class LoginPhoneActivity extends AppCompatActivity {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
-                                } */else {
+                                } */
+                                else {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);

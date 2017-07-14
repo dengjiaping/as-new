@@ -17,8 +17,8 @@ import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
 import com.jkpg.ruchu.view.activity.train.OtherTrainActivity;
-import com.jkpg.ruchu.view.activity.train.StartTrainActivity2;
 import com.jkpg.ruchu.view.activity.train.TestTrainActivity;
+import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 import com.jkpg.ruchu.widget.banner.Banner;
 import com.jkpg.ruchu.widget.banner.BannerConfig;
 import com.jkpg.ruchu.widget.banner.Transformer;
@@ -154,7 +154,7 @@ public class TrainFragment extends Fragment {
 //
                 break;
             case R.id.train_bt_train:
-                startActivity(new Intent(getActivity(), StartTrainActivity2.class));
+                startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
 //
                 break;
             case R.id.header_iv_right:

@@ -270,6 +270,8 @@
         <activity
             android:name=".view.activity.test.TestDetailedActivity"
             android:screenOrientation="portrait"/>
+        <activity android:name=".view.activity.train.TrainPrepareActivity"
+                  android:screenOrientation="portrait"/>
 
         <activity
             android:name=".wxapi.WXEntryActivity"

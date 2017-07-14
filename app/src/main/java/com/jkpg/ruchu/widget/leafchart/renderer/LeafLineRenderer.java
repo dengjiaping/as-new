@@ -190,7 +190,7 @@ public class LeafLineRenderer extends AbsRenderer {
      */
     public void drawFillArea(Canvas canvas, Line line, Axis axisX) {
         //继续使用前面的 path
-        if (line != null && line.getValues().size() > 1 && isShow) {
+        if (line != null && line.getValues().size() > 1 /*&& isShow*/) {
             List<PointValue> values = line.getValues();
             PointValue firstPoint = values.get(0);
             float firstX = firstPoint.getOriginX();

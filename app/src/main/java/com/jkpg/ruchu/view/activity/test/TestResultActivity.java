@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.view.activity.train.StartTrainActivity2;
+import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +72,7 @@ public class TestResultActivity extends AppCompatActivity {
 
                             }
                         });*/
-               startActivity(new Intent(TestResultActivity.this, StartTrainActivity2.class));
+               startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
                 break;
         }
     }

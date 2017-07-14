@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -120,6 +121,13 @@ public class MySetUpActivity extends AppCompatActivity {
         mPopupWindow.setFocusable(true);
         mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
         mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+        PopupWindowUtils.darkenBackground(MySetUpActivity.this,.5f);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(MySetUpActivity.this,1f);
+            }
+        });
         mWeb = new UMWeb(getString(R.string.share_url));
         mWeb.setTitle(getString(R.string.share_title));//标题
         mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));  //缩略图

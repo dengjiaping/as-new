@@ -55,11 +55,12 @@
 
             <TextView
                 android:id="@+id/open_vip_tv_wx"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="80dp"
+                android:layout_height="22dp"
                 android:background="@drawable/rectangle_gray"
                 android:gravity="center"
                 android:text="去绑定微信"
+                android:textSize="12sp"
                 android:textColor="@color/colorPink"
                 />
         </LinearLayout>

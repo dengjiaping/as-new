@@ -73,10 +73,10 @@ public class LeafLineChart extends AbsLeafChart {
 //                    } else {
                         leafChartRenderer.drawLines(canvas, line);
 //                    }
-                   /* if (line.isFill()) {
+                    if (line.isFill()) {
                         //填充
                         leafChartRenderer.drawFillArea(canvas, line, axisX);
-                    }*/
+                    }
 
                     //leafChartRenderer.drawPoints(canvas, line);
                 }

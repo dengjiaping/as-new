@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="87dp"
+            android:layout_marginTop="120dp"
             android:text="恭喜您，开通成功"
             android:textColor="@color/colorPink"
             android:textSize="18sp"/>

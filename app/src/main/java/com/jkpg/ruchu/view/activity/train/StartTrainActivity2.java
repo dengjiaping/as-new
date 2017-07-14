@@ -2,9 +2,14 @@ package com.jkpg.ruchu.view.activity.train;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Bundle;
@@ -13,18 +18,26 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.LinearInterpolator;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.utils.DateUtil;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.MainActivity;
 import com.jkpg.ruchu.view.adapter.ChartRLAdapter;
 import com.jkpg.ruchu.widget.leafchart.LeafLineChart;
 import com.jkpg.ruchu.widget.leafchart.LineChart;
@@ -67,8 +80,6 @@ public class StartTrainActivity2 extends AppCompatActivity {
     ImageView mStartTrainStart;
     @BindView(R.id.start_train)
     RelativeLayout mStartTrain;
-    @BindView(R.id.start_train_iv_grade)
-    ImageView mStartTrainIvGrade;
     @BindView(R.id.start_train_recycle_view)
     RecyclerView mStartTrainRecycleView;
     @BindView(R.id.start_train_tv_progress_time)
@@ -79,8 +90,15 @@ public class StartTrainActivity2 extends AppCompatActivity {
     ProgressBar mStartTrainProgressBar;
     @BindView(R.id.start_train_iv_voice)
     CheckBox mStartTrainIvVoice;
+    @BindView(R.id.start_train_now_one)
+    TextView mStartTrainNowOne;
+    @BindView(R.id.start_train_total_one)
+    TextView mStartTrainTotalOne;
+    @BindView(R.id.start_train_tip)
+    ImageView mStartTrainTip;
 
     private List<float[]> charts;       //图表集合
+    private List<float[]> chartsX;       //图表x集合
     private List<Animator> mAnimators = new ArrayList<>();//所有的动画列表
     private String totalTime;         //总时间
     private ArrayList<Line> mLine;    // 点的集合
@@ -96,11 +114,11 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private AudioManager mAudioManager;
     private boolean isTrain = true;
     private SoundPool mSoundPool;
-    private HashMap<Integer, Integer> soundID ;
     private int nowSound;
     private Map<Integer, Boolean> mMap;
     private ChartRLAdapter mAdapter;
-
+    private boolean isPause; //是否暂停
+    private PopupWindow mPopupWindowSuccess;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,7 +131,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
         initRecycleView();
         initSound();
 
-        initLineChart(0, charts.get(0).length);  // 默认显示第一个图
+        initLineChart(0, (int) chartsX.get(0)[(chartsX.get(0).length) - 1] * 2); // 默认显示第一个图
+        LogUtils.i((int) chartsX.get(0)[(chartsX.get(0).length - 1)] + "= chart");
         /*
          *判断音量设置音量图标
          */
@@ -124,22 +143,35 @@ public class StartTrainActivity2 extends AppCompatActivity {
             mStartTrainIvVoice.setChecked(true);
         }
         mStartTrainSection.setText(1 + "/" + charts.size() + "节"); //初始化小节
+        mStartTrainNowOne.setText("当前为第1节");
+        mStartTrainTotalOne.setText("共" + charts.size() + "节");
+        myRegisterReceiver();
     }
 
     private void initData() {
         charts = new ArrayList<>();
-//        charts.add(new float[]{0,0.5f,});
+        chartsX = new ArrayList<>();
+        charts.add(new float[]{1, 2, 3, 5, 5});
+        chartsX.add(new float[]{0, 2, 5, 7, 14});
+        charts.add(new float[]{1, 5, 5, 1});
+        chartsX.add(new float[]{0, 6, 9, 10});
+        charts.add(new float[]{1, 5, 5, 1});
+        chartsX.add(new float[]{0, 6, 9, 10});
+        charts.add(new float[]{1, 2, 3, 5, 5});
+        chartsX.add(new float[]{0, 2, 5, 7, 14});
+//        charts.add(new float[]{1, 17 / 12.0f, 22 / 12.0f, 27 / 12.0f, 32 / 12.0f, 37 / 12.0f, 42/12.0f, 47/12.0f, 52/12.0f, 57/12.0f, 62/12.0f, 67/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 5/2.0f, 1});
+        /*charts.add(new float[]{1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1});
         charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new float[]{2, 4, 0, 0, 0, 4, 1, 4, 1, 4, 1, /*4, 1, 4, 2*/});
+        charts.add(new float[]{2, 4, 0, 0, 0, 4, 1, 4, 1, 4, 1, *//*4, 1, 4, 2*//*});
         charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new float[]{2, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 3/*4, 1, 4, 2*/});
+        charts.add(new float[]{2, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 3*//*4, 1, 4, 2*//*});*/
         if (mTask == null) {
             mTask = new AutoProgressTask();
         }
     }
 
     private void initSound() {
-        soundID = new HashMap<>();
+        HashMap<Integer, Integer> soundID = new HashMap<>();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         soundID.put(0, mSoundPool.load(this, R.raw.a, 1));
         soundID.put(1, mSoundPool.load(this, R.raw.b, 1));
@@ -147,7 +179,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
 
     }
 
-    @OnClick({R.id.header_iv_left, R.id.line_chart, R.id.start_train_iv_voice})
+    @OnClick({R.id.header_iv_left, R.id.start_train_start, R.id.start_train_iv_voice})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -157,7 +189,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                     } else {
                         mAnimator.pause();
                         mTask.stop();
-                        mStartTrainStart.setVisibility(View.VISIBLE);
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
                         mSoundPool.pause(nowSound);
                         okOut();
                     }
@@ -165,7 +197,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                     finish();
                 }
                 break;
-            case R.id.line_chart:
+            case R.id.start_train_start:
                 chartPauseOrResume();
                 break;
             case R.id.start_train_iv_voice:
@@ -187,42 +219,53 @@ public class StartTrainActivity2 extends AppCompatActivity {
     }
 
     private void chartPauseOrResume() {
+        mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
         if (!isTrain) {
             numChart = 0;
+            timeCount = 0;
             for (int i = 0; i < mLines.size(); i++) {
                 mStartTrain.removeView(mLines.get(i));
             }
             isTrain = true;
-            mMap.put(0, true);
             mMap.put(mMap.size() - 1, false);
-            mAdapter.notifyItemChanged(0);
+            mMap.put(0, true);
             mAdapter.notifyItemChanged(mMap.size() - 1);
+            mAdapter.notifyItemChanged(0);
             mTask.start();
-            mStartTrainStart.setVisibility(View.GONE);
-            initLineChart(numChart, charts.get(numChart).length);
+            mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+            initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
             mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
+            scrollRecyclerView(numChart);
             mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
+            mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
         } else {
             mTask.start();
             isTrain = true;
-            mStartTrainStart.setVisibility(View.GONE);
             if (mAnimator != null) {
-                if (!mAnimator.isPaused()) {
-                    mAnimator.pause();
-                    mTask.stop();
-                    mSoundPool.pause(nowSound);
-                    LogUtils.i("stop" + nowSound);
-                    mStartTrainStart.setVisibility(View.VISIBLE);
-                } else if (mAnimator.isPaused()) {
+                mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+                LogUtils.i("start one -- click");
+
+//                if (mAnimator.isPaused()) {
+                if (isPause) {
+                    isPause = false;
                     mAnimator.resume();
                     mTask.start();
                     mSoundPool.resume(nowSound);
-                    LogUtils.i("start" + nowSound);
-                    mStartTrainStart.setVisibility(View.GONE);
+                    LogUtils.i("start -- click");
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+
+//                } else if (!mAnimator.isPaused() && mAnimator.isStarted()) {
+                } else /*if (isPause)*/ {
+                    isPause = true;
+                    mAnimator.pause();
+                    mTask.stop();
+                    mSoundPool.pause(nowSound);
+                    LogUtils.i("stop -- click");
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+
                 }
             }
         }
-
     }
 
     private void initHeader() {
@@ -231,38 +274,49 @@ public class StartTrainActivity2 extends AppCompatActivity {
 
     private void initLineChart(int index, int numberX) {
         Axis axisX = new Axis(getAxisValuesX(numberX));
-        axisX.setAxisColor(Color.parseColor("#FCA29A")).setTextColor(Color.WHITE)
-                .setHasLines(false).setAxisLineColor(Color.parseColor("#FCA29A"));
-        Axis axisY = new Axis(getAxisValuesY());
-        axisY.setAxisColor(Color.parseColor("#FCA29A")).setTextColor(Color.WHITE).setHasLines(false);
+        axisX.setAxisColor(Color.TRANSPARENT).setTextColor(Color.WHITE)
+                .setHasLines(false).setAxisWidth(3);
+        Axis axisY = new Axis(getAxisValuesY()).setAxisWidth(3);
+        axisY.setAxisColor(Color.TRANSPARENT).setTextColor(Color.WHITE).setHasLines(false);
         mLineChart.setAxisX(axisX);
         mLineChart.setAxisY(axisY);
 
         mLine = new ArrayList<>();
         mLineChart.invalidate();
-        mLine.add(getDottedLine(charts.get(index)));
+        mLine.add(getDottedLine(chartsX.get(index), charts.get(index)));
         mLineChart.setChartData(mLine);
 
         mLines = new ArrayList<>();
-        for (int i = 0; i < charts.get(index).length - 1; i++) {
+//        for (int i = 0; i < charts.get(index).length - 1; i++) {
+        for (int i = 0; i < chartsX.get(index)[(chartsX.get(index).length) - 1] * 2; i++) {
             LineChart lineChart = new LineChart(UIUtils.getContext());
             lineChart.setLayoutParams(mStartTrain.getLayoutParams());
             mStartTrain.addView(lineChart);
             mLines.add(lineChart);
         }
-
+        LogUtils.i("mLines = " + mLines.size());
+        LogUtils.i("index = " + index);
     }
 
     private List<AxisValue> getAxisValuesX(int numberX) {
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i = 0; i < numberX; i++) {
-            AxisValue value = new AxisValue();
-            value.setLabel(i + " ");
-            axisValues.add(value);
+        for (int i = 0; i < numberX + 2; i++) {
+            if (numberX + 2 <= 22) {
+                if (i % 2 != 1) {
+                    AxisValue value = new AxisValue();
+                    value.setLabel(i / 2 + " ");
+                    axisValues.add(value);
+                }
+            } else {
+                if (i % 4 == 0) {
+                    AxisValue value = new AxisValue();
+                    value.setLabel(i / 2 + " ");
+                    axisValues.add(value);
+                }
+            }
         }
         return axisValues;
     }
-
 
     private List<AxisValue> getAxisValuesY() {
         List<AxisValue> axisValues = new ArrayList<>();
@@ -274,11 +328,37 @@ public class StartTrainActivity2 extends AppCompatActivity {
         return axisValues;
     }
 
-    private Line getDottedLine(float[] points) {
+    private Line getDottedLine(float[] pointsX, float[] points) {
         List<PointValue> pointValues = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
-            pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
+            if (i == 0) {
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
+                continue;
+            }
+            if (pointsX[i] - pointsX[i - 1] == 0.5f) {
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
+                continue;
+            }
+            if (pointsX[i] - pointsX[i - 1] != 0.5f) {
+                float v = (pointsX[i] - pointsX[i - 1]) * 2;
+                for (float j = 0; j < v; j++) {
+                    float y = (points[i] - points[i - 1]) / (pointsX[i] - pointsX[i - 1]) * 0.5f;
+                    pointValues.add(new PointValue((.5f * (j + 1) + pointsX[i - 1]) / pointsX[pointsX.length - 1], (y * (j + 1) + points[i - 1]) / 6f));
+                    LogUtils.i("x=" + (.5f * (j + 1) + pointsX[i - 1]) + "y=" + (y * (j + 1) + points[i - 1]));
+                }
+            }
+//            pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+
+
         }
+//            pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
+       /* pointValues.add(new PointValue(0 / 10f, 1 / 6f));
+        pointValues.add(new PointValue(6 / 10f, 5 / 6f));
+        pointValues.add(new PointValue(9 / 10f, 5 / 6f));
+        pointValues.add(new PointValue(10 / 10f, 1 / 6f));
+*/
         Line line = new Line(pointValues);
         line.setLineColor(Color.parseColor("#FAD719"))
                 .setLineWidth(3)
@@ -287,12 +367,11 @@ public class StartTrainActivity2 extends AppCompatActivity {
         return line;
     }
 
-
     private void initRecycleView() {
         mLinearLayoutManager = new LinearLayoutManager(this);
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mStartTrainRecycleView.setLayoutManager(mLinearLayoutManager);
-        mAdapter = new ChartRLAdapter(charts);
+        mAdapter = new ChartRLAdapter(chartsX, charts);
         mStartTrainRecycleView.setAdapter(mAdapter);
         mMap = mAdapter.getMap();
         mMap.put(0, true);
@@ -302,22 +381,26 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private class AutoProgressTask implements Runnable {
         @Override
         public void run() {
-
+            String s = DateUtil.dateFormat(timeCount + "", "mm:ss");
+            mStartTrainTvProgressTime.setText(s);
+            LogUtils.i("timeCount=" + timeCount);
+            LogUtils.i(s + "= 00:00");
             timeCount += 100;
             // FIXME: 2017/7/5
-            if (timeCount == 500) {
-                LogUtils.i("timeCount=" + timeCount);
-                timeCount = 0;
-                if (numLine >= charts.get(numChart).length - 2) {
+            if (timeCount % 500 == 0) {
+//                timeCount = 0;
+                if (numLine >= chartsX.get(numChart)[(chartsX.get(numChart).length) - 1] * 2 - 1) {
                     numChart++;
                     numLine = -1;
-                    LogUtils.i("numChart=" + numChart);
-                    LogUtils.i("charts.size()=" + (charts.size()));
+                   /* LogUtils.i("numChart=" + numChart);
+                    LogUtils.i("charts.size()=" + (charts.size()));*/
                     if (numChart >= charts.size()) {
-                        mStartTrainStart.setVisibility(View.VISIBLE);
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+
                         LogUtils.i("-----怎么不结束！！！！");
                         isTrain = false;
                         mTask.stop();
+                        showSuccess();
                         return;
                     } else {
                        /* for (int i = 0; i < mAnimators.size(); i++) {
@@ -326,14 +409,19 @@ public class StartTrainActivity2 extends AppCompatActivity {
                         for (int i = 0; i < mLines.size(); i++) {
                             mStartTrain.removeView(mLines.get(i));
                         }
-                        initLineChart(numChart, charts.get(numChart).length);
-                        mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
+                        initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
+
+//                        mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
+                        scrollRecyclerView(numChart);
+//                        mLinearLayoutManager.scrollToPosition(numChart);
 
                         mMap.put(numChart, true);
                         mMap.put(numChart - 1, false);
                         mAdapter.notifyDataSetChanged();
 
                         mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
+                        mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
+
 
                     }
                 }
@@ -351,8 +439,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                 mAnimator = lineChart.getAnimator();
                 mAnimators.add(mAnimator);
                 mAnimator.start();
-
-                // sound!!
+               /* // sound!!
                 float[] points = charts.get(numChart);
                 if (points[numLine] > points[numLine + 1]) {
                     mSoundPool.stop(soundID.get(1));
@@ -374,7 +461,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                     nowSound = play;
                     LogUtils.i("<" + nowSound + "   play=" + play);
 
-                }
+                }*/
             }
             start();
         }
@@ -406,7 +493,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                         mAnimator.resume();
                         mTask.start();
                         LogUtils.i("start");
-                        mStartTrainStart.setVisibility(View.GONE);
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
                         dialog.dismiss();
                     }
                 })
@@ -431,7 +518,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                     } else {
                         mAnimator.pause();
                         mTask.stop();
-                        mStartTrainStart.setVisibility(View.VISIBLE);
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
                         mSoundPool.pause(nowSound);
                         okOut();
                     }
@@ -439,16 +526,95 @@ public class StartTrainActivity2 extends AppCompatActivity {
                     finish();
                 }
                 return true;
-            case KeyEvent.KEYCODE_VOLUME_UP:
+           /* case KeyEvent.KEYCODE_VOLUME_UP:
                 if (getMediaVolume() > 0)
                     mStartTrainIvVoice.setChecked(true);
                 return super.onKeyDown(keyCode, event);
             case KeyEvent.KEYCODE_VOLUME_DOWN:
                 if (getMediaVolume() == 0)
                     mStartTrainIvVoice.setChecked(false);
-                return super.onKeyDown(keyCode, event);
+                return super.onKeyDown(keyCode, event);*/
         }
         return super.onKeyDown(keyCode, event);
     }
 
+    /**
+     * 注册当音量发生变化时接收的广播
+     */
+
+    private void myRegisterReceiver() {
+        MyVolumeReceiver volumeReceiver = new MyVolumeReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.media.VOLUME_CHANGED_ACTION");
+        registerReceiver(volumeReceiver, filter);
+    }
+
+    /**
+     * 处理音量变化时的界面显示
+     *
+     * @author qindi
+     */
+    private class MyVolumeReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //如果音量发生变化则更改seekbar的位置
+            if (intent.getAction().equals("android.media.VOLUME_CHANGED_ACTION")) {
+                int currVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);// 当前的媒体音量
+                if (currVolume > 0) {
+                    mStartTrainIvVoice.setChecked(true);
+                } else {
+                    mStartTrainIvVoice.setChecked(false);
+                }
+            }
+        }
+    }
+
+    private void showSuccess() {
+        mPopupWindowSuccess = new PopupWindow(this);
+        mPopupWindowSuccess.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindowSuccess.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+        View viewPay = LayoutInflater.from(this).inflate(R.layout.view_train_success, null);
+        viewPay.findViewById(R.id.view_success_btn_ok).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindowSuccess.dismiss();
+
+            }
+        });
+        mPopupWindowSuccess.setContentView(viewPay);
+        mPopupWindowSuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mPopupWindowSuccess.setOutsideTouchable(false);
+        mPopupWindowSuccess.setFocusable(false);
+        mPopupWindowSuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.CENTER, 0, 0);
+        PopupWindowUtils.darkenBackground(StartTrainActivity2.this, .4f);
+        mPopupWindowSuccess.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(StartTrainActivity2.this, 1f);
+                startActivity(new Intent(StartTrainActivity2.this, MainActivity.class));
+                finish();
+            }
+        });
+    }
+
+    public void scrollRecyclerView(final int item) {
+        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, UIUtils.dip2Px(130));
+        valueAnimator.setDuration(2000);
+        valueAnimator.setInterpolator(new LinearInterpolator());
+        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int animatedValue = (int) animation.getAnimatedValue();
+                //调用RecyclerView的scrollBy执行滑动
+//                mStartTrainRecycleView.smoothScrollBy(item,animatedValue);
+                mLinearLayoutManager.scrollToPositionWithOffset(item, UIUtils.dip2Px(130) - animatedValue);
+
+                LogUtils.i("animatedValue=" + animatedValue);
+            }
+
+        });
+        valueAnimator.start();
+
+    }
 }

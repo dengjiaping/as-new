@@ -4,10 +4,11 @@
     <color name="colorPrimaryDark">#fff</color>
     <color name="colorAccent">#FF5070</color>
     <color name="colorPink">#FF5070</color>
-    <color name="colorPinkTop">#FE69AB</color>
+    <color name="colorPinkTop">#fc6cab</color>
     <color name="colorPinkCenter">#FE66A3</color>
     <color name="colorPinkBottom">#FF5071</color>
     <color name="colorPinkTran">#55FF5070</color>
+    <color name="colorPinkShallow">#f5d2d9</color>
     <color name="colorPink2">#FCA29A</color>
     <color name="colorGray2">#BDBDBD</color>
     <color name="colorGray4">#22BDBDBD</color>

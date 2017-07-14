@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.CircleImageView;
@@ -78,7 +79,6 @@ public class OpenVipActivity extends AppCompatActivity {
             case R.id.open_vip_tv_wx:
                 break;
             case R.id.open_vip_rl_30:
-                //不要打我...一时偷懒...后期改成自定义view
                 mOpenVipRl30.setBackgroundResource(R.drawable.rectangle_open_vip1);
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
@@ -170,6 +170,13 @@ public class OpenVipActivity extends AppCompatActivity {
         mPopupWindowPay.setOutsideTouchable(false);
         mPopupWindowPay.setFocusable(true);
         mPopupWindowPay.showAtLocation(getLayoutInflater().inflate(R.layout.activity_open_vip, null), Gravity.BOTTOM, 0, 0);
+        PopupWindowUtils.darkenBackground(OpenVipActivity.this,.5f);
+        mPopupWindowPay.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(OpenVipActivity.this,1f);
+            }
+        });
     }
 
     private void showPaySuccess() {
@@ -188,5 +195,13 @@ public class OpenVipActivity extends AppCompatActivity {
         mPopupWindowPaySuccess.setOutsideTouchable(true);
         mPopupWindowPaySuccess.setFocusable(true);
         mPopupWindowPaySuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_open_vip, null), Gravity.CENTER, 0, 0);
+        PopupWindowUtils.darkenBackground(OpenVipActivity.this,.5f);
+        mPopupWindowPaySuccess.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(OpenVipActivity.this,1f);
+
+            }
+        });
     }
 }
