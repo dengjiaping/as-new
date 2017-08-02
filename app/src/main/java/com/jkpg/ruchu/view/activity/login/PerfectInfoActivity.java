@@ -1,6 +1,5 @@
 package com.jkpg.ruchu.view.activity.login;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,11 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.NetworkUtils;
-import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.MainActivity;
+import com.lzy.okgo.OkGo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 
@@ -28,6 +31,8 @@ import cn.qqtheme.framework.picker.DoublePicker;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/11.
@@ -47,13 +52,13 @@ public class PerfectInfoActivity extends AppCompatActivity {
     @BindView(R.id.perfect_et_name)
     EditText mPerfectEtName;*/
 
-  /*  private static final String TAG = "PerfectInfoActivity";
+    /*  private static final String TAG = "PerfectInfoActivity";
 
-    private static final String FILE_PROVIDER_AUTHORITY = UIUtils.getPackageName() + ".provider";
+      private static final String FILE_PROVIDER_AUTHORITY = UIUtils.getPackageName() + ".provider";
 
-    private static final int REQ_TAKE_PHOTO = 100;
-    private static final int REQ_ALBUM = 101;
-    private static final int REQ_ZOOM = 102;*/
+      private static final int REQ_TAKE_PHOTO = 100;
+      private static final int REQ_ALBUM = 101;
+      private static final int REQ_ZOOM = 102;*/
     @BindView(R.id.perfect_tv_birth)
     TextView mPerfectTvBirth;
     @BindView(R.id.perfect_tv_height)
@@ -83,6 +88,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
         // initPhoto();
     }
 
+
   /*  private void initPhoto() {
         String imgPath = SPUtils.getString(UIUtils.getContext(), Constants.PERSONAIMAGE, "");
         if (!StringUtils.isEmpty(imgPath)) {
@@ -108,7 +114,8 @@ public class PerfectInfoActivity extends AppCompatActivity {
             case R.id.header_iv_left:
                 break;
             case R.id.header_tv_right:
-                startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
+                // startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
+                EventBus.getDefault().post(new MessageEvent("Login"));
                 finish();
                 break;
            /* case R.id.perfect_civ_photo:
@@ -144,7 +151,7 @@ public class PerfectInfoActivity extends AppCompatActivity {
             ToastUtils.showShort(UIUtils.getContext(), "专属昵称不能超过十二个字符");
             return;
         }*/
-        String birth = mPerfectTvBirth.getText().toString();
+       /* String birth = mPerfectTvBirth.getText().toString();
         if (StringUtils.isEmpty(birth)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入你的生日");
             return;
@@ -153,36 +160,29 @@ public class PerfectInfoActivity extends AppCompatActivity {
         if (StringUtils.isEmpty(height)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入你的胎次");
             return;
-        }
-        String weight = mPerfectTvWeight.getText().toString();
+        }*/
+       /* String weight = mPerfectTvWeight.getText().toString();
         if (StringUtils.isEmpty(weight)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入你的产后时间");
             return;
-        }
+        }*/
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
 
-        // FIXME: 2017/7/4
-           /* OkGo
-                    .post(AppUrl.UPDATEINFO + "?username=" + name + "&shengao=" + height + "&tizhong=" + weight +
-                            "&birth=" + birth + "&u_tel=" + SPUtils.getString(UIUtils.getContext(), Constants.PHONE, ""))
-                    .tag(this)
-                    .execute(new StringDialogCallback(this) {
-                        @Override
-                        public void onSuccess(String s, Call call, Response response) {
-                            LogUtils.i(s);
-                            ToastUtils.showShort(UIUtils.getContext(), "保存成功");
-                            try {
-                                Thread.sleep(1000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
-                            finish();
-                        }
-                    });*/
+        OkGo
+                .post(AppUrl.LOGINNEXTADDMESS)
+                .params("birthday", mPerfectTvBirth.getText().toString())
+                .params("taici", mPerfectTvHeight.getText().toString())
+                .params("chanHouShiJian", mPerfectTvWeight.getText().toString())
+                .execute(new StringDialogCallback(this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        EventBus.getDefault().post(new MessageEvent("Login"));
+                        finish();
+                    }
+                });
     }
 
     // 产后时间
@@ -217,25 +217,25 @@ public class PerfectInfoActivity extends AppCompatActivity {
 
     //出生年月
     private void onYearMonthDayPicker() {
-        final DatePicker picker = new DatePicker(PerfectInfoActivity.this, DatePicker.YEAR_MONTH);
+        final DatePicker picker = new DatePicker(PerfectInfoActivity.this, DatePicker.YEAR_MONTH_DAY);
         picker.setCanceledOnTouchOutside(true);
         picker.setCycleDisable(false);//不禁用循环
         picker.setDividerVisible(false);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
-        picker.setRangeStart(1970, 1);
+        picker.setRangeStart(1970, 1, 1);
         picker.setUseWeight(false);
-        picker.setRangeEnd(2017, 1);
-        picker.setSelectedItem(1990, 5);
+        picker.setRangeEnd(2017, 1, 1);
+        picker.setSelectedItem(1990, 5, 31);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
         picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-        picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
+        picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
-            public void onDatePicked(String year, String month) {
-                mPerfectTvBirth.setText(year + "年" + month + "月");
+            public void onDatePicked(String year, String month, String day) {
+                mPerfectTvBirth.setText(year + "年" + month + "月" + day + "日");
             }
         });
         picker.show();

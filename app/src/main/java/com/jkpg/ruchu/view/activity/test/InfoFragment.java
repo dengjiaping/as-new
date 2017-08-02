@@ -3,7 +3,6 @@ package com.jkpg.ruchu.view.activity.test;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.TrainQuestionNextBean;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import butterknife.BindView;
@@ -24,7 +24,7 @@ import cn.qqtheme.framework.util.ConvertUtils;
  * Created by qindi on 2017/7/3.
  */
 
-public class InfoFragment extends Fragment {
+public class InfoFragment extends NormalFragment {
     @BindView(R.id.view_test_height_text)
     TextView mViewTestHeightText;
     @BindView(R.id.view_test_height)
@@ -34,6 +34,8 @@ public class InfoFragment extends Fragment {
     @BindView(R.id.view_test_weight)
     LinearLayout mViewTestWeight;
     Unbinder unbinder;
+    private String mWeight = "";
+    private String mHeight = "";
 
     @Nullable
     @Override
@@ -78,7 +80,8 @@ public class InfoFragment extends Fragment {
                 heightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
                     @Override
                     public void onNumberPicked(int index, Number item) {
-                        mViewTestHeightText.setText(item.intValue() + " cm");
+                        mHeight = item.intValue() + "";
+                        mViewTestHeightText.setText(mHeight + " cm");
                        /* mStringMap.put("height", height.getText().toString());
                         if (mStringMap.containsKey("weight")) {
                             mTestDetailBtn.setEnabled(true);
@@ -108,7 +111,8 @@ public class InfoFragment extends Fragment {
                 weightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
                     @Override
                     public void onNumberPicked(int index, Number item) {
-                        mViewTestWeightText.setText(item.intValue() + " kg");
+                        mWeight = item.intValue() + "";
+                        mViewTestWeightText.setText(mWeight + " kg");
                        /* mStringMap.put("weight", weight.getText().toString());
                         if (mStringMap.containsKey("height")) {
                             mTestDetailBtn.setEnabled(true);
@@ -118,5 +122,24 @@ public class InfoFragment extends Fragment {
                 weightPicker.show();
                 break;
         }
+    }
+
+    @Override
+    public String getFlag() {
+
+        if (mHeight.equals("") || mWeight.equals(""))
+            return "";
+        else
+            return mHeight + "," + mWeight;
+    }
+
+    @Override
+    public String getTid() {
+        return "2";
+    }
+
+    @Override
+    public TrainQuestionNextBean.ListBean getListBean() {
+        return null;
     }
 }

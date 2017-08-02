@@ -22,6 +22,7 @@ import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.AnimationUtil;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.StringUtils;
@@ -192,6 +193,9 @@ public class RegisterPhoneActivity extends AppCompatActivity {
                     ToastUtils.showShort(UIUtils.getContext(), "两次密码不一致");
                     return;
                 }
+
+                mPwdone = Md5Utils.getMD5(mPwdone);
+
                 OkGo
                         .post(AppUrl.REGISTERTEL)
                         .params("tele", mPhone)

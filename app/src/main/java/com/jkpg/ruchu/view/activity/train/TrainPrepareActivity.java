@@ -37,7 +37,8 @@ public class TrainPrepareActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.train_prepare_btn:
-                startActivity(new Intent(TrainPrepareActivity.this,StartTrainActivity2.class));
+                startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
+                finish();
                 break;
             case R.id.train_prepare_tip:
                 break;

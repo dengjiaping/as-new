@@ -10,21 +10,31 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SimpleItemAnimator;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.NoticReplyBean;
+import com.jkpg.ruchu.bean.NoticeDetailBean;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.NoticeDetailReplyAdapter;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
@@ -33,6 +43,7 @@ import com.jkpg.ruchu.widget.CircleImageView;
 import com.jkpg.ruchu.widget.nineview.ImageInfo;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.jkpg.ruchu.widget.nineview.preview.NineGridViewClickAdapter;
+import com.lzy.okgo.OkGo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +53,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/6/7.
@@ -66,22 +79,167 @@ public class NoticeDetailActivity extends AppCompatActivity {
     TextView mNoticeDetailTvReply;
     @BindView(R.id.notice_detail_reply_recycler)
     RecyclerView mNoticeDetailReplyRecycler;
+    @BindView(R.id.notice_detail_reply)
+    TextView mNoticeDetailReply;
+    @BindView(R.id.notice_detail_tv_name)
+    TextView mNoticeDetailTvName;
+    @BindView(R.id.notice_detail_iv_lz)
+    ImageView mNoticeDetailIvLz;
+    @BindView(R.id.notice_detail_iv_fine)
+    ImageView mNoticeDetailIvFine;
+    @BindView(R.id.notice_detail_tv_tc)
+    TextView mNoticeDetailTvTc;
+    @BindView(R.id.notice_detail_tv_address)
+    TextView mNoticeDetailTvAddress;
+    @BindView(R.id.notice_detail_tv_dz)
+    CheckBox mNoticeDetailTvDz;
+    @BindView(R.id.notice_detail_tv_title)
+    TextView mNoticeDetailTvTitle;
+    @BindView(R.id.notice_detail_tv_time)
+    TextView mNoticeDetailTvTime;
+    @BindView(R.id.notice_detail_tv_content)
+    TextView mNoticeDetailTvContent;
+    @BindView(R.id.notice_detail_tv_num)
+    TextView mNoticeDetailTvNum;
+    @BindView(R.id.notice_detail)
+    LinearLayout mNoticeDetail;
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private RecyclerView mReplyRecyclerView;
-    List<NoticReplyBean> data;
     private NoticeDetailReplyAdapter mNoticeDetailReplyAdapter;
     private boolean isCollect = false;
     private int isShowImage = View.VISIBLE;
+    private int mTid;
+    private List<NoticeDetailBean.List1Bean> mList1;
+    private List<NoticeDetailBean.List2Bean> mList2;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_detail);
         ButterKnife.bind(this);
-        initNineView();
+        String bbsid = getIntent().getStringExtra("bbsid");
+        initData(bbsid);
         initHeader();
-        initRecyclerView();
+        initZan();
+
+    }
+
+    private void initZan() {
+        mNoticeDetailTvDz.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    OkGo
+                            .post(AppUrl.UPVOTE)
+                            .params("bbsid", mTid)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("flag", 1)
+                            .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                    if (successBean.success) {
+                                        int i = Integer.parseInt(mNoticeDetailTvDz.getText().toString()) + 1;
+                                        mNoticeDetailTvDz.setText(i + "");
+                                    } else {
+                                        ToastUtils.showShort(UIUtils.getContext(), "点赞失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    ToastUtils.showShort(UIUtils.getContext(), "点赞失败");
+                                }
+                            });
+
+                } else {
+                    OkGo
+                            .post(AppUrl.UPVOTE)
+                            .params("bbsid", mTid)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("flag", 0)
+                            .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                    if (successBean.success) {
+                                        int i = Integer.parseInt(mNoticeDetailTvDz.getText().toString()) - 1;
+                                        mNoticeDetailTvDz.setText(i + "");
+                                    } else {
+                                        ToastUtils.showShort(UIUtils.getContext(), "取消点赞失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    ToastUtils.showShort(UIUtils.getContext(), "取消点赞失败");
+                                }
+                            });
+                }
+            }
+        });
+    }
+
+    private void initData(String bbsid) {
+        OkGo
+                .post(AppUrl.BBS_DETAILS)
+                .params("bbsid", bbsid)
+                .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                        mList1 = noticeDetailBean.list1;
+                        mList2 = noticeDetailBean.list2;
+                        initNotice(mList1);
+                        if (mList2.size() > 0) {
+                            mNoticeDetailTvNum.setText("共有" + mList2.size() + "条回帖");
+                        } else {
+                            mNoticeDetailTvNum.setText("暂无回帖");
+                        }
+                        initRecyclerView(mList2);
+                    }
+                });
+    }
+
+    private void initNotice(List<NoticeDetailBean.List1Bean> list1) {
+        NoticeDetailBean.List1Bean list1Bean = list1.get(0);
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + list1Bean.headimg)
+                .centerCrop()
+                .into(mNoticeDetailCivPhoto);
+        mNoticeDetailTvName.setText(list1Bean.nick);
+        if (!list1Bean.isGood.equals("1")) {
+            mNoticeDetailIvFine.setVisibility(View.GONE);
+        } else {
+            mNoticeDetailIvFine.setVisibility(View.VISIBLE);
+        }
+        mNoticeDetailTvTc.setText(list1Bean.taici + " " + list1Bean.chanhoutime);
+        mNoticeDetailTvAddress.setText(list1Bean.site);
+        mNoticeDetailTvDz.setText(list1Bean.zan);
+        mNoticeDetailTvDz.setChecked(list1Bean.iszan);
+
+        mNoticeDetailTvReply.setText(list1Bean.reply);
+        mNoticeDetailTvTitle.setText(list1Bean.title);
+        mNoticeDetailTvTime.setText(list1Bean.createtime);
+        mNoticeDetailTvContent.setText(list1Bean.content);
+
+        initNineView(list1Bean.images);
+
+        isCollect = list1Bean.iscollect;
+        if (isCollect) {
+            mHeaderIvRight2.setImageResource(R.drawable.icon_collect_ok);
+        } else {
+            mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
+        }
+
+        mTid = list1Bean.tid;
+
     }
 
     private void initHeader() {
@@ -90,38 +248,9 @@ public class NoticeDetailActivity extends AppCompatActivity {
         mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
     }
 
-    private void initRecyclerView() {
-        data = new ArrayList<>();
-        List<ImageInfo> imageInfos = new ArrayList<>();
-        imageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-        imageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-        imageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-        List<ImageInfo> toImageInfos = new ArrayList<>();
-        toImageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-        toImageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-        toImageInfos.add(new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg"));
-
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "1楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", false, "3", "1", true, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "2楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", false, "3", "1", true, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "3楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", true, "3", "1", false, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "4楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", true, "3", "1", true, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "5楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", false, "3", "1", false, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "6楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", true, "3", "1", true, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "7楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", false, "3", "1", false, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "8楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", true, "3", "1", false, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-        data.add(new NoticReplyBean("", "https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg",
-                "哈哈", "9楼", "三个月", "哈哈哈啊哈哈哈好开心啊", imageInfos, "2017-05-21", false, "3", "1", true, "呵呵", "1楼", "2015-15-78", "就要哈哈哈", toImageInfos));
-
+    private void initRecyclerView(List<NoticeDetailBean.List2Bean> list2) {
         mNoticeDetailReplyRecycler.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mNoticeDetailReplyAdapter = new NoticeDetailReplyAdapter(R.layout.item_notic_reply, data);
+        mNoticeDetailReplyAdapter = new NoticeDetailReplyAdapter(R.layout.item_notic_reply, list2);
         mNoticeDetailReplyRecycler.setAdapter(mNoticeDetailReplyAdapter);
         mNoticeDetailReplyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -131,47 +260,124 @@ public class NoticeDetailActivity extends AppCompatActivity {
         mNoticeDetailReplyAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-                if (data.get(position).isReply) {
-                    isShowImage = View.GONE;
-                } else {
-                    isShowImage = View.VISIBLE;
+                switch (view.getId()) {
+                    case R.id.item_notice_detail_tv_reply:
+                    case R.id.item_notice_reply_body:
+                        isShowImage = View.GONE;
+                        replyLZ();
+                        break;
+                    case R.id.item_notice_reply_civ:
+                    case R.id.item_notice_reply_name:
+                        ToastUtils.showShort(UIUtils.getContext(), mList1.get(0).userid);
+                        break;
+                    case R.id.item_notice_reply_to_body:
+                        int tid = mList2.get(position).items.get(0).tid;
+                        isShowImage = View.GONE;
+                        replyLZ();
+                        break;
+                    case R.id.item_notice_reply_to_body0:
+                        isShowImage = View.GONE;
+                        replyLZ();
+                        break;
+                    case R.id.item_notice_reply_to_body1:
+                        isShowImage = View.GONE;
+                        replyLZ();
+                        break;
+                    case R.id.item_notice_reply_to_name:
+                        String userid = mList2.get(position).items.get(0).userid;
+                        ToastUtils.showShort(UIUtils.getContext(), userid);
+                        break;
+                    case R.id.item_notice_reply_to_name0:
+                        String userid0 = mList2.get(position).items.get(1).userid;
+                        ToastUtils.showShort(UIUtils.getContext(), userid0);
+                        break;
+                    case R.id.item_notice_reply_to_name1:
+                        String userid1 = mList2.get(position).items.get(1).userid;
+                        ToastUtils.showShort(UIUtils.getContext(), userid1);
+                        break;
+                    case R.id.item_notice_reply_to_name2:
+                        String userid2 = mList2.get(position).items.get(1).userid;
+                        ToastUtils.showShort(UIUtils.getContext(), userid2);
+                        break;
+                    case R.id.item_notice_reply_to_more:
+                        ToastUtils.showShort(UIUtils.getContext(), "more");
+                        break;
 
                 }
-                replyLZ();
+
             }
         });
-        // 关掉默认动画
-        mNoticeDetailReplyRecycler.getItemAnimator().setAddDuration(0);
-        mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
-        mNoticeDetailReplyRecycler.getItemAnimator().setMoveDuration(0);
-        mNoticeDetailReplyRecycler.getItemAnimator().setRemoveDuration(0);
-        ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
     }
 
 
-    private void initNineView() {
+    private void initNineView(List<String> images) {
         imageInfo = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            ImageInfo info = new ImageInfo("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=0791f0edbe8f8c54f7decd7d5b404690/a9d3fd1f4134970a988e262c9fcad1c8a7865d37.jpg");
+        for (int i = 0; i < images.size(); i++) {
+            ImageInfo info = new ImageInfo(AppUrl.BASEURL + images.get(i));
             this.imageInfo.add(info);
         }
         mNoticeDetailNineView.setAdapter(new NineGridViewClickAdapter(UIUtils.getContext(), imageInfo));
     }
 
-    @OnClick({R.id.header_iv_left, R.id.header_iv_right2, R.id.header_iv_right, R.id.notice_detail_civ_photo, R.id.notice_detail_tv_reply})
+    @OnClick({R.id.header_iv_left, R.id.header_iv_right2, R.id.header_iv_right, R.id.notice_detail_civ_photo, R.id.notice_detail_tv_reply, R.id.notice_detail_reply})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
                 finish();
                 break;
             case R.id.header_iv_right2:
-                if (!isCollect) {
-                    isCollect = true;
 
-                    mHeaderIvRight2.setImageResource(R.drawable.icon_collect_ok);
+                if (!isCollect) {
+                    OkGo
+                            .post(AppUrl.BBS_COLLECT)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("tid", mTid)
+                            .params("flag", 1)
+                            .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                    if (successBean.success) {
+                                        isCollect = true;
+                                        mHeaderIvRight2.setImageResource(R.drawable.icon_collect_ok);
+                                    } else {
+                                        ToastUtils.showShort(UIUtils.getContext(), "收藏失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    ToastUtils.showShort(UIUtils.getContext(), "收藏失败");
+
+                                }
+                            });
                 } else {
-                    isCollect = false;
-                    mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
+                    OkGo
+                            .post(AppUrl.BBS_COLLECT)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("tid", mTid)
+                            .params("flag", 0)
+                            .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                    if (successBean.success) {
+                                        isCollect = false;
+                                        mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
+                                    } else {
+                                        ToastUtils.showShort(UIUtils.getContext(), "取消收藏失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    ToastUtils.showShort(UIUtils.getContext(), "取消收藏失败");
+
+                                }
+                            });
+
                 }
                 break;
             case R.id.header_iv_right:
@@ -187,6 +393,8 @@ public class NoticeDetailActivity extends AppCompatActivity {
             case R.id.notice_detail_civ_photo:
                 break;
             case R.id.notice_detail_tv_reply:
+            case R.id.notice_detail_reply:
+                isShowImage = View.VISIBLE;
                 replyLZ();
                 break;
         }

@@ -16,12 +16,12 @@
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/view_pay_success_btn_ok"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="120dp"
             android:text="恭喜您，本次训练完成！"
             android:textColor="@color/colorPink"
-            android:textSize="18sp"
-            android:layout_below="@+id/view_pay_success_btn_ok"
-            android:layout_centerHorizontal="true"/>
+            android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/view_train_success_ll"
@@ -61,18 +61,18 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/view_success_integral"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:text="+20分"
                     android:textColor="@color/colorPink"/>
 
                 <TextView
+                    android:id="@+id/view_success_experience"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
                     android:gravity="center"
-                    android:text="+20分"
                     android:textColor="@color/colorPink"/>
             </LinearLayout>
         </LinearLayout>
@@ -81,8 +81,8 @@
             android:id="@+id/view_success_btn_ok"
             android:layout_width="wrap_content"
             android:layout_height="30dp"
-            android:layout_centerHorizontal="true"
             android:layout_below="@id/view_train_success_ll"
+            android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:background="@drawable/shap_rectangle_red"
             android:text="OK"

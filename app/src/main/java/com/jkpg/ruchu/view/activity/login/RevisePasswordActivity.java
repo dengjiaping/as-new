@@ -17,6 +17,7 @@ import com.jkpg.ruchu.bean.RegisterPhoneBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -94,7 +95,7 @@ public class RevisePasswordActivity extends AppCompatActivity {
             ToastUtils.showShort(UIUtils.getContext(), "两次密码不一致");
             return;
         }
-
+        pwd1 = Md5Utils.getMD5(pwd1);
         OkGo
                 .post(AppUrl.UPDATEPWD)
                 .params("password", pwd1)

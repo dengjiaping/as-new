@@ -3,7 +3,6 @@ package com.jkpg.ruchu.view.activity.test;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.TrainQuestionNextBean;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import butterknife.BindView;
@@ -24,12 +24,16 @@ import cn.qqtheme.framework.util.ConvertUtils;
  * Created by qindi on 2017/7/3.
  */
 
-public class BirthFragment extends Fragment {
+public class BirthFragment extends NormalFragment {
     @BindView(R.id.view_test_birth_text)
     TextView mViewTestBirthText;
     @BindView(R.id.view_test_birth)
     LinearLayout mViewTestBirth;
     Unbinder unbinder;
+
+    private String mYear = "";
+    private String mMonth = "";
+    private String mDay;
 
     @Nullable
     @Override
@@ -56,25 +60,28 @@ public class BirthFragment extends Fragment {
 
     @OnClick(R.id.view_test_birth)
     public void onViewClicked() {
-        final DatePicker picker = new DatePicker(getActivity(), DatePicker.YEAR_MONTH);
+        final DatePicker picker = new DatePicker(getActivity(), DatePicker.YEAR_MONTH_DAY);
         picker.setCanceledOnTouchOutside(true);
         picker.setCycleDisable(false);//不禁用循环
         picker.setDividerVisible(false);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
-        picker.setRangeStart(1970, 1);
+        picker.setRangeStart(1970, 1, 1);
         picker.setUseWeight(false);
-        picker.setRangeEnd(2017, 1);
-        picker.setSelectedItem(1990, 5);
+        picker.setRangeEnd(2017, 1, 1);
+        picker.setSelectedItem(1990, 5, 31);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
         picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-        picker.setOnDatePickListener(new DatePicker.OnYearMonthPickListener() {
+        picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
-            public void onDatePicked(String year, String month) {
-                mViewTestBirthText.setText(year + "年" + month + "月");
+            public void onDatePicked(String year, String month, String day) {
+                mYear = year;
+                mMonth = month;
+                mDay = day;
+                mViewTestBirthText.setText(year + "年" + month + "月" + day + "日");
             }
         });
         picker.show();
@@ -83,7 +90,7 @@ public class BirthFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("birth",mViewTestBirthText.getText().toString());
+        outState.putString("birth", mViewTestBirthText.getText().toString());
 
     }
 
@@ -95,5 +102,24 @@ public class BirthFragment extends Fragment {
             mViewTestBirthText.setText(birth);
         }
 
+    }
+
+    @Override
+    public String getFlag() {
+        if (mYear.equals("")) {
+            return "";
+        } else {
+            return mYear + "-" + mMonth + "-" + mDay;
+        }
+    }
+
+    @Override
+    public String getTid() {
+        return "1";
+    }
+
+    @Override
+    public TrainQuestionNextBean.ListBean getListBean() {
+        return null;
     }
 }

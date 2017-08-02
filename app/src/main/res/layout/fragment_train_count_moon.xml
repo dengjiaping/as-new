@@ -23,13 +23,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
-            android:text="2017-05"
             android:textSize="16sp"
             />
 
         <Button
             android:id="@+id/train_count_btn_down"
-
             android:layout_width="20dp"
             android:layout_height="20dp"
             android:background="@drawable/selector_btn_down_bg"/>
@@ -80,7 +78,6 @@
                     android:id="@+id/train_count_tv_time_count_number"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="177"
                     android:textColor="@color/colorPink"
                     android:textSize="20sp"/>
 
@@ -118,7 +115,6 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="177"
                     android:textColor="@color/colorPink"
                     android:textSize="20sp"/>
 

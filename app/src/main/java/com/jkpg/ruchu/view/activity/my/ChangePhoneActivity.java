@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,16 +13,27 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/25.
@@ -97,10 +109,6 @@ public class ChangePhoneActivity extends AppCompatActivity {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
-
-
-        showDialogSuccess();
-
     }
 
     private void sendSMS() {
@@ -113,30 +121,73 @@ public class ChangePhoneActivity extends AppCompatActivity {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 60; i > 0; i--) {
-                    handler.sendEmptyMessage(CODE_ING);
-                    if (i <= 0) {
-                        break;
+
+        OkGo
+                .post(AppUrl.UPDATE_TEL)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("tele", phone)
+                .params("flag", "0")
+                .execute(new StringDialogCallback(this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (!successBean.success) {
+                            ToastUtils.showShort(UIUtils.getContext(), "手机号已存在");
+                        } else {
+                            OkGo
+                                    .post(AppUrl.SMS)
+                                    .params("tele", phone)
+                                    .execute(new StringDialogCallback(ChangePhoneActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+                                            // TODO: 2017/7/22
+                                            LogUtils.i(s);
+                                            new Thread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    for (int i = 60; i > 0; i--) {
+                                                        handler.sendEmptyMessage(CODE_ING);
+                                                        if (i <= 0) {
+                                                            break;
+                                                        }
+                                                        try {
+                                                            Thread.sleep(1000);
+                                                        } catch (InterruptedException e) {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                    handler.sendEmptyMessage(CODE_REPEAT);
+                                                }
+                                            }).start();
+
+
+                                            showDialogSuccess();
+
+                                        }
+                                    });
+                        }
                     }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                handler.sendEmptyMessage(CODE_REPEAT);
-            }
-        }).start();
+                });
+
     }
 
     private void showDialogSuccess() {
         View view = View.inflate(UIUtils.getContext(), R.layout.view_show_success, null);
         ((TextView) view.findViewById(R.id.show_success_text)).setText("手机号变更成功");
-        new AlertDialog.Builder(this)
+        AlertDialog show = new AlertDialog.Builder(this)
                 .setView(view)
                 .show();
+        show.setOnDismissListener(new DialogInterface.OnDismissListener() {
+            @Override
+            public void onDismiss(DialogInterface dialog) {
+                finish();
+            }
+        });
+        MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 3000);
     }
 }

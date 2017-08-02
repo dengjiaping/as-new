@@ -11,10 +11,21 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.view.adapter.FansRLAdapter;
+import com.jkpg.ruchu.bean.MyNoteBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.adapter.MyReplyNoteBean;
+import com.jkpg.ruchu.view.adapter.MySpeakNoteRVAdapter;
 import com.jkpg.ruchu.view.adapter.MySpeakVPAdapter;
 import com.jkpg.ruchu.view.adapter.SenderRLAdapter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +33,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/25.
@@ -40,6 +53,13 @@ public class MySpeakActivity extends AppCompatActivity {
     private List<View> views;
     private List<String> titles;
 
+    private int speakIndex = 1;
+    private int replyIndex = 1;
+    private boolean speak;
+    private boolean reply;
+    private RecyclerView mRecyclerView;
+    private RecyclerView mRecyclerView2;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,23 +68,106 @@ public class MySpeakActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         initHeader();
         initData();
-        initViewPager();
-        initTabLayout();
     }
 
     private void initData() {
-        views = new ArrayList<>();
-        RecyclerView recyclerView = new RecyclerView(this);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(new FansRLAdapter());
-        RecyclerView recyclerView2 = new RecyclerView(this);
-        recyclerView2.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView2.setAdapter(new SenderRLAdapter());
-        views.add(recyclerView);
-        views.add(recyclerView2);
-        titles = new ArrayList<>();
-        titles.add("我的帖子");
-        titles.add("我的回帖");
+        OkGo
+                .post(AppUrl.MYSPEAK)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("fenyeid", speakIndex)
+                .execute(new StringDialogCallback(MySpeakActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        MyNoteBean myNoteBean = new Gson().fromJson(s, MyNoteBean.class);
+                        List<MyNoteBean.MySpeakBean> mySpeak = myNoteBean.mySpeak;
+                        initSpeakRecyclerView(mySpeak);
+                        OkGo
+                                .post(AppUrl.MYREPLY)
+                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                .params("fenyeid", replyIndex)
+                                .execute(new StringDialogCallback(MySpeakActivity.this) {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        MyReplyNoteBean myReplyNoteBean = new Gson().fromJson(s, MyReplyNoteBean.class);
+                                        List<MyReplyNoteBean.MySpeakBean> mySpeak = myReplyNoteBean.mySpeak;
+                                        initReplyRecyclerView(mySpeak);
+                                    }
+                                });
+                    }
+                });
+
+    }
+
+    private void initReplyRecyclerView(List<MyReplyNoteBean.MySpeakBean> mySpeak) {
+        mRecyclerView2 = new RecyclerView(this);
+        mRecyclerView2.setLayoutManager(new LinearLayoutManager(this));
+        final SenderRLAdapter senderRLAdapter = new SenderRLAdapter(R.layout.item_sender, mySpeak);
+        mRecyclerView2.setAdapter(senderRLAdapter);
+        senderRLAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                replyIndex++;
+                OkGo
+                        .post(AppUrl.MYREPLY)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("fenyeid", replyIndex)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                MyReplyNoteBean myReplyNoteBean = new Gson().fromJson(s, MyReplyNoteBean.class);
+                                List<MyReplyNoteBean.MySpeakBean> mySpeak = myReplyNoteBean.mySpeak;
+                                if (mySpeak == null) {
+                                    senderRLAdapter.loadMoreEnd();
+
+                                } else if (mySpeak.size() == 0) {
+                                    senderRLAdapter.loadMoreEnd();
+                                } else {
+                                    senderRLAdapter.addData(mySpeak);
+                                    senderRLAdapter.loadMoreComplete();
+                                }
+                            }
+                        });
+            }
+        }, mRecyclerView2);
+
+
+        initTabLayout();
+        initViewPager();
+
+    }
+
+    private void initSpeakRecyclerView(List<MyNoteBean.MySpeakBean> mySpeak) {
+        mRecyclerView = new RecyclerView(this);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        final MySpeakNoteRVAdapter mySpeakNoteRVAdapter = new MySpeakNoteRVAdapter(R.layout.item_fans_post, mySpeak);
+        mRecyclerView.setAdapter(mySpeakNoteRVAdapter);
+        mySpeakNoteRVAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                speakIndex++;
+                OkGo
+                        .post(AppUrl.MYSPEAK)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("fenyeid", speakIndex)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                MyNoteBean myNoteBean = new Gson().fromJson(s, MyNoteBean.class);
+                                List<MyNoteBean.MySpeakBean> mySpeak = myNoteBean.mySpeak;
+                                if (mySpeak == null) {
+                                    mySpeakNoteRVAdapter.loadMoreEnd();
+
+                                } else if (mySpeak.size() == 0) {
+                                    mySpeakNoteRVAdapter.loadMoreEnd();
+                                } else {
+                                    mySpeakNoteRVAdapter.addData(mySpeak);
+                                    mySpeakNoteRVAdapter.loadMoreComplete();
+                                }
+                            }
+                        });
+            }
+        }, mRecyclerView);
+
     }
 
     private void initTabLayout() {
@@ -72,6 +175,12 @@ public class MySpeakActivity extends AppCompatActivity {
     }
 
     private void initViewPager() {
+        views = new ArrayList<>();
+        views.add(mRecyclerView);
+        views.add(mRecyclerView2);
+        titles = new ArrayList<>();
+        titles.add("我的帖子");
+        titles.add("我的回帖");
         mMySpeakViewPager.setAdapter(new MySpeakVPAdapter(views, titles));
 
     }

@@ -16,14 +16,21 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.ChatActivity;
 import com.jkpg.ruchu.view.adapter.FansRLAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/27.
@@ -63,6 +70,10 @@ public class FansCenterActivity extends AppCompatActivity {
 
     @BindView(R.id.fans_show_follow)
     LinearLayout mFansShowFollow;
+    @BindView(R.id.fans_tv_time)
+    TextView mFansTvTime;
+
+    private int flag = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,7 +81,23 @@ public class FansCenterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fans_center);
         ButterKnife.bind(this);
         initHeader();
+        String fansId = getIntent().getStringExtra("fansId");
+        initData(fansId);
         initRecyclerView();
+    }
+
+    private void initData(String fansId) {
+        OkGo
+                .post(AppUrl.FANSDETAIL)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("fansid", fansId)
+                .params("flag", flag)
+                .execute(new StringDialogCallback(FansCenterActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+
+                    }
+                });
     }
 
     private void initRecyclerView() {

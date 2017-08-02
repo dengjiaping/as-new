@@ -43,6 +43,7 @@ public class PlateDetailActivity extends AppCompatActivity {
     private List<Fragment> viewList;
     private List<String> viewTitle;
     public static String mTitle;
+    private String mPlateid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -51,6 +52,7 @@ public class PlateDetailActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mTitle = getIntent().getStringExtra("title");
+        mPlateid = getIntent().getStringExtra("plateid");
         initHeader();
         initData();
         initTabLayout();
@@ -70,6 +72,7 @@ public class PlateDetailActivity extends AppCompatActivity {
     private void initTabLayout() {
         mPlateDetailTabLayout.setupWithViewPager(mPlateDetailViewPager);
         mPlateDetailViewPager.setAdapter(new PlateDetailVPAdapter(getSupportFragmentManager(), viewList, viewTitle));
+        mPlateDetailViewPager.setOffscreenPageLimit(3);
     }
 
     private void initHeader() {
@@ -93,4 +96,7 @@ public class PlateDetailActivity extends AppCompatActivity {
         return mTitle;
     }
 
+    public String getPlateid() {
+        return mPlateid;
+    }
 }

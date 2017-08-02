@@ -8,11 +8,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.TrainMainBean;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
+import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
@@ -22,7 +33,15 @@ import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 import com.jkpg.ruchu.widget.banner.Banner;
 import com.jkpg.ruchu.widget.banner.BannerConfig;
 import com.jkpg.ruchu.widget.banner.Transformer;
+import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
 import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +50,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/16.
@@ -40,7 +61,7 @@ public class TrainFragment extends Fragment {
     @BindView(R.id.train_banner)
     Banner mTrainBanner;
     Unbinder unbinder;
-    List<Integer> images;
+    List<String> images;
     List<String> titles;
     @BindView(R.id.header_tv_title)
     TextView mHeaderTvTitle;
@@ -68,7 +89,11 @@ public class TrainFragment extends Fragment {
     Button mTrainBtTrain;
     @BindView(R.id.train_ll_train)
     LinearLayout mTrainLlTrain;
-
+    @BindView(R.id.errorStateRelativeLayout)
+    RelativeLayout mBaseRetry;
+    @BindView(R.id.id_loading_and_retry)
+    FrameLayout mBaseLoading;
+    private TrainMainBean mTrainMainBean;
 
     @Nullable
     @Override
@@ -81,9 +106,48 @@ public class TrainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        TrainFragment.this.initData();
         initHeader();
+
+    }
+
+
+    private void initData() {
+        OkGo
+                .post(AppUrl.HEADERLUNBOIMAGE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        mTrainMainBean = new Gson().fromJson(s, TrainMainBean.class);
+                        initContent();
+                        mBaseLoading.setVisibility(View.GONE);
+                        mBaseRetry.setVisibility(View.GONE);
+                    }
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mBaseLoading.setVisibility(View.GONE);
+                        mBaseRetry.setVisibility(View.VISIBLE);
+                    }
+
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        mBaseLoading.setVisibility(View.VISIBLE);
+                    }
+                });
+    }
+
+    private void initContent() {
+
+        if (mTrainMainBean.uIsfirst.equals("1")) {
+            mTrainIvNewHand.setVisibility(View.GONE);
+        }
+        if (mTrainMainBean.uIsstest.equals("1")) {
+            initTestBtn();
+        }
         initBanner();
-        initTestBtn();
     }
 
     //初始化训练按钮状态 + 新手提示
@@ -97,18 +161,17 @@ public class TrainFragment extends Fragment {
     private void initHeader() {
         mHeaderIvLeft.setVisibility(View.GONE);
         mHeaderTvTitle.setText("盆底肌训练");
-        mHeaderIvRight.setImageResource(R.drawable.icon_sms_red);
+//        mHeaderIvRight.setImageResource(R.drawable.icon_sms_red);
     }
 
     private void initBanner() {
         images = new ArrayList<>();
-        images.add(R.drawable.banner);
-        images.add(R.drawable.banner);
-        images.add(R.drawable.banner);
         titles = new ArrayList<>();
-        titles.add("入门训练---认识盆底肌");
-        titles.add("入门训练---认识盆底肌");
-        titles.add("入门训练---认识盆底肌");
+        final List<TrainMainBean.HeaderLunBoImageBean> headerLunBoImage = mTrainMainBean.headerLunBoImage;
+        for (int i = 0; i < headerLunBoImage.size(); i++) {
+            images.add(AppUrl.BASEURL + headerLunBoImage.get(i).imageUrl);
+            titles.add(headerLunBoImage.get(i).title);
+        }
         //设置图片加载器
         mTrainBanner.setImageLoader(new GlideImageLoader());
         //设置图片集合
@@ -122,6 +185,13 @@ public class TrainFragment extends Fragment {
         mTrainBanner.isAutoPlay(true);
         //设置轮播时间
         mTrainBanner.setDelayTime(3000);
+        mTrainBanner.setOnBannerListener(new OnBannerListener() {
+            @Override
+            public void OnBannerClick(int position) {
+                String allcontent = headerLunBoImage.get(position).allcontent;
+                ToastUtils.showShort(UIUtils.getContext(),allcontent);
+            }
+        });
         //设置指示器位置（当banner模式中有指示器时）
 //        mTrainBanner.setIndicatorGravity(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
         mTrainBanner.start();
@@ -133,23 +203,41 @@ public class TrainFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.header_iv_right,R.id.train_ll_new, R.id.train_ll_my, R.id.train_bt_train,R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
+    @OnClick({R.id.id_btn_retry, R.id.header_iv_right, R.id.train_ll_new, R.id.train_ll_my, R.id.train_bt_train, R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.id_btn_retry:
+                TrainFragment.this.initData();
+                break;
             case R.id.train_ll_new:
+              /*  if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
+                }*/
                 startActivity(new Intent(getActivity(), NewTrainActivity.class));
                 break;
             case R.id.train_ll_my:
-
+                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
+                }
                 startActivity(new Intent(getActivity(), MyTrainActivity.class));
                 break;
             case R.id.train_ll_other:
+                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
+                }
                 startActivity(new Intent(getActivity(), OtherTrainActivity.class));
                 break;
             case R.id.train_tv_tip:
                 mTrainTvTip.setVisibility(View.GONE);
                 break;
             case R.id.train_bt_test:
+                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    break;
+                }
                 startActivity(new Intent(getActivity(), TestTrainActivity.class));
 //
                 break;
@@ -167,11 +255,20 @@ public class TrainFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mTrainBanner.stopAutoPlay();
+        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mTrainBanner.startAutoPlay();
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    public void onMessageEvent(MessageEvent event) {
+        /* Do something */
+        if (event.message.equals("Login"))
+            initData();
     }
 }

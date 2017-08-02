@@ -10,19 +10,27 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.FineNoteBean;
+import com.jkpg.ruchu.bean.MyCollectBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.MyNoteEditRVAdapter;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/6/5.
@@ -42,25 +50,26 @@ public class MyCollectEditActivity extends AppCompatActivity {
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
 
-    private List<FineNoteBean> data;
     private MyNoteEditRVAdapter mAdapter;
 
     private boolean isEdit = false;
     private boolean isSelectAll = false;
+    private List<MyCollectBean.ListBean> mList;
+    private int pageIndex = 1;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_collect);
         ButterKnife.bind(this);
-        initData();
         initHeader();
-        initRecyclerView();
+        initData();
     }
 
-    private void initRecyclerView() {
-        mMyCollectRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mAdapter = new MyNoteEditRVAdapter(data);
+    private void initRecyclerView(final List<MyCollectBean.ListBean> list) {
+        final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(UIUtils.getContext());
+        mMyCollectRecyclerView.setLayoutManager(linearLayoutManager);
+        mAdapter = new MyNoteEditRVAdapter(list);
         mMyCollectRecyclerView.setAdapter(mAdapter);
         mAdapter.setRecyclerViewOnItemClickListener(new MyNoteEditRVAdapter.RecyclerViewOnItemClickListener() {
             @Override
@@ -68,11 +77,68 @@ public class MyCollectEditActivity extends AppCompatActivity {
                 if (isEdit) {
                     mAdapter.setSelectItem(position);
                 } else {
-                    startActivity(new Intent(MyCollectEditActivity.this, NoticeDetailActivity.class));
+                    int bbsid = list.get(position).bbsid;
+                    Intent intent = new Intent(MyCollectEditActivity.this, NoticeDetailActivity.class);
+                    intent.putExtra("bbsid", bbsid + "");
+                    startActivity(intent);
                 }
             }
         });
+        mMyCollectRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            private int mLastVisibleItem;
+            boolean isLoading = false;
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE && mLastVisibleItem + 1 == mAdapter.getItemCount() && !isLoading) {
+                    pageIndex++;
+                    isLoading = true;
+                    OkGo.
+                            post(AppUrl.BBS_LOOKCOLLECTION)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("flag", pageIndex + "")
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
+                                    if (myCollectBean.list == null) {
+                                        mAdapter.changeState(2);
+
+                                    } else {
+                                        List<MyCollectBean.ListBean> listMore = myCollectBean.list;
+                                        if (listMore.size() == 10) {
+                                            mAdapter.changeState(2);
+
+                                        } else if (listMore.size() <= 10) {
+                                            mAdapter.changeState(2);
+                                            mList.addAll(listMore);
+
+                                        } else {
+                                            mAdapter.changeState(1);
+                                            mList.addAll(listMore);
+                                            isLoading = false;
+                                        }
+                                    }
+                                }
+                            });
+                }
+
+            }
+
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                //拿到最后一个出现的item的位置
+                mLastVisibleItem = linearLayoutManager.findLastVisibleItemPosition();
+            }
+        });
+        if (mList.size() <= 10)
+            mAdapter.changeState(2);
     }
+
 
     private void initHeader() {
         mHeaderTvTitle.setText("我的收藏");
@@ -86,35 +152,19 @@ public class MyCollectEditActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        data = new ArrayList<>();
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "2", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "3", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "4", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "5", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "6", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "7", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "8", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "9", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "10", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "11", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "12", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "13", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "14", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "15", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "16", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "17", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "18", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
-        data.add(new FineNoteBean("如初", "2017-07-01 09:00", "1", "5", "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1496831897187&di=e8ac08f5e3f54dc009613ca962332165&imgtype=0&src=http%3A%2F%2Fww2.sinaimg.cn%2Fwap180%2F75d91745jw1dtprt062sjj.jpg", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢哈啊哈哈哈哈哈哈哈哈哈啊哈哈哈啊阿花啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈啊哈哈哈哈", "https://www.dujin.org/sys/bing/1366.php"));
+        OkGo
+                .post(AppUrl.BBS_LOOKCOLLECTION)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("flag", pageIndex + "")
+                .execute(new StringDialogCallback(MyCollectEditActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
+                        mList = myCollectBean.list;
+                        initRecyclerView(mList);
+
+                    }
+                });
     }
 
     @OnClick(R.id.header_iv_left)
@@ -146,26 +196,71 @@ public class MyCollectEditActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.header_tv_right:
+                String s = "";
                 for (int i = map.size() - 1; i >= 0; i--) {
                     if (map.get(i)) {
                         LogUtils.i(i + "map");
-                        data.remove(i);
+                        LogUtils.i(mList.get(i).bbsid + "=bbsid");
                         map.put(i, false);
                         map.remove(map.size() - 1);
                         LogUtils.i(map.size() + "size");
+                        s = s + mList.get(i).bbsid + ",";
+                        mList.remove(i);
                     }
                     mAdapter.notifyDataSetChanged();
                 }
-                mHeaderIvLeft.setVisibility(View.VISIBLE);
-                mHeaderTvLeft.setVisibility(View.GONE);
-                mHeaderIvRight.setVisibility(View.VISIBLE);
-                mHeaderTvRight.setVisibility(View.GONE);
-                mAdapter.setShowBox();
-                mAdapter.notifyDataSetChanged();
-                isEdit = false;
+                LogUtils.i(s);
+
+                OkGo
+                        .post(AppUrl.BBS_DELCOLLECTION)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("bbsid", s)
+                        .execute(new StringDialogCallback(MyCollectEditActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                                mHeaderIvLeft.setVisibility(View.VISIBLE);
+                                mHeaderTvLeft.setVisibility(View.GONE);
+                                mHeaderIvRight.setVisibility(View.VISIBLE);
+                                mHeaderTvRight.setVisibility(View.GONE);
+                                mHeaderTvLeft.setText("全选");
+                                isSelectAll = false;
+                                mAdapter.setShowBox();
+                                mAdapter.notifyDataSetChanged();
+                                isEdit = false;
+
+                                OkGo.
+                                        post(AppUrl.BBS_LOOKCOLLECTION)
+                                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                        .params("flag", pageIndex + "")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onSuccess(String s, Call call, Response response) {
+                                                MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
+                                                if (myCollectBean.list == null) {
+                                                    mAdapter.changeState(2);
+
+                                                } else {
+                                                    List<MyCollectBean.ListBean> listMore = myCollectBean.list;
+                                                    if (listMore.size() == 10) {
+                                                        mAdapter.changeState(2);
+
+                                                    } else if (listMore.size() <= 10) {
+                                                        mAdapter.changeState(2);
+                                                        mList.addAll(listMore);
+
+                                                    } else {
+                                                        mAdapter.changeState(1);
+                                                        mList.addAll(listMore);
+                                                    }
+                                                }
+                                            }
+                                        });
+                            }
+                        });
                 break;
             case R.id.header_iv_right:
-                if (data.size() == 0) {
+                if (mList == null || mList.size() == 0) {
                     return;
                 }
                 mAdapter.setShowBox();
@@ -179,4 +274,5 @@ public class MyCollectEditActivity extends AppCompatActivity {
                 break;
         }
     }
+
 }

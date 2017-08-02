@@ -1,13 +1,16 @@
 package com.jkpg.ruchu.view.adapter;
 
-import android.support.v7.widget.CardView;
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.VideoBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.List;
@@ -20,10 +23,12 @@ import butterknife.ButterKnife;
  */
 
 public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainViewHolder> implements View.OnClickListener {
-    private List<VideoBean> videos;
+    List<VideoBean.VideoMSBean> vedioMS;
+    Context context;
 
-    public NewRLAdapter(List<VideoBean> videos) {
-        this.videos = videos;
+    public NewRLAdapter(Context context, List<VideoBean.VideoMSBean> vedioMS) {
+        this.context = context;
+        this.vedioMS = vedioMS;
     }
 
 
@@ -31,7 +36,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (VideoBean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (VideoBean.VideoMSBean.VideomessBean) v.getTag());
         }
     }
 
@@ -44,18 +49,25 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
 
     @Override
     public void onBindViewHolder(NewTrainViewHolder holder, int position) {
-        VideoBean videoBean = videos.get(position);
-        holder.itemView.setTag(videos.get(position));
+        holder.itemView.setTag(vedioMS.get(position).videomess);
+        VideoBean.VideoMSBean videoBean = vedioMS.get(position);
         holder.mItemNewTitle.setText(videoBean.title);
-        holder.mItemNewTime.setText(videoBean.time);
+        holder.mItemNewTime.setText(videoBean.videotime);
+        Glide.with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + videoBean.imageUrl)
+                .placeholder(R.drawable.new_guide_bg)
+                .crossFade()
+                .centerCrop()
+                .error(R.drawable.new_guide_bg)
+                .into(holder.mItemRL);
     }
 
     @Override
     public int getItemCount() {
-        if (videos == null)
+        if (vedioMS == null)
             return 0;
         else
-            return videos.size();
+            return vedioMS.size();
     }
 
     static class NewTrainViewHolder extends RecyclerView.ViewHolder {
@@ -63,8 +75,8 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
         TextView mItemNewTitle;
         @BindView(R.id.item_new_time)
         TextView mItemNewTime;
-        @BindView(R.id.item_card_view)
-        CardView mItemCardView;
+        @BindView(R.id.item_new_rl)
+        ImageView mItemRL;
 
         NewTrainViewHolder(View view) {
             super(view);
@@ -73,7 +85,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
     }
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, VideoBean data);
+        void onItemClick(View view, VideoBean.VideoMSBean.VideomessBean data);
 
     }
 

@@ -281,12 +281,12 @@ public class SendNoteActivity extends AppCompatActivity {
         mTitle = getIntent().getStringExtra("title");
         mSendNoteTvPlateContent.setText(mTitle);
         data = new ArrayList<>();
-        data.add(new PlateBean("尴尬体位"));
+        /*data.add(new PlateBean("尴尬体位"));
         data.add(new PlateBean("小确幸"));
         data.add(new PlateBean("爱爱糗事"));
         data.add(new PlateBean("我的进步"));
         data.add(new PlateBean("灰色心情"));
-        data.add(new PlateBean("康复百宝箱"));
+        data.add(new PlateBean("康复百宝箱"));*/
         View view = View.inflate(UIUtils.getContext(), R.layout.view_plate_notice, null);
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(view)

@@ -40,7 +40,6 @@
                 android:id="@+id/result_tv_grade"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="B级"
                 android:textColor="@color/colorPink"
                 android:textSize="18sp"/>
         </LinearLayout>
@@ -59,7 +58,6 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="chan"
             android:textColor="@android:color/black"
             android:textSize="16sp"/>
 

@@ -11,16 +11,24 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.jkpg.ruchu.MyTrainBean;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.MyTrainBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.MyTrainRVAdapter;
+import com.lzy.okgo.OkGo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/18.
@@ -32,7 +40,6 @@ public class MyTrainActivity extends AppCompatActivity {
     @BindView(R.id.my_train_recycler_view)
     RecyclerView mMyTrainRecyclerView;
 
-    private List<MyTrainBean> mDatas;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,150 +48,41 @@ public class MyTrainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mHeaderTvTitle.setText("我的训练");
         initData();
-        initRecyclerView();
     }
 
     private void initData() {
-        mDatas = new ArrayList<>();
-        mDatas.add(new MyTrainBean(R.drawable.grade_1,"我不听","我不听","我不听",true,"便利店可以办会员了？\n" +
-                "\n" +
-                "意思是买瓶2块钱的饮料还要办个会员卡？\n" +
-                "\n" +
-                "说好的轻便、快捷、用完即走呢？\n" +
-                "\n" +
-                "我不听…"));
-           mDatas.add(new MyTrainBean(R.drawable.grade_2,"我不听","我不听","我不听",true,"便利店可以办会员了？\n" +
-                "\n" +
-                "意思是买瓶2块钱的饮料还要办个会员卡？\n" +
-                "\n" +
-                "说好的轻便、快捷、用完即走呢？\n" +
-                "\n" +
-                "我不听…"));
-           mDatas.add(new MyTrainBean(R.drawable.grade_3,"我不听","我不听","我不听",true,"便利店可以办会员了？\n" +
-                "\n" +
-                "意思是买瓶2块钱的饮料还要办个会员卡？\n" +
-                "\n" +
-                "说好的轻便、快捷、用完即走呢？\n" +
-                "\n" +
-                "我不听…"));
-           mDatas.add(new MyTrainBean(R.drawable.grade_4,"我不听","我不听","我不听",true,"便利店可以办会员了？\n" +
-                "\n" +
-                "意思是买瓶2块钱的饮料还要办个会员卡？\n" +
-                "\n" +
-                "说好的轻便、快捷、用完即走呢？\n" +
-                "\n" +
-                "我不听…"));
-           mDatas.add(new MyTrainBean(R.drawable.grade_5,"我不听","我不听","我不听",true,"便利店可以办会员了？\n" +
-                "\n" +
-                "意思是买瓶2块钱的饮料还要办个会员卡？\n" +
-                "\n" +
-                "说好的轻便、快捷、用完即走呢？\n" +
-                "\n" +
-                "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "\n" +
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"+
-                   "我不听…"));
+        OkGo
+                .post(AppUrl.OPENMYPRACTICE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("level", "")
+                .execute(new StringDialogCallback(MyTrainActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        MyTrainBean myTrainBean = new Gson().fromJson(s, MyTrainBean.class);
+                        List<MyTrainBean.ListBean> list = myTrainBean.list;
+                        list.get(0).backgroundRes = R.drawable.grade_1;
+                        list.get(1).backgroundRes = R.drawable.grade_2;
+                        list.get(2).backgroundRes = R.drawable.grade_3;
+                        list.get(3).backgroundRes = R.drawable.grade_4;
+                        list.get(4).backgroundRes = R.drawable.grade_5;
 
+                        int i = Integer.parseInt(myTrainBean.ulevel) - 1;
+                        list.get(i).isSelect = true;
+                        initRecyclerView(list);
 
+                    }
+                });
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(final List<MyTrainBean.ListBean> list) {
         mMyTrainRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        MyTrainRVAdapter myTrainRVAdapter = new MyTrainRVAdapter(R.layout.item_my_train, mDatas);
+        final MyTrainRVAdapter myTrainRVAdapter = new MyTrainRVAdapter(R.layout.item_my_train, list);
         mMyTrainRecyclerView.setAdapter(myTrainRVAdapter);
         myTrainRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
                 new AlertDialog.Builder(MyTrainActivity.this)
-                        .setMessage(mDatas.get(position).introduce)
+                        .setMessage(list.get(position).introduction)
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -194,10 +92,23 @@ public class MyTrainActivity extends AppCompatActivity {
                         .setPositiveButton("启用", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-
+                                OkGo
+                                        .post(AppUrl.OPENMYPRACTICE)
+                                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                        .params("level", (position + 1 + ""))
+                                        .execute(new StringDialogCallback(MyTrainActivity.this) {
+                                            @Override
+                                            public void onSuccess(String s, Call call, Response response) {
+                                                for (int i = 0; i < 5; i++) {
+                                                    list.get(i).isSelect = false;
+                                                }
+                                                list.get(position).isSelect = true;
+                                                myTrainRVAdapter.notifyDataSetChanged();
+                                            }
+                                        });
                             }
                         })
-                        .setTitle("要启用 V"+(position+1)+" 难度训练吗？")
+                        .setTitle("要启用 V" + (position + 1) + " 难度训练吗？")
                         .show();
             }
         });

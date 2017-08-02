@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 
 import butterknife.BindView;
@@ -32,6 +33,7 @@ public class TestResultActivity extends AppCompatActivity {
     Button mResultBtnLook;
     @BindView(R.id.result_btn_start)
     Button mResultBtnStart;
+    private TestResultBean mTestResultBean;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +41,13 @@ public class TestResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_test_result);
         ButterKnife.bind(this);
         initHeader();
+        initData();
+    }
+
+    private void initData() {
+        mTestResultBean = getIntent().getParcelableExtra("testResultBean");
+        mResultTvGrade.setText(mTestResultBean.count + "分");
+        mResultTvPlan.setText(mTestResultBean.level);
     }
 
     private void initHeader() {
@@ -52,27 +61,13 @@ public class TestResultActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.result_btn_look:
-                startActivity(new Intent(TestResultActivity.this, TestReportActivity.class));
+                Intent intent = new Intent(TestResultActivity.this, TestReportActivity.class);
+                intent.putExtra("testResultBean", mTestResultBean);
+                startActivity(intent);
                 break;
             case R.id.result_btn_start:
-               /* OkGo
-                        .post(AppUrl.BEGINPRACTICE)
-                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(String s, Call call, Response response) {
-                                LogUtils.i(s);
-                                TrainPointBean trainPointBean = new Gson().fromJson(s, TrainPointBean.class);
-                                Intent intent = new Intent(TestResultActivity.this, StartTrainActivity2.class);
-                                Bundle bundle = new Bundle();
-                                bundle.putSerializable("trainPointBean", trainPointBean);
-                                intent.putExtras(bundle);
-                                startActivity(intent);
-                                finish();
-
-                            }
-                        });*/
-               startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                finish();
                 break;
         }
     }

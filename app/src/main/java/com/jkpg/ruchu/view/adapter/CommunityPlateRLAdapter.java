@@ -7,7 +7,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.PlateBean;
+import com.jkpg.ruchu.bean.CommunityMianBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.CircleImageView;
 
@@ -21,9 +22,9 @@ import butterknife.ButterKnife;
  */
 
 public class CommunityPlateRLAdapter extends RecyclerView.Adapter<CommunityPlateRLAdapter.CommunityPlateRLViewHolder> implements View.OnClickListener {
-    private List<PlateBean> plates;
+    private List<CommunityMianBean.List2Bean> plates;
 
-    public CommunityPlateRLAdapter(List<PlateBean> plates) {
+    public CommunityPlateRLAdapter(List<CommunityMianBean.List2Bean> plates) {
         this.plates = plates;
     }
 
@@ -37,12 +38,12 @@ public class CommunityPlateRLAdapter extends RecyclerView.Adapter<CommunityPlate
 
     @Override
     public void onBindViewHolder(CommunityPlateRLViewHolder holder, int position) {
-        PlateBean plateBean = plates.get(position);
+        CommunityMianBean.List2Bean plateBean = plates.get(position);
         holder.itemView.setTag(plateBean);
-        holder.mPlateTvTitle.setText(plateBean.title);
-        holder.mPlateTvBody.setText(plateBean.body);
-        holder.mPlateTvNum.setText(plateBean.number);
-        Glide.with(UIUtils.getContext()).load(plateBean.ImageUrl).error(R.mipmap.ic_launcher).into(holder.mPlateCivPhoto);
+        holder.mPlateTvTitle.setText(plateBean.platename);
+        holder.mPlateTvBody.setText(plateBean.remark);
+        holder.mPlateTvNum.setText(plateBean.zongshu+"贴");
+        Glide.with(UIUtils.getContext()).load(AppUrl.BASEURL+plateBean.plateimg).error(R.mipmap.ic_launcher).into(holder.mPlateCivPhoto);
 
     }
 
@@ -58,13 +59,13 @@ public class CommunityPlateRLAdapter extends RecyclerView.Adapter<CommunityPlate
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (PlateBean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (CommunityMianBean.List2Bean) v.getTag());
         }
     }
 
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, PlateBean data);
+        void onItemClick(View view, CommunityMianBean.List2Bean data);
     }
 
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;

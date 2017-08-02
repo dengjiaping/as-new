@@ -45,7 +45,7 @@
                 android:layout_marginRight="16dp"
                 android:textColor="@android:color/black"
 
-                android:text="      "/>
+                android:text=""/>
 
             <View
                 android:layout_width="0dp"
@@ -85,7 +85,7 @@
                 android:layout_marginLeft="16dp"
                 android:textColor="@android:color/black"
                 android:layout_marginRight="16dp"
-                android:text="      "/>
+                android:text=""/>
 
             <View
                 android:layout_width="0dp"

@@ -62,7 +62,6 @@
                     android:id="@+id/plate_detail_tv_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2017-05-21 09:20"
                     android:textColor="@color/colorGray3"
                     android:textSize="12sp"/>
 
@@ -111,8 +110,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:lines="2"
-                android:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢啊哈哈哈啊哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"
+                android:maxLines="2"
                 android:textColor="@color/colorGray3"
                 android:textSize="14sp"/>
         </LinearLayout>

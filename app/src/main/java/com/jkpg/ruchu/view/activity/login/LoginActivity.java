@@ -6,7 +6,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -14,21 +13,33 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.LoginQQBean;
+import com.jkpg.ruchu.bean.LoginWxBean;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.MainActivity;
+import com.lzy.okgo.OkGo;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/11.
@@ -91,12 +102,17 @@ public class LoginActivity extends AppCompatActivity {
 
             case R.id.login_ll_phone:
                 startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
                 break;
             case R.id.login_btn_random:
-                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+//                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "587a253d-3d07-11e7-aebf-fa163e547655");
+                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "d523f793-3ee1-11e7-aebf-fa163e534242");
+                // TODO: 2017/7/21
+               /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);*/
+                EventBus.getDefault().post(new MessageEvent("Login"));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
                 finish();
                 break;
         }
@@ -105,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private long firstTime = 0;
 
-    @Override
+   /* @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
             if (System.currentTimeMillis() - firstTime > 2000) {
@@ -118,12 +134,12 @@ public class LoginActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
     private void LoginQQ() {
         UMShareAPI mShareAPI = UMShareAPI.get(LoginActivity.this);
         if (mShareAPI.isInstall(LoginActivity.this, SHARE_MEDIA.QQ)) {
-            mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
+            // mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
             mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
         } else {
             ToastUtils.showShort(UIUtils.getContext(), "未安装QQ");
@@ -136,7 +152,7 @@ public class LoginActivity extends AppCompatActivity {
     private void LoginWX() {
         UMShareAPI mShareAPI = UMShareAPI.get(LoginActivity.this);
         if (mShareAPI.isInstall(LoginActivity.this, SHARE_MEDIA.WEIXIN)) {
-            mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+//            mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
             mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
         } else {
             ToastUtils.showShort(UIUtils.getContext(), "未安装微信");
@@ -156,23 +172,81 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-            Toast.makeText(getApplicationContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
-            String temp = "";
-            for (String key : data.keySet()) {
-                temp = temp + key + " : " + data.get(key) + "\n";
+
+            //Toast.makeText(UIUtils.getContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
+
+            if (platform == SHARE_MEDIA.WEIXIN) {
+              /*  String temp = "";
+                for (String key : data.keySet()) {
+                    temp = temp + key + " : " + data.get(key) + "\n";
+                }
+                LogUtils.i(temp);*/
+
+                OkGo
+                        .post(AppUrl.WXLOGIN)
+                        .params("unionid", data.get("unionid"))
+                        .params("appwxnikename", data.get("name"))
+                        .params("appwxurlimage", data.get("iconurl"))
+                        .execute(new StringDialogCallback(LoginActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
+                                if (loginWxBean.state == 200) {
+
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
+
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
+                                    startActivity(new Intent(LoginActivity.this,BindingPhoneActivity.class));
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
+                                } else {
+                                    ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
+                                }
+                                LogUtils.i(s);
+                            }
+                        });
+
+            } else if (platform == SHARE_MEDIA.QQ) {
+                /*String temp = "";
+                for (String key : data.keySet()) {
+                    temp = temp + key + " : " + data.get(key) + "\n";
+                }
+                LogUtils.i(temp);*/
+
+                OkGo
+                        .post(AppUrl.QQLOGIN)
+                        .params("uid", data.get("uid"))
+                        .params("appqqnikename", data.get("name"))
+                        .params("appqqurlimage", data.get("iconurl"))
+                        .execute(new StringDialogCallback(LoginActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                LoginQQBean loginQQBean = new Gson().fromJson(s, LoginQQBean.class);
+                                if (loginQQBean.state == 200) {
+
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
+
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQQBean.backMess.userId);
+                                    startActivity(new Intent(LoginActivity.this,BindingPhoneActivity.class));
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
+                                } else {
+                                    ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
+                                }
+                            }
+                        });
             }
-            LogUtils.i(temp);
 
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText(getApplicationContext(), "Authorize fail", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText(getApplicationContext(), "Authorize cancel", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "登陆取消", Toast.LENGTH_SHORT).show();
         }
     };
 

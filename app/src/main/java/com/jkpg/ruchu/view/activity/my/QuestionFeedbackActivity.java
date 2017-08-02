@@ -10,11 +10,23 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
+import com.jkpg.ruchu.utils.UIUtils;
+import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/25.
@@ -55,9 +67,28 @@ public class QuestionFeedbackActivity extends AppCompatActivity {
     }
 
     private void showDialog() {
-        new AlertDialog.Builder(this)
-                .setView(R.layout.view_question_feedback_success)
-                .show();
+        if (StringUtils.isEmpty(mQuestionFeedbackEt.getText().toString())){
+            ToastUtils.showShort(UIUtils.getContext(),"请输入你的反馈内容再提交~");
+            return;
+        }
+        OkGo
+                .post(AppUrl.FEEDBACK)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("content", mQuestionFeedbackEt.getText().toString())
+                .execute(new StringDialogCallback(QuestionFeedbackActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (successBean.success) {
+                            new AlertDialog.Builder(QuestionFeedbackActivity.this)
+                                    .setView(R.layout.view_question_feedback_success)
+                                    .show();
+                        } else {
+                            ToastUtils.showShort(UIUtils.getContext(), "提交失败");
+                        }
+                    }
+                });
+
 
     }
 }

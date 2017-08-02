@@ -20,7 +20,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:text="产后康复 LEVEL 0"
             android:textColor="@android:color/white"
             android:textSize="18sp"/>
 
@@ -35,7 +34,6 @@
                 android:id="@+id/start_train_total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="共计约：00分00秒"
                 android:textColor="@android:color/white"/>
 
             <TextView
@@ -43,7 +41,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
-                android:text="0 / 0 节"
                 android:textColor="@android:color/white"/>
         </LinearLayout>
 
@@ -64,12 +61,6 @@
 
         </RelativeLayout>
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/gradlient_background"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -119,6 +110,12 @@
                 android:clickable="true"/>
         </RelativeLayout>
     </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/gradlient_background"/>
 
     <View
         android:layout_width="match_parent"

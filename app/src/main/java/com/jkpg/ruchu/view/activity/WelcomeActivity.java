@@ -64,10 +64,10 @@ public class WelcomeActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-
-
 */
-                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
+                Intent intentLogin = new Intent(WelcomeActivity.this, LoginActivity.class);
+                Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
+                startActivities(new Intent[]{intentMain,intentLogin});
                 finish();
 
             }

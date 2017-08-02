@@ -58,6 +58,11 @@
                     android:src="@drawable/icon_next"/>
             </RelativeLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:background="#22000000"
+                />
 
             <RelativeLayout
                 android:id="@+id/personal_rl_name"
@@ -138,7 +143,6 @@
 
             <RelativeLayout
                 android:id="@+id/personal_rl_height"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/ripple_with_color">

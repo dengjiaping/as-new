@@ -18,6 +18,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -31,11 +33,17 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.StartTrainBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.DateUtil;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.MainActivity;
 import com.jkpg.ruchu.view.adapter.ChartRLAdapter;
@@ -45,6 +53,9 @@ import com.jkpg.ruchu.widget.leafchart.bean.Axis;
 import com.jkpg.ruchu.widget.leafchart.bean.AxisValue;
 import com.jkpg.ruchu.widget.leafchart.bean.Line;
 import com.jkpg.ruchu.widget.leafchart.bean.PointValue;
+import com.lzy.okgo.OkGo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +65,8 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/6/2.
@@ -100,7 +113,6 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private List<float[]> charts;       //图表集合
     private List<float[]> chartsX;       //图表x集合
     private List<Animator> mAnimators = new ArrayList<>();//所有的动画列表
-    private String totalTime;         //总时间
     private ArrayList<Line> mLine;    // 点的集合
     private List<LineChart> mLines;  //线的集合
     private AutoProgressTask mTask;
@@ -119,6 +131,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private ChartRLAdapter mAdapter;
     private boolean isPause; //是否暂停
     private PopupWindow mPopupWindowSuccess;
+    private StartTrainBean mStartTrainBean;
+    private String mStartTime;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,11 +142,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
 
         initData();
         initHeader();
-        initRecycleView();
         initSound();
 
-        initLineChart(0, (int) chartsX.get(0)[(chartsX.get(0).length) - 1] * 2); // 默认显示第一个图
-        LogUtils.i((int) chartsX.get(0)[(chartsX.get(0).length - 1)] + "= chart");
         /*
          *判断音量设置音量图标
          */
@@ -142,14 +153,77 @@ public class StartTrainActivity2 extends AppCompatActivity {
         if (streamVolume > 0) {
             mStartTrainIvVoice.setChecked(true);
         }
-        mStartTrainSection.setText(1 + "/" + charts.size() + "节"); //初始化小节
-        mStartTrainNowOne.setText("当前为第1节");
-        mStartTrainTotalOne.setText("共" + charts.size() + "节");
+
         myRegisterReceiver();
+
+
+        if (mTask == null) {
+            mTask = new AutoProgressTask();
+        }
+
+        recordTime();
+    }
+
+    private void recordTime() {
+        mStartTrainTvProgressTime.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.toString().equals("00:00")) {
+                    long timeMillis = System.currentTimeMillis();
+                    mStartTime = DateUtil.dateFormat(timeMillis + "", "HH:mm");
+                    LogUtils.i(mStartTime + "=timeMillis");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
     }
 
     private void initData() {
+
+        OkGo
+                .post(AppUrl.STARTEXERCISE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(StartTrainActivity2.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        mStartTrainBean = new Gson().fromJson(s, StartTrainBean.class);
+                        init(mStartTrainBean);
+                        initDot(mStartTrainBean);
+
+                    }
+                });
+
+
+    }
+
+    private void initDot(StartTrainBean startTrainBean) {
         charts = new ArrayList<>();
+        chartsX = new ArrayList<>();
+        List<StartTrainBean.ProgrammeBean> programme = startTrainBean.programme;
+        for (int i = 0; i < programme.size(); i++) {
+            StartTrainBean.ProgrammeBean programmeBean = programme.get(i);
+            float[] floatsX = programmeBean.arr.get(0);
+            float[] floatsY = programmeBean.arr.get(1);
+            charts.add(floatsY);
+            chartsX.add(floatsX);
+        }
+        initRecycleView();
+        initLineChart(0, (int) chartsX.get(0)[(chartsX.get(0).length) - 1] * 2); // 默认显示第一个图
+//        mStartTrainSection.setText(1 + "/" + charts.size() + "节"); //初始化小节
+        mStartTrainNowOne.setText("当前为第1节");
+//        mStartTrainTotalOne.setText("共" + charts.size() + "节");
+        mStartTrainProgressBar.setMax(Integer.parseInt(startTrainBean.totaltime) * 1000);
+
+        /*charts = new ArrayList<>();
         chartsX = new ArrayList<>();
         charts.add(new float[]{1, 2, 3, 5, 5});
         chartsX.add(new float[]{0, 2, 5, 7, 14});
@@ -158,16 +232,19 @@ public class StartTrainActivity2 extends AppCompatActivity {
         charts.add(new float[]{1, 5, 5, 1});
         chartsX.add(new float[]{0, 6, 9, 10});
         charts.add(new float[]{1, 2, 3, 5, 5});
-        chartsX.add(new float[]{0, 2, 5, 7, 14});
-//        charts.add(new float[]{1, 17 / 12.0f, 22 / 12.0f, 27 / 12.0f, 32 / 12.0f, 37 / 12.0f, 42/12.0f, 47/12.0f, 52/12.0f, 57/12.0f, 62/12.0f, 67/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 72/12.0f, 5/2.0f, 1});
-        /*charts.add(new float[]{1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1, 5, 1, 1});
-        charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new float[]{2, 4, 0, 0, 0, 4, 1, 4, 1, 4, 1, *//*4, 1, 4, 2*//*});
-        charts.add(new float[]{2, 3, 4, 2, 2, 3, 2, 3, 2, 3, 2, 3, 2, 3, 2});
-        charts.add(new float[]{2, 4, 1, 4, 1, 4, 1, 4, 1, 4, 1, 2, 3*//*4, 1, 4, 2*//*});*/
-        if (mTask == null) {
-            mTask = new AutoProgressTask();
-        }
+        chartsX.add(new float[]{0, 2, 5, 7, 14});*/
+
+
+    }
+
+    private void init(StartTrainBean startTrainBean) {
+        mStartTrainTitle.setText("产后康复 " + startTrainBean.level);
+        String dateFormat = DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm分ss秒");
+        mStartTrainTotalTime.setText(dateFormat);
+        mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2);
+        mStartTrainTotalOne.setText("共" + startTrainBean.programme.size() + "节");
+        mStartTrainTvProgressTotal.setText(DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm:ss"));
+
     }
 
     private void initSound() {
@@ -236,7 +313,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
             initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
             mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
             scrollRecyclerView(numChart);
-            mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
+//            mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
             mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
         } else {
             mTask.start();
@@ -381,6 +458,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private class AutoProgressTask implements Runnable {
         @Override
         public void run() {
+            mStartTrainProgressBar.setProgress(timeCount);
             String s = DateUtil.dateFormat(timeCount + "", "mm:ss");
             mStartTrainTvProgressTime.setText(s);
             LogUtils.i("timeCount=" + timeCount);
@@ -419,7 +497,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
                         mMap.put(numChart - 1, false);
                         mAdapter.notifyDataSetChanged();
 
-                        mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
+//                        mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
                         mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
 
 
@@ -505,6 +583,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
         super.onDestroy();
         MyApplication.getMainThreadHandler().removeCallbacks(mTask);
         mSoundPool.release();
+        EventBus.getDefault().post("Train");
     }
 
     @Override
@@ -570,36 +649,52 @@ public class StartTrainActivity2 extends AppCompatActivity {
     }
 
     private void showSuccess() {
-        mPopupWindowSuccess = new PopupWindow(this);
-        mPopupWindowSuccess.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-        mPopupWindowSuccess.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
-        View viewPay = LayoutInflater.from(this).inflate(R.layout.view_train_success, null);
-        viewPay.findViewById(R.id.view_success_btn_ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mPopupWindowSuccess.dismiss();
+        OkGo
+                .post(AppUrl.EXERCISEEND)
+                .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+                .params("starttime",mStartTime)
+                .params("alltimelong",mStartTrainBean.totaltime)
+                .execute(new StringDialogCallback(StartTrainActivity2.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        mPopupWindowSuccess = new PopupWindow(StartTrainActivity2.this);
+                        mPopupWindowSuccess.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+                        mPopupWindowSuccess.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+                        View viewPay = LayoutInflater.from(StartTrainActivity2.this).inflate(R.layout.view_train_success, null);
+                        viewPay.findViewById(R.id.view_success_btn_ok).setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                mPopupWindowSuccess.dismiss();
 
-            }
-        });
-        mPopupWindowSuccess.setContentView(viewPay);
-        mPopupWindowSuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindowSuccess.setOutsideTouchable(false);
-        mPopupWindowSuccess.setFocusable(false);
-        mPopupWindowSuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.CENTER, 0, 0);
-        PopupWindowUtils.darkenBackground(StartTrainActivity2.this, .4f);
-        mPopupWindowSuccess.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(StartTrainActivity2.this, 1f);
-                startActivity(new Intent(StartTrainActivity2.this, MainActivity.class));
-                finish();
-            }
-        });
+                            }
+                        });
+                        ((TextView) viewPay.findViewById(R.id.view_success_integral)).setText("+" + mStartTrainBean.integral + "分");
+                        ((TextView) viewPay.findViewById(R.id.view_success_experience)).setText("+" + mStartTrainBean.experience + "分");
+                        mPopupWindowSuccess.setContentView(viewPay);
+                        mPopupWindowSuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
+                        mPopupWindowSuccess.setOutsideTouchable(false);
+                        mPopupWindowSuccess.setFocusable(false);
+                        mPopupWindowSuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.CENTER, 0, 0);
+                        PopupWindowUtils.darkenBackground(StartTrainActivity2.this, .4f);
+                        mPopupWindowSuccess.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                            @Override
+                            public void onDismiss() {
+                                PopupWindowUtils.darkenBackground(StartTrainActivity2.this, 1f);
+                                startActivity(new Intent(StartTrainActivity2.this, MainActivity.class));
+                                finish();
+                            }
+                        });
+                    }
+                });
+
+
+
+
     }
 
     public void scrollRecyclerView(final int item) {
         final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, UIUtils.dip2Px(130));
-        valueAnimator.setDuration(2000);
+        valueAnimator.setDuration(1000);
         valueAnimator.setInterpolator(new LinearInterpolator());
         valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
 
@@ -617,4 +712,5 @@ public class StartTrainActivity2 extends AppCompatActivity {
         valueAnimator.start();
 
     }
+
 }

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.view.adapter.MyCommentAdapter;
 import com.jkpg.ruchu.view.adapter.MySMSAdapter;
-import com.jkpg.ruchu.view.adapter.VipManageVPAdapter;
+import com.jkpg.ruchu.view.adapter.ViewPagerAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +53,7 @@ public class MySMSActivity extends AppCompatActivity {
 
     private void init() {
         mMySpeakTabLayout.setupWithViewPager(mMySpeakViewPager);
-        mMySpeakViewPager.setAdapter(new VipManageVPAdapter(mViews,mTitle));
+        mMySpeakViewPager.setAdapter(new ViewPagerAdapter(mViews,mTitle));
     }
 
     private void initData() {

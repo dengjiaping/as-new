@@ -10,17 +10,24 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.VideoBean;
+import com.jkpg.ruchu.bean.OtherVideoBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.OtherRLAdapter;
+import com.lzy.okgo.OkGo;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/18.
@@ -34,7 +41,6 @@ public class OtherTrainActivity extends AppCompatActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
 
-    private List<VideoBean> videos;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,25 +48,33 @@ public class OtherTrainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_other_train);
         ButterKnife.bind(this);
         initHeader();
-        initRecycleView();
+        initData();
     }
 
     private void initData() {
-        videos = new ArrayList<>();
-        videos.add(new VideoBean("核心肌群初级训练", "2:30", ""));
-        videos.add(new VideoBean("核心肌群中级训练", "2:30", ""));
-        videos.add(new VideoBean("核心肌群高级训练", "2:30", ""));
+        OkGo
+                .post(AppUrl.NEWHANDVEDIO)
+                .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID,""))
+                .params("type",2)
+                .execute(new StringDialogCallback(OtherTrainActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        OtherVideoBean otherVideoBean = new Gson().fromJson(s, OtherVideoBean.class);
+                        List<OtherVideoBean.VideoMS2Bean> vedioMS2 = otherVideoBean.videoMS2;
+                        initRecycleView(vedioMS2);
+
+                    }
+                });
     }
 
-    private void initRecycleView() {
-        initData();
+    private void initRecycleView(List<OtherVideoBean.VideoMS2Bean> vedioMS2) {
         mOtherRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mOtherRecyclerView.setHasFixedSize(true);
-        OtherRLAdapter otherRLAdapter = new OtherRLAdapter(videos);
+        OtherRLAdapter otherRLAdapter = new OtherRLAdapter(vedioMS2);
         mOtherRecyclerView.setAdapter(otherRLAdapter);
         otherRLAdapter.setOnItemClickListener(new OtherRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, VideoBean data) {
+            public void onItemClick(View view, OtherVideoBean.VideoMS2Bean data) {
                 startActivity(new Intent(OtherTrainActivity.this, VideoDetailActivity.class));
             }
         });

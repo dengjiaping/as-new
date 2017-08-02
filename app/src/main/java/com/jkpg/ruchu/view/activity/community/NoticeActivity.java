@@ -3,18 +3,13 @@ package com.jkpg.ruchu.view.activity.community;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.NoticeBean;
-import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.adapter.NoticRVAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -49,14 +44,14 @@ public class NoticeActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        data = new ArrayList<>();
+      /*  data = new ArrayList<>();
         data.add(new NoticeBean("鼓励发言", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢"));
         data.add(new NoticeBean("鼓励发言", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢"));
         data.add(new NoticeBean("圈规在先", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢"));
         data.add(new NoticeBean("圈规在先", "哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈呢"));
         mNoticeIvClose.setVisibility(View.GONE);
         mNoticeRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mNoticeRecyclerView.setAdapter(new NoticRVAdapter(R.layout.item_notice, data));
+        mNoticeRecyclerView.setAdapter(new NoticRVAdapter(R.layout.item_notice, data));*/
     }
 
     private void initHeader() {

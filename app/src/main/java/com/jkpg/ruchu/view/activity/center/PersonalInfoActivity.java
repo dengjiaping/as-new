@@ -31,7 +31,14 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.PersonallInfoBean;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
@@ -42,6 +49,9 @@ import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.AddressPickTask;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.lzy.okgo.OkGo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -59,6 +69,8 @@ import cn.qqtheme.framework.picker.NumberPicker;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static android.os.Build.VERSION_CODES.M;
 
@@ -99,8 +111,8 @@ public class PersonalInfoActivity extends AppCompatActivity {
     Button mPersonalBtnSave;
     @BindView(R.id.personal_view)
     ScrollView mPersonalView;
-   /* @BindView(R.id.personal_ll_ok)
-    LinearLayout mPersonalLlOk;*/
+    /* @BindView(R.id.personal_ll_ok)
+     LinearLayout mPersonalLlOk;*/
    /* @BindView(R.id.personal_success)
     LinearLayout mPersonalSuccess;*/
     @BindView(R.id.personal_tv_parity)
@@ -130,26 +142,49 @@ public class PersonalInfoActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_info);
         ButterKnife.bind(this);
+        initData();
         initHeader();
-        initPhoto();
     }
 
-    private void initPhoto() {
-        String imgPath = SPUtils.getString(UIUtils.getContext(), Constants.PERSONAIMAGE, "");
-        if (!StringUtils.isEmpty(imgPath)) {
-            Glide
-                    .with(UIUtils.getContext())
-                    .load(new File(imgPath))
-                    .error(R.drawable.icon_photo)
-                    .into(mPersonalCivPhoto);
-        }
+    private void initData() {
+
+
+        OkGo
+                .post(AppUrl.UPDATE_INFO)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(PersonalInfoActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        LogUtils.i(s);
+                        PersonallInfoBean personallInfoBean = new Gson().fromJson(s, PersonallInfoBean.class);
+                        init(personallInfoBean);
+
+                    }
+                });
+    }
+
+    private void init(PersonallInfoBean personallInfoBean) {
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + personallInfoBean.headImg)
+                .crossFade()
+                .error(R.drawable.icon_photo)
+                .into(mPersonalCivPhoto);
+
+        mPersonalTvName.setText(personallInfoBean.nick);
+        mPersonalTvBirth.setText(personallInfoBean.birth);
+        mPersonalTvHeight.setText(personallInfoBean.height);
+        mPersonalTvWeight.setText(personallInfoBean.weight);
+        mPersonalTvParity.setText(personallInfoBean.taici);
+        mPersonalTvTime.setText(personallInfoBean.chanhoutime);
+        mPersonalTvAddress.setText(personallInfoBean.address);
     }
 
     private void initHeader() {
         mHeaderTvTitle.setText("我的资料");
     }
 
-    @OnClick({R.id.personal_rl_photo,R.id.personal_rl_parity,R.id.personal_rl_time, R.id.personal_rl_name, R.id.personal_rl_birth, R.id.personal_rl_height, R.id.personal_rl_weight, R.id.personal_rl_address, R.id.personal_btn_save, R.id.header_iv_left})
+    @OnClick({R.id.personal_rl_photo, R.id.personal_rl_parity, R.id.personal_rl_time, R.id.personal_rl_name, R.id.personal_rl_birth, R.id.personal_rl_height, R.id.personal_rl_weight, R.id.personal_rl_address, R.id.personal_btn_save, R.id.header_iv_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.personal_rl_photo:
@@ -241,29 +276,71 @@ public class PersonalInfoActivity extends AppCompatActivity {
     }
 
     private void showOK() {
-//        URL = URL + "?username=" + mPersonalTvName.getText().toString() + "&shengao=" + mPersonalTvHeight.getText().toString() + "&tizhong" + mPersonalTvWeight.getText().toString() +
-//                "&birth=" + mPersonalTvBirth.getText().toString() + "&address=" + mPersonalTvAddress.getText().toString() + "&u_tel=00000000000";
-//        OkGo.post(URL)
-//                .tag(this)
-//                .isMultipart(true)
-//                .params("image", new File(mScaleImgPath))
-//                .execute(new StringCallback() {
-//
-//                    @Override
-//                    public void onSuccess(String s, Call call, Response response) {
-//                    }
-//                });
+/*
+        if (!NetworkUtils.isAvailableByPing()) {
+            ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+            return;
+        }*/
+        if (!StringUtils.isEmpty(mScaleImgPath)) {
+            OkGo
+                    .post(AppUrl.UPDATEHEADIMG + "?userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .isMultipart(true)
+                    .params("image", new File(mScaleImgPath))
+                    .execute(new StringDialogCallback(this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
 
+                        }
+
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            ToastUtils.showShort(UIUtils.getContext(), "头像保存失败");
+                        }
+                    });
+        }
 
         // TODO: 2017/5/16
+        OkGo
+                .post(AppUrl.UPDATE_INFO)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("type", "1")
+                .params("nick", mPersonalTvName.getText().toString())
+                .params("birth", mPersonalTvBirth.getText().toString())
+                .params("weight", mPersonalTvWeight.getText().toString())
+                .params("height", mPersonalTvHeight.getText().toString())
+                .params("address", mPersonalTvAddress.getText().toString())
+                .params("chanhoutime", mPersonalTvTime.getText().toString())
+                .params("taici", mPersonalTvParity.getText().toString())
+                .execute(new StringDialogCallback(PersonalInfoActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (!successBean.success) {
+                            ToastUtils.showShort(UIUtils.getContext(), "昵称已存在");
+                        } else {
 
-        new AlertDialog.Builder(this)
-                .setView(View.inflate(this,R.layout.view_save_success,null))
-                .show();
+//                            EventBus.getDefault().post();
+                            EventBus.getDefault().post(new MessageEvent("MyFragment"));
 
-
-//        mPersonalSuccess.setVisibility(View.VISIBLE);
-//        mPersonalLlOk.setAnimation(AnimationUtil.createPanInAnim(2000));
+                            AlertDialog dialog = new AlertDialog.Builder(PersonalInfoActivity.this)
+                                    .setView(View.inflate(PersonalInfoActivity.this, R.layout.view_save_success, null))
+                                    .show();
+                            dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    finish();
+                                }
+                            });
+                            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            }, 3000);
+                        }
+                    }
+                });
 
     }
 
@@ -319,7 +396,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
         //picker.setOffset(2);//偏移量
         picker.setRange(145, 200, 1);//数字范围
         picker.setSelectedItem(168);
-        picker.setLabel("Cm");
+        picker.setLabel("cm");
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 
         picker.setTextColor(getResources().getColor(R.color.colorPink));
@@ -437,7 +514,19 @@ public class PersonalInfoActivity extends AppCompatActivity {
                         pickPictureFromCamera();
                         break;
                     case 1:
-                        pickPictureFromSystem();
+                        if (Build.VERSION.SDK_INT >= M) {
+                            //如果是6.0或6.0以上，则要申请运行时权限，这里需要申请拍照和写入SD卡的权限
+                            requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                                @Override
+                                public void onGranted() {
+                                    pickPictureFromSystem();
+                                }
+
+                                @Override
+                                public void onDenied(List<String> deniedPermissions) {
+                                }
+                            });
+                        }
                         break;
                 }
 
@@ -563,10 +652,10 @@ public class PersonalInfoActivity extends AppCompatActivity {
                             if (outputUri != null) {
                                 bm = ImageTools.decodeUriAsBitmap(outputUri);
                                 //如果是拍照的,删除临时文件
-                                temFile = new File(imgPath);
+                               /* temFile = new File(imgPath);
                                 if (temFile.exists()) {
                                     temFile.delete();
-                                }
+                                }*/
 
                                 //进行压缩
                                 mScaleImgPath = FileUtils.saveBitmapByQuality(bm, 80);
@@ -575,7 +664,6 @@ public class PersonalInfoActivity extends AppCompatActivity {
                                         .with(UIUtils.getContext())
                                         .load(new File(mScaleImgPath))
                                         .into(mPersonalCivPhoto);
-                                SPUtils.saveString(UIUtils.getContext(), Constants.PERSONAIMAGE, mScaleImgPath);
                             }
                         } else {
                             ToastUtils.showShort(UIUtils.getContext(), "选择图片发生错误，图片可能已经移位或删除");
@@ -610,4 +698,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
                 break;
         }
     }
+
+
 }
+

@@ -13,16 +13,22 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.Login;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.MainActivity;
 import com.lzy.okgo.OkGo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,8 +52,6 @@ public class LoginPhoneActivity extends AppCompatActivity {
     Button mLoginBtnOk;
     @BindView(R.id.login_tv_forget)
     TextView mLoginTvForget;
-    private String mPhone;
-    private String mPassword;
 
 
     @Override
@@ -85,13 +89,13 @@ public class LoginPhoneActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.login_btn_ok:
-                mPhone = mLoginEtPhone.getText().toString().trim();
-                mPassword = mLoginEtPassword.getText().toString().trim();
-                if (!RegexUtils.isMatch(RegexUtils.REGEX_PHONE, mPhone)) {
+                String phone = mLoginEtPhone.getText().toString().trim();
+                String password = mLoginEtPassword.getText().toString().trim();
+                if (!RegexUtils.isMatch(RegexUtils.REGEX_PHONE, phone)) {
                     ToastUtils.showShort(UIUtils.getContext(), "请输入正确的手机号");
                     return;
                 }
-                if (StringUtils.isEmpty(mPassword)) {
+                if (StringUtils.isEmpty(password)) {
                     ToastUtils.showShort(UIUtils.getContext(), "请输入密码");
                     return;
                 }
@@ -99,32 +103,28 @@ public class LoginPhoneActivity extends AppCompatActivity {
                     ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
                     return;
                 }
-                //md5加密
-               /* mPassword = EncryptUtils.encryptMD5ToString(mPassword);
-                LogUtils.i(mPassword + "-- phone");*/
-                OkGo
+                password = Md5Utils.getMD5(password);
+                       OkGo
                         .post(AppUrl.LOGIN)
                         .tag(this)
-                        .params("tele", mPhone)
-                        .params("password", mPassword)
+                        .params("tele", phone)
+                        .params("password", password)
                         .execute(new StringDialogCallback(this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
+                                LogUtils.i(s);
                                 Login login = new Gson().fromJson(s, Login.class);
-                                SPUtils.saveString(UIUtils.getContext(), Constants.PERSONALINFO, s);
                                 if (!login.success) {
                                     ToastUtils.showShort(UIUtils.getContext(), "手机号或密码错误");
-                                }
-                                // FIXME: 2017/7/4 
-                                /*else if (login.birth == "") {
+                                } else if (login.isfirst == 1) {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
-                                    finish();
+                                    EventBus.getDefault().postSticky(new MessageEvent("Login"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
-                                } */
-                                else {
-                                    startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
-                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
+                                } else {
+                                    // TODO: 2017/7/21
+                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
+                                    finish();
                                 }
                             }
                         });

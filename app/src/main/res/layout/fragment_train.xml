@@ -1,202 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+    >
 
-    <include layout="@layout/view_header"/>
-
-    <com.jkpg.ruchu.widget.banner.Banner
-        android:id="@+id/train_banner"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        >
-    </com.jkpg.ruchu.widget.banner.Banner>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="match_parent"
+        android:background="@drawable/train_bg"
+        android:clickable="true"
+        android:orientation="vertical">
 
-        <RelativeLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1">
+
+        <include layout="@layout/view_header"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.jkpg.ruchu.widget.banner.Banner
+                android:id="@+id/train_banner"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                >
+            </com.jkpg.ruchu.widget.banner.Banner>
 
             <LinearLayout
-                android:id="@+id/train_ll_new"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-                android:background="@drawable/ripple_with_color"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="5dp">
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageView3"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
-                    android:src="@drawable/train_1"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:text="入门指导"
-                    android:textColor="@android:color/black"
-                    android:textSize="16sp"/>
+                    android:layout_weight="1">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/train_ll_new"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentTop="true"
+                        android:background="@drawable/ripple_with_color"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="5dp">
+
+                        <ImageView
+                            android:id="@+id/imageView3"
+                            android:layout_width="75dp"
+                            android:layout_height="75dp"
+                            android:src="@drawable/train_1"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:text="入门指导"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="欢迎进入到如初"/>
+                    </LinearLayout>
+
+                    <ImageView
+                        android:id="@+id/train_iv_new_hand"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/icon_new_hand"/>
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"/>
+
+                <LinearLayout
+                    android:id="@+id/train_ll_my"
+                    android:layout_width="0dp"
+
                     android:layout_height="wrap_content"
-                    android:text="欢迎进入到如初"/>
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_with_color"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:id="@+id/imageView2"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/train_2"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="我的训练"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="查看我的训练"/>
+                </LinearLayout>
+
+                <View
+                    android:layout_width="0.5dp"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/darker_gray"/>
+
+                <LinearLayout
+                    android:id="@+id/train_ll_other"
+                    android:layout_width="0dp"
+
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/ripple_with_color"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="5dp">
+
+                    <ImageView
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:src="@drawable/train_3"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5dp"
+                        android:text="拓展训练"
+                        android:textColor="@android:color/black"
+                        android:textSize="16sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="难度进一步提升"/>
+                </LinearLayout>
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/train_iv_new_hand"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:src="@drawable/icon_new_hand"/>
-        </RelativeLayout>
-
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray"/>
-
-        <LinearLayout
-            android:id="@+id/train_ll_my"
-            android:layout_width="0dp"
-
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/ripple_with_color"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dp">
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/train_2"/>
-
             <TextView
-                android:layout_width="wrap_content"
+                android:id="@+id/train_tv_tip"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="我的训练"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:background="@color/colorPinkTran"
+                android:drawableRight="@drawable/icon_cancel"
+                android:paddingBottom="5dp"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp"
+                android:paddingTop="5dp"
+                android:text="请先完成健康测试，在进行训练哦！"
+                android:textSize="10sp"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="查看我的训练"/>
-        </LinearLayout>
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-        <View
-            android:layout_width="0.5dp"
-            android:layout_height="match_parent"
-            android:background="@android:color/darker_gray"/>
+                <LinearLayout
+                    android:id="@+id/train_ll_test"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/train_ll_other"
-            android:layout_width="0dp"
+                    <Button
+                        android:id="@+id/train_bt_test"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:background="@drawable/selector_test_btn_bg"
+                        android:text="健康测试"
+                        android:textColor="@color/select_test_text_color"
+                        />
 
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/ripple_with_color"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="5dp">
+                    <TextView
+                        android:id="@+id/train_tv_test"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="点击进入我的健康测试"/>
+                </LinearLayout>
 
-            <ImageView
-                android:layout_width="75dp"
-                android:layout_height="75dp"
-                android:src="@drawable/train_3"/>
+                <LinearLayout
+                    android:id="@+id/train_ll_train"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="gone">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:text="拓展训练"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                    <Button
+                        android:id="@+id/train_bt_train"
+                        android:layout_width="120dp"
+                        android:layout_height="120dp"
+                        android:background="@drawable/selector_train_btn_bg"
+                        android:text="开始训练"
+                        android:textColor="@color/select_train_text_color"
+                        />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="难度进一步提升"/>
+                    <TextView
+                        android:id="@+id/train_tv_train"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="点击按钮开始我的训练"/>
+                </LinearLayout>
+            </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/train_tv_tip"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/colorPinkTran"
-        android:drawableRight="@drawable/icon_cancel"
-        android:paddingBottom="5dp"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp"
-        android:paddingTop="5dp"
-        android:text="请先完成健康测试，在进行训练哦！"
-        android:textSize="10sp"/>
+    <include layout="@layout/base_retry"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/train_ll_test"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/train_bt_test"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:background="@drawable/selector_test_btn_bg"
-                android:text="健康测试"
-                android:textColor="@color/select_test_text_color"
-                />
-
-            <TextView
-                android:id="@+id/train_tv_test"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="点击进入我的健康测试"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/train_ll_train"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/train_bt_train"
-                android:layout_width="120dp"
-                android:layout_height="120dp"
-                android:background="@drawable/selector_train_btn_bg"
-                android:text="开始训练"
-                android:textColor="@color/select_train_text_color"
-                />
-
-            <TextView
-                android:id="@+id/train_tv_train"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="点击按钮开始我的训练"/>
-        </LinearLayout>
-    </RelativeLayout>
-</LinearLayout>
+    <include layout="@layout/base_loading"/>
+</RelativeLayout>

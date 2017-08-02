@@ -11,10 +11,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.VipManageBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.VipManageVPAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.lzy.okgo.OkGo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +30,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/24.
@@ -46,6 +56,8 @@ public class VipManageActivity extends AppCompatActivity {
     ViewPager mVipManagerViewPager;
     @BindView(R.id.vip_manager_btn_open_vip)
     Button mVipManagerBtnOpenVip;
+    @BindView(R.id.vip_manager_iv_vip)
+    ImageView mVipManagerIvVip;
 
     private List<View> viewList;
     private List<String> viewTitle;
@@ -56,13 +68,49 @@ public class VipManageActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vip_manage);
         ButterKnife.bind(this);
-        initData();
         initHeader();
-        initTabLayout();
-        initViewPager();
+        initData();
     }
 
     private void initData() {
+        OkGo
+                .post(AppUrl.VIPMANAGE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(VipManageActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        VipManageBean vipManageBean = new Gson().fromJson(s, VipManageBean.class);
+                        initVipHeader(vipManageBean);
+                        List<VipManageBean.ListBean> list = vipManageBean.list;
+                        initViewPager(list);
+
+                    }
+                });
+
+
+    }
+
+    private void initVipHeader(VipManageBean vipManageBean) {
+        mVipManagerTvName.setText(vipManageBean.nick);
+        if (vipManageBean.isVIP.equals("0")) {
+            mVipManagerIvVip.setImageResource(R.drawable.icon_vip2);
+            mVipManagerTvNotOpen.setVisibility(View.VISIBLE);
+            mVipManagerTvRenew.setVisibility(View.GONE);
+        } else {
+            mVipManagerIvVip.setImageResource(R.drawable.icon_vip1);
+            mVipManagerTvNotOpen.setVisibility(View.GONE);
+            mVipManagerTvRenew.setVisibility(View.VISIBLE);
+            mVipManagerTvRenew.setText(vipManageBean.VIPTime);
+        }
+
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + vipManageBean.headImg)
+                .crossFade()
+                .into(mVipManagerCivPhoto);
+    }
+
+    private void initViewPager(List<VipManageBean.ListBean> list) {
         viewList = new ArrayList<>();
         viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
         viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
@@ -71,15 +119,10 @@ public class VipManageActivity extends AppCompatActivity {
         viewTitle.add("训练特权");
         viewTitle.add("咨询特权");
         viewTitle.add("社区特权");
-    }
-
-    private void initViewPager() {
-        mVipManagerViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle));
-    }
-
-    private void initTabLayout() {
         mVipManagerTabLayout.setupWithViewPager(mVipManagerViewPager);
+        mVipManagerViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle,list));
     }
+
 
     private void initHeader() {
         mHeaderTvTitle.setText("会员管理");

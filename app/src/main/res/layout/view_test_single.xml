@@ -10,21 +10,21 @@
     >
 
     <TextView
+        android:id="@+id/test_single_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="22dp"
-        android:text="请选择盆底肌障碍情况"
         android:textColor="@android:color/black"
         android:textSize="20sp"
         />
 
     <TextView
+        android:id="@+id/test_single_subhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
-        android:text="（持续时间）"
         android:textColor="@android:color/black"
         android:textSize="16sp"/>
 

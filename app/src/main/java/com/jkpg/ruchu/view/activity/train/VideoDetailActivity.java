@@ -54,7 +54,7 @@ public class VideoDetailActivity extends AppCompatActivity {
     }
 
     private void initVideoPlayer() {
-        mVideoPlayer.setUp("https://gss3.baidu.com/6LZ0ej3k1Qd3ote6lo7D0j9wehsv/tieba-smallvideo/39_c8af348eac83348a197944c59ba62e4a.mp4"
+        mVideoPlayer.setUp("http://10.60.7.92:8080/AppServer/videos/456.MOV"
                 , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "哈哈哈哈");
         Glide.with(this)
                 .load("http://img4.jiecaojingxuan.com/2016/11/23/00b026e7-b830-4994-bc87-38f4033806a6.jpg@!640_360")

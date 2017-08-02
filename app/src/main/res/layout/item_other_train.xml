@@ -13,8 +13,8 @@
         android:layout_marginLeft="12dp"
         android:layout_marginRight="12dp"
         android:layout_marginTop="12dp"
-        app:cardCornerRadius="5dp"
         android:background="@drawable/shap_rectangle_white"
+        app:cardCornerRadius="5dp"
         >
 
         <LinearLayout
@@ -23,11 +23,14 @@
             android:orientation="vertical">
 
             <RelativeLayout
-                android:id="@+id/item_train_rl_bg"
                 android:layout_width="match_parent"
                 android:layout_height="120dp"
-                android:background="@drawable/other_train_bg"
                 >
+
+                <ImageView
+                    android:id="@+id/item_train_rl_bg"
+                    android:layout_width="match_parent"
+                    android:layout_height="120dp"/>
 
                 <ImageView
                     android:id="@+id/item_train_iv_start"
@@ -39,9 +42,9 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:background="@android:color/white"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@android:color/white"
                 android:gravity="center_vertical"
                 android:padding="5dp">
 

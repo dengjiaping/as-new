@@ -30,7 +30,6 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="22dp"
                 android:paddingRight="22dp"
-                android:text="第一步，认识盆底肌"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"/>
 
@@ -41,7 +40,6 @@
                 android:layout_marginTop="5dp"
                 android:paddingLeft="22dp"
                 android:paddingRight="22dp"
-                android:text="      第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌第一步，认识盆底肌"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="16sp"/>
         </LinearLayout>

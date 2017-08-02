@@ -1,55 +1,34 @@
 package com.jkpg.ruchu.view.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.widget.CircleImageView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.List;
 
 /**
  * Created by qindi on 2017/5/27.
  */
 
-public class SenderRLAdapter extends RecyclerView.Adapter<SenderRLAdapter.FansRLViewHolder> {
+public class SenderRLAdapter extends BaseQuickAdapter<MyReplyNoteBean.MySpeakBean, BaseViewHolder> {
 
-    @Override
-    public FansRLViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(UIUtils.getContext(), R.layout.item_sender, null);
-
-        return new FansRLViewHolder(view);
+    public SenderRLAdapter(@LayoutRes int layoutResId, @Nullable List<MyReplyNoteBean.MySpeakBean> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public void onBindViewHolder(FansRLViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 3;
-    }
-
-    static class FansRLViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_feedback_photo)
-        CircleImageView mItemFeedbackPhoto;
-        @BindView(R.id.item_tv_post_unread)
-        TextView mItemTvPostUnread;
-        @BindView(R.id.item_tv_post_title)
-        TextView mItemTvPostTitle;
-        @BindView(R.id.item_tv_post_body)
-        TextView mItemTvPostBody;
-        @BindView(R.id.item_tv_post_time)
-        TextView mItemTvPostTime;
-
-        FansRLViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+    protected void convert(BaseViewHolder helper, MyReplyNoteBean.MySpeakBean item) {
+        helper.setText(R.id.item_tv_post_title, item.title);
+        helper.setText(R.id.item_tv_post_body, item.content);
+        helper.setText(R.id.item_tv_post_time, item.replytime);
+        if (item.ct != null) {
+            if (item.ct.equals("0")) {
+                helper.setVisible(R.id.item_tv_post_unread, false);
+            } else
+                helper.setText(R.id.item_tv_post_unread, item.ct);
         }
     }
 }

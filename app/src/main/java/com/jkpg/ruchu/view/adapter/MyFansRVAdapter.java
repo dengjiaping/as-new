@@ -1,87 +1,51 @@
 package com.jkpg.ruchu.view.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.CheckBox;
-import android.widget.TextView;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.FansListBean;
+import com.jkpg.ruchu.bean.FansBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.widget.CircleImageView;
 
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.Map;
 
 /**
  * Created by qindi on 2017/5/25.
  */
 
-public class MyFansRVAdapter extends RecyclerView.Adapter<MyFansRVAdapter.MyFansViewHolder> implements View.OnClickListener {
+public class MyFansRVAdapter extends BaseQuickAdapter<FansBean.list, BaseViewHolder> {
+    private Map<Integer, String> map;
 
-    private List<FansListBean> fansList;
-
-    public MyFansRVAdapter(List<FansListBean> fansList) {
-        this.fansList = fansList;
+    public MyFansRVAdapter(@LayoutRes int layoutResId, @Nullable List<FansBean.list> data, Map<Integer, String> map) {
+        super(layoutResId, data);
+        this.map = map;
     }
 
     @Override
-    public void onClick(View v) {
-        if (mOnItemClickListener != null) {
-            //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (FansListBean) v.getTag());
+    protected void convert(BaseViewHolder helper, FansBean.list item) {
+        helper.setText(R.id.item_fans_tv_name, item.nike);
+        helper.setText(R.id.item_fans_tv_body, item.introduction);
+        int position = helper.getLayoutPosition();
+        if (map.get(position).equals("0")) {
+            helper.setText(R.id.item_fans_cb_follow, "加关注");
+            helper.setChecked(R.id.item_fans_cb_follow, true);
+        } else {
+            helper.setText(R.id.item_fans_cb_follow, "已关注");
+            helper.setChecked(R.id.item_fans_cb_follow, false);
         }
-    }
-
-
-    @Override
-    public MyFansViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(UIUtils.getContext(), R.layout.item_fans, null);
-        view.setOnClickListener(this);
-        return new MyFansViewHolder(view);
-    }
-
-    @Override
-    public void onBindViewHolder(MyFansViewHolder holder, int position) {
-        FansListBean fansListBean = fansList.get(position);
-        holder.itemView.setTag(fansListBean);
-        holder.mItemFansTvBody.setText(fansListBean.body);
-        holder.mItemFansCbFollow.setChecked(fansListBean.isFollow);
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + item.imgurl)
+                .crossFade()
+                .into((ImageView) helper.getView(R.id.item_fans_civ_photo));
+        helper.addOnClickListener(R.id.item_fans_cb_follow);
 
     }
 
-    @Override
-    public int getItemCount() {
-        return fansList.size();
-    }
-
-    static class MyFansViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_fans_civ_photo)
-        CircleImageView mItemFansCivPhoto;
-        @BindView(R.id.item_fans_tv_name)
-        TextView mItemFansTvName;
-        @BindView(R.id.item_fans_tv_body)
-        TextView mItemFansTvBody;
-        @BindView(R.id.item_fans_cb_follow)
-        CheckBox mItemFansCbFollow;
-
-        MyFansViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
-    }
-
-    public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, FansListBean data);
-
-    }
-
-    private OnRecyclerViewItemClickListener mOnItemClickListener = null;
-
-    public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
-        this.mOnItemClickListener = listener;
-    }
 }

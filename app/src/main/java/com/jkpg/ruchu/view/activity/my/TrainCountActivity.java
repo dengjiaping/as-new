@@ -48,6 +48,8 @@ public class TrainCountActivity extends AppCompatActivity {
         initFragment();
     }
 
+
+
     private void initFragment() {
         mMountFragment = new TrainCountMountFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -60,7 +62,7 @@ public class TrainCountActivity extends AppCompatActivity {
 
     @OnClick({R.id.header_iv_left, R.id.train_count_rb_moon, R.id.train_count_rb_year})
     public void onViewClicked(View view) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (view.getId()) {
 
             case R.id.header_iv_left:

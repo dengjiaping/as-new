@@ -12,5 +12,5 @@
         android:top="1dp"
         />
     <!-- 背景色 -->
-    <solid android:color="@color/colorGray3"/>
+    <solid android:color="@color/colorGray2"/>
 </shape>

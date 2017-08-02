@@ -8,6 +8,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.VideoBean;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,21 +39,27 @@ public class NewVideoDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_video_detail);
         ButterKnife.bind(this);
-
-        initVideo();
+        VideoBean.VideoMSBean.VideomessBean vediomessBean = getIntent().getParcelableExtra("VediomessBean");
         initHeader();
+
+        initVideo(vediomessBean);
     }
 
     private void initHeader() {
         mHeaderTvTitle.setText("入门指导");
     }
 
-    private void initVideo() {
-        mNewVideoPlayer.setUp("https://2449.vod.myqcloud.com/2449_22ca37a6ea9011e5acaaf51d105342e3.f20.mp4"
-                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, "哈哈哈哈");
+    private void initVideo(VideoBean.VideoMSBean.VideomessBean vediomessBean) {
+        mNewVideoPlayer.setUp(AppUrl.BASEURL + vediomessBean.videourl
+                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, vediomessBean.title);
+        LogUtils.i(AppUrl.BASEURL + vediomessBean.image);
         Glide.with(this)
-                .load("http://img4.jiecaojingxuan.com/2016/11/23/00b026e7-b830-4994-bc87-38f4033806a6.jpg@!640_360")
+                .load(AppUrl.BASEURL + vediomessBean.image)
                 .into(mNewVideoPlayer.thumbImageView);
+        mNewVideoTvTitle.setText(vediomessBean.title);
+        mNewVideoTvDetail.setText(vediomessBean.content);
+
+
     }
 
     @OnClick(R.id.header_iv_left)

@@ -1,10 +1,12 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
@@ -12,10 +14,21 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.MyFilesBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.NetworkUtils;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.adapter.VipManageVPAdapter;
+import com.jkpg.ruchu.view.adapter.ViewPagerAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.lzy.okgo.OkGo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +41,8 @@ import cn.qqtheme.framework.picker.NumberPicker;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 import cn.qqtheme.framework.widget.WheelView;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/25.
@@ -60,6 +75,32 @@ public class MyFilesActivity extends AppCompatActivity {
     private View mBearing;
     private View mBearingBack;
 
+    private RelativeLayout mView_bearing_chsj;
+    private TextView mView_bearing_tv_chsj;
+    private RelativeLayout mView_bearing_mqtz;
+    private TextView mView_bearing_tv_mqtz;
+    private RelativeLayout mView_bearing_sg;
+    private TextView mView_bearing_tv_sg;
+    private RelativeLayout mView_bearing_42jc;
+    private TextView mView_bearing_tv_42jc;
+    private RelativeLayout mView_bearing_pdjl;
+    private TextView mView_bearing_tv_pdjl;
+    private RelativeLayout mView_bearing_gnza;
+    private TextView mView_bearing_tv_gnza;
+
+    private RelativeLayout mView_bearing_tc;
+    private TextView mView_bearing_tv_tc;
+    private RelativeLayout mView_bearing_fmfs;
+    private TextView mView_bearing_tv_fmfs;
+    private RelativeLayout mView_bearing_fmtz;
+    private TextView mView_bearing_tv_fmtz;
+    private RelativeLayout mView_bearing_scsc;
+    private TextView mView_bearing_tv_scsc;
+    private RelativeLayout mView_bearing_fmss;
+    private TextView mView_bearing_tv_fmss;
+    private RelativeLayout mView_bearing_xstz;
+    private TextView mView_bearing_tv_xstz;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +117,33 @@ public class MyFilesActivity extends AppCompatActivity {
 
 
     private void initData() {
+
+        OkGo
+                .post(AppUrl.UPDATE_MYARCHIVE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("ispublic", "")
+                .params("taici", "")
+                .params("mode", "")
+                .params("oldweight", "")
+                .params("chantime", "")
+                .params("hurt", "")
+                .params("kidweight", "")
+                .params("chanhoutime", "")
+                .params("weight", "")
+                .params("height", "")
+                .params("test42", "")
+                .params("power", "")
+                .params("obstacle", "")
+                .execute(new StringDialogCallback(MyFilesActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        // LogUtils.i(s);
+                        MyFilesBean myFilesBean = new Gson().fromJson(s, MyFilesBean.class);
+                        init(myFilesBean);
+                    }
+                });
+
+
         viewList = new ArrayList<>();
         mBearing = View.inflate(UIUtils.getContext(), R.layout.view_bearing, null);
         viewList.add(mBearing);
@@ -86,12 +154,54 @@ public class MyFilesActivity extends AppCompatActivity {
         viewTitle.add("产后情况");
     }
 
+    private void init(MyFilesBean myFilesBean) {
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + myFilesBean.headImg)
+                .into(mMyFilesCtvPhoto);
+        mMyFilesTvName.setText(myFilesBean.nick);
+        if (myFilesBean.isVIP.equals("1"))
+            mMyFilesIvVip.setImageResource(R.drawable.icon_vip1);
+        else
+            mMyFilesIvVip.setImageResource(R.drawable.icon_vip2);
+
+        if (myFilesBean.ispublic.equals("0"))
+            mMyFilesCb.setChecked(false);
+        else
+            mMyFilesCb.setChecked(true);
+
+        mMyFilesTvUid.setText("UID:" + myFilesBean.uid);
+
+        mView_bearing_tv_tc.setText(myFilesBean.taici);
+        mView_bearing_tv_fmfs.setText(myFilesBean.mode);
+        mView_bearing_tv_fmtz.setText(myFilesBean.oldweight);
+        mView_bearing_tv_scsc.setText(myFilesBean.chantime);
+        mView_bearing_tv_fmss.setText(myFilesBean.hurt);
+        mView_bearing_tv_xstz.setText(myFilesBean.kidweight);
+
+        mView_bearing_tv_chsj.setText(myFilesBean.chanhoutime);
+        mView_bearing_tv_mqtz.setText(myFilesBean.weight);
+        mView_bearing_tv_sg.setText(myFilesBean.height);
+        mView_bearing_tv_42jc.setText(myFilesBean.test42);
+        mView_bearing_tv_pdjl.setText(myFilesBean.power);
+        mView_bearing_tv_gnza.setText(myFilesBean.obstacle);
+        if (myFilesBean.test42.equals("未做")) {
+            mView_bearing_pdjl.setVisibility(View.GONE);
+            mView_bearing_gnza.setVisibility(View.GONE);
+        } else {
+            mView_bearing_pdjl.setVisibility(View.VISIBLE);
+            mView_bearing_gnza.setVisibility(View.VISIBLE);
+        }
+
+
+    }
+
     private void initTabLayout() {
         mMyFilesTabLayout.setupWithViewPager(mMyFilesViewPager);
     }
 
     private void initViewPager() {
-        mMyFilesViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle));
+        mMyFilesViewPager.setAdapter(new ViewPagerAdapter(viewList, viewTitle));
     }
 
 
@@ -107,22 +217,79 @@ public class MyFilesActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.header_tv_right:
+                if (
+                        mView_bearing_tv_tc.getText().equals("") ||
+                                mView_bearing_tv_fmfs.getText().equals("") ||
+                                mView_bearing_tv_fmtz.getText().equals("") ||
+                                mView_bearing_tv_scsc.getText().equals("") ||
+                                mView_bearing_tv_fmss.getText().equals("") ||
+                                mView_bearing_tv_xstz.getText().equals("") ||
+
+                                mView_bearing_tv_chsj.getText().equals("") ||
+                                mView_bearing_tv_mqtz.getText().equals("") ||
+                                mView_bearing_tv_sg.getText().equals("") ||
+                                mView_bearing_tv_42jc.getText().equals("")
+                        ) {
+
+                    if (!mView_bearing_tv_42jc.getText().equals("未做")) {
+                        mView_bearing_tv_pdjl.getText().equals("");
+                        mView_bearing_tv_gnza.getText().equals("");
+                    }
+                    ToastUtils.showShort(UIUtils.getContext(),"请完善信息");
+                } else {
+                    if (!NetworkUtils.isConnected()) {
+                        ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+                        return;
+                    }
+                    OkGo
+                            .post(AppUrl.UPDATE_MYARCHIVE)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("ispublic", mMyFilesCb.isChecked() ? 1 : 0)
+                            .params("taici", mView_bearing_tv_tc.getText().toString())
+                            .params("mode", mView_bearing_tv_fmfs.getText().toString())
+                            .params("oldweight", mView_bearing_tv_fmtz.getText().toString())
+                            .params("chantime", mView_bearing_tv_scsc.getText().toString())
+                            .params("hurt", mView_bearing_tv_fmss.getText().toString())
+                            .params("kidweight", mView_bearing_tv_xstz.getText().toString())
+                            .params("chanhoutime", mView_bearing_tv_chsj.getText().toString())
+                            .params("weight", mView_bearing_tv_mqtz.getText().toString())
+                            .params("height", mView_bearing_tv_sg.getText().toString())
+                            .params("test42", mView_bearing_tv_42jc.getText().toString())
+                            .params("power", mView_bearing_tv_pdjl.getText().toString())
+                            .params("obstacle", mView_bearing_tv_gnza.getText().toString())
+                            .execute(new StringDialogCallback(MyFilesActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    // LogUtils.i(s);
+                                    AlertDialog dialog = new AlertDialog.Builder(MyFilesActivity.this)
+                                            .setView(View.inflate(MyFilesActivity.this, R.layout.view_save_success, null))
+                                            .show();
+                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            MyFilesActivity.this.finish();
+                                        }
+                                    });
+
+                                    MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            MyFilesActivity.this.finish();
+                                        }
+                                    }, 3000);
+                                }
+
+                                @Override
+                                public void onError(Call call, Response response, Exception e) {
+                                    super.onError(call, response, e);
+                                    ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+                                }
+                            });
+                }
                 break;
         }
     }
 
-    private RelativeLayout mView_bearing_chsj;
-    private TextView mView_bearing_tv_chsj;
-    private RelativeLayout mView_bearing_mqtz;
-    private TextView mView_bearing_tv_mqtz;
-    private RelativeLayout mView_bearing_sg;
-    private TextView mView_bearing_tv_sg;
-    private RelativeLayout mView_bearing_42jc;
-    private TextView mView_bearing_tv_42jc;
-    private RelativeLayout mView_bearing_pdjl;
-    private TextView mView_bearing_tv_pdjl;
-    private RelativeLayout mView_bearing_gnza;
-    private TextView mView_bearing_tv_gnza;
 
     private void initBearingBack() {
         mView_bearing_chsj = (RelativeLayout) mBearingBack.findViewById(R.id.view_bearing_chsj);
@@ -239,18 +406,6 @@ public class MyFilesActivity extends AppCompatActivity {
 
     }
 
-    private RelativeLayout mView_bearing_tc;
-    private TextView mView_bearing_tv_tc;
-    private RelativeLayout mView_bearing_fmfs;
-    private TextView mView_bearing_tv_fmfs;
-    private RelativeLayout mView_bearing_fmtz;
-    private TextView mView_bearing_tv_fmtz;
-    private RelativeLayout mView_bearing_scsc;
-    private TextView mView_bearing_tv_scsc;
-    private RelativeLayout mView_bearing_fmss;
-    private TextView mView_bearing_tv_fmss;
-    private RelativeLayout mView_bearing_xstz;
-    private TextView mView_bearing_tv_xstz;
 
     private void initBearing() {
         mView_bearing_tc = (RelativeLayout) mBearing.findViewById(R.id.view_bearing_tc);

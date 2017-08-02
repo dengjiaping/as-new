@@ -3,6 +3,7 @@
           package="com.jkpg.ruchu">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.CALL_PHONE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -40,6 +41,10 @@
             </intent-filter>
 
         </activity>
+        <meta-data
+            android:name="com.jkpg.ruchu.widget.glidemodules.SimpleGlideModule"
+            android:value="GlideModule"/>
+
         <activity
             android:name=".view.activity.SplashActivity"
             android:screenOrientation="portrait"/>
@@ -270,8 +275,19 @@
         <activity
             android:name=".view.activity.test.TestDetailedActivity"
             android:screenOrientation="portrait"/>
-        <activity android:name=".view.activity.train.TrainPrepareActivity"
-                  android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.train.TrainPrepareActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.ShopActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.login.BindingPhoneActivity"
+            android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".view.activity.WebViewActivity"
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".wxapi.WXEntryActivity"
@@ -298,9 +314,10 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="5955a4a0bbea83690400086e" >
+            android:value="5955a4a0bbea83690400086e">
         </meta-data>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"

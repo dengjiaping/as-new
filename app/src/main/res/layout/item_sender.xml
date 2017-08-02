@@ -14,6 +14,7 @@
         android:orientation="horizontal">
 
         <com.jkpg.ruchu.widget.CircleImageView
+            android:visibility="gone"
             android:id="@+id/item_feedback_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"

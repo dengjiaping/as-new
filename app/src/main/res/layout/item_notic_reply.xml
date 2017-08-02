@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:background="@android:color/white"
               android:orientation="vertical"
               android:paddingTop="12dp">
@@ -32,7 +32,6 @@
                     android:id="@+id/item_notice_reply_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="我是小可爱"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"/>
 
@@ -41,7 +40,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="1楼"
                     android:textColor="@color/colorGray3"
                     android:textSize="14sp"/>
             </RelativeLayout>
@@ -51,7 +49,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="一胎3月"
                 android:textColor="@color/colorGray3"
                 android:textSize="12sp"/>
 
@@ -60,18 +57,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="一胎3月"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"/>
 
             <com.jkpg.ruchu.widget.nineview.NineGridView
                 android:id="@+id/item_notice_reply_nine_view"
-                app:ngv_singleImageSize="90dp"
-                app:ngv_gridSpacing="5dp"
-
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"/>
+
+                android:layout_marginTop="5dp"
+                app:ngv_gridSpacing="5dp"
+                app:ngv_singleImageSize="90dp"/>
 
             <LinearLayout
                 android:id="@+id/item_notice_reply_to"
@@ -82,59 +78,148 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
+                <!-- <LinearLayout
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     >
+
+                     <TextView
+                         android:id="@+id/item_notice_reply_to_name"
+
+                         android:layout_width="wrap_content"
+
+                         android:layout_height="wrap_content"
+                         android:text="你是小可爱"
+                         android:textColor="@color/colorGray3"
+                         android:textSize="12sp"/>
+
+                     <TextView
+                         android:id="@+id/item_notice_reply_to_floor"
+
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_marginLeft="12dp"
+                         android:text="1楼"
+                         android:textColor="@color/colorGray3"
+                         android:textSize="12sp"/>
+
+                     <TextView
+                         android:id="@+id/item_notice_reply_to_time"
+
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+
+                         android:layout_marginLeft="12dp"
+                         android:text="2017-05-21"
+                         android:textColor="@color/colorGray3"
+                         android:textSize="12sp"/>
+                 </LinearLayout>-->
+
+                <!-- <TextView
+                     android:id="@+id/item_notice_reply_to_body"
+
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="5dp"
+                     android:textColor="@android:color/black"
+                     android:textSize="14sp"/>-->
+
+                <!--  <com.jkpg.ruchu.widget.nineview.NineGridView
+                      android:id="@+id/item_notice_reply_to_nine_view"
+                      android:layout_width="match_parent"
+                      app:ngv_singleImageSize="50dp"
+                      app:ngv_gridSpacing="8dp"
+                      android:layout_height="wrap_content"/>-->
+
+
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/item_notice_reply_to_name"
-
                         android:layout_width="wrap_content"
-
                         android:layout_height="wrap_content"
-                        android:text="你是小可爱"
-                        android:textColor="@color/colorGray3"
-                        android:textSize="12sp"/>
+                        android:textColor="@color/colorPink"
+                        android:textSize="12dp"/>
 
                     <TextView
-                        android:id="@+id/item_notice_reply_to_floor"
-
+                        android:id="@+id/item_notice_reply_to_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginLeft="12dp"
-                        android:text="1楼"
-                        android:textColor="@color/colorGray3"
-                        android:textSize="12sp"/>
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/item_notice_reply_to_0"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone">
 
                     <TextView
-                        android:id="@+id/item_notice_reply_to_time"
+                        android:id="@+id/item_notice_reply_to_name0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPink"
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_body0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"/>
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/item_notice_reply_to_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_name1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/colorPink"
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:text="回复 "
+                        android:textSize="12dp"/>
+
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_name2"
 
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textColor="@color/colorPink"
+                        android:textSize="12dp"/>
 
-                        android:layout_marginLeft="12dp"
-                        android:text="2017-05-21"
-                        android:textColor="@color/colorGray3"
-                        android:textSize="12sp"/>
+                    <TextView
+                        android:id="@+id/item_notice_reply_to_body1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:textSize="12dp"/>
+
                 </LinearLayout>
 
                 <TextView
-                    android:id="@+id/item_notice_reply_to_body"
-
-                    android:layout_width="match_parent"
+                    android:id="@+id/item_notice_reply_to_more"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:textColor="@android:color/black"
-                    android:textSize="14sp"/>
-
-                <com.jkpg.ruchu.widget.nineview.NineGridView
-                    android:id="@+id/item_notice_reply_to_nine_view"
-                    android:layout_width="match_parent"
-                    app:ngv_singleImageSize="50dp"
-                    app:ngv_gridSpacing="8dp"
-                    android:layout_height="wrap_content"/>
-
+                    android:textColor="@color/colorPink"
+                    android:textSize="12dp"/>
             </LinearLayout>
 
             <LinearLayout
@@ -148,7 +233,7 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2017-05-21"/>
+                    />
 
 
                 <RelativeLayout
@@ -170,7 +255,7 @@
                             android:drawableLeft="@drawable/selector_zan_bg"
                             android:drawablePadding="5dp"
                             android:gravity="center"
-                            android:text="1"
+                            android:text="0"
                             android:textColor="@color/select_bd_text_color"/>
 
                         <TextView
@@ -192,10 +277,10 @@
 
 
     </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
         android:layout_marginTop="12dp"
-
         android:background="#22000000"/>
 </LinearLayout>

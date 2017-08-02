@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,16 +9,20 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.fragment.CommunityFragment;
+import com.jkpg.ruchu.view.fragment.CommunityModuleFragment;
 import com.jkpg.ruchu.view.fragment.MyFragment;
-import com.jkpg.ruchu.view.fragment.ShopFragment;
 import com.jkpg.ruchu.view.fragment.TrainFragment;
 import com.jkpg.ruchu.widget.BottomNavigationViewEx;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -32,9 +37,12 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationViewEx mMainBottomNavigationView;
     @BindView(R.id.main_frame_layout)
     FrameLayout mMainFrameLayout;
+    @BindView(R.id.main_view_shop)
+    View mMainViewShop;
     private MyFragment mMyFragment;
-    private CommunityFragment mCommunityFragment;
-    private ShopFragment mShopFragment;
+    //    private CommunityFragment mCommunityFragment;
+    private CommunityModuleFragment mCommunityFragment;
+    //    private ShopFragment mShopFragment;
     private TrainFragment mTrainFragment;
     private FragmentTransaction mFt;
     private int TAG = R.id.menu_train;
@@ -47,11 +55,22 @@ public class MainActivity extends AppCompatActivity {
         initBottomNavigationView();
         if (savedInstanceState != null) {
             mTrainFragment = (TrainFragment) getSupportFragmentManager().findFragmentByTag("mTrainFragment");
-            mCommunityFragment = (CommunityFragment) getSupportFragmentManager().findFragmentByTag("mCommunityFragment");
-            mShopFragment = (ShopFragment) getSupportFragmentManager().findFragmentByTag("mShopFragment");
+            mCommunityFragment = (CommunityModuleFragment) getSupportFragmentManager().findFragmentByTag("mCommunityFragment");
+//            mShopFragment = (ShopFragment) getSupportFragmentManager().findFragmentByTag("mShopFragment");
             mMyFragment = (MyFragment) getSupportFragmentManager().findFragmentByTag("mMyFragment");
         }
+        initShop();
         switchFragment(TAG);
+    }
+
+    private void initShop() {
+        mMainViewShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, ShopActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+            }
+        });
     }
 
     @Override
@@ -73,8 +92,8 @@ public class MainActivity extends AppCompatActivity {
             mFt.hide(mMyFragment);
         if (mTrainFragment != null)
             mFt.hide(mTrainFragment);
-        if (mShopFragment != null)
-            mFt.hide(mShopFragment);
+       /* if (mShopFragment != null)
+            mFt.hide(mShopFragment);*/
         if (mCommunityFragment != null)
             mFt.hide(mCommunityFragment);
         mFt.commit();
@@ -86,28 +105,31 @@ public class MainActivity extends AppCompatActivity {
                     mFt.add(R.id.main_frame_layout, mTrainFragment, "mTrainFragment");
                 } else {
                     mFt.show(mTrainFragment);
+                    LogUtils.i("mTrainFragment");
                 }
                 TAG = R.id.menu_train;
                 break;
             case R.id.menu_shop:
 //                        mFt.replace(R.id.main_frame_layout, mShopFragment).commit();
-                if (mShopFragment == null) {
+                /*if (mShopFragment == null) {
                     mShopFragment = new ShopFragment();
                     mFt.add(R.id.main_frame_layout, mShopFragment, "mShopFragment");
                 } else {
                     mFt.show(mShopFragment);
+                LogUtils.i("mShopFragment");
                 }
-
-                TAG = R.id.menu_shop;
-
+                TAG = R.id.menu_shop;*/
                 break;
             case R.id.menu_group:
 //                        mFt.replace(R.id.main_frame_layout, mCommunityFragment).commit();
                 if (mCommunityFragment == null) {
-                    mCommunityFragment = new CommunityFragment();
+//                    mCommunityFragment = new CommunityFragment();
+                    mCommunityFragment = new CommunityModuleFragment();
                     mFt.add(R.id.main_frame_layout, mCommunityFragment, "mCommunityFragment");
                 } else {
                     mFt.show(mCommunityFragment);
+                    LogUtils.i("mCommunityFragment");
+
                 }
 
                 TAG = R.id.menu_group;
@@ -120,6 +142,8 @@ public class MainActivity extends AppCompatActivity {
                     mFt.add(R.id.main_frame_layout, mMyFragment, "mMyFragment");
                 } else {
                     mFt.show(mMyFragment);
+                    LogUtils.i("mMyFragment");
+
                 }
                 TAG = R.id.menu_my;
 
@@ -155,6 +179,29 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe
+    public void EventMass(String mess) {
+        if (mess.equals("Train")) {
+            switchFragment(R.id.menu_train);
+        }
     }
 }
 

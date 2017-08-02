@@ -28,6 +28,7 @@ public abstract class StringDialogCallback extends StringCallback {
         mBuilder = new AlertDialog.Builder(activity);
         mBuilder.setView(View.inflate(activity.getApplicationContext(), R.layout.view_animation,null));
         dialog = mBuilder.show();
+        dialog.setCanceledOnTouchOutside(false);
     }
 
 

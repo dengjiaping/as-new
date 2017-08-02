@@ -11,24 +11,38 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.PlateBean;
+import com.jkpg.ruchu.bean.CommunityMianBean;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
-import com.jkpg.ruchu.view.activity.community.FineNoteDetailActivity;
 import com.jkpg.ruchu.view.activity.community.HotNoteActivity;
 import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.adapter.CommunityPlateRLAdapter;
-import com.jkpg.ruchu.view.adapter.FansRLAdapter;
+import com.jkpg.ruchu.view.adapter.HotPlateRLAdapter;
 import com.jkpg.ruchu.widget.GridDividerItemDecoration;
 import com.jkpg.ruchu.widget.banner.BannerCommunity;
 import com.jkpg.ruchu.widget.banner.BannerConfig;
 import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
 import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +51,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/6/5.
@@ -56,8 +72,17 @@ public class CommunityModuleFragment extends Fragment {
     @BindView(R.id.community_rl_hot)
     RecyclerView mCommunityRlHot;
     Unbinder unbinder;
+    @BindView(R.id.header_tv_title)
+    TextView mHeaderTvTitle;
+    @BindView(R.id.header_iv_left)
+    ImageView mHeaderIvLeft;
+    @BindView(R.id.id_btn_retry)
+    Button mIdBtnRetry;
+    @BindView(R.id.errorStateRelativeLayout)
+    RelativeLayout mErrorStateRelativeLayout;
+    @BindView(R.id.id_loading_and_retry)
+    FrameLayout mIdLoadingAndRetry;
 
-    private List<PlateBean> mPlates;
 
     @Nullable
     @Override
@@ -71,52 +96,89 @@ public class CommunityModuleFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initData();
-        initBanner();
-        initPlateRecyclerView();
-        initHotRecyclerView();
+        mHeaderTvTitle.setText("互动");
+        mHeaderIvLeft.setVisibility(View.GONE);
     }
 
     private void initData() {
-        mPlates = new ArrayList<>();
-        mPlates.add(new PlateBean("", "尴尬体位", "这是我的难言之隐", "213贴"));
-        mPlates.add(new PlateBean("", "小确幸", "请给我正能量  ", "213贴"));
-        mPlates.add(new PlateBean("", "爱爱糗事", "说出关灯后的故事", "213贴"));
-        mPlates.add(new PlateBean("", "我的进步", "记录点滴改变  ", "213贴"));
-        mPlates.add(new PlateBean("", "灰色心情", "抑郁，我要直视你", "213贴"));
-        mPlates.add(new PlateBean("", "康复百宝箱", "人人都是康复师", "213贴"));
+        OkGo
+                .post(AppUrl.BBS_INFOS)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+//                        LogUtils.i(s);
+                        CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                        List<CommunityMianBean.List1Bean> list1 = communityMianBean.list1;
+                        List<CommunityMianBean.List2Bean> list2 = communityMianBean.list2;
+                        List<CommunityMianBean.List3Bean> list3 = communityMianBean.list3;
+                        initBanner(list1);
+                        initPlateRecyclerView(list2);
+                        initHotRecyclerView(list3);
+
+                        mIdLoadingAndRetry.setVisibility(View.GONE);
+                        mErrorStateRelativeLayout.setVisibility(View.GONE);
+
+                    }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+//                        mLoadingAndRetryManager.showRetry();
+                        mIdLoadingAndRetry.setVisibility(View.GONE);
+                        mErrorStateRelativeLayout.setVisibility(View.VISIBLE);
+
+                        LogUtils.i("onError");
+                    }
+
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        mIdLoadingAndRetry.setVisibility(View.VISIBLE);
+                    }
+                });
     }
 
 
-    private void initPlateRecyclerView() {
+    private void initPlateRecyclerView(List<CommunityMianBean.List2Bean> list2) {
         mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 2));
-        CommunityPlateRLAdapter communityPlateRLAdapter = new CommunityPlateRLAdapter(mPlates);
+        CommunityPlateRLAdapter communityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
         mCommunityRlPlate.setAdapter(communityPlateRLAdapter);
         mCommunityRlPlate.addItemDecoration(new GridDividerItemDecoration(1, Color.parseColor("#22000000")));
         communityPlateRLAdapter.setOnItemClickListener(new CommunityPlateRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, PlateBean data) {
+            public void onItemClick(View view, CommunityMianBean.List2Bean data) {
                 Intent intent = new Intent(getActivity(), PlateDetailActivity.class);
-                intent.putExtra("title", data.title);
+                intent.putExtra("plateid", data.tid + "");
+                intent.putExtra("title", data.platename);
                 startActivity(intent);
 
             }
         });
     }
 
-    private void initHotRecyclerView() {
+    private void initHotRecyclerView(final List<CommunityMianBean.List3Bean> list3) {
         mCommunityRlHot.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mCommunityRlHot.setAdapter(new FansRLAdapter());
+        HotPlateRLAdapter hotPlateRLAdapter = new HotPlateRLAdapter(R.layout.item_fans_post, list3);
+        mCommunityRlHot.setAdapter(hotPlateRLAdapter);
+        hotPlateRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                int tid = list3.get(position).tid;
+                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                intent.putExtra("bbsid", tid + "");
+                startActivity(intent);
+            }
+        });
+
     }
 
-    private void initBanner() {
+    private void initBanner(final List<CommunityMianBean.List1Bean> list1) {
         ArrayList<String> images = new ArrayList<>();
-        images.add("https://imgsa.baidu.com/baike/s%3D500/sign=2e583e4075d98d1072d40c31113eb807/574e9258d109b3de9c074cd4c5bf6c81810a4cd5.jpg");
-        images.add("https://imgsa.baidu.com/baike/c0%3Dbaike150%2C5%2C5%2C150%2C50/sign=fa7b7a6872ec54e755e1124cd851f035/574e9258d109b3de47c6133ec5bf6c81800a4c6f.jpg");
-        images.add("https://imgsa.baidu.com/baike/c0%3Dbaike220%2C5%2C5%2C220%2C73/sign=85bc175fbf003af359b7d4325443ad39/00e93901213fb80ec88396813fd12f2eb9389412.jpg");
         ArrayList<String> titles = new ArrayList<>();
-        titles.add("김지원");
-        titles.add("Kim Ji Won");
-        titles.add("金智媛");
+        for (CommunityMianBean.List1Bean list1Bean : list1) {
+            images.add(AppUrl.BASEURL + list1Bean.images);
+            titles.add(list1Bean.title);
+        }
         //设置图片加载器
         mCommunityBanner.setImageLoader(new GlideImageLoader());
         //设置图片集合
@@ -136,7 +198,9 @@ public class CommunityModuleFragment extends Fragment {
         mCommunityBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                startActivity(new Intent(getActivity(), FineNoteDetailActivity.class));
+                int tid = list1.get(position).tid;
+                ToastUtils.showShort(UIUtils.getContext(), tid + "");
+                //startActivity(new Intent(getActivity(), FineNoteDetailActivity.class));
             }
         });
     }
@@ -147,13 +211,20 @@ public class CommunityModuleFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.community_ll_fine, R.id.community_ll_collect, R.id.community_tv_hot})
+    @OnClick({R.id.id_btn_retry, R.id.community_ll_fine, R.id.community_ll_collect, R.id.community_tv_hot})
     public void onViewClicked(View view) {
         switch (view.getId()) {
+            case R.id.id_btn_retry:
+                initData();
+                break;
             case R.id.community_ll_fine:
                 startActivity(new Intent(getActivity(), FineNoteActivity.class));
                 break;
             case R.id.community_ll_collect:
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+                    ToastUtils.showShort(UIUtils.getContext(), "未登录");
+                    return;
+                }
                 startActivity(new Intent(getActivity(), MyCollectEditActivity.class));
                 break;
             case R.id.community_tv_hot:

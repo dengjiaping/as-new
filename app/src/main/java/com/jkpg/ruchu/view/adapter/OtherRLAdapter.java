@@ -4,11 +4,12 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.VideoBean;
+import com.jkpg.ruchu.bean.OtherVideoBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.List;
@@ -21,9 +22,9 @@ import butterknife.ButterKnife;
  */
 
 public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTrainViewHolder> implements View.OnClickListener {
-    private List<VideoBean> videos;
+    private List<OtherVideoBean.VideoMS2Bean> videos;
 
-    public OtherRLAdapter(List<VideoBean> videos) {
+    public OtherRLAdapter(List<OtherVideoBean.VideoMS2Bean> videos) {
         this.videos = videos;
     }
 
@@ -36,10 +37,16 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
 
     @Override
     public void onBindViewHolder(OtherTrainViewHolder holder, int position) {
-        VideoBean videoBean = videos.get(position);
+        OtherVideoBean.VideoMS2Bean vedioMS2Bean = videos.get(position);
         holder.itemView.setTag(videos.get(position));
-        holder.mItemTrainTvTitle.setText(videoBean.title);
-        holder.mItemTrainTvTime.setText(videoBean.time);
+        holder.mItemTrainTvTitle.setText(vedioMS2Bean.title);
+        holder.mItemTrainTvTime.setText(vedioMS2Bean.videotime);
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + vedioMS2Bean.imageUrl)
+                .crossFade()
+                .centerCrop()
+                .into(holder.mItemTrainRlBg);
     }
 
     @Override
@@ -54,7 +61,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (VideoBean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (OtherVideoBean.VideoMS2Bean) v.getTag());
         }
     }
 
@@ -62,7 +69,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
         @BindView(R.id.item_train_iv_start)
         ImageView mItemTrainIvStart;
         @BindView(R.id.item_train_rl_bg)
-        RelativeLayout mItemTrainRlBg;
+        ImageView mItemTrainRlBg;
         @BindView(R.id.item_train_tv_title)
         TextView mItemTrainTvTitle;
         @BindView(R.id.item_train_tv_time)
@@ -75,7 +82,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     }
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, VideoBean data);
+        void onItemClick(View view, OtherVideoBean.VideoMS2Bean data);
     }
 
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;

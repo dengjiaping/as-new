@@ -31,5 +31,6 @@ public class MyNoteRVAdapter extends BaseQuickAdapter<FineNoteBean, BaseViewHold
                 .setText(R.id.item_tv_post_huifu, item.reply)
                 .setText(R.id.item_tv_post_body, item.body);
         Glide.with(UIUtils.getContext()).load(item.image).crossFade().into((ImageView) helper.getView(R.id.item_feedback_photo));
+
     }
 }
