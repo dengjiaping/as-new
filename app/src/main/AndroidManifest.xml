@@ -45,6 +45,7 @@
             android:name="com.jkpg.ruchu.widget.glidemodules.SimpleGlideModule"
             android:value="GlideModule"/>
 
+
         <activity
             android:name=".view.activity.SplashActivity"
             android:screenOrientation="portrait"/>
@@ -231,6 +232,7 @@
 
         <activity
             android:name=".view.activity.community.NoticeDetailActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.community.HotNoteActivity"
@@ -287,6 +289,9 @@
 
         <activity
             android:name=".view.activity.WebViewActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.community.MoreReplyActivity"
             android:screenOrientation="portrait"/>
 
         <activity

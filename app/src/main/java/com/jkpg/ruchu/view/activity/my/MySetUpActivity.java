@@ -1,6 +1,5 @@
 package com.jkpg.ruchu.view.activity.my;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.umeng.socialize.ShareAction;

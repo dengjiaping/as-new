@@ -4,14 +4,12 @@
               android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/view_selector_province"
         android:layout_width="0dp"
         android:background="@color/colorPink2"
         android:layout_height="match_parent"
         android:layout_weight="1"/>
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/view_selector_city"
         android:layout_width="0dp"
         android:background="@color/colorPink"
         android:layout_height="match_parent"

@@ -2,8 +2,6 @@ package com.jkpg.ruchu.view.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -42,6 +40,7 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
         helper.addOnClickListener(R.id.item_notice_reply_civ);
         helper.addOnClickListener(R.id.item_notice_reply_name);
         helper.addOnClickListener(R.id.item_notice_reply_body);
+        helper.addOnClickListener(R.id.item_notice_reply_cb_love);
 
         Glide
                 .with(UIUtils.getContext())
@@ -54,24 +53,13 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
         helper.setText(R.id.item_notice_reply_body, item.content);
         helper.setText(R.id.item_notice_reply_floor, (helper.getPosition() + 1) + "楼");
         helper.setText(R.id.item_notice_reply_time, item.replytime);
-        helper.setText(R.id.item_notice_reply_cb_love, item.zan);
+        helper.setText(R.id.item_notice_reply_cb_love, item.zan+"");
         helper.setText(R.id.item_notice_detail_tv_reply, item.reply);
-        final CheckBox love = helper.getView(R.id.item_notice_reply_cb_love);
-        love.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                int i = Integer.parseInt(love.getText().toString());
-                if (isChecked) {
-                    love.setText((i + 1) + "");
-                } else {
-                    love.setText((i - 1) + "");
-                }
-            }
-        });
+        helper.setChecked(R.id.item_notice_reply_cb_love,item.iszan);
         List<NoticeDetailBean.List2Bean.ItemsBean> items = item.items;
         if (items.size() == 0) {
             helper.setVisible(R.id.item_notice_reply_to, false);
-        } else {
+        } else if (items.size() >= 2){
             NoticeDetailBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
             helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
             helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);
@@ -97,6 +85,12 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
 
             }
 
+        } else if (items.size() == 1){
+            NoticeDetailBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
+            helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
+            helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);
+            helper.addOnClickListener(R.id.item_notice_reply_to_body);
+            helper.addOnClickListener(R.id.item_notice_reply_to_name);
         }
         if (items.size() <= 2) {
             helper.setVisible(R.id.item_notice_reply_to_more, false);

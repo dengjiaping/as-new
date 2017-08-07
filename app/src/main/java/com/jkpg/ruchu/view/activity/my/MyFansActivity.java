@@ -209,4 +209,10 @@ public class MyFansActivity extends AppCompatActivity {
     public void onViewClicked() {
         finish();
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        initData();
+    }
 }

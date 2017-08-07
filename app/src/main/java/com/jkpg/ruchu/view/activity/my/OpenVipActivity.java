@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
@@ -24,6 +25,11 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.lzy.okgo.OkGo;
+import com.umeng.socialize.UMAuthListener;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,6 +68,8 @@ public class OpenVipActivity extends AppCompatActivity {
     @BindView(R.id.open_vip_tv_135)
     TextView mOpenVipTv135;
     @BindView(R.id.open_vip_rl_365)
+    TextView mOpenVipWx;
+    @BindView(R.id.open_vip_wx)
     RelativeLayout mOpenVipRl365;
     @BindView(R.id.open_vip_btn_pay)
     Button mOpenVipBtnPay;
@@ -75,6 +83,8 @@ public class OpenVipActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mHeaderTvTitle.setText("开通会员");
         initData();
+        UMShareAPI.get(OpenVipActivity.this).fetchAuthResultWithBundle(OpenVipActivity.this, savedInstanceState, umAuthListener);
+
     }
 
     private void initData() {
@@ -163,7 +173,7 @@ public class OpenVipActivity extends AppCompatActivity {
         });
     }
 
-    @OnClick({R.id.open_vip_btn_pay, R.id.header_iv_left, R.id.open_vip_rl_30, R.id.open_vip_rl_90, R.id.open_vip_rl_180, R.id.open_vip_rl_365})
+    @OnClick({R.id.open_vip_wx, R.id.open_vip_btn_pay, R.id.header_iv_left, R.id.open_vip_rl_30, R.id.open_vip_rl_90, R.id.open_vip_rl_180, R.id.open_vip_rl_365})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.open_vip_btn_pay:
@@ -229,6 +239,40 @@ public class OpenVipActivity extends AppCompatActivity {
                 mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorPink));
 
                 break;
+            case R.id.open_vip_wx:
+                UMShareAPI mShareAPI = UMShareAPI.get(OpenVipActivity.this);
+                if (mShareAPI.isInstall(OpenVipActivity.this, SHARE_MEDIA.WEIXIN)) {
+                    mShareAPI.doOauthVerify(OpenVipActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+//                    mShareAPI.getPlatformInfo(OpenVipActivity.this, SHARE_MEDIA.WEIXIN, umAuthListener);
+                } else {
+                    ToastUtils.showShort(UIUtils.getContext(), "未安装微信");
+                }
+                break;
         }
     }
+
+    private UMAuthListener umAuthListener = new UMAuthListener() {
+        @Override
+        public void onStart(SHARE_MEDIA share_media) {
+
+        }
+
+        @Override
+        public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
+            Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
+            Toast.makeText(getApplicationContext(), "绑定失败", Toast.LENGTH_SHORT).show();
+
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA share_media, int i) {
+            Toast.makeText(getApplicationContext(), "绑定取消", Toast.LENGTH_SHORT).show();
+
+        }
+    };
 }

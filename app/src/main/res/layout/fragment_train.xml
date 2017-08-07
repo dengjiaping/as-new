@@ -50,7 +50,6 @@
                         android:padding="5dp">
 
                         <ImageView
-                            android:id="@+id/imageView3"
                             android:layout_width="75dp"
                             android:layout_height="75dp"
                             android:src="@drawable/train_1"/>
@@ -80,7 +79,7 @@
                 <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="#22000000"/>
 
                 <LinearLayout
                     android:id="@+id/train_ll_my"
@@ -94,7 +93,6 @@
                     android:padding="5dp">
 
                     <ImageView
-                        android:id="@+id/imageView2"
                         android:layout_width="75dp"
                         android:layout_height="75dp"
                         android:src="@drawable/train_2"/>
@@ -116,7 +114,7 @@
                 <View
                     android:layout_width="0.5dp"
                     android:layout_height="match_parent"
-                    android:background="@android:color/darker_gray"/>
+                    android:background="#22000000"/>
 
                 <LinearLayout
                     android:id="@+id/train_ll_other"
@@ -148,7 +146,10 @@
                         android:text="难度进一步提升"/>
                 </LinearLayout>
             </LinearLayout>
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
             <TextView
                 android:id="@+id/train_tv_tip"
                 android:layout_width="match_parent"
@@ -207,7 +208,6 @@
                         />
 
                     <TextView
-                        android:id="@+id/train_tv_train"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="点击按钮开始我的训练"/>

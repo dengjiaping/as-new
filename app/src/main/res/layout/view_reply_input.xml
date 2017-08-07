@@ -3,8 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:background="@android:color/white"
-              android:paddingBottom="12dp"
               android:orientation="vertical"
+              android:paddingBottom="12dp"
               android:paddingLeft="22dp"
               android:paddingRight="22dp"
               android:paddingTop="12dp"
@@ -18,13 +18,12 @@
         <ImageView
             android:id="@+id/view_reply_image"
             android:layout_width="34dp"
-            android:layout_marginRight="12dp"
             android:layout_height="24dp"
             android:layout_gravity="center"
+            android:layout_marginRight="12dp"
             android:src="@drawable/add_photo"/>
 
         <EditText
-            android:maxLines="5"
             android:id="@+id/view_reply_et"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -32,17 +31,18 @@
             android:layout_weight="1"
             android:background="@drawable/shap_rectangle_white_grayline"
             android:hint="我来说两句..."
+            android:maxLines="5"
             android:padding="5dp"
             android:textColor="@android:color/black"
             android:textColorHint="@color/colorGray3"
             android:textSize="14sp"/>
 
         <TextView
-            android:layout_gravity="center"
             android:id="@+id/view_reply_btn"
             android:layout_width="wrap_content"
-
             android:layout_height="wrap_content"
+
+            android:layout_gravity="center"
             android:background="@drawable/shap_rectangle_pink_void"
             android:paddingBottom="5dp"
             android:paddingLeft="15dp"
@@ -51,11 +51,12 @@
             android:text="回复"
             android:textColor="@color/colorPink"/>
     </LinearLayout>
+
     <android.support.v7.widget.RecyclerView
-        android:visibility="gone"
         android:id="@+id/view_reply_recycler"
-        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:visibility="gone"/>
 
 </LinearLayout>

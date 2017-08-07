@@ -1,5 +1,5 @@
 <resources>
-    <style name="ToolbarTheme" parent="@style/Base.Theme.AppCompat.Light">
+    <style name="PickerToolbarTheme" parent="@style/Base.Theme.AppCompat.Light">
         <item name="actionMenuTextColor">@android:color/white</item>
     </style>
 </resources>

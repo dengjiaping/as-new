@@ -61,12 +61,18 @@
 
         </RelativeLayout>
     </LinearLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="4dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/gradlient_background"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="vertical"
         >
+
+
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -111,11 +117,6 @@
         </RelativeLayout>
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="4dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/gradlient_background"/>
 
     <View
         android:layout_width="match_parent"

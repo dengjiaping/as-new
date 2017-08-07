@@ -81,6 +81,13 @@ public class MyTestActivity extends AppCompatActivity {
                             mMyTestSl.setVisibility(View.VISIBLE);
                             mMyTestLl.setVisibility(View.GONE);
                             mMyTestLlBtnAgainTest.setVisibility(View.VISIBLE);
+
+
+                            mMyTestTvBody.setText(myTestBean.report.content);
+                            mMyTestTvTime.setText(myTestBean.report.createtime);
+                            mMyTestTvGrade.setText(myTestBean.report.count + "分");
+                            mMyTestTvLevel.setText(myTestBean.report.level);
+
                         }
                     }
                 });

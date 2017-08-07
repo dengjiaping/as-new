@@ -11,6 +11,8 @@
     <include layout="@layout/view_header"/>
 
     <LinearLayout
+        android:id="@+id/open_vip_ll_wx"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
@@ -28,6 +30,7 @@
             />
 
         <TextView
+            android:id="@+id/open_vip_wx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="end"
@@ -45,7 +48,6 @@
         android:background="@android:color/white">
 
         <LinearLayout
-            android:id="@+id/open_vip_ll_wx"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

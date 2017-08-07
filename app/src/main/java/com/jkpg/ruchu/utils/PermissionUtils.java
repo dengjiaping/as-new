@@ -20,6 +20,8 @@ public final class PermissionUtils {
 
     private static OnPermissionListener mOnPermissionListener;
 
+
+
     public interface OnPermissionListener {
 
         void onPermissionGranted();

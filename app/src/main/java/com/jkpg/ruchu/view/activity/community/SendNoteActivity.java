@@ -4,18 +4,17 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,15 +34,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateBean;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.FileUtils;
+import com.jkpg.ruchu.utils.ImageTools;
+import com.jkpg.ruchu.utils.PermissionUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.PlateNameRVAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
+import com.lzy.okgo.OkGo;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,9 +64,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPreview;
+import okhttp3.Call;
+import okhttp3.Response;
 
-import static android.os.Build.VERSION_CODES.M;
 import static android.widget.Toast.LENGTH_LONG;
+import static com.jkpg.ruchu.R.id.send_note_cb_no_name;
 
 /**
  * Created by qindi on 2017/6/6.
@@ -77,7 +89,7 @@ public class SendNoteActivity extends AppCompatActivity {
     EditText mSendNoteEtBody;
     @BindView(R.id.send_note_cb_position)
     CheckBox mSendNoteCbPosition;
-    @BindView(R.id.send_note_cb_no_name)
+    @BindView(send_note_cb_no_name)
     CheckBox mSendNoteCbNoName;
     @BindView(R.id.send_note_iv_image)
     ImageView mSendNoteIvImage;
@@ -95,6 +107,9 @@ public class SendNoteActivity extends AppCompatActivity {
 
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
+    private String mLocality = "";
+    private String mPlateid;
+    private String[] mPermissions;
 
 
     @Override
@@ -201,9 +216,9 @@ public class SendNoteActivity extends AppCompatActivity {
     }
 
     private void initPermission() {
-        String[] permissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-        if (Build.VERSION.SDK_INT >= M) {
-            requestRuntimePermission(permissions, new PersonalInfoActivity.PermissionListener() {
+        mPermissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
+//        if (Build.VERSION.SDK_INT >= M) {
+           /* requestRuntimePermission(permissions, new PersonalInfoActivity.PermissionListener() {
                 @Override
                 public void onGranted() {
                     initLocation();
@@ -213,13 +228,24 @@ public class SendNoteActivity extends AppCompatActivity {
                 public void onDenied(List<String> deniedPermissions) {
                 }
             });
-            return;
-        }
+            return;*/
+            PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
+                @Override
+                public void onPermissionGranted() {
+                    initLocation();
+                }
+
+                @Override
+                public void onPermissionDenied(String[] deniedPermissions) {
+                    mSendNoteCbPosition.setChecked(false);
+                }
+            });
+//        }
     }
 
     /**
      * 申请运行时权限
-     */
+     *//*
     public void requestRuntimePermission(String[] permissions, PersonalInfoActivity.PermissionListener listener) {
         permissionListener = listener;
         List<String> permissionList = new ArrayList<>();
@@ -234,8 +260,7 @@ public class SendNoteActivity extends AppCompatActivity {
         } else {
             permissionListener.onGranted();
         }
-    }
-
+    }*/
     private void initLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         //获取当前可用的位置控制器
@@ -271,22 +296,26 @@ public class SendNoteActivity extends AppCompatActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            if (locationList == null){
+                ToastUtils.showShort(UIUtils.getContext(),"获取地址失败");
+                return;
+            }
             Address address = locationList.get(0);//得到Address实例
-            String locality = address.getLocality();//得到城市名称，比如：北京市
-            ToastUtils.showShort(UIUtils.getContext(), locality);
+
+            mLocality = address.getLocality();
+            ToastUtils.showShort(UIUtils.getContext(), mLocality);
         }
     }
 
     private void init() {
         mTitle = getIntent().getStringExtra("title");
+        mPlateid = getIntent().getStringExtra("plateid");
+        ArrayList<String> plate = getIntent().getStringArrayListExtra("plate");
         mSendNoteTvPlateContent.setText(mTitle);
         data = new ArrayList<>();
-        /*data.add(new PlateBean("尴尬体位"));
-        data.add(new PlateBean("小确幸"));
-        data.add(new PlateBean("爱爱糗事"));
-        data.add(new PlateBean("我的进步"));
-        data.add(new PlateBean("灰色心情"));
-        data.add(new PlateBean("康复百宝箱"));*/
+        for (String s : plate) {
+            data.add(new PlateBean(s));
+        }
         View view = View.inflate(UIUtils.getContext(), R.layout.view_plate_notice, null);
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(view)
@@ -311,6 +340,7 @@ public class SendNoteActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.header_tv_right:
+                send();
                 break;
             case R.id.send_note_tv_plate:
                 showPopupWindow();
@@ -324,6 +354,58 @@ public class SendNoteActivity extends AppCompatActivity {
                         .setGridColumnCount(4)
                         .start(SendNoteActivity.this);
                 break;
+        }
+    }
+
+    private void send() {
+        if (selectedPhotos.size() == 0) {
+            OkGo
+                    .post(AppUrl.BBS_POST
+                            + "?plateid=" + mPlateid
+                            + "&title=" + mSendNoteEtTitle.getText().toString()
+                            + "&content=" + mSendNoteEtBody.getText().toString()
+                            + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
+                            + "&issite=" + (mSendNoteCbPosition.isChecked() ? 1 : 0)
+                            + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
+                            + "&site=" + mLocality)
+                    .execute(new StringDialogCallback(SendNoteActivity.this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                            if (successBean.success){
+                                finish();
+                            }
+                        }
+                    });
+        } else {
+
+            ArrayList<File> files = new ArrayList<>();
+            for (int i = 0; i < selectedPhotos.size(); i++) {
+                Uri uri = Uri.fromFile(new File(selectedPhotos.get(i)));
+                Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
+                String s = FileUtils.saveBitmapByQuality(bm, 10);
+                files.add(new File(s));
+            }
+            OkGo
+                    .post(AppUrl.BBS_POST
+                            + "?plateid=" + mPlateid
+                            + "&title=" + mSendNoteEtTitle.getText().toString()
+                            + "&content=" + mSendNoteEtBody.getText().toString()
+                            + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
+                            + "&issite=" + (mSendNoteCbPosition.isChecked() ? 1 : 0)
+                            + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
+                            + "&site=" + mLocality)
+                    .isMultipart(true)
+                    .addFileParams("upload", files)
+                    .execute(new StringDialogCallback(SendNoteActivity.this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                            if (successBean.success){
+                                finish();
+                            }
+                        }
+                    });
         }
     }
 
@@ -354,7 +436,7 @@ public class SendNoteActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
+        /*switch (requestCode) {
             case 1:
                 if (grantResults.length > 0) {
                     List<String> deniedPermissions = new ArrayList<>();
@@ -372,7 +454,8 @@ public class SendNoteActivity extends AppCompatActivity {
                     }
                 }
                 break;
-        }
+        }*/
+        PermissionUtils.onRequestPermissionsResult(this, 200, mPermissions);
     }
 
     @Override

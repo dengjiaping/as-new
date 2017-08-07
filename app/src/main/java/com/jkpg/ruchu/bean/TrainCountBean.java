@@ -15,7 +15,7 @@ public class TrainCountBean {
      * state : 200
      * mess : 鏌ユ壘鍒版暟鎹�
      */
-
+    public String max;
     public int averageday;
     public int countsm;
     public int state;

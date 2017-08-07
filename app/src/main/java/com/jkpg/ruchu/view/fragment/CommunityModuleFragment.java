@@ -82,6 +82,7 @@ public class CommunityModuleFragment extends Fragment {
     RelativeLayout mErrorStateRelativeLayout;
     @BindView(R.id.id_loading_and_retry)
     FrameLayout mIdLoadingAndRetry;
+    private CommunityMianBean mCommunityMianBean;
 
 
     @Nullable
@@ -107,10 +108,10 @@ public class CommunityModuleFragment extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
 //                        LogUtils.i(s);
-                        CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                        List<CommunityMianBean.List1Bean> list1 = communityMianBean.list1;
-                        List<CommunityMianBean.List2Bean> list2 = communityMianBean.list2;
-                        List<CommunityMianBean.List3Bean> list3 = communityMianBean.list3;
+                        mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                        List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
+                        List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
+                        List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
                         initBanner(list1);
                         initPlateRecyclerView(list2);
                         initHotRecyclerView(list3);
@@ -139,7 +140,11 @@ public class CommunityModuleFragment extends Fragment {
     }
 
 
-    private void initPlateRecyclerView(List<CommunityMianBean.List2Bean> list2) {
+    private void initPlateRecyclerView(final List<CommunityMianBean.List2Bean> list2) {
+        final ArrayList<String> plateNameList = new ArrayList<>();
+        for (int i = 0; i < list2.size(); i++) {
+            plateNameList.add(list2.get(i).platename);
+        }
         mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 2));
         CommunityPlateRLAdapter communityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
         mCommunityRlPlate.setAdapter(communityPlateRLAdapter);
@@ -150,6 +155,7 @@ public class CommunityModuleFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), PlateDetailActivity.class);
                 intent.putExtra("plateid", data.tid + "");
                 intent.putExtra("title", data.platename);
+                intent.putStringArrayListExtra("plate",plateNameList);
                 startActivity(intent);
 
             }

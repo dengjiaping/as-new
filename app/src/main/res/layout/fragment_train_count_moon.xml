@@ -82,6 +82,7 @@
                     android:textSize="20sp"/>
 
                 <TextView
+                    android:id="@+id/train_count_tv_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分钟"
@@ -119,6 +120,7 @@
                     android:textSize="20sp"/>
 
                 <TextView
+                    android:id="@+id/train_count_tv_2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="分钟"

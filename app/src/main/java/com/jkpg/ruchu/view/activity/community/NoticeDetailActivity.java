@@ -2,8 +2,9 @@ package com.jkpg.ruchu.view.activity.community;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
+import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -33,9 +34,15 @@ import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.FileUtils;
+import com.jkpg.ruchu.utils.ImageTools;
+import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
 import com.jkpg.ruchu.view.adapter.NoticeDetailReplyAdapter;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
@@ -44,7 +51,15 @@ import com.jkpg.ruchu.widget.nineview.ImageInfo;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.jkpg.ruchu.widget.nineview.preview.NineGridViewClickAdapter;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+import com.umeng.socialize.ShareAction;
+import com.umeng.socialize.UMShareAPI;
+import com.umeng.socialize.UMShareListener;
+import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.umeng.socialize.media.UMImage;
+import com.umeng.socialize.media.UMWeb;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,9 +75,8 @@ import okhttp3.Response;
  * Created by qindi on 2017/6/7.
  */
 
-public class NoticeDetailActivity extends AppCompatActivity {
-    @BindView(R.id.notice_detail_nine_view)
-    NineGridView mNoticeDetailNineView;
+public class NoticeDetailActivity extends AppCompatActivity implements View.OnClickListener {
+
 
     List<ImageInfo> imageInfo;
     @BindView(R.id.header_iv_left)
@@ -73,55 +87,47 @@ public class NoticeDetailActivity extends AppCompatActivity {
     ImageView mHeaderIvRight2;
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
-    @BindView(R.id.notice_detail_civ_photo)
-    CircleImageView mNoticeDetailCivPhoto;
-    @BindView(R.id.notice_detail_tv_reply)
-    TextView mNoticeDetailTvReply;
     @BindView(R.id.notice_detail_reply_recycler)
     RecyclerView mNoticeDetailReplyRecycler;
     @BindView(R.id.notice_detail_reply)
     TextView mNoticeDetailReply;
-    @BindView(R.id.notice_detail_tv_name)
-    TextView mNoticeDetailTvName;
-    @BindView(R.id.notice_detail_iv_lz)
-    ImageView mNoticeDetailIvLz;
-    @BindView(R.id.notice_detail_iv_fine)
-    ImageView mNoticeDetailIvFine;
-    @BindView(R.id.notice_detail_tv_tc)
-    TextView mNoticeDetailTvTc;
-    @BindView(R.id.notice_detail_tv_address)
-    TextView mNoticeDetailTvAddress;
-    @BindView(R.id.notice_detail_tv_dz)
-    CheckBox mNoticeDetailTvDz;
-    @BindView(R.id.notice_detail_tv_title)
-    TextView mNoticeDetailTvTitle;
-    @BindView(R.id.notice_detail_tv_time)
-    TextView mNoticeDetailTvTime;
-    @BindView(R.id.notice_detail_tv_content)
-    TextView mNoticeDetailTvContent;
-    @BindView(R.id.notice_detail_tv_num)
-    TextView mNoticeDetailTvNum;
-    @BindView(R.id.notice_detail)
-    LinearLayout mNoticeDetail;
+
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
     private RecyclerView mReplyRecyclerView;
     private NoticeDetailReplyAdapter mNoticeDetailReplyAdapter;
     private boolean isCollect = false;
     private int isShowImage = View.VISIBLE;
-    private int mTid;
+    private int mbbsid;
     private List<NoticeDetailBean.List1Bean> mList1;
     private List<NoticeDetailBean.List2Bean> mList2;
+    private int mTid;
+    private View mHeaderView;
+    private CircleImageView mNoticeDetailCivPhoto;
+    private TextView mNoticeDetailTvReply;
+    private TextView mNoticeDetailTvName;
+    private ImageView mNoticeDetailIvLz;
+    private ImageView mNoticeDetailIvFine;
+    private TextView mNoticeDetailTvTc;
+    private TextView mNoticeDetailTvAddress;
+    private TextView mNoticeDetailTvTitle;
+    private TextView mNoticeDetailTvTime;
+    private TextView mNoticeDetailTvContent;
+    private TextView mNoticeDetailTvNum;
+    private CheckBox mNoticeDetailTvDz;
+    private NineGridView mNoticeDetailNineView;
+    private int mIndex;
+    private String mUserid;
+    private PopupWindow mPopupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_notice_detail);
+        setContentView(R.layout.activity_notice_detail_revise);
         ButterKnife.bind(this);
         String bbsid = getIntent().getStringExtra("bbsid");
         initData(bbsid);
         initHeader();
-        initZan();
 
     }
 
@@ -132,7 +138,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
                 if (isChecked) {
                     OkGo
                             .post(AppUrl.UPVOTE)
-                            .params("bbsid", mTid)
+                            .params("bbsid", mbbsid)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                             .params("flag", 1)
                             .execute(new StringDialogCallback(NoticeDetailActivity.this) {
@@ -157,7 +163,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
                 } else {
                     OkGo
                             .post(AppUrl.UPVOTE)
-                            .params("bbsid", mTid)
+                            .params("bbsid", mbbsid)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                             .params("flag", 0)
                             .execute(new StringDialogCallback(NoticeDetailActivity.this) {
@@ -187,6 +193,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
         OkGo
                 .post(AppUrl.BBS_DETAILS)
                 .params("bbsid", bbsid)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .execute(new StringDialogCallback(NoticeDetailActivity.this) {
 
 
@@ -195,13 +202,9 @@ public class NoticeDetailActivity extends AppCompatActivity {
                         NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
                         mList1 = noticeDetailBean.list1;
                         mList2 = noticeDetailBean.list2;
-                        initNotice(mList1);
-                        if (mList2.size() > 0) {
-                            mNoticeDetailTvNum.setText("共有" + mList2.size() + "条回帖");
-                        } else {
-                            mNoticeDetailTvNum.setText("暂无回帖");
-                        }
                         initRecyclerView(mList2);
+
+
                     }
                 });
     }
@@ -220,7 +223,11 @@ public class NoticeDetailActivity extends AppCompatActivity {
             mNoticeDetailIvFine.setVisibility(View.VISIBLE);
         }
         mNoticeDetailTvTc.setText(list1Bean.taici + " " + list1Bean.chanhoutime);
-        mNoticeDetailTvAddress.setText(list1Bean.site);
+        if (StringUtils.isEmpty(list1Bean.site)) {
+            mNoticeDetailTvAddress.setVisibility(View.GONE);
+        } else {
+            mNoticeDetailTvAddress.setText(list1Bean.site);
+        }
         mNoticeDetailTvDz.setText(list1Bean.zan);
         mNoticeDetailTvDz.setChecked(list1Bean.iszan);
 
@@ -238,7 +245,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
             mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
         }
 
-        mTid = list1Bean.tid;
+        mbbsid = list1Bean.tid;
 
     }
 
@@ -248,7 +255,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
         mHeaderIvRight2.setImageResource(R.drawable.icon_collect);
     }
 
-    private void initRecyclerView(List<NoticeDetailBean.List2Bean> list2) {
+    private void initRecyclerView(final List<NoticeDetailBean.List2Bean> list2) {
         mNoticeDetailReplyRecycler.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mNoticeDetailReplyAdapter = new NoticeDetailReplyAdapter(R.layout.item_notic_reply, list2);
         mNoticeDetailReplyRecycler.setAdapter(mNoticeDetailReplyAdapter);
@@ -259,54 +266,138 @@ public class NoticeDetailActivity extends AppCompatActivity {
         });
         mNoticeDetailReplyAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
-            public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+            public void onItemChildClick(BaseQuickAdapter adapter, View view, final int position) {
                 switch (view.getId()) {
                     case R.id.item_notice_detail_tv_reply:
                     case R.id.item_notice_reply_body:
                         isShowImage = View.GONE;
+                        mIndex = position;
+                        mTid = mList2.get(position).tid;
                         replyLZ();
                         break;
                     case R.id.item_notice_reply_civ:
                     case R.id.item_notice_reply_name:
-                        ToastUtils.showShort(UIUtils.getContext(), mList1.get(0).userid);
+                        toUserMain(mList2.get(position).userid);
                         break;
                     case R.id.item_notice_reply_to_body:
-                        int tid = mList2.get(position).items.get(0).tid;
+                        mTid = mList2.get(position).items.get(0).tid;
+                        mIndex = position;
                         isShowImage = View.GONE;
                         replyLZ();
                         break;
                     case R.id.item_notice_reply_to_body0:
+                        mTid = mList2.get(position).items.get(1).tid;
                         isShowImage = View.GONE;
+                        mIndex = position;
+
                         replyLZ();
                         break;
                     case R.id.item_notice_reply_to_body1:
                         isShowImage = View.GONE;
+                        mIndex = position;
+
                         replyLZ();
                         break;
                     case R.id.item_notice_reply_to_name:
-                        String userid = mList2.get(position).items.get(0).userid;
-                        ToastUtils.showShort(UIUtils.getContext(), userid);
+                        mUserid = mList2.get(position).items.get(0).userid;
+                        toUserMain(mUserid);
                         break;
                     case R.id.item_notice_reply_to_name0:
-                        String userid0 = mList2.get(position).items.get(1).userid;
-                        ToastUtils.showShort(UIUtils.getContext(), userid0);
+                        mUserid = mList2.get(position).items.get(1).userid;
+                        toUserMain(mUserid);
+
                         break;
                     case R.id.item_notice_reply_to_name1:
-                        String userid1 = mList2.get(position).items.get(1).userid;
-                        ToastUtils.showShort(UIUtils.getContext(), userid1);
+                        mUserid = mList2.get(position).items.get(1).userid;
+                        toUserMain(mUserid);
+
                         break;
                     case R.id.item_notice_reply_to_name2:
-                        String userid2 = mList2.get(position).items.get(1).userid;
-                        ToastUtils.showShort(UIUtils.getContext(), userid2);
+                        mUserid = mList2.get(position).items.get(1).userid;
+                        toUserMain(mUserid);
+
                         break;
                     case R.id.item_notice_reply_to_more:
-                        ToastUtils.showShort(UIUtils.getContext(), "more");
+                        int tid = mList2.get(position).tid;
+                        Intent intent = new Intent(NoticeDetailActivity.this, MoreReplyActivity.class);
+                        startActivity(intent);
+
+                        break;
+                    case R.id.item_notice_reply_cb_love:
+                        loveNotice((CheckBox) view, position);
                         break;
 
                 }
 
             }
         });
+        mHeaderView = View.inflate(this, R.layout.view_notice_detail_header, null);
+        mNoticeDetailReplyAdapter.addHeaderView(mHeaderView);
+        mNoticeDetailCivPhoto = (CircleImageView) mHeaderView.findViewById(R.id.notice_detail_civ_photo);
+        mNoticeDetailCivPhoto.setOnClickListener(this);
+        mNoticeDetailTvReply = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_reply);
+        mNoticeDetailTvReply.setOnClickListener(this);
+        mNoticeDetailTvName = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_name);
+        mNoticeDetailTvName.setOnClickListener(this);
+        mNoticeDetailIvLz = (ImageView) mHeaderView.findViewById(R.id.notice_detail_iv_lz);
+        mNoticeDetailIvFine = (ImageView) mHeaderView.findViewById(R.id.notice_detail_iv_fine);
+        mNoticeDetailTvTc = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_tc);
+        mNoticeDetailTvAddress = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_address);
+        mNoticeDetailTvTitle = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_title);
+        mNoticeDetailTvTime = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_time);
+        mNoticeDetailTvContent = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_content);
+        mNoticeDetailTvNum = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_num);
+        mNoticeDetailTvDz = (CheckBox) mHeaderView.findViewById(R.id.notice_detail_tv_dz);
+        mNoticeDetailNineView = (NineGridView) mHeaderView.findViewById(R.id.notice_detail_nine_view);
+        initZan();
+        initNotice(mList1);
+        if (mList2.size() > 0) {
+            mNoticeDetailTvNum.setText("共有" + mList2.size() + "条回帖");
+        } else {
+            mNoticeDetailTvNum.setText("暂无回帖");
+        }
+
+
+    }
+
+    private void toUserMain(String userid) {
+        Intent intent = new Intent(NoticeDetailActivity.this, FansCenterActivity.class);
+        intent.putExtra("fansId", userid);
+        startActivity(intent);
+    }
+
+    private void loveNotice(CheckBox view, int position) {
+        final CheckBox love = view;
+        int i = Integer.parseInt(love.getText().toString());
+        if (love.isChecked()) {
+            love.setText((i + 1) + "");
+            OkGo
+                    .post(AppUrl.UPVOTEREPLY)
+                    .params("bbsid", mList1.get(0).tid)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .params("replyid", mList2.get(position).tid)
+                    .params("flag", 1)
+                    .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+
+                        }
+                    });
+        } else {
+            love.setText((i - 1) + "");
+            OkGo
+                    .post(AppUrl.UPVOTEREPLY)
+                    .params("bbsid", mList1.get(0).tid)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .params("replyid", mList2.get(position).tid)
+                    .params("flag", 2)
+                    .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+
+                        }
+                    });
+        }
     }
 
 
@@ -319,7 +410,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
         mNoticeDetailNineView.setAdapter(new NineGridViewClickAdapter(UIUtils.getContext(), imageInfo));
     }
 
-    @OnClick({R.id.header_iv_left, R.id.header_iv_right2, R.id.header_iv_right, R.id.notice_detail_civ_photo, R.id.notice_detail_tv_reply, R.id.notice_detail_reply})
+    @OnClick({R.id.header_iv_left, R.id.header_iv_right2, R.id.header_iv_right, R.id.notice_detail_reply})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -331,7 +422,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
                     OkGo
                             .post(AppUrl.BBS_COLLECT)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                            .params("tid", mTid)
+                            .params("tid", mbbsid)
                             .params("flag", 1)
                             .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                                 @Override
@@ -356,7 +447,7 @@ public class NoticeDetailActivity extends AppCompatActivity {
                     OkGo
                             .post(AppUrl.BBS_COLLECT)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                            .params("tid", mTid)
+                            .params("tid", mbbsid)
                             .params("flag", 0)
                             .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                                 @Override
@@ -381,18 +472,9 @@ public class NoticeDetailActivity extends AppCompatActivity {
                 }
                 break;
             case R.id.header_iv_right:
-                Intent share_intent = new Intent();
-                share_intent.setAction(Intent.ACTION_SEND);//设置分享行为
-                share_intent.setType("text/plain");//设置分享内容的类型
-                share_intent.putExtra(Intent.EXTRA_SUBJECT, "分享帖子");//添加分享内容标题
-                share_intent.putExtra(Intent.EXTRA_TEXT, "www.ruchuapp.com");//添加分享内容
-                //创建分享的Dialog
-                share_intent = Intent.createChooser(share_intent, "分享帖子");
-                startActivity(share_intent);
+                showShare();
                 break;
-            case R.id.notice_detail_civ_photo:
-                break;
-            case R.id.notice_detail_tv_reply:
+
             case R.id.notice_detail_reply:
                 isShowImage = View.VISIBLE;
                 replyLZ();
@@ -400,14 +482,15 @@ public class NoticeDetailActivity extends AppCompatActivity {
         }
     }
 
+
     private void replyLZ() {
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
-        PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        editWindow.setOutsideTouchable(true);
+        final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        editWindow.setBackgroundDrawable(null);
+        editWindow.setOutsideTouchable(false);
         editWindow.setFocusable(true);
-        editWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
-        EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
+        final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
         mReplyRecyclerView = (RecyclerView) editView.findViewById(R.id.view_reply_recycler);
         editView.findViewById(R.id.view_reply_image).setVisibility(isShowImage);
         editView.findViewById(R.id.view_reply_image).setOnClickListener(new View.OnClickListener() {
@@ -417,6 +500,120 @@ public class NoticeDetailActivity extends AppCompatActivity {
                         .setPhotoCount(3)
                         .setGridColumnCount(4)
                         .start(NoticeDetailActivity.this);
+            }
+        });
+
+        editView.findViewById(R.id.view_reply_btn).setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                String string = replyEdit.getText().toString().trim();
+                if (string.length() == 0) {
+                    return;
+                }
+                if (isShowImage == View.VISIBLE) {
+
+                    if (selectedPhotos.size() == 0) {
+                        OkGo
+                                .post(AppUrl.BBS_REPLY
+                                        + "?bbsid=" + mbbsid
+                                        + "&parentid=" + "-1"
+                                        + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
+                                        + "&content=" + string)
+                                .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        editWindow.dismiss();
+                                        OkGo
+                                                .post(AppUrl.BBS_DETAILS)
+                                                .params("bbsid", mbbsid)
+                                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onSuccess(String s, Call call, Response response) {
+                                                        NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                        mList1 = noticeDetailBean.list1;
+                                                        mList2 = noticeDetailBean.list2;
+                                                        initRecyclerView(mList2);
+                                                        mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
+                                                        mNoticeDetailReplyRecycler.scrollToPosition(mList2.size());
+                                                    }
+                                                });
+                                    }
+                                });
+                    } else {
+                        List<File> files = new ArrayList<>();
+                        for (String selectedPhoto : selectedPhotos) {
+                            Uri uri = Uri.fromFile(new File(selectedPhoto));
+                            Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
+                            String s = FileUtils.saveBitmapByQuality(bm, 10);
+                            files.add(new File(s));
+                        }
+                        OkGo
+                                .post(AppUrl.BBS_REPLY
+                                        + "?bbsid=" + mbbsid
+                                        + "&parentid=" + "-1"
+                                        + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
+                                        + "&content=" + string)
+                                .isMultipart(true)
+                                .addFileParams("upload", files)
+                                .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        editWindow.dismiss();
+                                        OkGo
+                                                .post(AppUrl.BBS_DETAILS)
+                                                .params("bbsid", mbbsid)
+                                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                .execute(new StringCallback() {
+                                                    @Override
+                                                    public void onSuccess(String s, Call call, Response response) {
+                                                        NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                        mList1 = noticeDetailBean.list1;
+                                                        mList2 = noticeDetailBean.list2;
+                                                        initRecyclerView(mList2);
+                                                        mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
+
+                                                        mNoticeDetailReplyRecycler.smoothScrollToPosition(mList2.size());
+
+                                                    }
+                                                });
+                                    }
+                                });
+
+                    }
+                } else {
+                    OkGo
+                            .post(AppUrl.BBS_REPLY
+                                    + "?bbsid=" + mbbsid
+                                    + "&parentid=" + mTid
+                                    + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
+                                    + "&content=" + string)
+                            .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    editWindow.dismiss();
+                                    OkGo
+                                            .post(AppUrl.BBS_DETAILS)
+                                            .params("bbsid", mbbsid)
+                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                    mList1 = noticeDetailBean.list1;
+                                                    mList2 = noticeDetailBean.list2;
+                                                    initRecyclerView(mList2);
+                                                    mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
+
+                                                    mNoticeDetailReplyRecycler.scrollToPosition(mIndex);
+                                                }
+                                            });
+
+
+                                }
+                            });
+                }
             }
         });
         initPhotoPicker();
@@ -489,5 +686,115 @@ public class NoticeDetailActivity extends AppCompatActivity {
             }
             photoAdapter.notifyDataSetChanged();
         }
+        UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
+
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.notice_detail_tv_name:
+            case R.id.notice_detail_civ_photo:
+                toUserMain(mList1.get(0).userid);
+                break;
+            case R.id.notice_detail_tv_reply:
+                isShowImage = View.VISIBLE;
+                replyLZ();
+                break;
+        }
+    }
+
+    private void showShare() {
+        View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
+        mPopupWindow = new PopupWindow(this);
+        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow.setContentView(view);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+        PopupWindowUtils.darkenBackground(NoticeDetailActivity.this, .5f);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(NoticeDetailActivity.this, 1f);
+            }
+        });
+        final UMWeb mWeb = new UMWeb(mList1.get(0).shearurl);
+        mWeb.setTitle(mList1.get(0).title);//标题
+        mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));  //缩略图
+        mWeb.setDescription(getString(R.string.share_description));//描述
+        view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(NoticeDetailActivity.this).setPlatform(SHARE_MEDIA.QQ)
+                        .withMedia(mWeb)
+                        .setCallback(umShareListener)
+                        .share();
+                mPopupWindow.dismiss();
+            }
+        });
+        view.findViewById(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(NoticeDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN)
+                        .withMedia(mWeb)
+                        .setCallback(umShareListener)
+                        .share();
+                mPopupWindow.dismiss();
+
+            }
+        });
+        view.findViewById(R.id.share_wxq).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new ShareAction(NoticeDetailActivity.this).setPlatform(SHARE_MEDIA.WEIXIN_CIRCLE)
+                        .withMedia(mWeb)
+                        .setCallback(umShareListener)
+                        .share();
+                mPopupWindow.dismiss();
+
+            }
+        });
+        view.findViewById(R.id.share_cancel).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
+    }
+
+    private UMShareListener umShareListener = new UMShareListener() {
+        @Override
+        public void onStart(SHARE_MEDIA platform) {
+            //分享开始的回调
+        }
+
+        @Override
+        public void onResult(SHARE_MEDIA platform) {
+            LogUtils.d("plat", "platform" + platform);
+
+//               Toast.makeText(MySetUpActivity.this, platform + " 分享成功啦", Toast.LENGTH_SHORT).show();
+            mPopupWindow.dismiss();
+
+        }
+
+        @Override
+        public void onError(SHARE_MEDIA platform, Throwable t) {
+
+//            Toast.makeText(MySetUpActivity.this,platform + " 分享失败啦", Toast.LENGTH_SHORT).show();
+            if (t != null) {
+                LogUtils.d("throw", "throw:" + t.getMessage());
+            }
+        }
+
+        @Override
+        public void onCancel(SHARE_MEDIA platform) {
+//             Toast.makeText(MySetUpActivity.this, platform + " 分享取消了", Toast.LENGTH_SHORT).show();
+
+        }
+    };
+
 }

@@ -51,7 +51,6 @@
                     android:textColor="@color/colorGray3"/>
 
                 <TextView
-                    android:id="@+id/doctor_tv_money"
 
                     android:layout_width="wrap_content"
 
@@ -94,7 +93,6 @@
                     android:textColor="@android:color/black"/>
 
                 <TextView
-                    android:id="@+id/doctor_tv_num"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -117,7 +115,6 @@
                     android:textColor="@android:color/black"/>
 
                 <TextView
-                    android:id="@+id/doctor_tv_grade"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

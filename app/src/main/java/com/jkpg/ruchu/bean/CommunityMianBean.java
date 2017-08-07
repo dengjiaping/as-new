@@ -1,5 +1,8 @@
 package com.jkpg.ruchu.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.List;
 
 /**
@@ -13,7 +16,7 @@ public class CommunityMianBean {
     public List<List3Bean> list3;
     public List<List1Bean> list1;
 
-    public static class List2Bean {
+    public static class List2Bean implements Parcelable {
         /**
          * zongshu : 5
          * plateimg : headImg/100343110.png
@@ -26,6 +29,40 @@ public class CommunityMianBean {
         public String remark;
         public String platename;
         public int tid;
+
+        protected List2Bean(Parcel in) {
+            zongshu = in.readInt();
+            plateimg = in.readString();
+            remark = in.readString();
+            platename = in.readString();
+            tid = in.readInt();
+        }
+
+        public static final Creator<List2Bean> CREATOR = new Creator<List2Bean>() {
+            @Override
+            public List2Bean createFromParcel(Parcel in) {
+                return new List2Bean(in);
+            }
+
+            @Override
+            public List2Bean[] newArray(int size) {
+                return new List2Bean[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+
+        @Override
+        public void writeToParcel(Parcel dest, int flags) {
+            dest.writeInt(zongshu);
+            dest.writeString(plateimg);
+            dest.writeString(remark);
+            dest.writeString(platename);
+            dest.writeInt(tid);
+        }
     }
 
     public static class List3Bean {

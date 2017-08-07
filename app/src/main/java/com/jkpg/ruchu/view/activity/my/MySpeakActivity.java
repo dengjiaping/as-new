@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -20,6 +21,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.adapter.MyReplyNoteBean;
 import com.jkpg.ruchu.view.adapter.MySpeakNoteRVAdapter;
 import com.jkpg.ruchu.view.adapter.MySpeakVPAdapter;
@@ -59,6 +61,7 @@ public class MySpeakActivity extends AppCompatActivity {
     private boolean reply;
     private RecyclerView mRecyclerView;
     private RecyclerView mRecyclerView2;
+    private SenderRLAdapter mSenderRLAdapter;
 
 
     @Override
@@ -98,12 +101,12 @@ public class MySpeakActivity extends AppCompatActivity {
 
     }
 
-    private void initReplyRecyclerView(List<MyReplyNoteBean.MySpeakBean> mySpeak) {
+    private void initReplyRecyclerView(final List<MyReplyNoteBean.MySpeakBean> mySpeak) {
         mRecyclerView2 = new RecyclerView(this);
         mRecyclerView2.setLayoutManager(new LinearLayoutManager(this));
-        final SenderRLAdapter senderRLAdapter = new SenderRLAdapter(R.layout.item_sender, mySpeak);
-        mRecyclerView2.setAdapter(senderRLAdapter);
-        senderRLAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        mSenderRLAdapter = new SenderRLAdapter(R.layout.item_sender, mySpeak);
+        mRecyclerView2.setAdapter(mSenderRLAdapter);
+        mSenderRLAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 replyIndex++;
@@ -117,18 +120,27 @@ public class MySpeakActivity extends AppCompatActivity {
                                 MyReplyNoteBean myReplyNoteBean = new Gson().fromJson(s, MyReplyNoteBean.class);
                                 List<MyReplyNoteBean.MySpeakBean> mySpeak = myReplyNoteBean.mySpeak;
                                 if (mySpeak == null) {
-                                    senderRLAdapter.loadMoreEnd();
+                                    mSenderRLAdapter.loadMoreEnd();
 
                                 } else if (mySpeak.size() == 0) {
-                                    senderRLAdapter.loadMoreEnd();
+                                    mSenderRLAdapter.loadMoreEnd();
                                 } else {
-                                    senderRLAdapter.addData(mySpeak);
-                                    senderRLAdapter.loadMoreComplete();
+                                    mSenderRLAdapter.addData(mySpeak);
+                                    mSenderRLAdapter.loadMoreComplete();
                                 }
                             }
                         });
             }
         }, mRecyclerView2);
+        mSenderRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                int bbsid = mySpeak.get(position).BBSId;
+                Intent intent = new Intent(MySpeakActivity.this, NoticeDetailActivity.class);
+                intent.putExtra("bbsid", bbsid + "");
+                startActivity(intent);
+            }
+        });
 
 
         initTabLayout();
@@ -136,7 +148,7 @@ public class MySpeakActivity extends AppCompatActivity {
 
     }
 
-    private void initSpeakRecyclerView(List<MyNoteBean.MySpeakBean> mySpeak) {
+    private void initSpeakRecyclerView(final List<MyNoteBean.MySpeakBean> mySpeak) {
         mRecyclerView = new RecyclerView(this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         final MySpeakNoteRVAdapter mySpeakNoteRVAdapter = new MySpeakNoteRVAdapter(R.layout.item_fans_post, mySpeak);
@@ -167,6 +179,15 @@ public class MySpeakActivity extends AppCompatActivity {
                         });
             }
         }, mRecyclerView);
+        mySpeakNoteRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+                String bbsid = mySpeak.get(position).tid;
+                Intent intent = new Intent(MySpeakActivity.this, NoticeDetailActivity.class);
+                intent.putExtra("bbsid", bbsid + "");
+                startActivity(intent);
+            }
+        });
 
     }
 

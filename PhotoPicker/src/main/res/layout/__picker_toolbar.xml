@@ -5,8 +5,8 @@
                                    android:layout_width="match_parent"
                                    android:layout_height="56dp"
                                    android:background="#FF5070"
-                                   app:navigationIcon="@drawable/icon_return_white"
+                                   app:navigationIcon="@drawable/__picker_icon_return_white"
                                    app:subtitleTextColor="@android:color/white"
-                                   app:theme="@style/ToolbarTheme"
+                                   app:theme="@style/PickerToolbarTheme"
                                    app:titleTextColor="@android:color/white"
     />

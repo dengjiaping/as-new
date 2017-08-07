@@ -94,7 +94,8 @@ public class TrainCountMountFragment extends Fragment {
                         initHistogram(trainCountBean);
                         int i = trainCountBean.countsm * 1000;
                         mTrainCountTvTimeCountNumber.setText(DateUtil.dateFormat(i + "", "mm"));
-                        mTrainCountTvTimeMeanNumber.setText(DateUtil.dateFormat((trainCountBean.averageday * 1000) + "", "mm"));
+                        int ss = Integer.parseInt(DateUtil.dateFormat((trainCountBean.averageday * 1000) + "", "ss")) / 60;
+                        mTrainCountTvTimeMeanNumber.setText(DateUtil.dateFormat((trainCountBean.averageday * 1000) +"", "mm")+ "." + ss);
                     }
                 });
     }
@@ -121,8 +122,8 @@ public class TrainCountMountFragment extends Fragment {
             int m = Integer.parseInt(s) * 1000;
             mDatas.add(new Histogram.PPHistogramBean(Integer.parseInt(DateUtil.dateFormat(m + "", "mm")), stringsX.get(i)));
         }
-
-        mTrainCountFlHistogram.setmDatas(mDatas, MAX);
+        int i = Integer.parseInt(trainCountBean.max) * 1000;
+        mTrainCountFlHistogram.setmDatas(mDatas, Integer.parseInt(DateUtil.dateFormat(i + "", "mm")) + 10);
         mTrainCountFlHistogram.setCountInOne(7);
     }
 

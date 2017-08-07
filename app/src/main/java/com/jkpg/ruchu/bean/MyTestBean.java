@@ -1,7 +1,5 @@
 package com.jkpg.ruchu.bean;
 
-import com.google.gson.annotations.SerializedName;
-
 /**
  * Created by qindi on 2017/7/21.
  */
@@ -12,7 +10,7 @@ public class MyTestBean {
     /**
      * istest : 1
      * state : 200
-     * report : {"createtime":"2017-07-12 14:04:33.0","content":"16","userHeight":"179","class":"A级","userWeight":"80","userAge":"25","userNike":"a星月"}
+     * report : {"createtime":"2017-08-03 18:02:30.0","content":";;;;;;。","userHeight":"168","level":"Level-3","count":"81.13","userWeight":"45","userAge":"28","userNike":"A星越"}
      * mess : 查询成功,返回报告
      */
 
@@ -23,20 +21,21 @@ public class MyTestBean {
 
     public static class ReportBean {
         /**
-         * createtime : 2017-07-12 14:04:33.0
-         * content : 16
-         * userHeight : 179
-         * class : A级
-         * userWeight : 80
-         * userAge : 25
-         * userNike : a星月
+         * createtime : 2017-08-03 18:02:30.0
+         * content : ;;;;;;。
+         * userHeight : 168
+         * level : Level-3
+         * count : 81.13
+         * userWeight : 45
+         * userAge : 28
+         * userNike : A星越
          */
 
         public String createtime;
         public String content;
         public String userHeight;
-        @SerializedName("class")
-        public String classX;
+        public String level;
+        public String count;
         public String userWeight;
         public String userAge;
         public String userNike;

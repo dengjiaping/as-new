@@ -17,7 +17,6 @@
         >
 
         <TextView
-            android:id="@+id/doctor_appraise_name"
 
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -25,7 +24,6 @@
             android:textColor="@color/colorGray3"/>
 
         <me.zhanghai.android.materialratingbar.MaterialRatingBar
-            android:id="@+id/doctor_appraise_rating"
             style="@style/Widget.MaterialRatingBar.RatingBar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -39,7 +37,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/doctor_appraise_time"
         android:text="@string/app_name"
 
         android:layout_width="wrap_content"
@@ -50,7 +47,6 @@
         android:textColor="@color/colorGray3"/>
 
     <TextView
-        android:id="@+id/doctor_appraise_body"
         android:text="@string/app_name"
 
         android:layout_width="wrap_content"

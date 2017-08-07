@@ -24,7 +24,7 @@
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
             android:padding="10dp"
-            android:src="@drawable/icon_return_white"
+            android:src="@drawable/__picker_icon_return_white"
             />
 
         <LinearLayout

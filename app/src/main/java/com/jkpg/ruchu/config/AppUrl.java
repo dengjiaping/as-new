@@ -34,10 +34,23 @@ public class AppUrl {
     public static final String BBS_DELCOLLECTION = BASEURL + "BBS_DelCollection";
     public static final String BBS_DETAILS = BASEURL + "BBS_DetailsServlet";
     public static final String BBS_LOOKUP = BASEURL + "BBS_LookUpServlet";
+    public static final String BBS_POST = BASEURL + "BBS_PostServlet";
     // 收藏
     public static final String BBS_COLLECT = BASEURL + "BBS_CollectServlet";
     //点赞
     public static final String UPVOTE = BASEURL + "UpvoteServlet";
+    public static final String UPVOTEREPLY = BASEURL + "UpvoteReplyServlet";
+
+
+
+    public static final String BBS_REPLY = BASEURL + "BBS_ReplyServlet";
+    public static final String BBS_NOTICEDETAIL = BASEURL + "BBS_NoticeDetailServlet";
+    public static final String BBS_LOOKGOOD = BASEURL + "BBS_LookGoodServlet";
+    public static final String BBS_LOOKHOT = BASEURL + "BBS_LookHotServlet";
+    public static final String BBS_LOOKMOREREPLIES = BASEURL + "BBS_LookMoreRepliesServlet";
+
+
+
 
     public static final String MYINDEX = BASEURL + "MyIndexServlert";
     public static final String UPDATE_MYARCHIVE = BASEURL + "Update_MyArchivesServlet";
@@ -58,6 +71,8 @@ public class AppUrl {
     public static final String BIND_QQ = BASEURL + "Bind_QQServlet";
     public static final String BIND_WECHAT = BASEURL + "Bind_WeChatServlet";
     public static final String EXERICESHISTORY = BASEURL + "ExericesHistoryServlet";
+    public static final String CANCELBIND_QQ = BASEURL + "CancelBind_QQServlet";
+    public static final String CANCELBIND_WECHAT = BASEURL + "CancelBind_WeChatServlet";
 
 
     public static final String UPDATEHEADIMG = BASEURL + "UpdateHeadImgServlet";
@@ -66,6 +81,7 @@ public class AppUrl {
     public static final String STARTEXERCISE = BASEURL + "StartExerciseServlet";
     public static final String EXERCISEEND = BASEURL + "ExerciseEndServlet";
     public static final String EXERCISECOUNT = BASEURL + "ExerciseCountServlet";
+    public static final String EXERCISEYEAR = BASEURL + "ExerciseYearServlet";
 
 
 

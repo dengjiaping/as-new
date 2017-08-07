@@ -19,7 +19,6 @@
             <include layout="@layout/view_notice"/>
 
             <LinearLayout
-                android:id="@+id/notice_ll"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"

@@ -90,16 +90,11 @@ public class LoginActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_tv_wx:
-              /*  SendAuth.Req req = new SendAuth.Req();
-                req.scope = "snsapi_userinfo";
-                req.state = "wechat_sdk_demo_test";
-                api.sendReq(req);*/
                 LoginWX();
                 break;
             case R.id.login_ll_qq:
                 LoginQQ();
                 break;
-
             case R.id.login_ll_phone:
                 startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -112,8 +107,8 @@ public class LoginActivity extends AppCompatActivity {
                /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);*/
                 EventBus.getDefault().post(new MessageEvent("Login"));
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 finish();
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
         }
     }
@@ -242,6 +237,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
             Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+            LogUtils.i(t+"");
         }
 
         @Override

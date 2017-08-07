@@ -17,7 +17,6 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateDetailBean;
 import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
@@ -204,6 +203,8 @@ public class PlateDetailAllFragment extends Fragment {
             case R.id.plate_detail_fab:
                 Intent intent = new Intent(getActivity(), SendNoteActivity.class);
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
+                intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
+                intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());
                 startActivity(intent);
                 break;
         }

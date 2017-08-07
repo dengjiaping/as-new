@@ -486,7 +486,6 @@ public final class ImageTools {
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 50, fos);
                 fos.close();
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
             if (!bitmap.isRecycled()) {

@@ -5,7 +5,6 @@
               android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/notice_ll_all"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="12dp"

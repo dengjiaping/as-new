@@ -21,7 +21,6 @@
             android:textColor="@android:color/black"/>
 
         <TextView
-            android:id="@+id/item_question_title"
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +41,6 @@
             android:textColor="@color/colorGray3"/>
 
         <TextView
-            android:id="@+id/item_question_body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
@@ -58,7 +56,6 @@
         android:layout_marginTop="5dp">
 
         <TextView
-            android:id="@+id/item_question_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -67,7 +64,6 @@
             android:textSize="12sp"/>
 
         <TextView
-            android:id="@+id/item_question_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

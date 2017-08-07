@@ -5,9 +5,9 @@ package com.jkpg.ruchu.bean;
  */
 
 public class PlateBean {
-    public String ImageUrl;
     public String title;
-    public String body;
-    public String number;
 
+    public PlateBean(String title) {
+        this.title = title;
+    }
 }

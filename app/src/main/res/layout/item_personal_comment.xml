@@ -14,7 +14,6 @@
         android:orientation="horizontal">
 
         <com.jkpg.ruchu.widget.CircleImageView
-            android:id="@+id/item_other_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="12dp"
@@ -63,7 +62,6 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/item_tv_other_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"

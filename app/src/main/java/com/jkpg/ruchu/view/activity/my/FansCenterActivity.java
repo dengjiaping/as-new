@@ -15,16 +15,26 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.FansCenterBean;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.ChatActivity;
-import com.jkpg.ruchu.view.adapter.FansRLAdapter;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.adapter.FanCenterRvAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,6 +84,7 @@ public class FansCenterActivity extends AppCompatActivity {
     TextView mFansTvTime;
 
     private int flag = 1;
+    private String mFansId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,9 +92,8 @@ public class FansCenterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_fans_center);
         ButterKnife.bind(this);
         initHeader();
-        String fansId = getIntent().getStringExtra("fansId");
-        initData(fansId);
-        initRecyclerView();
+        mFansId = getIntent().getStringExtra("fansId");
+        initData(mFansId);
     }
 
     private void initData(String fansId) {
@@ -95,14 +105,85 @@ public class FansCenterActivity extends AppCompatActivity {
                 .execute(new StringDialogCallback(FansCenterActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-
+                        FansCenterBean fansCenterBean = new Gson().fromJson(s, FansCenterBean.class);
+                        init(fansCenterBean);
+                        initRecyclerView(fansCenterBean.bbslist);
                     }
                 });
     }
 
-    private void initRecyclerView() {
+    private void init(FansCenterBean fansCenterBean) {
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + fansCenterBean.headImg)
+                .crossFade()
+                .centerCrop()
+                .into(mFansCivPhoto);
+        mFansTvTime.setText(fansCenterBean.chanhoutime);
+        mFansTvName.setText(fansCenterBean.nick);
+        if (!fansCenterBean.isVIP.equals("1")) {
+            mFansIvVip.setImageResource(R.drawable.icon_vip2);
+        }
+        mFansTvFollow.setText(fansCenterBean.attNum);
+        mFansTvFans.setText(fansCenterBean.fansNum);
+        mFansTvAddress.setText(fansCenterBean.address);
+        mFansTvGrade.setText(fansCenterBean.levelname);
+        if (fansCenterBean.isAtt.equals("1")) {
+            mFansTvAddFollow.setVisibility(View.GONE);
+            mFansShowFollow.setVisibility(View.VISIBLE);
+        } else {
+            mFansTvAddFollow.setVisibility(View.VISIBLE);
+            mFansShowFollow.setVisibility(View.GONE);
+        }
+        if (fansCenterBean.bbsnum == null || fansCenterBean.bbslist.size() == 0) {
+            mFansTvPostCount.setText("暂无发帖");
+        } else {
+            mFansTvPostCount.setText("全部发帖（" + fansCenterBean.bbsnum + "）");
+        }
+    }
+
+    private void initRecyclerView(final List<FansCenterBean.BbslistBean> bbslist) {
         mFansRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mFansRecyclerView.setAdapter(new FansRLAdapter());
+        final FanCenterRvAdapter fanCenterRvAdapter = new FanCenterRvAdapter(R.layout.item_fans_post, bbslist);
+        mFansRecyclerView.setAdapter(fanCenterRvAdapter);
+        fanCenterRvAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
+                Intent intent = new Intent(FansCenterActivity.this, NoticeDetailActivity.class);
+                intent.putExtra("bbsid", bbslist.get(position).tid + "");
+                startActivity(intent);
+            }
+        });
+
+        fanCenterRvAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+            @Override
+            public void onLoadMoreRequested() {
+                flag++;
+                LogUtils.i(flag + "");
+                OkGo
+                        .post(AppUrl.FANSDETAIL)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("fansid", mFansId)
+                        .params("flag", flag)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                FansCenterBean fansCenterBean = new Gson().fromJson(s, FansCenterBean.class);
+                                List<FansCenterBean.BbslistBean> list = fansCenterBean.bbslist;
+                                if (list == null) {
+                                    fanCenterRvAdapter.loadMoreEnd();
+                                } else if (list.size() == 0) {
+                                    fanCenterRvAdapter.loadMoreEnd();
+                                } else {
+                                    fanCenterRvAdapter.addData(list);
+                                    fanCenterRvAdapter.loadMoreComplete();
+                                }
+                            }
+                        });
+
+            }
+        }, mFansRecyclerView);
     }
 
     private void initHeader() {
@@ -113,16 +194,36 @@ public class FansCenterActivity extends AppCompatActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fans_tv_add_follow:
-                mFansShowFollow.setVisibility(View.VISIBLE);
-                mFansTvAddFollow.setVisibility(View.GONE);
+
+                OkGo
+                        .post(AppUrl.ATTENTION)
+                        .params("followUserid", mFansId)
+                        .params("MyUserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(FansCenterActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (!successBean.success) {
+                                    ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
+
+                                } else {
+                                    mFansShowFollow.setVisibility(View.VISIBLE);
+                                    mFansTvAddFollow.setVisibility(View.GONE);
+                                }
+                            }
+                        });
+
                 break;
             case R.id.fans_tv_ok_follow:
                 showPopupWindow();
                 break;
             case R.id.fans_tv_chat:
-                startActivity(new Intent(FansCenterActivity.this, ChatActivity.class));
+                ToastUtils.showShort(UIUtils.getContext(), "即将登场，敬请期待");
+                //startActivity(new Intent(FansCenterActivity.this, ChatActivity.class));
                 break;
             case R.id.fans_tv_more:
+                ToastUtils.showShort(UIUtils.getContext(), "即将登场，敬请期待");
                 break;
             case R.id.header_iv_left:
                 finish();
@@ -142,9 +243,25 @@ public class FansCenterActivity extends AppCompatActivity {
         view.findViewById(R.id.text_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mFansShowFollow.setVisibility(View.GONE);
-                mFansTvAddFollow.setVisibility(View.VISIBLE);
-                popupWindow.dismiss();
+                OkGo
+                        .post(AppUrl.CANCLEATT)
+                        .params("fansid", mFansId)
+                        .params("myuserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(FansCenterActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (!successBean.success) {
+                                    ToastUtils.showShort(UIUtils.getContext(), "取消关注失败");
+                                } else {
+                                    mFansShowFollow.setVisibility(View.GONE);
+                                    mFansTvAddFollow.setVisibility(View.VISIBLE);
+                                    popupWindow.dismiss();
+                                }
+                            }
+                        });
+
+
             }
         });
         int popupWidth = view.getMeasuredWidth();

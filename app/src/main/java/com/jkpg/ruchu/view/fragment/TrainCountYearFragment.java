@@ -9,18 +9,28 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.TrainYearCountBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.DateUtil;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.Histogram;
+import com.lzy.okgo.OkGo;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/31.
@@ -46,7 +56,10 @@ public class TrainCountYearFragment extends Fragment {
     Unbinder unbinder;
 
     List<Histogram.PPHistogramBean> mDatas;
-    int MAX = 80;
+    @BindView(R.id.train_count_tv_1)
+    TextView mTrainCountTv1;
+    @BindView(R.id.train_count_tv_2)
+    TextView mTrainCountTv2;
     private int mNowYear;
     private int mNowMonth;
     private int mYear;
@@ -64,8 +77,25 @@ public class TrainCountYearFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         init();
-        initHistogram();
+        initData();
+    }
 
+    private void initData() {
+        OkGo
+                .post(AppUrl.EXERCISEYEAR)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("years", mNowYear)
+                .execute(new StringDialogCallback(getActivity()) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        TrainYearCountBean trainYearCountBean = new Gson().fromJson(s, TrainYearCountBean.class);
+                        initHistogram(trainYearCountBean);
+                        int i = trainYearCountBean.countyear * 1000;
+                        mTrainCountTvTimeCountNumber.setText(DateUtil.dateFormat(i + "", "HH"));
+                        int ss = Integer.parseInt(DateUtil.dateFormat((trainYearCountBean.avmonth * 1000) + "", "mm")) / 60;
+                        mTrainCountTvTimeMeanNumber.setText(DateUtil.dateFormat((trainYearCountBean.avmonth * 1000) + "", "HH")+ "." + ss);
+                    }
+                });
     }
 
     private void init() {
@@ -76,17 +106,24 @@ public class TrainCountYearFragment extends Fragment {
         mTrainCountTvMoon.setText(mNowYear + "年");
         mTrainCountTvTimeCount.setText("本年训练总时间");
         mTrainCountTvTimeMean.setText("本年平均训练时间");
+        mTrainCountTv1.setText("小时");
+        mTrainCountTv2.setText("小时");
         if (mYear == mNowYear)
             mTrainCountBtnDown.setEnabled(false);
     }
 
-    private void initHistogram() {
+    private void initHistogram(TrainYearCountBean trainYearCountBean) {
+        List<String> stringX = trainYearCountBean.arraypoint.get(0);
+        List<String> stringY = trainYearCountBean.arraypoint.get(1);
         mDatas = new ArrayList<>();
-        for (int i = 1; i <= 12; i++) {
-            mDatas.add(new Histogram.PPHistogramBean(new Random().nextInt(81), i + ""));
-        }
+        for (int i = 0; i < trainYearCountBean.arraypoint.get(0).size(); i++) {
+            String s = stringY.get(i);
+            int m = Integer.parseInt(s) * 1000;
+            mDatas.add(new Histogram.PPHistogramBean(Integer.parseInt(DateUtil.dateFormat(m + "", "HH")), stringX.get(i)));
 
-        mTrainCountFlHistogram.setmDatas(mDatas, MAX);
+        }
+        int i = Integer.parseInt(trainYearCountBean.max) * 1000;
+        mTrainCountFlHistogram.setmDatas(mDatas, Integer.parseInt(DateUtil.dateFormat(i + "", "HH")) + 2);
         mTrainCountFlHistogram.setCountInOne(12);
     }
 
@@ -100,16 +137,15 @@ public class TrainCountYearFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.train_count_btn_up:
-                initHistogram();
                 mTrainCountTvMoon.setText(--mNowYear + "年");
+                initData();
                 mTrainCountBtnDown.setEnabled(true);
 
 
                 break;
             case R.id.train_count_btn_down:
-
-                initHistogram();
                 mTrainCountTvMoon.setText(++mNowYear + "年");
+                initData();
                 if (mYear == mNowYear)
                     mTrainCountBtnDown.setEnabled(false);
                 break;

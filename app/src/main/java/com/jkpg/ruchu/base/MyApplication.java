@@ -9,8 +9,11 @@ import android.widget.ImageView;
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.lzy.okgo.OkGo;
+import com.umeng.message.IUmengRegisterCallback;
+import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.youzan.sdk.YouzanSDK;
@@ -59,7 +62,7 @@ public class MyApplication extends Application {
         PlatformConfig.setWeixin(Constants.WX_APP_ID, Constants.WX_SECRET);
         PlatformConfig.setQQZone(Constants.QQ_APP_ID, Constants.QQ_SECRET);
         UMShareAPI.get(this);
-/*//        Config.isJumptoAppStore = true;
+//        Config.isJumptoAppStore = true;
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //通知栏可以设置最多显示通知的条数，当有新通知到达时，会把旧的通知隐藏。
 //        mPushAgent.setDisplayNotificationNumber(0);
@@ -76,7 +79,7 @@ public class MyApplication extends Application {
             public void onFailure(String s, String s1) {
 
             }
-        });*/
+        });
 
         /**
          * 初始化SDK.

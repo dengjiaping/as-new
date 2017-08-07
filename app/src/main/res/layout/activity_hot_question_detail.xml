@@ -35,7 +35,6 @@
                     android:padding="12dp">
 
                     <TextView
-                        android:id="@+id/textView5"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="问题描述："
@@ -53,7 +52,6 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/question_detail_ll_answer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"

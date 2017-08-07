@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.iwf.photopicker.PhotoPicker;
 import me.iwf.photopicker.PhotoPickerActivity;
 import me.iwf.photopicker.R;
 import me.iwf.photopicker.adapter.PhotoGridAdapter;
@@ -224,7 +223,6 @@ public class PhotoPickerFragment extends Fragment {
     } catch (IOException e) {
       e.printStackTrace();
     } catch (ActivityNotFoundException e) {
-      // TODO No Activity Found to handle Intent
       e.printStackTrace();
     }
   }

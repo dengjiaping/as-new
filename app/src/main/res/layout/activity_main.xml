@@ -16,7 +16,10 @@
 
 
         </FrameLayout>
-
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -32,7 +35,6 @@
                 android:background="@android:color/white"
                 app:menu="@menu/menu_bottomnav"/>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp">

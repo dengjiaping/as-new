@@ -183,6 +183,9 @@ public class PlateDetailNewFragment extends Fragment {
             case R.id.plate_detail_fab:
                 Intent intent = new Intent(getActivity(), SendNoteActivity.class);
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
+                intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());
+                intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
+
                 startActivity(intent);
                 break;
         }

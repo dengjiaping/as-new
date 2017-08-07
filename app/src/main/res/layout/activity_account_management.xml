@@ -30,13 +30,13 @@
             android:id="@+id/account_manage_tv_phone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:paddingBottom="18dp"
+            android:gravity="end|center"
+            android:paddingBottom="16dp"
             android:paddingLeft="22dp"
             android:paddingRight="42dp"
-            android:paddingTop="18dp"
+            android:paddingTop="16dp"
             android:textColor="@android:color/black"
-            android:textSize="20sp"/>
+            android:textSize="18sp"/>
 
     </RelativeLayout>
 
@@ -52,10 +52,10 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ripple_with_color"
         android:drawableRight="@drawable/icon_next"
-        android:paddingBottom="18dp"
+        android:paddingBottom="16dp"
         android:paddingLeft="22dp"
         android:paddingRight="22dp"
-        android:paddingTop="18dp"
+        android:paddingTop="16dp"
         android:text="修改密码"
         android:textSize="16sp"/>
 
@@ -70,15 +70,17 @@
         android:id="@+id/account_manage_ll_wx"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
         android:background="@drawable/ripple_with_color">
 
-        <ImageView
+        <!--<ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/wx_min"/>
+            android:src="@drawable/wx_min"/>-->
 
         <TextView
             android:layout_width="0dp"
@@ -88,8 +90,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="微信"
-            android:textColor="#343434"
-            android:textSize="15sp"/>
+            android:textSize="16sp"/>
 
         <CheckBox
             android:id="@+id/account_manage_rb_wx"
@@ -118,18 +119,20 @@
         />
 
     <LinearLayout
+        android:paddingBottom="16dp"
+        android:paddingTop="16dp"
         android:id="@+id/account_manage_ll_qq"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ripple_with_color">
 
-        <ImageView
+       <!-- <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_marginBottom="12dp"
             android:layout_marginLeft="22dp"
             android:layout_marginTop="12dp"
-            android:src="@drawable/qq_min"/>
+            android:src="@drawable/qq_min"/>-->
 
         <TextView
             android:layout_width="0dp"
@@ -138,8 +141,7 @@
             android:layout_weight="1"
             android:gravity="center_vertical"
             android:text="QQ"
-            android:textColor="#343434"
-            android:textSize="15sp"/>
+            android:textSize="16sp"/>
 
         <CheckBox
             android:id="@+id/account_manage_rb_qq"

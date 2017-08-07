@@ -152,7 +152,6 @@ public class TrainFragment extends Fragment {
 
     //初始化训练按钮状态 + 新手提示
     private void initTestBtn() {
-        // TODO: 2017/5/18
         mTrainTvTip.setVisibility(View.GONE);
         mTrainLlTest.setVisibility(View.GONE);
         mTrainLlTrain.setVisibility(View.VISIBLE);

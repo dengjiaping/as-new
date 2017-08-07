@@ -17,19 +17,19 @@ import java.util.List;
  * Created by qindi on 2017/6/5.
  */
 
-public class FineNoteRVAdapter extends BaseQuickAdapter<FineNoteBean, BaseViewHolder> {
-    public FineNoteRVAdapter(@LayoutRes int layoutResId, @Nullable List<FineNoteBean> data) {
+public class FineNoteRVAdapter extends BaseQuickAdapter<FineNoteBean.ListBean, BaseViewHolder> {
+    public FineNoteRVAdapter(@LayoutRes int layoutResId, @Nullable List<FineNoteBean.ListBean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, FineNoteBean item) {
+    protected void convert(BaseViewHolder helper, FineNoteBean.ListBean item) {
         helper
                 .setText(R.id.item_fine_note_tv_title, item.title)
-                .setText(R.id.item_fine_note_tv_time, item.time)
-                .setText(R.id.item_fine_note_tv_eulogy, item.eulogy)
+                .setText(R.id.item_fine_note_tv_time, item.createtime)
+                .setText(R.id.item_fine_note_tv_eulogy, item.zan)
                 .setText(R.id.item_fine_note_tv_reply, item.reply)
-                .setText(R.id.item_fine_note_iv_body, item.body);
+                .setText(R.id.item_fine_note_iv_body, item.remark);
         Glide.with(UIUtils.getContext()).load(item.image).crossFade().into((ImageView) helper.getView(R.id.item_fine_note_tv_image));
     }
 }

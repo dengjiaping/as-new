@@ -88,10 +88,13 @@ public class AccountManagementActivity extends AppCompatActivity {
                         isQQ = mAccountManagementBean.qqflag;
                         if (mAccountManagementBean.qqflag) {
                             mAccountManageRbQq.setChecked(false);
+                            mAccountManageRbWx.setText("已绑定");
+
                         }
                         isWX = mAccountManagementBean.wxflag;
                         if (mAccountManagementBean.wxflag) {
                             mAccountManageRbWx.setChecked(false);
+                            mAccountManageRbWx.setText("已绑定");
                         }
                     }
                 });
@@ -130,11 +133,18 @@ public class AccountManagementActivity extends AppCompatActivity {
                             .setPositiveButton("确认解绑", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
+                                    OkGo
+                                            .post(AppUrl.CANCELBIND_WECHAT)
+                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                            .execute(new StringDialogCallback(AccountManagementActivity.this) {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    mAccountManageRbWx.setChecked(true);
+                                                    mAccountManageRbWx.setText("绑定");
+                                                    isWX = false;
+                                                }
+                                            });
 
-
-                                    mAccountManageRbWx.setChecked(true);
-                                    mAccountManageRbWx.setText("绑定");
-                                    isWX = false;
 
                                 }
                             })
@@ -157,10 +167,18 @@ public class AccountManagementActivity extends AppCompatActivity {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
 
+                                    OkGo
+                                            .post(AppUrl.CANCELBIND_QQ)
+                                            .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+                                            .execute(new StringDialogCallback(AccountManagementActivity.this) {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    mAccountManageRbQq.setChecked(true);
+                                                    mAccountManageRbQq.setText("绑定");
+                                                    isQQ = false;
+                                                }
+                                            });
 
-                                    mAccountManageRbQq.setChecked(true);
-                                    mAccountManageRbQq.setText("绑定");
-                                    isQQ = false;
 
                                 }
                             })
@@ -255,13 +273,13 @@ public class AccountManagementActivity extends AppCompatActivity {
 
         @Override
         public void onError(SHARE_MEDIA share_media, int i, Throwable throwable) {
-            Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "绑定失败", Toast.LENGTH_SHORT).show();
 
         }
 
         @Override
         public void onCancel(SHARE_MEDIA share_media, int i) {
-            Toast.makeText(getApplicationContext(), "登陆取消", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "绑定取消", Toast.LENGTH_SHORT).show();
 
         }
 

@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.view.adapter.PlateDetailVPAdapter;
 import com.jkpg.ruchu.view.fragment.PlateDetailAllFragment;
 import com.jkpg.ruchu.view.fragment.PlateDetailFineFragment;
@@ -44,6 +45,7 @@ public class PlateDetailActivity extends AppCompatActivity {
     private List<String> viewTitle;
     public static String mTitle;
     private String mPlateid;
+    private ArrayList<String> mPlate;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +55,10 @@ public class PlateDetailActivity extends AppCompatActivity {
 
         mTitle = getIntent().getStringExtra("title");
         mPlateid = getIntent().getStringExtra("plateid");
+        mPlate = getIntent().getStringArrayListExtra("plate");
+        for (String s : mPlate) {
+            LogUtils.i(s + "1");
+        }
         initHeader();
         initData();
         initTabLayout();
@@ -87,7 +93,9 @@ public class PlateDetailActivity extends AppCompatActivity {
                 finish();
                 break;
             case R.id.header_iv_right:
-                startActivity(new Intent(PlateDetailActivity.this, NoticeActivity.class));
+                Intent intent = new Intent(PlateDetailActivity.this, NoticeActivity.class);
+                intent.putExtra("plateid", mPlateid);
+                startActivity(intent);
                 break;
         }
     }
@@ -98,5 +106,9 @@ public class PlateDetailActivity extends AppCompatActivity {
 
     public String getPlateid() {
         return mPlateid;
+    }
+
+    public ArrayList<String> getPlate() {
+        return mPlate;
     }
 }

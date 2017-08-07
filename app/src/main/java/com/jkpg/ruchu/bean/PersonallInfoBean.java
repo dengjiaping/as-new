@@ -25,11 +25,11 @@ public class PersonallInfoBean {
      */
 
     public String tele;
-    public int istest;
-    public int isfirst;
-    public int flag_status;
+    public String istest;
+    public String isfirst;
+    public String flag_status;
     public String userid;
-    public int level;
+    public String level;
 
     public String headImg;
     public String nick;

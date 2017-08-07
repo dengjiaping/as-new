@@ -8,7 +8,6 @@ import java.util.List;
 
 public class NoticeDetailBean {
 
-
     public List<List2Bean> list2;
     public List<List1Bean> list1;
 
@@ -19,14 +18,15 @@ public class NoticeDetailBean {
          * userid : ed6cdb60-3eb2-11e7-aebf-fa163e547655
          * parentid : -1
          * taici : 无
-         * content : 方法很简单，可以123123123望有用
+         * content : 方法很简单，可888888888有用
+         * iszan : false
          * nick : haha
-         * items : [{"content":"方法很简单，可888888888有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-05-27 11:01:50.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"1","tid":2,"nick2":"haha"},{"content":"方法很简单，可888888888有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-05-27 11:01:50.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"1","tid":42,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-06-12 11:00:20.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"2","tid":4,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-06-12 11:00:25.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"1","tid":6,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-06-12 11:00:27.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"1","tid":8,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"挺好听","replytime":"2017-06-12 11:00:27.0","userid":"587a253d-3d07-11e7-aebf-fa163e547655","parentid":"42","tid":69,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"587a253d-3d07-11e7-aebf-fa163e547655","nick":"挺好听","replytime":"2017-06-12 11:00:34.0","userid":"587a253d-3d07-11e7-aebf-fa163e547655","parentid":"69","tid":74,"nick2":"挺好听"}]
-         * zan : 0
-         * replytime : 2017-06-07 11:01:50.0
-         * images :
+         * items : [{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-06-12 11:00:20.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"2","tid":4,"nick2":"haha"},{"content":"方法很不简单,望有用","userid2":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","nick":"haha","replytime":"2017-06-12 11:00:27.0","userid":"ed6cdb60-3eb2-11e7-aebf-fa163e547655","parentid":"2","tid":8,"nick2":"haha"}]
+         * zan : 8
+         * replytime : 2017-05-27 11:01:50.0
+         * images : []
          * reply : 0
-         * tid : 1
+         * tid : 2
          */
 
         public String chanhoutime;
@@ -35,27 +35,29 @@ public class NoticeDetailBean {
         public String parentid;
         public String taici;
         public String content;
+        public boolean iszan;
         public String nick;
-        public String zan;
+        public int zan;
         public String replytime;
-        public List<String> images;
         public String reply;
         public int tid;
         public List<ItemsBean> items;
+        public List<String> images;
 
-        public static class ItemsBean {
+        public static class ItemsBean  {
             /**
-             * content : 方法很简单，可888888888有用
+             * content : 方法很不简单,望有用
              * userid2 : ed6cdb60-3eb2-11e7-aebf-fa163e547655
              * nick : haha
-             * replytime : 2017-05-27 11:01:50.0
+             * replytime : 2017-06-12 11:00:20.0
              * userid : ed6cdb60-3eb2-11e7-aebf-fa163e547655
-             * parentid : 1
-             * tid : 2
+             * parentid : 2
+             * tid : 4
              * nick2 : haha
              */
 
             public String content;
+            public String headImg;
             public String userid2;
             public String nick;
             public String replytime;
@@ -98,9 +100,10 @@ public class NoticeDetailBean {
         public boolean iszan;
         public String nick;
         public String zan;
-        public List<String> images;
         public String reply;
         public int tid;
         public String isGood;
+        public String shearurl;
+        public List<String> images;
     }
 }

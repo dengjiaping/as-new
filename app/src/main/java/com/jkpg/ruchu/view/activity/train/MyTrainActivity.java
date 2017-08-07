@@ -108,7 +108,7 @@ public class MyTrainActivity extends AppCompatActivity {
                                         });
                             }
                         })
-                        .setTitle("要启用 V" + (position + 1) + " 难度训练吗？")
+                        .setTitle("要启用 " + list.get(position).level + " 难度训练吗？")
                         .show();
             }
         });

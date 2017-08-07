@@ -28,9 +28,11 @@ public class HotQuestionFragment extends Fragment {
     private RecyclerView mRecyclerView;
     List<HotQuestionBean> data;
 
+
     public HotQuestionFragment(List<HotQuestionBean> data) {
         this.data = data;
     }
+
 
     @Nullable
     @Override
@@ -53,4 +55,5 @@ public class HotQuestionFragment extends Fragment {
             }
         });
     }
+
 }
