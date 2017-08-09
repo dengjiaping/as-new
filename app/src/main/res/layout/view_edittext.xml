@@ -9,9 +9,7 @@
         android:id="@+id/text_input_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        app:counterEnabled="true"
-        app:counterMaxLength="12">
+        android:layout_margin="20dp">
 
         <EditText
             android:id="@+id/edit_text_name"

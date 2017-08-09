@@ -23,6 +23,7 @@ import com.jkpg.ruchu.widget.BottomNavigationViewEx;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -196,8 +197,7 @@ public class MainActivity extends AppCompatActivity {
             EventBus.getDefault().unregister(this);
         }
     }
-
-    @Subscribe
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void EventMass(String mess) {
         if (mess.equals("Train")) {
             switchFragment(R.id.menu_train);

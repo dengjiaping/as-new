@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -29,6 +28,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.NoticeDetailBean;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -47,6 +47,7 @@ import com.jkpg.ruchu.view.adapter.NoticeDetailReplyAdapter;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.jkpg.ruchu.widget.MyLinearLayoutManager;
 import com.jkpg.ruchu.widget.nineview.ImageInfo;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.jkpg.ruchu.widget.nineview.preview.NineGridViewClickAdapter;
@@ -58,6 +59,10 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -128,6 +133,9 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
         String bbsid = getIntent().getStringExtra("bbsid");
         initData(bbsid);
         initHeader();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
     }
 
@@ -256,7 +264,7 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
     private void initRecyclerView(final List<NoticeDetailBean.List2Bean> list2) {
-        mNoticeDetailReplyRecycler.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
+        mNoticeDetailReplyRecycler.setLayoutManager(new MyLinearLayoutManager(UIUtils.getContext()));
         mNoticeDetailReplyAdapter = new NoticeDetailReplyAdapter(R.layout.item_notic_reply, list2);
         mNoticeDetailReplyRecycler.setAdapter(mNoticeDetailReplyAdapter);
         mNoticeDetailReplyAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
@@ -268,7 +276,7 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, final int position) {
                 switch (view.getId()) {
-                    case R.id.item_notice_detail_tv_reply:
+                    case R.id.item_notice_reply_tv_reply:
                     case R.id.item_notice_reply_body:
                         isShowImage = View.GONE;
                         mIndex = position;
@@ -293,6 +301,7 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                         replyLZ();
                         break;
                     case R.id.item_notice_reply_to_body1:
+                        mTid = mList2.get(position).items.get(1).tid;
                         isShowImage = View.GONE;
                         mIndex = position;
 
@@ -319,7 +328,10 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                         break;
                     case R.id.item_notice_reply_to_more:
                         int tid = mList2.get(position).tid;
+                        mIndex = position;
                         Intent intent = new Intent(NoticeDetailActivity.this, MoreReplyActivity.class);
+                        intent.putExtra("replyid", tid + "");
+                        intent.putExtra("bbsid", mbbsid + "");
                         startActivity(intent);
 
                         break;
@@ -390,7 +402,7 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                     .params("bbsid", mList1.get(0).tid)
                     .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                     .params("replyid", mList2.get(position).tid)
-                    .params("flag", 2)
+                    .params("flag", 0)
                     .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
@@ -483,6 +495,34 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
     }
 
 
+    private void initPhotoPicker() {
+        photoAdapter = new PhotoAdapter(this, selectedPhotos);
+
+
+        mReplyRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(6, OrientationHelper.VERTICAL));
+        mReplyRecyclerView.setAdapter(photoAdapter);
+        mReplyRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
+                new RecyclerItemClickListener.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        if (photoAdapter.getItemViewType(position) == 1) {
+                            PhotoPicker.builder()
+                                    .setPhotoCount(3)
+                                    .setGridColumnCount(4)
+                                    .setShowCamera(true)
+                                    .setPreviewEnabled(false)
+                                    .setSelected(selectedPhotos)
+                                    .start(NoticeDetailActivity.this);
+                        } else {
+                            PhotoPreview.builder()
+                                    .setPhotos(selectedPhotos)
+                                    .setCurrentItem(position)
+                                    .start(NoticeDetailActivity.this);
+                        }
+                    }
+                }));
+    }
+
     private void replyLZ() {
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
         final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -532,6 +572,8 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                                                     @Override
                                                     public void onSuccess(String s, Call call, Response response) {
                                                         NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                        mList1.clear();
+                                                        mList2.clear();
                                                         mList1 = noticeDetailBean.list1;
                                                         mList2 = noticeDetailBean.list2;
                                                         initRecyclerView(mList2);
@@ -569,12 +611,14 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                                                     @Override
                                                     public void onSuccess(String s, Call call, Response response) {
                                                         NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                        mList1.clear();
+                                                        mList2.clear();
                                                         mList1 = noticeDetailBean.list1;
                                                         mList2 = noticeDetailBean.list2;
                                                         initRecyclerView(mList2);
                                                         mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
 
-                                                        mNoticeDetailReplyRecycler.smoothScrollToPosition(mList2.size());
+                                                        mNoticeDetailReplyRecycler.scrollToPosition(mList2.size());
 
                                                     }
                                                 });
@@ -601,11 +645,17 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                                                 @Override
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                                    mList1.clear();
+                                                    mList2.clear();
                                                     mList1 = noticeDetailBean.list1;
                                                     mList2 = noticeDetailBean.list2;
                                                     initRecyclerView(mList2);
-                                                    mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
-
+//                                                    int size = mList2.size();
+//                                                    mList2.clear();
+//                                                    mNoticeDetailReplyAdapter.notifyItemRangeRemoved(0,size);
+//                                                    mList2.addAll(noticeDetailBean.list2);
+//                                                    mNoticeDetailReplyAdapter.notifyItemRangeInserted(0,mList2.size());
+//                                                    ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
                                                     mNoticeDetailReplyRecycler.scrollToPosition(mIndex);
                                                 }
                                             });
@@ -633,34 +683,6 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
                 if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
             }
         });
-    }
-
-    private void initPhotoPicker() {
-        photoAdapter = new PhotoAdapter(this, selectedPhotos);
-
-
-        mReplyRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(6, OrientationHelper.VERTICAL));
-        mReplyRecyclerView.setAdapter(photoAdapter);
-        mReplyRecyclerView.addOnItemTouchListener(new RecyclerItemClickListener(this,
-                new RecyclerItemClickListener.OnItemClickListener() {
-                    @Override
-                    public void onItemClick(View view, int position) {
-                        if (photoAdapter.getItemViewType(position) == 1) {
-                            PhotoPicker.builder()
-                                    .setPhotoCount(3)
-                                    .setGridColumnCount(4)
-                                    .setShowCamera(true)
-                                    .setPreviewEnabled(false)
-                                    .setSelected(selectedPhotos)
-                                    .start(NoticeDetailActivity.this);
-                        } else {
-                            PhotoPreview.builder()
-                                    .setPhotos(selectedPhotos)
-                                    .setCurrentItem(position)
-                                    .start(NoticeDetailActivity.this);
-                        }
-                    }
-                }));
     }
 
     @Override
@@ -797,4 +819,51 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
         }
     };
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventReply(MessageEvent mess) {
+        if (mess.message.equals("reply")) {
+            OkGo
+                    .post(AppUrl.BBS_DETAILS)
+                    .params("bbsid", mbbsid)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                            mList1.clear();
+                            mList2.clear();
+                            mList1 = noticeDetailBean.list1;
+                            mList2 = noticeDetailBean.list2;
+                            initRecyclerView(mList2);
+//                                                    int size = mList2.size();
+//                                                    mList2.clear();
+//                                                    mNoticeDetailReplyAdapter.notifyItemRangeRemoved(0,size);
+//                                                    mList2.addAll(noticeDetailBean.list2);
+//                                                    mNoticeDetailReplyAdapter.notifyItemRangeInserted(0,mList2.size());
+//                                                    ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
+                            mNoticeDetailReplyRecycler.scrollToPosition(mIndex);
+                        }
+                    });
+        }
+    }
 }

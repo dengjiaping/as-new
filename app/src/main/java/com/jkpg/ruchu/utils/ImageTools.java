@@ -61,7 +61,7 @@ public final class ImageTools {
      */  
     public static Drawable bitmapToDrawable(Bitmap bitmap) {
         return new BitmapDrawable(bitmap);
-    }  
+    }
   
     /** 
      * Input stream to bitmap 
@@ -244,17 +244,17 @@ public final class ImageTools {
      * @return 
      */  
     public static Drawable zoomDrawable(Drawable drawable, int w, int h) {
-        int width = drawable.getIntrinsicWidth();  
-        int height = drawable.getIntrinsicHeight();  
+        int width = drawable.getIntrinsicWidth();
+        int height = drawable.getIntrinsicHeight();
         Bitmap oldbmp = drawableToBitmap(drawable);
         Matrix matrix = new Matrix();
-        float sx = ((float) w / width);  
-        float sy = ((float) h / height);  
-        matrix.postScale(sx, sy);  
+        float sx = ((float) w / width);
+        float sy = ((float) h / height);
+        matrix.postScale(sx, sy);
         Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
-                matrix, true);  
+                matrix, true);
         return new BitmapDrawable(newbmp);
-    }  
+    }
       
     /** 
      * Get images from SD card by path and the name of image 

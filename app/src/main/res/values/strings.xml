@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">如初</string>
+    <string name="app_name">如初康复</string>
     <string name="select">%1$s/%2$s</string>
-    <string name="share_url">http://www.ruchuapp.com</string>
+    <string name="share_url">https://www.ruchuapp.com</string>
     <string name="share_title">快下载如初APP吧</string>
     <string name="share_description">专注产后女性盆底康复平台</string>
     <string name="about_phone">邮箱</string>

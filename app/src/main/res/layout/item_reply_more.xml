@@ -13,6 +13,7 @@
         android:layout_marginTop="12dp">
 
         <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/item_image"
             android:layout_width="50dp"
             android:layout_height="50dp"/>
 
@@ -63,7 +64,7 @@
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/item_tv_name2"
-
+                    android:textColor="@color/colorPink"
                     android:layout_marginLeft="5dp"
                     android:gravity="center_vertical"
                     android:layout_width="wrap_content"

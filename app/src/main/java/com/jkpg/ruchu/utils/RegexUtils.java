@@ -13,6 +13,7 @@ public class RegexUtils {
     //密码
     public static final String REGEX_PWD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
 
+    public static final String REGEX_NAME = "^[a-zA-Z0-9_\\u4e00-\\u9fa5]{1,12}$";
     /**
      * 判断是否匹配正则
      *

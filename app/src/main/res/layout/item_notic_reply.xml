@@ -260,12 +260,12 @@
                             android:textColor="@color/select_bd_text_color"/>
 
                         <TextView
-                            android:id="@+id/item_notice_detail_tv_reply"
+                            android:id="@+id/item_notice_reply_tv_reply"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
                             android:layout_marginLeft="10dp"
-                            android:drawableLeft="@drawable/huifu2"
+                            android:drawableLeft="@drawable/huifu3"
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="1"

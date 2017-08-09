@@ -43,6 +43,7 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -454,11 +455,13 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() <= 12) {
+                if (RegexUtils.isMatch(RegexUtils.REGEX_NAME,s.toString())){
+//                if (s.length() <= 12) {
+                    //^[a-zA-Z][a-zA-Z0-9_]{0,11}$
                     textInputLayout.setError("");
                     isOk[0] = true;
                 } else {
-                    textInputLayout.setError("不能超过12个字符");
+                    textInputLayout.setError("不能超过12个字符和特殊字符");
                     isOk[0] = false;
                 }
 

@@ -26,6 +26,10 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -54,6 +58,8 @@ public class PlateDetailNewFragment extends Fragment {
     private String mPlateid;
     private List<PlateDetailBean.NoticeBean> mNotice;
     private List<PlateDetailBean.ListBean> mList;
+
+
 
     @Nullable
     @Override
@@ -185,9 +191,29 @@ public class PlateDetailNewFragment extends Fragment {
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
                 intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());
                 intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
-
                 startActivity(intent);
                 break;
         }
+    }
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void eventMess(String mess){
+        if (mess.equals("send"))
+            initData();
     }
 }

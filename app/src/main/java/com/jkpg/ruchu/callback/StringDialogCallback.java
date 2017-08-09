@@ -18,6 +18,7 @@ public abstract class StringDialogCallback extends StringCallback {
 
     private final AlertDialog.Builder mBuilder;
     private final AlertDialog dialog;
+    private final Activity activity;
 
     public StringDialogCallback(Activity activity) {
        /* dialog = new ProgressDialog(activity);
@@ -25,7 +26,8 @@ public abstract class StringDialogCallback extends StringCallback {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         dialog.setMessage("请求网络中");*/
-        mBuilder = new AlertDialog.Builder(activity);
+       this.activity = activity;
+        mBuilder = new AlertDialog.Builder(activity,R.style.dialog);
         mBuilder.setView(View.inflate(activity.getApplicationContext(), R.layout.view_animation,null));
         dialog = mBuilder.show();
         dialog.setCanceledOnTouchOutside(false);
@@ -47,6 +49,7 @@ public abstract class StringDialogCallback extends StringCallback {
         //网络请求结束后关闭对话框
         if (dialog != null && dialog.isShowing()) {
             dialog.dismiss();
+
         }
     }
 

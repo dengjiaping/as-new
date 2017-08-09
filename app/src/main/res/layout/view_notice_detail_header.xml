@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
 
     <LinearLayout
@@ -20,8 +19,7 @@
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/notice_detail_civ_photo"
             android:layout_width="45dp"
-            android:layout_height="45dp"
-            />
+            android:layout_height="45dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,21 +36,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
-                    android:textColor="@android:color/black"/>
+                    android:textColor="@android:color/black" />
 
                 <ImageView
                     android:id="@+id/notice_detail_iv_lz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_lz"/>
+                    android:src="@drawable/icon_lz" />
 
                 <ImageView
                     android:id="@+id/notice_detail_iv_fine"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_fine"/>
+                    android:src="@drawable/icon_fine" />
             </LinearLayout>
 
             <LinearLayout
@@ -65,8 +63,7 @@
                 <TextView
                     android:id="@+id/notice_detail_tv_tc"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    />
+                    android:layout_height="wrap_content" />
 
                 <TextView
                     android:id="@+id/notice_detail_tv_address"
@@ -74,8 +71,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/icon_gps"
-                    android:drawablePadding="5dp"
-                    />
+                    android:drawablePadding="5dp" />
 
 
             </LinearLayout>
@@ -87,7 +83,7 @@
         android:layout_height="0.5dp"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:background="#22000000"/>
+        android:background="#22000000" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -105,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="16sp"/>
+            android:textSize="16sp" />
 
         <TextView
             android:id="@+id/notice_detail_tv_time"
@@ -115,7 +111,7 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp"
             android:textColor="@color/colorGray3"
-            android:textSize="12sp"/>
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/notice_detail_tv_content"
@@ -123,40 +119,35 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
             android:textColor="@color/colorGray3"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <com.jkpg.ruchu.widget.nineview.NineGridView
             android:id="@+id/notice_detail_nine_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:ngv_mode="grid"/>
+            android:layout_marginBottom="12dp"
+            app:ngv_mode="grid" />
 
-        <!--<View
-                    android:layout_width="match_parent"
-                    android:layout_height=".5dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginLeft="22dp"
-                    android:layout_marginRight="22dp"
-                    android:background="#22000000"/>-->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="#22000000" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="end"
-            android:layout_marginTop="5dp"
-            >
+            android:layout_marginTop="12dp">
 
             <CheckBox
                 android:id="@+id/notice_detail_tv_dz"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="22dp"
                 android:button="@null"
-                android:drawableLeft="@drawable/selector_zan_bg"
+                android:drawableLeft="@drawable/selector_zan"
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/select_bd_text_color"/>
+                android:textColor="@color/select_bd_text_color" />
 
             <TextView
                 android:id="@+id/notice_detail_tv_reply"
@@ -168,7 +159,7 @@
                 android:drawablePadding="5dp"
                 android:gravity="center"
                 android:text=""
-                android:textColor="@color/colorGray2"/>
+                android:textColor="@color/colorGray2" />
         </LinearLayout>
 
     </LinearLayout>
@@ -177,10 +168,10 @@
         android:id="@+id/notice_detail_tv_num"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorXmlBg"
         android:paddingBottom="12dp"
         android:paddingLeft="22dp"
-        android:paddingTop="12dp"
-        />
+        android:paddingTop="12dp" />
 
 
 </LinearLayout>

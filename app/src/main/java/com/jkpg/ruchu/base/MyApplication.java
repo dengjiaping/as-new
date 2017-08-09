@@ -88,7 +88,7 @@ public class MyApplication extends Application {
          * @param clientId 需向有赞申请获取.
          */
         YouzanSDK.init(getApplicationContext(), "4418182033f8a2898e");
-        YouzanSDK.isDebug(true);
+        YouzanSDK.isDebug(false);
 
 
     }

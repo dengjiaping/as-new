@@ -231,7 +231,7 @@ public class MyFragment extends Fragment {
         startActivity(new Intent(getActivity(), LoginActivity.class));
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         /* Do something */
         if (event.message.equals("Login") || event.message.equals("MyFragment"))

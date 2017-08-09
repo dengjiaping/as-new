@@ -53,6 +53,8 @@ import com.jkpg.ruchu.view.adapter.PlateNameRVAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
 import com.lzy.okgo.OkGo;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -371,6 +373,7 @@ public class SendNoteActivity extends AppCompatActivity {
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
+                            EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success){
                                 finish();
@@ -400,6 +403,7 @@ public class SendNoteActivity extends AppCompatActivity {
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
+                            EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success){
                                 finish();
