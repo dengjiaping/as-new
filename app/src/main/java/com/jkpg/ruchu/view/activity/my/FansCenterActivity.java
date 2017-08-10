@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.FansCenterBean;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -46,7 +46,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/27.
  */
 
-public class FansCenterActivity extends AppCompatActivity {
+public class FansCenterActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

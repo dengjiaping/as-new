@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/25.
  */
 
-public class RevisePwdActivity extends AppCompatActivity {
+public class RevisePwdActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

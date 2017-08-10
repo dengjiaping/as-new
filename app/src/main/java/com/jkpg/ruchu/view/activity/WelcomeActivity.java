@@ -5,11 +5,11 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 
@@ -17,7 +17,7 @@ import com.jkpg.ruchu.view.activity.login.LoginActivity;
  * Created by qindi on 2017/5/10.
  */
 
-public class WelcomeActivity extends AppCompatActivity {
+public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

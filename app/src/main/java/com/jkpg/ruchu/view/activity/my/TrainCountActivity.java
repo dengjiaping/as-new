@@ -3,7 +3,6 @@ package com.jkpg.ruchu.view.activity.my;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -12,6 +11,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.view.fragment.TrainCountMountFragment;
 import com.jkpg.ruchu.view.fragment.TrainCountYearFragment;
 
@@ -23,7 +23,7 @@ import butterknife.OnClick;
  * Created by qindi on 2017/5/31.
  */
 
-public class TrainCountActivity extends AppCompatActivity {
+public class TrainCountActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

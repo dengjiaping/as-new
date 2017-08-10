@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MyNoteBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -42,7 +42,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/25.
  */
 
-public class MySpeakActivity extends AppCompatActivity {
+public class MySpeakActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

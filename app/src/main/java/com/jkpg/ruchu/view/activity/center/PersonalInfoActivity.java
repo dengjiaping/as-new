@@ -18,7 +18,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -33,6 +32,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.PersonallInfoBean;
@@ -79,7 +79,7 @@ import static android.os.Build.VERSION_CODES.M;
  * Created by qindi on 2017/5/15.
  */
 
-public class PersonalInfoActivity extends AppCompatActivity {
+public class PersonalInfoActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -455,7 +455,7 @@ public class PersonalInfoActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (RegexUtils.isMatch(RegexUtils.REGEX_NAME,s.toString())){
+                if (RegexUtils.isMatch(RegexUtils.REGEX_NAME, s.toString()) && RegexUtils.getStrlength(s.toString()) <= 20) {
 //                if (s.length() <= 12) {
                     //^[a-zA-Z][a-zA-Z0-9_]{0,11}$
                     textInputLayout.setError("");

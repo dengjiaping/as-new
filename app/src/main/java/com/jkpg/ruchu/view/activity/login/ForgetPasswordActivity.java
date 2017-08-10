@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.CodeBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -38,7 +38,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/13.
  */
 
-public class ForgetPasswordActivity extends AppCompatActivity {
+public class ForgetPasswordActivity extends BaseActivity {
     @BindView(R.id.forget_et_phone)
     EditText mForgetEtPhone;
     @BindView(R.id.forget_et_code)

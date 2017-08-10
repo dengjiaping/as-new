@@ -3,6 +3,7 @@ package com.jkpg.ruchu.view.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -10,7 +11,6 @@ import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.CommunityMianBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.widget.CircleImageView;
 
 import java.util.List;
 
@@ -76,7 +76,7 @@ public class CommunityPlateRLAdapter extends RecyclerView.Adapter<CommunityPlate
 
     static class CommunityPlateRLViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.plate_civ_photo)
-        CircleImageView mPlateCivPhoto;
+        ImageView mPlateCivPhoto;
         @BindView(R.id.plate_tv_title)
         TextView mPlateTvTitle;
         @BindView(R.id.plate_tv_body)

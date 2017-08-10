@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -28,6 +27,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.NoticeDetailBean;
 import com.jkpg.ruchu.bean.SuccessBean;
@@ -80,7 +80,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/6/7.
  */
 
-public class NoticeDetailActivity extends AppCompatActivity implements View.OnClickListener {
+public class NoticeDetailActivity extends BaseActivity implements View.OnClickListener {
 
 
     List<ImageInfo> imageInfo;
@@ -656,8 +656,9 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
 //                                                    mList2.addAll(noticeDetailBean.list2);
 //                                                    mNoticeDetailReplyAdapter.notifyItemRangeInserted(0,mList2.size());
 //                                                    ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
-                                                    mNoticeDetailReplyRecycler.scrollToPosition(mIndex);
+                                                    mNoticeDetailReplyRecycler.scrollToPosition(mIndex + 1);
                                                 }
+
                                             });
 
 
@@ -861,7 +862,12 @@ public class NoticeDetailActivity extends AppCompatActivity implements View.OnCl
 //                                                    mList2.addAll(noticeDetailBean.list2);
 //                                                    mNoticeDetailReplyAdapter.notifyItemRangeInserted(0,mList2.size());
 //                                                    ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
-                            mNoticeDetailReplyRecycler.scrollToPosition(mIndex);
+                        }
+
+                        @Override
+                        public void onAfter(String s, Exception e) {
+                            super.onAfter(s, e);
+                            mNoticeDetailReplyRecycler.scrollToPosition(mIndex + 1);
                         }
                     });
         }

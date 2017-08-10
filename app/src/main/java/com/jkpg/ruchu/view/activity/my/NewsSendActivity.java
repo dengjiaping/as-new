@@ -3,13 +3,13 @@ package com.jkpg.ruchu.view.activity.my;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +20,7 @@ import cn.qqtheme.framework.picker.TimePicker;
  * Created by qindi on 2017/5/25.
  */
 
-public class NewsSendActivity extends AppCompatActivity {
+public class NewsSendActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

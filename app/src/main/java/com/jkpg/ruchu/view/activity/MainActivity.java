@@ -6,7 +6,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.fragment.CommunityModuleFragment;
@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
  * Created by qindi on 2017/5/16.
  */
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
     @BindView(R.id.main_bottom_navigation_view)
     BottomNavigationViewEx mMainBottomNavigationView;
     @BindView(R.id.main_frame_layout)

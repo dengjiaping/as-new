@@ -6,12 +6,12 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.view.adapter.PlateDetailVPAdapter;
 import com.jkpg.ruchu.view.fragment.PlateDetailAllFragment;
@@ -29,7 +29,7 @@ import butterknife.OnClick;
  * Created by qindi on 2017/6/5.
  */
 
-public class PlateDetailActivity extends AppCompatActivity {
+public class PlateDetailActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

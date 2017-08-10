@@ -16,7 +16,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -36,6 +35,7 @@ import android.widget.Toast;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.PlateBean;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -76,7 +76,7 @@ import static com.jkpg.ruchu.R.id.send_note_cb_no_name;
  * Created by qindi on 2017/6/6.
  */
 
-public class SendNoteActivity extends AppCompatActivity {
+public class SendNoteActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

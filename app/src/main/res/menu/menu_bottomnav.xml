@@ -18,7 +18,7 @@
         android:id="@+id/menu_shop"
         android:enabled="true"
         android:icon="@drawable/shop_normal"
-        android:title="商店"
+        android:title="商城"
         />
 
 

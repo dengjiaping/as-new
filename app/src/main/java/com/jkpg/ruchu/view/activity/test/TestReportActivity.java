@@ -7,7 +7,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,6 +16,7 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -39,7 +39,7 @@ import static com.jkpg.ruchu.utils.ScreenUtils.getBitmapByView;
  * Created by qindi on 2017/5/20.
  */
 
-public class TestReportActivity extends AppCompatActivity {
+public class TestReportActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.CodeBean;
 import com.jkpg.ruchu.bean.RegisterPhoneBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -42,7 +42,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/11.
  */
 
-public class RegisterPhoneActivity extends AppCompatActivity {
+public class RegisterPhoneActivity extends BaseActivity {
 
 
     @BindView(R.id.header_iv_left)

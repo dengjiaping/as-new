@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.VipManageBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -37,7 +37,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/24.
  */
 
-public class VipManageActivity extends AppCompatActivity {
+public class VipManageActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -112,13 +112,16 @@ public class VipManageActivity extends AppCompatActivity {
 
     private void initViewPager(List<VipManageBean.ListBean> list) {
         viewList = new ArrayList<>();
-        viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
-        viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
-        viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
         viewTitle = new ArrayList<>();
-        viewTitle.add("训练特权");
-        viewTitle.add("咨询特权");
-        viewTitle.add("社区特权");
+        for (int i = 0; i < list.size(); i++) {
+            viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
+            viewTitle.add(list.get(i).title);
+        }
+//        viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
+//        viewList.add(View.inflate(UIUtils.getContext(), R.layout.view_train_vip, null));
+//        viewTitle.add("训练特权");
+//        viewTitle.add("咨询特权");
+//        viewTitle.add("社区特权");
         mVipManagerTabLayout.setupWithViewPager(mVipManagerViewPager);
         mVipManagerViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle,list));
     }

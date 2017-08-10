@@ -2,12 +2,12 @@ package com.jkpg.ruchu.view.activity.train;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.VideoBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -22,7 +22,7 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
  * Created by qindi on 2017/5/22.
  */
 
-public class NewVideoDetailActivity extends AppCompatActivity {
+public class NewVideoDetailActivity extends BaseActivity {
     @BindView(R.id.new_video_player)
     JCVideoPlayerStandard mNewVideoPlayer;
     @BindView(R.id.new_video_tv_title)
@@ -76,7 +76,7 @@ public class NewVideoDetailActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         JCVideoPlayer.releaseAllVideos();
     }

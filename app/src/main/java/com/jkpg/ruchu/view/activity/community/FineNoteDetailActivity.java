@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -23,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.FineNoteBodyBean;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.FineNoteBodyAdapter;
@@ -43,7 +43,7 @@ import me.iwf.photopicker.PhotoPreview;
  * Created by qindi on 2017/6/17.
  */
 
-public class FineNoteDetailActivity extends AppCompatActivity {
+public class FineNoteDetailActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

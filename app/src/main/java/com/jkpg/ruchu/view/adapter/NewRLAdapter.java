@@ -55,7 +55,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
         holder.mItemNewTime.setText(videoBean.videotime);
         Glide.with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + videoBean.imageUrl)
-                .placeholder(R.drawable.new_guide_bg)
+//                .placeholder(R.drawable.new_guide_bg)
                 .crossFade()
                 .centerCrop()
                 .error(R.drawable.new_guide_bg)

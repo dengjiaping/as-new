@@ -3,11 +3,11 @@ package com.jkpg.ruchu.view.activity.train;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -17,7 +17,7 @@ import butterknife.OnClick;
  * Created by qindi on 2017/7/13.
  */
 
-public class TrainPrepareActivity extends AppCompatActivity {
+public class TrainPrepareActivity extends BaseActivity {
     @BindView(R.id.header_tv_title)
     TextView mHeaderTvTitle;
 

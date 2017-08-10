@@ -76,30 +76,33 @@ dependencies {
     compile 'com.github.chrisbanes:PhotoView:2.0.0'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'org.greenrobot:eventbus:3.0.0'
+    compile 'com.youzanyun.open.mobile:hybrid:5.1.+'
 
+    compile 'com.umeng.analytics:analytics:latest.integration'
     //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
 
     //内存溢出检测，上线移除
 
     /* debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.1'
-                            releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
-                            testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'*/
+                                    releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'
+                                    testCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.1'*/
 
     // most often used way, enable notification to notify block event
+
     //卡顿检测
-//    compile 'com.github.markzhai:blockcanary-android:1.5.0'
+
+    //    compile 'com.github.markzhai:blockcanary-android:1.5.0'
+
     // this way you only enable BlockCanary in debug package
 
     // debugCompile 'com.github.markzhai:blockcanary-android:1.5.0'
 
     // releaseCompile 'com.github.markzhai:blockcanary-no-op:1.5.0'
-    compile files('libs/open_sdk_r5781.jar')
+    compile files('libs/open_sdk_r5788_lite.jar')
     compile files('libs/SocialSDK_QQ_Full.jar')
     compile files('libs/SocialSDK_WeiXin_Full.jar')
     compile files('libs/umeng_social_api.jar')
     compile files('libs/umeng_social_net.jar')
+    compile files('libs/umeng_social_tool.jar')
     compile files('libs/wechat-sdk-android-with-mta-1.1.6.jar')
-    compile files('libs/youzan-sdk-basic-v5.0.7.jar')
-    compile files('libs/youzan-sdk-hybrid-v20170425.jar')
-
 }

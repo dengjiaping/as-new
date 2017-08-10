@@ -238,15 +238,21 @@ public class MyFragment extends Fragment {
             initData();
     }
 
+
     @Override
-    public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
     }
+
 }

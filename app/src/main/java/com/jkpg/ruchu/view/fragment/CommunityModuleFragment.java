@@ -145,7 +145,8 @@ public class CommunityModuleFragment extends Fragment {
         for (int i = 0; i < list2.size(); i++) {
             plateNameList.add(list2.get(i).platename);
         }
-        mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 2));
+        mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 1));
+//        mCommunityRlPlate.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         CommunityPlateRLAdapter communityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
         mCommunityRlPlate.setAdapter(communityPlateRLAdapter);
         mCommunityRlPlate.addItemDecoration(new GridDividerItemDecoration(1, Color.parseColor("#22000000")));

@@ -13,7 +13,7 @@ public class RegexUtils {
     //密码
     public static final String REGEX_PWD = "^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,16}$";
 
-    public static final String REGEX_NAME = "^[a-zA-Z0-9_\\u4e00-\\u9fa5]{1,12}$";
+    public static final String REGEX_NAME = "^[a-zA-Z0-9_\\u4e00-\\u9fa5]{1,20}$";
     /**
      * 判断是否匹配正则
      *
@@ -23,5 +23,24 @@ public class RegexUtils {
      */
     public static boolean isMatch(String regex, CharSequence input) {
         return input != null && input.length() > 0 && Pattern.matches(regex, input);
+    }
+
+    public static int getStrlength(String value) {
+        int valueLength = 0;
+        String chinese = "[\u0391-\uFFE5]";
+        /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+        for (int i = 0; i < value.length(); i++) {
+            /* 获取一个字符 */
+            String temp = value.substring(i, i + 1);
+            /* 判断是否为中文字符 */
+            if (temp.matches(chinese)) {
+                /* 中文字符长度为2 */
+                valueLength += 2;
+            } else {
+                /* 其他字符长度为1 */
+                valueLength += 1;
+            }
+        }
+        return valueLength;
     }
 }

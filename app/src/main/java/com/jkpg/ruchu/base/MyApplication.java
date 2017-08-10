@@ -65,8 +65,9 @@ public class MyApplication extends Application {
 //        Config.isJumptoAppStore = true;
         PushAgent mPushAgent = PushAgent.getInstance(this);
         //通知栏可以设置最多显示通知的条数，当有新通知到达时，会把旧的通知隐藏。
-//        mPushAgent.setDisplayNotificationNumber(0);
-//注册推送服务，每次调用register方法都会回调该接口
+        //mPushAgent.setDisplayNotificationNumber(0);
+        mPushAgent.setDebugMode(false);
+        //注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
 
             @Override

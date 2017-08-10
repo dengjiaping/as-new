@@ -68,9 +68,6 @@
             android:name=".view.activity.login.PerfectInfoActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".view.activity.center.CenterActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".view.activity.MainActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -169,9 +166,6 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.community.FineNoteActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".view.activity.community.MyCollectActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.community.PlateDetailActivity"
@@ -328,6 +322,9 @@
             android:name="UMENG_MESSAGE_SECRET"
             android:value="013bc6e7bf034de2c3b4fc2dabc1830d">
         </meta-data>
+        <meta-data
+            android:name="android"
+            android:value="Channel ID"/>
     </application>
 
 </manifest>

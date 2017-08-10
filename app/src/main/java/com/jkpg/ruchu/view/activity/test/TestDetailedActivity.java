@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -16,6 +15,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.bean.TrainQuestionNextBean;
@@ -45,7 +45,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/6/27.
  */
 
-public class TestDetailedActivity extends AppCompatActivity {
+public class TestDetailedActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

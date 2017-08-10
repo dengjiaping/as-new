@@ -15,7 +15,6 @@ import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -35,6 +34,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.StartTrainBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -72,7 +72,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/6/2.
  */
 
-public class StartTrainActivity2 extends AppCompatActivity {
+public class StartTrainActivity2 extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -89,6 +89,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
     TextView mStartTrainSection;
     @BindView(R.id.line_chart)
     LeafLineChart mLineChart;
+    @BindView(R.id.line_text)
+    TextView mLineText;
     @BindView(R.id.start_train_start)
     ImageView mStartTrainStart;
     @BindView(R.id.start_train)
@@ -133,6 +135,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private PopupWindow mPopupWindowSuccess;
     private StartTrainBean mStartTrainBean;
     private String mStartTime;
+    private MyVolumeReceiver mVolumeReceiver;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -240,8 +243,8 @@ public class StartTrainActivity2 extends AppCompatActivity {
     private void init(StartTrainBean startTrainBean) {
         mStartTrainTitle.setText("产后康复 " + startTrainBean.level);
         String dateFormat = DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm分ss秒");
-        mStartTrainTotalTime.setText(dateFormat);
-        mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2);
+        mStartTrainTotalTime.setText("共计"+dateFormat);
+        mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2 +"级");
         mStartTrainTotalOne.setText("共" + startTrainBean.programme.size() + "节");
         mStartTrainTvProgressTotal.setText(DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm:ss"));
 
@@ -370,6 +373,11 @@ public class StartTrainActivity2 extends AppCompatActivity {
             lineChart.setLayoutParams(mStartTrain.getLayoutParams());
             mStartTrain.addView(lineChart);
             mLines.add(lineChart);
+        }
+        if (mStartTrainBean.programme.get(index).ishavezero.equals("1")){
+            mLineText.setText("充分放松盆底肌");
+        } else {
+            mLineText.setText("");
         }
         LogUtils.i("mLines = " + mLines.size());
         LogUtils.i("index = " + index);
@@ -583,6 +591,7 @@ public class StartTrainActivity2 extends AppCompatActivity {
         super.onDestroy();
         MyApplication.getMainThreadHandler().removeCallbacks(mTask);
         mSoundPool.release();
+        unregisterReceiver(mVolumeReceiver);
         EventBus.getDefault().post("Train");
     }
 
@@ -622,10 +631,10 @@ public class StartTrainActivity2 extends AppCompatActivity {
      */
 
     private void myRegisterReceiver() {
-        MyVolumeReceiver volumeReceiver = new MyVolumeReceiver();
+        mVolumeReceiver = new MyVolumeReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.media.VOLUME_CHANGED_ACTION");
-        registerReceiver(volumeReceiver, filter);
+        registerReceiver(mVolumeReceiver, filter);
     }
 
     /**

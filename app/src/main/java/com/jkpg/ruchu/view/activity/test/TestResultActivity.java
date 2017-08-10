@@ -2,13 +2,13 @@ package com.jkpg.ruchu.view.activity.test;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 
@@ -20,7 +20,7 @@ import butterknife.OnClick;
  * Created by qindi on 2017/5/20.
  */
 
-public class TestResultActivity extends AppCompatActivity {
+public class TestResultActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

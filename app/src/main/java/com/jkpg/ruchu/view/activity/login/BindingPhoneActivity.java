@@ -5,7 +5,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.StringUtils;
@@ -27,7 +27,7 @@ import butterknife.OnClick;
  * Created by qindi on 2017/7/21.
  */
 
-public class BindingPhoneActivity extends AppCompatActivity {
+public class BindingPhoneActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

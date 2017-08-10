@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -14,6 +13,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.AccountManagementBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SuccessBean;
@@ -28,6 +28,7 @@ import com.lzy.okgo.OkGo;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.youzan.sdk.YouzanSDK;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -43,7 +44,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/25.
  */
 
-public class AccountManagementActivity extends AppCompatActivity {
+public class AccountManagementActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -192,6 +193,7 @@ public class AccountManagementActivity extends AppCompatActivity {
                 SPUtils.clear();
                 startActivity(new Intent(AccountManagementActivity.this, LoginActivity.class));
                 EventBus.getDefault().post(new MessageEvent("Quit"));
+                YouzanSDK.userLogout(this);
                 finish();
                 break;
         }

@@ -2,7 +2,6 @@ package com.jkpg.ruchu.view.activity.community;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -11,6 +10,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.NoticeBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -30,7 +30,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/6/6.
  */
 
-public class NoticeActivity extends AppCompatActivity {
+public class NoticeActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -63,7 +63,7 @@ public class NoticeActivity extends AppCompatActivity {
                         NoticeBean noticeBean = new Gson().fromJson(s, NoticeBean.class);
                         List<NoticeBean.ListBean> list = noticeBean.list;
                         initRecyclerView(list);
-                        mNoticeTvIntroduce.setText(noticeBean.json.remark);
+                        mNoticeTvIntroduce.setText(noticeBean.json.platename);
                     }
                 });
 

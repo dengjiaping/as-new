@@ -2,54 +2,72 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@drawable/ripple_with_color"
               android:orientation="horizontal"
               android:paddingBottom="12dp"
-              android:background="@drawable/ripple_with_color"
-
               android:paddingTop="12dp">
 
-    <com.jkpg.ruchu.widget.CircleImageView
+    <ImageView
         android:id="@+id/plate_civ_photo"
         android:layout_width="50dp"
-        android:layout_marginLeft="22dp"
         android:layout_height="50dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon_photo"/>
+        android:layout_marginLeft="22dp"
+        />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_weight="1"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/plate_tv_title"
+        <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
-            android:textColor="@color/colorPink"
-            android:textSize="16sp"
-            />
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+
+
+            <TextView
+                android:id="@+id/plate_tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="5dp"
+                android:textColor="@color/colorPink"
+                android:textSize="16sp"
+                />
+
+
+            <TextView
+                android:layout_marginLeft="12dp"
+                android:id="@+id/plate_tv_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shap_rectangle_gray4"
+                android:paddingBottom="2dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingTop="2dp"
+                android:textColor="@android:color/white"
+                android:textSize="10sp"/>
+        </LinearLayout>
 
         <TextView
             android:id="@+id/plate_tv_body"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="3dp"
             android:textColor="@color/colorGray3"
             android:textSize="14sp"/>
 
-        <TextView
-            android:id="@+id/plate_tv_num"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/shap_rectangle_gray4"
-            android:paddingTop="2dp"
-            android:paddingBottom="2dp"
-            android:paddingLeft="4dp"
-            android:paddingRight="4dp"
-            android:textColor="@android:color/white"
-            android:textSize="10sp"/>
     </LinearLayout>
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginRight="22dp"
+        android:src="@drawable/icon_next"
+        />
 
 </LinearLayout>

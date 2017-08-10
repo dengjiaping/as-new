@@ -5,7 +5,6 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -15,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.LoginQQBean;
 import com.jkpg.ruchu.bean.LoginWxBean;
 import com.jkpg.ruchu.bean.MessageEvent;
@@ -45,7 +45,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/11.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends BaseActivity {
 
 
     @BindView(R.id.login_tv_wx)
@@ -187,12 +187,12 @@ public class LoginActivity extends AppCompatActivity {
                             public void onSuccess(String s, Call call, Response response) {
                                 LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
                                 if (loginWxBean.state == 200) {
-
+                                    if (loginWxBean.backMess.loginCount.equals("1")) {
+                                        startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    }
                                     EventBus.getDefault().post(new MessageEvent("Login"));
-
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
-                                    startActivity(new Intent(LoginActivity.this,BindingPhoneActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
@@ -218,12 +218,12 @@ public class LoginActivity extends AppCompatActivity {
                             public void onSuccess(String s, Call call, Response response) {
                                 LoginQQBean loginQQBean = new Gson().fromJson(s, LoginQQBean.class);
                                 if (loginQQBean.state == 200) {
-
+                                    if (loginQQBean.backMess.loginCount.equals("1")){
+                                        startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
+                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    }
                                     EventBus.getDefault().post(new MessageEvent("Login"));
-
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQQBean.backMess.userId);
-                                    startActivity(new Intent(LoginActivity.this,BindingPhoneActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
@@ -237,7 +237,7 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
             Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
-            LogUtils.i(t+"");
+            LogUtils.i(t + "");
         }
 
         @Override

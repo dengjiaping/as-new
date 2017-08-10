@@ -17,8 +17,10 @@ public class AppUrl {
     public static final String REGISTERTEL = BASEURL + "Register_telServlet";
     public static final String CODE = BASEURL + "AppCodeServlet";
     public static final String UPDATEPWD = BASEURL + "updatePwdServlet";
+    public static final String Bind_Tel = BASEURL + "Bind_TelServlet";
 
     public static final String QQLOGIN = BASEURL + "QQLoginServlet";
+
     public static final String WXLOGIN = BASEURL + "WxLoginServlet";
     public static final String LOGINNEXTADDMESS = BASEURL + "LoginNextAddMessServlet";
 

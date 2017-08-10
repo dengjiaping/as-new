@@ -3,7 +3,6 @@ package com.jkpg.ruchu.view.activity.my;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,6 +11,7 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.TrainHistoryBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -33,7 +33,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/27.
  */
 
-public class TrainHistoryActivity extends AppCompatActivity {
+public class TrainHistoryActivity extends BaseActivity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)

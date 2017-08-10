@@ -7,12 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.widget.CircleIndicator;
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
  * Created by qindi on 2017/5/10.
  */
 
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends BaseActivity {
 
     @BindView(R.id.viewpager)
     ViewPager mViewpager;
