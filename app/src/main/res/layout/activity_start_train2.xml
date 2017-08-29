@@ -30,14 +30,15 @@
             android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp">
 
+
             <TextView
-                android:id="@+id/start_train_total_time"
+                android:id="@+id/start_train_section"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"/>
 
             <TextView
-                android:id="@+id/start_train_section"
+                android:id="@+id/start_train_total_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="22dp"
@@ -57,13 +58,33 @@
                 android:layout_height="match_parent"
                 app:lc_topPadding="0dp"
                 />
+
+            <ImageView
+                android:id="@+id/line_start_iv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:padding="22dp"
+                android:src="@drawable/start_train_bg"/>
+
+            <TextView
+                android:id="@+id/line_start_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center"
+                android:padding="50dp"
+                android:text="锻炼开始前,先做几次深呼吸,让全身放松下来"
+                android:textColor="@android:color/white"
+                android:textSize="20sp"/>
+
             <TextView
                 android:id="@+id/line_text"
-                android:layout_centerInParent="true"
-                android:textSize="30sp"
-                android:textColor="@color/colorYellow"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/colorYellow"
+                android:textSize="30sp"/>
 
 
         </RelativeLayout>
@@ -74,12 +95,12 @@
         android:layout_height="4dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/gradlient_background"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="vertical"
         >
-
 
 
         <RelativeLayout

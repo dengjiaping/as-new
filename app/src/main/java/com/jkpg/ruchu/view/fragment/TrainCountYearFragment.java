@@ -15,12 +15,13 @@ import com.jkpg.ruchu.bean.TrainYearCountBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.DateUtil;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.Histogram;
 import com.lzy.okgo.OkGo;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -90,10 +91,10 @@ public class TrainCountYearFragment extends Fragment {
                     public void onSuccess(String s, Call call, Response response) {
                         TrainYearCountBean trainYearCountBean = new Gson().fromJson(s, TrainYearCountBean.class);
                         initHistogram(trainYearCountBean);
-                        int i = trainYearCountBean.countyear * 1000;
-                        mTrainCountTvTimeCountNumber.setText(DateUtil.dateFormat(i + "", "HH"));
-                        int ss = Integer.parseInt(DateUtil.dateFormat((trainYearCountBean.avmonth * 1000) + "", "mm")) / 60;
-                        mTrainCountTvTimeMeanNumber.setText(DateUtil.dateFormat((trainYearCountBean.avmonth * 1000) + "", "HH")+ "." + ss);
+                        float i = (float) (trainYearCountBean.countyear / 3600.0);
+                        mTrainCountTvTimeCountNumber.setText((new DecimalFormat("0.00").format(i) + ""));
+                        float ss = (float) (trainYearCountBean.avmonth / 3600.0);
+                        mTrainCountTvTimeMeanNumber.setText((new DecimalFormat("0.00").format(ss) + ""));
                     }
                 });
     }
@@ -118,13 +119,16 @@ public class TrainCountYearFragment extends Fragment {
         mDatas = new ArrayList<>();
         for (int i = 0; i < trainYearCountBean.arraypoint.get(0).size(); i++) {
             String s = stringY.get(i);
-            int m = Integer.parseInt(s) * 1000;
-            mDatas.add(new Histogram.PPHistogramBean(Integer.parseInt(DateUtil.dateFormat(m + "", "HH")), stringX.get(i)));
+            float m = (float) (Integer.parseInt(s) / 3600.0);
+            mDatas.add(new Histogram.PPHistogramBean(m, stringX.get(i)));
 
         }
-        int i = Integer.parseInt(trainYearCountBean.max) * 1000;
-        mTrainCountFlHistogram.setmDatas(mDatas, Integer.parseInt(DateUtil.dateFormat(i + "", "HH")) + 2);
+        int i = (int) (Integer.parseInt(trainYearCountBean.max) / 3600.0 + .5f);
+        LogUtils.d("i =" + i);
+        i = i + (5 - i % 5);
+        mTrainCountFlHistogram.setmDatas(mDatas, i);
         mTrainCountFlHistogram.setCountInOne(12);
+
     }
 
     @Override

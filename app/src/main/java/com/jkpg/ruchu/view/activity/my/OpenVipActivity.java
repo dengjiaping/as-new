@@ -1,7 +1,15 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,22 +21,39 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alipay.sdk.app.PayTask;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.AliPayBean;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.OpenVipBean;
+import com.jkpg.ruchu.bean.PayResult;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.bean.WxPayBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.IpUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.lzy.okgo.OkGo;
+import com.tencent.mm.opensdk.modelpay.PayReq;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -68,13 +93,25 @@ public class OpenVipActivity extends BaseActivity {
     @BindView(R.id.open_vip_tv_135)
     TextView mOpenVipTv135;
     @BindView(R.id.open_vip_rl_365)
-    TextView mOpenVipWx;
-    @BindView(R.id.open_vip_wx)
     RelativeLayout mOpenVipRl365;
+    @BindView(R.id.open_vip_wx)
+    TextView mOpenVipWx;
+    @BindView(R.id.open_vip_tip)
+    TextView mOpenVipTip;
     @BindView(R.id.open_vip_btn_pay)
     Button mOpenVipBtnPay;
     private PopupWindow mPopupWindowPay;
     private PopupWindow mPopupWindowPaySuccess;
+    String day;
+    private OpenVipBean mOpenVipBean;
+
+
+    private static final int SDK_PAY_FLAG = 1;
+    private String cardid;
+    private List<TextView> mPriceViews;
+    private List<TextView> mTimeViews;
+    private List<RelativeLayout> mRLViews;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,8 +119,27 @@ public class OpenVipActivity extends BaseActivity {
         setContentView(R.layout.activity_open_vip);
         ButterKnife.bind(this);
         mHeaderTvTitle.setText("开通会员");
-        initData();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         UMShareAPI.get(OpenVipActivity.this).fetchAuthResultWithBundle(OpenVipActivity.this, savedInstanceState, umAuthListener);
+
+        mPriceViews = new ArrayList<>();
+        mPriceViews.add(mOpenVipTv15);
+        mPriceViews.add(mOpenVipTv45);
+        mPriceViews.add(mOpenVipTv75);
+        mPriceViews.add(mOpenVipTv135);
+        mTimeViews = new ArrayList<>();
+        mTimeViews.add(mOpenVipTv30);
+        mTimeViews.add(mOpenVipTv90);
+        mTimeViews.add(mOpenVipTv180);
+        mTimeViews.add(mOpenVipTv365);
+        mRLViews = new ArrayList<>();
+        mRLViews.add(mOpenVipRl30);
+        mRLViews.add(mOpenVipRl90);
+        mRLViews.add(mOpenVipRl180);
+        mRLViews.add(mOpenVipRl365);
+        initData();
 
     }
 
@@ -94,16 +150,19 @@ public class OpenVipActivity extends BaseActivity {
                 .execute(new StringDialogCallback(OpenVipActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        OpenVipBean openVipBean = new Gson().fromJson(s, OpenVipBean.class);
-                        mOpenVipLlWx.setVisibility(openVipBean.WXStatus ? View.GONE : View.VISIBLE);
-                        mOpenVipTv15.setText("￥ " + openVipBean.list.get(0).cardprice);
-                        mOpenVipTv45.setText("￥ " + openVipBean.list.get(1).cardprice);
-                        mOpenVipTv75.setText("￥ " + openVipBean.list.get(2).cardprice);
-                        mOpenVipTv135.setText("￥ " + openVipBean.list.get(3).cardprice);
-                        mOpenVipTv30.setText(openVipBean.list.get(0).cardname);
-                        mOpenVipTv90.setText(openVipBean.list.get(1).cardname);
-                        mOpenVipTv180.setText(openVipBean.list.get(2).cardname);
-                        mOpenVipTv365.setText(openVipBean.list.get(3).cardname);
+                        mOpenVipBean = new Gson().fromJson(s, OpenVipBean.class);
+                        mOpenVipLlWx.setVisibility(mOpenVipBean.WXStatus ? View.GONE : View.VISIBLE);
+                        for (int i = 0; i < mOpenVipBean.list.size(); i++) {
+                            mPriceViews.get(i).setText("￥ " + mOpenVipBean.list.get(i).cardprice);
+                            mTimeViews.get(i).setText(mOpenVipBean.list.get(i).cardname);
+                            mRLViews.get(i).setVisibility(View.VISIBLE);
+                        }
+                        day = mOpenVipBean.list.get(0).cardtime;
+                        if (mOpenVipBean.isVIP.equals("1")) {
+                            mOpenVipTip.setText("续费会员后，将继续享有所有特权");
+                        }
+                        cardid = mOpenVipBean.list.get(0).cardid;
+
                     }
                 });
     }
@@ -123,14 +182,16 @@ public class OpenVipActivity extends BaseActivity {
         viewPay.findViewById(R.id.view_pay_ll_wx).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShort(UIUtils.getContext(), "wx");
-                showPaySuccess();
+                toWXPay();
+                mPopupWindowPay.dismiss();
+
             }
         });
         viewPay.findViewById(R.id.view_pay_ll_ali).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ToastUtils.showShort(UIUtils.getContext(), "ali");
+                toALiPay();
+                mPopupWindowPay.dismiss();
             }
         });
         mPopupWindowPay.setContentView(viewPay);
@@ -147,7 +208,9 @@ public class OpenVipActivity extends BaseActivity {
         });
     }
 
+
     private void showPaySuccess() {
+        EventBus.getDefault().post(new MessageEvent("Vip"));
         mPopupWindowPaySuccess = new PopupWindow(this);
         mPopupWindowPaySuccess.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindowPaySuccess.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
@@ -158,6 +221,7 @@ public class OpenVipActivity extends BaseActivity {
                 mPopupWindowPaySuccess.dismiss();
             }
         });
+        ((TextView) viewPay.findViewById(R.id.view_pay_success)).setText("    您已成功开通如初会员,有效期为" + day + "天，可在“我的”界面里查看");
         mPopupWindowPaySuccess.setContentView(viewPay);
         mPopupWindowPaySuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
         mPopupWindowPaySuccess.setOutsideTouchable(true);
@@ -168,9 +232,15 @@ public class OpenVipActivity extends BaseActivity {
             @Override
             public void onDismiss() {
                 PopupWindowUtils.darkenBackground(OpenVipActivity.this, 1f);
-
+                finish();
             }
         });
+        MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                finish();
+            }
+        }, 3000);
     }
 
     @OnClick({R.id.open_vip_wx, R.id.open_vip_btn_pay, R.id.header_iv_left, R.id.open_vip_rl_30, R.id.open_vip_rl_90, R.id.open_vip_rl_180, R.id.open_vip_rl_365})
@@ -183,6 +253,8 @@ public class OpenVipActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.open_vip_rl_30:
+                day = mOpenVipBean.list.get(0).cardtime;
+                cardid = mOpenVipBean.list.get(0).cardid;
                 mOpenVipRl30.setBackgroundResource(R.drawable.rectangle_open_vip1);
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
@@ -197,6 +269,9 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_90:
+                day = mOpenVipBean.list.get(1).cardtime;
+                cardid = mOpenVipBean.list.get(1).cardid;
+
                 mOpenVipRl30.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip1);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
@@ -211,6 +286,10 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_180:
+                day = mOpenVipBean.list.get(2).cardtime;
+                cardid = mOpenVipBean.list.get(2).cardid;
+
+
                 mOpenVipRl30.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip1);
@@ -225,6 +304,9 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_365:
+                day = mOpenVipBean.list.get(3).cardtime;
+                cardid = mOpenVipBean.list.get(3).cardid;
+
                 mOpenVipRl30.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
@@ -259,7 +341,40 @@ public class OpenVipActivity extends BaseActivity {
 
         @Override
         public void onComplete(SHARE_MEDIA share_media, int i, Map<String, String> map) {
-            Toast.makeText(getApplicationContext(), "绑定成功", Toast.LENGTH_SHORT).show();
+            if (share_media == SHARE_MEDIA.WEIXIN) {
+
+                OkGo
+                        .post(AppUrl.BIND_WECHAT)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("unionid", map.get("unionid"))
+                        .execute(new StringDialogCallback(OpenVipActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (successBean.success) {
+                                    mOpenVipLlWx.setVisibility(View.GONE);
+                                    if (successBean.giveVIP) {
+                                        Notification.Builder builder = new Notification.Builder(OpenVipActivity.this);
+                                        Intent intent = new Intent(OpenVipActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(OpenVipActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        builder.setContentIntent(pendingIntent);
+                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
+                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
+                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+                                        builder.setAutoCancel(true); //自己维护通知的消失
+                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
+                                        builder.setOngoing(true);
+                                        Notification notification = builder.build();
+                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+                                    }
+                                } else {
+                                    ToastUtils.showShort(UIUtils.getContext(), getString(R.string.AccounntWX));
+                                }
+                            }
+                        });
+            }
 
         }
 
@@ -274,5 +389,127 @@ public class OpenVipActivity extends BaseActivity {
             Toast.makeText(getApplicationContext(), "绑定取消", Toast.LENGTH_SHORT).show();
 
         }
+    };
+
+    private void toALiPay() {
+        OkGo
+                .post(AppUrl.ALIPAY)
+                .params("cardid", cardid)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(OpenVipActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        AliPayBean aliPayBean = new Gson().fromJson(s, AliPayBean.class);
+                        String info = aliPayBean.info;
+                        final String orderInfo = info;   // 订单信息
+
+                        Runnable payRunnable = new Runnable() {
+
+                            @Override
+                            public void run() {
+                                PayTask alipay = new PayTask(OpenVipActivity.this);
+                                Map<String, String> result = alipay.payV2(orderInfo, true);
+                                Message msg = new Message();
+                                msg.what = SDK_PAY_FLAG;
+                                msg.obj = result;
+                                mHandler.sendMessage(msg);
+                            }
+                        };
+
+                        Thread payThread = new Thread(payRunnable);
+                        payThread.start();
+                    }
+                });
+
+
+    }
+
+    private IWXAPI iwxapi; //微信支付api
+
+    /**
+     * 调起微信支付的方法
+     **/
+    private void toWXPay() {
+        OkGo
+                .post(AppUrl.WXPAY)
+                .params("ip", IpUtils.getIPAddress(OpenVipActivity.this))
+//                .params("ip", "127.0.0.1")
+                .params("cardid", cardid)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(OpenVipActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        final WxPayBean wxPayBean = new Gson().fromJson(s, WxPayBean.class);
+//                        if (wxPayBean.info.return_code.equals("SUCCESS")) {
+                        iwxapi = WXAPIFactory.createWXAPI(OpenVipActivity.this, null); //初始化微信api
+                        iwxapi.registerApp(Constants.WX_APP_ID); //注册appid
+
+                        Runnable payRunnable = new Runnable() {  //这里注意要放在子线程
+                            @Override
+                            public void run() {
+                                PayReq request = new PayReq(); //调起微信APP的对象
+                                request.appId = wxPayBean.info.appid;
+                                request.partnerId = wxPayBean.info.partnerid;
+                                request.prepayId = wxPayBean.info.prepayid;
+                                request.packageValue = "Sign=WXPay";
+                                request.nonceStr = wxPayBean.info.noncestr;
+                                request.timeStamp = wxPayBean.info.timestamp;
+                                request.sign = wxPayBean.info.sign;
+                                iwxapi.sendReq(request);//发送调起微信的请求
+                            }
+                        };
+                        Thread payThread = new Thread(payRunnable);
+                        payThread.start();
+//                        } else {
+//                            ToastUtils.showShort(UIUtils.getContext(), wxPayBean.return_msg);
+//                        }
+                    }
+                });
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void paySuccess(String mess) {
+        if (mess.equals("wxPaySuccess")) {
+            showPaySuccess();
+        }
+    }
+
+    private Handler mHandler = new Handler() {
+        @SuppressWarnings("unused")
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case SDK_PAY_FLAG: {
+                    @SuppressWarnings("unchecked")
+                    PayResult payResult = new PayResult((Map<String, String>) msg.obj);
+                    /**
+                     对于支付结果，请商户依赖服务端的异步通知结果。同步通知结果，仅作为支付结束的通知。
+                     */
+                    String resultInfo = payResult.getResult();// 同步返回需要验证的信息
+                    String resultStatus = payResult.getResultStatus();
+                    // 判断resultStatus 为9000则代表支付成功
+                    if (TextUtils.equals(resultStatus, "9000")) {
+                        // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
+                        ToastUtils.showShort(UIUtils.getContext(), "支付成功");
+                        showPaySuccess();
+
+                    } else {
+                        // 该笔订单真实的支付结果，需要依赖服务端的异步通知。
+                        ToastUtils.showShort(UIUtils.getContext(), "支付失败");
+                    }
+                    break;
+                }
+            }
+        }
+
+        ;
     };
 }

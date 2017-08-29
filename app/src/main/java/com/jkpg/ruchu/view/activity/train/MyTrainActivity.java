@@ -21,6 +21,9 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.MyTrainRVAdapter;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -55,6 +58,8 @@ public class MyTrainActivity extends BaseActivity {
                 .post(AppUrl.OPENMYPRACTICE)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("level", "")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .cacheKey("OPENMYPRACTICE")
                 .execute(new StringDialogCallback(MyTrainActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -70,6 +75,22 @@ public class MyTrainActivity extends BaseActivity {
                         list.get(i).isSelect = true;
                         initRecyclerView(list);
 
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        MyTrainBean myTrainBean = new Gson().fromJson(s, MyTrainBean.class);
+                        List<MyTrainBean.ListBean> list = myTrainBean.list;
+                        list.get(0).backgroundRes = R.drawable.grade_1;
+                        list.get(1).backgroundRes = R.drawable.grade_2;
+                        list.get(2).backgroundRes = R.drawable.grade_3;
+                        list.get(3).backgroundRes = R.drawable.grade_4;
+                        list.get(4).backgroundRes = R.drawable.grade_5;
+
+                        int i = Integer.parseInt(myTrainBean.ulevel) - 1;
+                        list.get(i).isSelect = true;
+                        initRecyclerView(list);
                     }
                 });
     }
@@ -104,6 +125,7 @@ public class MyTrainActivity extends BaseActivity {
                                                 }
                                                 list.get(position).isSelect = true;
                                                 myTrainRVAdapter.notifyDataSetChanged();
+                                                EventBus.getDefault().post("TrainFragment");
                                             }
                                         });
                             }

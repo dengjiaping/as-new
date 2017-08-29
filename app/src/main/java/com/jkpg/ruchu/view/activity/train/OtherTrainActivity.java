@@ -20,6 +20,11 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.OtherRLAdapter;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
@@ -46,6 +51,9 @@ public class OtherTrainActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_other_train);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         ButterKnife.bind(this);
         initHeader();
         initData();
@@ -53,31 +61,46 @@ public class OtherTrainActivity extends BaseActivity {
 
     private void initData() {
         OkGo
-                .post(AppUrl.NEWHANDVEDIO)
-                .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID,""))
-                .params("type",2)
+                .post(AppUrl.NEWHANDINTRODUCTION)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("type", 2)
+                .cacheKey("NEWHANDINTRODUCTION")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringDialogCallback(OtherTrainActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         OtherVideoBean otherVideoBean = new Gson().fromJson(s, OtherVideoBean.class);
-                        List<OtherVideoBean.VideoMS2Bean> vedioMS2 = otherVideoBean.videoMS2;
+                        List<OtherVideoBean.ItemBean> vedioMS2 = otherVideoBean.item;
+                        initRecycleView(vedioMS2);
+
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        OtherVideoBean otherVideoBean = new Gson().fromJson(s, OtherVideoBean.class);
+                        List<OtherVideoBean.ItemBean> vedioMS2 = otherVideoBean.item;
                         initRecycleView(vedioMS2);
 
                     }
                 });
+
     }
 
-    private void initRecycleView(List<OtherVideoBean.VideoMS2Bean> vedioMS2) {
+    private void initRecycleView(List<OtherVideoBean.ItemBean> vedioMS2) {
         mOtherRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mOtherRecyclerView.setHasFixedSize(true);
         OtherRLAdapter otherRLAdapter = new OtherRLAdapter(vedioMS2);
         mOtherRecyclerView.setAdapter(otherRLAdapter);
         otherRLAdapter.setOnItemClickListener(new OtherRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, OtherVideoBean.VideoMS2Bean data) {
-                startActivity(new Intent(OtherTrainActivity.this, VideoDetailActivity.class));
+            public void onItemClick(View view, OtherVideoBean.ItemBean data) {
+                Intent intent = new Intent(OtherTrainActivity.this, VideoDetailActivity.class);
+                intent.putExtra("tid", data.tid);
+                startActivity(intent);
             }
         });
+
     }
 
     private void initHeader() {
@@ -87,5 +110,19 @@ public class OtherTrainActivity extends BaseActivity {
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this))
+            EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(String mess) {
+        if (mess.equals("OtherTrain")) {
+            initData();
+        }
     }
 }

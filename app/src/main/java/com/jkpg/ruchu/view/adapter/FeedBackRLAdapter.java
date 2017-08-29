@@ -1,53 +1,39 @@
 package com.jkpg.ruchu.view.adapter;
 
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.support.annotation.LayoutRes;
+import android.support.annotation.Nullable;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.VideoDetailBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.widget.CircleImageView;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
+import java.util.List;
 
 /**
  * Created by qindi on 2017/5/20.
  */
 
-public class FeedBackRLAdapter extends RecyclerView.Adapter<FeedBackRLAdapter.FeedBackViewHolder> {
-
-
-    @Override
-    public FeedBackViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = View.inflate(UIUtils.getContext(), R.layout.item_feedback, null);
-        return new FeedBackViewHolder(view);
+public class FeedBackRLAdapter extends BaseQuickAdapter<VideoDetailBean.VideoMSBean.DiscussBean,BaseViewHolder> {
+    public FeedBackRLAdapter(@LayoutRes int layoutResId, @Nullable List<VideoDetailBean.VideoMSBean.DiscussBean> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    public void onBindViewHolder(FeedBackViewHolder holder, int position) {
-
-    }
-
-    @Override
-    public int getItemCount() {
-        return 5;
-    }
-
-    static class FeedBackViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_feedback_photo)
-        CircleImageView mItemFeedbackPhoto;
-        @BindView(R.id.item_feedback_name)
-        TextView mItemFeedbackName;
-        @BindView(R.id.item_feedback_time)
-        TextView mItemFeedbackTime;
-        @BindView(R.id.item_feedback_body)
-        TextView mItemFeedbackBody;
-
-        FeedBackViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
-        }
+    protected void convert(BaseViewHolder helper, VideoDetailBean.VideoMSBean.DiscussBean item) {
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL+item.userimageurl)
+                .centerCrop()
+                .crossFade()
+                .into((ImageView) helper.getView(R.id.item_feedback_photo));
+        helper.addOnClickListener(R.id.item_feedback_photo);
+        helper.setText(R.id.item_feedback_name,item.username);
+        helper.setText(R.id.item_feedback_time,item.createtime);
+        helper.setText(R.id.item_feedback_body,item.discussContent);
     }
 }

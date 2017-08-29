@@ -3,9 +3,9 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:paddingBottom="5dp"
-              android:background="@android:color/white"
-              android:orientation="vertical">
+              android:background="@drawable/ripple_with_color"
+              android:orientation="vertical"
+              android:paddingBottom="5dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,13 +15,14 @@
         android:orientation="horizontal">
 
         <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/sms_image"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="22dp"
             android:src="@drawable/icon_photo"
             app:civ_border_color="@color/colorPinkTran"
             app:civ_border_overlay="true"
-            app:civ_border_width="1dp"/>
+            app:civ_border_width=".5dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -32,11 +33,11 @@
 
 
             <TextView
+                android:id="@+id/sms_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="5dp"
                 android:lines="1"
-                android:text="hahhahahahhahahah"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"/>
 
@@ -46,19 +47,20 @@
                 android:layout_marginTop="5dp">
 
                 <TextView
-                    android:id="@+id/item_tv_time"
+                    android:id="@+id/sms_time"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:lines="1"
-                    android:text="@string/app_name"
                     android:textColor="@color/colorGray3"
                     android:textSize="12sp"/>
+
                 <TextView
+                    android:id="@+id/sms_text"
                     android:layout_width="wrap_content"
-                    android:textColor="@color/colorGray3"
                     android:layout_height="wrap_content"
-                    android:text="回复"/>
+                    android:text="回复"
+                    android:textColor="@color/colorGray3"/>
 
             </LinearLayout>
 
@@ -68,11 +70,11 @@
     </LinearLayout>
 
     <TextView
+        android:id="@+id/sms_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:text="@string/app_name"
         android:textColor="@android:color/black"
         android:textSize="16sp"
         />
@@ -87,6 +89,7 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/sms_ll_reply"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -94,7 +97,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="22dp"
+                android:layout_marginLeft="12dp"
                 android:layout_marginRight="22dp"
                 android:layout_marginTop="12dp">
 
@@ -105,11 +108,10 @@
                     android:text="我的评论："/>
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/sms_reply"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="5dp"
-                    android:text="@string/app_name"
                     android:textColor="@android:color/black"/>
             </LinearLayout>
 
@@ -129,14 +131,15 @@
             android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
-            <com.jkpg.ruchu.widget.CircleImageView
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:layout_marginLeft="12dp"
-                android:src="@drawable/icon_photo"
-                app:civ_border_color="@color/colorPinkTran"
-                app:civ_border_overlay="true"
-                app:civ_border_width="1dp"/>
+            <!--<com.jkpg.ruchu.widget.CircleImageView-->
+                <!--android:id="@+id/sms_image2"-->
+                <!--android:layout_width="40dp"-->
+                <!--android:layout_height="40dp"-->
+                <!--android:layout_marginLeft="12dp"-->
+                <!--android:src="@drawable/icon_photo"-->
+                <!--app:civ_border_color="@color/colorPinkTran"-->
+                <!--app:civ_border_overlay="true"-->
+                <!--app:civ_border_width="1dp"/>-->
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -147,20 +150,20 @@
 
 
                 <TextView
+                    android:id="@+id/sms_content2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:lines="1"
-                    android:text="hahhahahahhahahah"
                     android:textColor="@android:color/black"
                     android:textSize="14sp"/>
 
                 <TextView
+                    android:id="@+id/sms_time2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="5dp"
                     android:lines="1"
-                    android:text="hahhahahahhahahah"
                     android:textColor="@color/colorGray3"
                     android:textSize="12sp"/>
 

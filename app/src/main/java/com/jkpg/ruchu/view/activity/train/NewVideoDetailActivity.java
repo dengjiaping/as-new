@@ -5,12 +5,8 @@ import android.support.annotation.Nullable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
-import com.jkpg.ruchu.bean.VideoBean;
-import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.utils.LogUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,28 +35,26 @@ public class NewVideoDetailActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_video_detail);
         ButterKnife.bind(this);
-        VideoBean.VideoMSBean.VideomessBean vediomessBean = getIntent().getParcelableExtra("VediomessBean");
         initHeader();
 
-        initVideo(vediomessBean);
     }
 
     private void initHeader() {
         mHeaderTvTitle.setText("入门指导");
     }
 
-    private void initVideo(VideoBean.VideoMSBean.VideomessBean vediomessBean) {
-        mNewVideoPlayer.setUp(AppUrl.BASEURL + vediomessBean.videourl
-                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, vediomessBean.title);
-        LogUtils.i(AppUrl.BASEURL + vediomessBean.image);
-        Glide.with(this)
-                .load(AppUrl.BASEURL + vediomessBean.image)
-                .into(mNewVideoPlayer.thumbImageView);
-        mNewVideoTvTitle.setText(vediomessBean.title);
-        mNewVideoTvDetail.setText(vediomessBean.content);
+//    private void initVideo(VideoBean.VideoMSBean.VideomessBean vediomessBean) {
+//        mNewVideoPlayer.setUp(AppUrl.BASEURL + vediomessBean.videourl
+//                , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, vediomessBean.title);
+//        LogUtils.i(AppUrl.BASEURL + vediomessBean.image);
+//        Glide.with(this)
+//                .load(AppUrl.BASEURL + vediomessBean.image)
+//                .into(mNewVideoPlayer.thumbImageView);
+//        mNewVideoTvTitle.setText(vediomessBean.title);
+//        mNewVideoTvDetail.setText(vediomessBean.content);
 
 
-    }
+//    }
 
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {

@@ -17,10 +17,14 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateDetailBean;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.community.SendNoteActivity;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.adapter.PlateDetailRVAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -187,6 +191,10 @@ public class PlateDetailNewFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.plate_detail_fab:
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 Intent intent = new Intent(getActivity(), SendNoteActivity.class);
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
                 intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());

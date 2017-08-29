@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -25,7 +26,9 @@ import com.jkpg.ruchu.bean.CommunityMianBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
@@ -33,6 +36,7 @@ import com.jkpg.ruchu.view.activity.community.HotNoteActivity;
 import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.adapter.CommunityPlateRLAdapter;
 import com.jkpg.ruchu.view.adapter.HotPlateRLAdapter;
 import com.jkpg.ruchu.widget.GridDividerItemDecoration;
@@ -41,8 +45,13 @@ import com.jkpg.ruchu.widget.banner.BannerConfig;
 import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
 import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +91,8 @@ public class CommunityModuleFragment extends Fragment {
     RelativeLayout mErrorStateRelativeLayout;
     @BindView(R.id.id_loading_and_retry)
     FrameLayout mIdLoadingAndRetry;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
     private CommunityMianBean mCommunityMianBean;
 
 
@@ -99,11 +110,39 @@ public class CommunityModuleFragment extends Fragment {
         initData();
         mHeaderTvTitle.setText("互动");
         mHeaderIvLeft.setVisibility(View.GONE);
+
+        initRefreshLayout();
+    }
+
+    private void initRefreshLayout() {
+        mRefreshLayout.setColorSchemeResources(R.color.colorPink, R.color.colorPink2);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                OkGo
+                        .post(AppUrl.BBS_INFOS)
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
+                                List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
+                                List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
+                                initBanner(list1);
+                                initPlateRecyclerView(list2);
+                                initHotRecyclerView(list3);
+                                mRefreshLayout.setRefreshing(false);
+                            }
+                        });
+            }
+        });
     }
 
     private void initData() {
         OkGo
                 .post(AppUrl.BBS_INFOS)
+                .cacheKey("BBS_INFOS")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -119,6 +158,21 @@ public class CommunityModuleFragment extends Fragment {
                         mIdLoadingAndRetry.setVisibility(View.GONE);
                         mErrorStateRelativeLayout.setVisibility(View.GONE);
 
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                        List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
+                        List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
+                        List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
+                        initBanner(list1);
+                        initPlateRecyclerView(list2);
+                        initHotRecyclerView(list3);
+
+                        mIdLoadingAndRetry.setVisibility(View.GONE);
+                        mErrorStateRelativeLayout.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -156,7 +210,7 @@ public class CommunityModuleFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), PlateDetailActivity.class);
                 intent.putExtra("plateid", data.tid + "");
                 intent.putExtra("title", data.platename);
-                intent.putStringArrayListExtra("plate",plateNameList);
+                intent.putStringArrayListExtra("plate", plateNameList);
                 startActivity(intent);
 
             }
@@ -220,6 +274,10 @@ public class CommunityModuleFragment extends Fragment {
 
     @OnClick({R.id.id_btn_retry, R.id.community_ll_fine, R.id.community_ll_collect, R.id.community_tv_hot})
     public void onViewClicked(View view) {
+        if (!NetworkUtils.isConnected()) {
+            ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+            return;
+        }
         switch (view.getId()) {
             case R.id.id_btn_retry:
                 initData();
@@ -228,8 +286,8 @@ public class CommunityModuleFragment extends Fragment {
                 startActivity(new Intent(getActivity(), FineNoteActivity.class));
                 break;
             case R.id.community_ll_collect:
-                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
-                    ToastUtils.showShort(UIUtils.getContext(), "未登录");
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
                 startActivity(new Intent(getActivity(), MyCollectEditActivity.class));
@@ -251,5 +309,41 @@ public class CommunityModuleFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mCommunityBanner.stopAutoPlay();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(String mess) {
+        if (mess.equals("Community")) {
+            OkGo
+                    .post(AppUrl.BBS_INFOS)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                            List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
+                            List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
+                            List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
+                            initBanner(list1);
+                            initPlateRecyclerView(list2);
+                            initHotRecyclerView(list3);
+                        }
+                    });
+        }
     }
 }

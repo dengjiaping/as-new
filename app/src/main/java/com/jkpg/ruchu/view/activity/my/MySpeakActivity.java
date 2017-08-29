@@ -132,6 +132,7 @@ public class MySpeakActivity extends BaseActivity {
                         });
             }
         }, mRecyclerView2);
+        mSenderRLAdapter.setEmptyView(R.layout.view_no_data);
         mSenderRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -188,6 +189,7 @@ public class MySpeakActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+        mySpeakNoteRVAdapter.setEmptyView(R.layout.view_no_data);
 
     }
 

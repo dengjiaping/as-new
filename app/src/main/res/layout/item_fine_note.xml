@@ -18,7 +18,6 @@
             android:id="@+id/item_fine_note_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/app_name"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             />
@@ -33,7 +32,6 @@
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2017-05-21 09:20"
                 android:textColor="@color/colorGray3"
                 android:textSize="12sp"/>
 
@@ -71,7 +69,7 @@
             android:layout_width="match_parent"
             android:layout_height="120dp"
             android:scaleType="fitXY"
-            android:src="@drawable/banner"/>
+            />
 
         <TextView
             android:id="@+id/item_fine_note_iv_body"
@@ -80,7 +78,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:lines="2"
-            android:text="哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈哈"/>
+            />
     </LinearLayout>
 
 </LinearLayout>

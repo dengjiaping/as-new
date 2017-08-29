@@ -69,6 +69,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.center.PersonalInfoActivity"
@@ -151,6 +152,7 @@
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.my.FansCenterActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.my.MySMSActivity"
@@ -226,7 +228,7 @@
 
         <activity
             android:name=".view.activity.community.NoticeDetailActivity"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.community.HotNoteActivity"
@@ -283,9 +285,13 @@
 
         <activity
             android:name=".view.activity.WebViewActivity"
+            android:hardwareAccelerated="true"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.community.MoreReplyActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.my.BindingTeleActivity"
             android:screenOrientation="portrait"/>
 
         <activity
@@ -294,6 +300,10 @@
             android:exported="true"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        <activity
+            android:name=".wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:launchMode="singleTop"/>
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -323,8 +333,17 @@
             android:value="013bc6e7bf034de2c3b4fc2dabc1830d">
         </meta-data>
         <meta-data
-            android:name="android"
-            android:value="Channel ID"/>
+            android:name="UMENG_CHANNEL"
+            android:value="Bate"/>
+
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation|screenSize"
+            android:exported="false"
+            android:screenOrientation="behind"
+            android:windowSoftInputMode="adjustResize|stateHidden">
+        </activity>
+        <service android:name=".service.SmsService"/>
     </application>
 
 </manifest>

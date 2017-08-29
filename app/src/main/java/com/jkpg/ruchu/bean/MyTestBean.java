@@ -1,10 +1,12 @@
 package com.jkpg.ruchu.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by qindi on 2017/7/21.
  */
 
-public class MyTestBean {
+public class MyTestBean implements Serializable {
 
 
     /**
@@ -19,7 +21,7 @@ public class MyTestBean {
     public ReportBean report;
     public String mess;
 
-    public static class ReportBean {
+    public static class ReportBean implements Serializable {
         /**
          * createtime : 2017-08-03 18:02:30.0
          * content : ;;;;;;。

@@ -37,8 +37,7 @@
         android:id="@+id/train_count_fl_histogram"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_margin="12dp"
         android:layout_weight="1">
 
     </com.jkpg.ruchu.widget.Histogram>

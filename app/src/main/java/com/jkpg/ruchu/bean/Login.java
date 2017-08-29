@@ -35,7 +35,7 @@ public class Login {
     public String userid;
     public String taici;
     public String height;
-    public int level;
+    public String level;
     public String headImg;
     public String nick;
     public String address;

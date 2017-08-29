@@ -1,5 +1,9 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,7 +32,6 @@ import com.lzy.okgo.OkGo;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
-import com.youzan.sdk.YouzanSDK;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -85,11 +88,13 @@ public class AccountManagementActivity extends BaseActivity {
                             String tele = mAccountManagementBean.tele;
                             tele = tele.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
                             mAccountManageTvPhone.setText(tele);
+                        } else {
+                            mAccountManageTvPhone.setText("点击绑定手机号");
                         }
                         isQQ = mAccountManagementBean.qqflag;
                         if (mAccountManagementBean.qqflag) {
                             mAccountManageRbQq.setChecked(false);
-                            mAccountManageRbWx.setText("已绑定");
+                            mAccountManageRbQq.setText("已绑定");
 
                         }
                         isWX = mAccountManagementBean.wxflag;
@@ -112,7 +117,11 @@ public class AccountManagementActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.account_manage_btn_change:
-                startActivity(new Intent(AccountManagementActivity.this, ChangePhoneActivity.class));
+                if (mAccountManagementBean.telflag) {
+                    startActivity(new Intent(AccountManagementActivity.this, ChangePhoneActivity.class));
+                } else {
+                    startActivity(new Intent(AccountManagementActivity.this, BindingTeleActivity.class));
+                }
                 break;
             case R.id.account_manage_tv_pwd:
                 if (mAccountManagementBean.telflag) {
@@ -140,9 +149,14 @@ public class AccountManagementActivity extends BaseActivity {
                                             .execute(new StringDialogCallback(AccountManagementActivity.this) {
                                                 @Override
                                                 public void onSuccess(String s, Call call, Response response) {
-                                                    mAccountManageRbWx.setChecked(true);
-                                                    mAccountManageRbWx.setText("绑定");
-                                                    isWX = false;
+                                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                                    if (successBean.success) {
+                                                        mAccountManageRbWx.setChecked(true);
+                                                        mAccountManageRbWx.setText("绑定");
+                                                        isWX = false;
+                                                    } else {
+                                                        ToastUtils.showShort(UIUtils.getContext(), "解绑失败");
+                                                    }
                                                 }
                                             });
 
@@ -170,13 +184,18 @@ public class AccountManagementActivity extends BaseActivity {
 
                                     OkGo
                                             .post(AppUrl.CANCELBIND_QQ)
-                                            .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                                             .execute(new StringDialogCallback(AccountManagementActivity.this) {
                                                 @Override
                                                 public void onSuccess(String s, Call call, Response response) {
-                                                    mAccountManageRbQq.setChecked(true);
-                                                    mAccountManageRbQq.setText("绑定");
-                                                    isQQ = false;
+                                                    SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                                    if (successBean.success) {
+                                                        mAccountManageRbQq.setChecked(true);
+                                                        mAccountManageRbQq.setText("绑定");
+                                                        isQQ = false;
+                                                    } else {
+                                                        ToastUtils.showShort(UIUtils.getContext(), "解绑失败");
+                                                    }
                                                 }
                                             });
 
@@ -193,7 +212,7 @@ public class AccountManagementActivity extends BaseActivity {
                 SPUtils.clear();
                 startActivity(new Intent(AccountManagementActivity.this, LoginActivity.class));
                 EventBus.getDefault().post(new MessageEvent("Quit"));
-                YouzanSDK.userLogout(this);
+                EventBus.getDefault().post(new MessageEvent("Login"));
                 finish();
                 break;
         }
@@ -242,6 +261,31 @@ public class AccountManagementActivity extends BaseActivity {
                                     mAccountManageRbWx.setChecked(false);
                                     mAccountManageRbWx.setText("已绑定");
                                     isWX = true;
+                                    if (successBean.giveVIP) {
+//                                        new AlertDialog.Builder(AccountManagementActivity.this)
+//                                                .setMessage(R.string.PresentVipTip)
+//                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//                                                    @Override
+//                                                    public void onClick(DialogInterface dialog, int which) {
+//                                                        dialog.dismiss();
+//                                                    }
+//                                                })
+//                                                .show();
+                                        Notification.Builder builder = new Notification.Builder(AccountManagementActivity.this);
+                                        Intent intent = new Intent(AccountManagementActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+                                        PendingIntent pendingIntent = PendingIntent.getActivity(AccountManagementActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                                        builder.setContentIntent(pendingIntent);
+                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
+                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
+                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+                                        builder.setAutoCancel(true); //自己维护通知的消失
+                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
+                                        builder.setOngoing(true);
+                                        Notification notification = builder.build();
+                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+                                    }
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), getString(R.string.AccounntWX));
                                 }

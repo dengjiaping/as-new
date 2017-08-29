@@ -80,6 +80,7 @@ public class MoreReplyActivity extends BaseActivity {
                         MoreReplyBean moreReplyBean = new Gson().fromJson(s, MoreReplyBean.class);
                         List<MoreReplyBean.ItemsBean> items = moreReplyBean.items;
                         initRecyclerView(items);
+                        mHeaderTvTitle.setText("共有" + items.size() + "条回复");
 
                     }
                 });
@@ -170,7 +171,7 @@ public class MoreReplyActivity extends BaseActivity {
                                                 List<MoreReplyBean.ItemsBean> items = moreReplyBean.items;
                                                 initRecyclerView(items);
                                                 mMoreReplyRecyclerView.scrollToPosition(items.size() - 1);
-                                                EventBus.getDefault().post(new MessageEvent("reply",conunt));
+                                                EventBus.getDefault().post(new MessageEvent("reply", conunt));
 //                                                    ToastUtils.showShort(UIUtils.getContext(),items.size()+"");
                                             }
                                         });

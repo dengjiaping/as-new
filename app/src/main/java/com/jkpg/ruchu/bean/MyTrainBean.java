@@ -1,12 +1,13 @@
 package com.jkpg.ruchu.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by qindi on 2017/7/13.
+ * Created by qindi on 2017/7/13
  */
 
-public class MyTrainBean {
+public class MyTrainBean implements Serializable{
     /**
      * ulevel : 5
      * list : [{"level":"Level-1","strength":"0~20","totaltime":"2:03"},{"level":"Level-2","strength":"20~40","totaltime":"02:12"},{"level":"Level-3","strength":"40~60","totaltime":"02:12"},{"level":"Level-4","strength":"60~80","totaltime":"02:12"},{"level":"Level-5","strength":"80~100","totaltime":"02:05"}]
@@ -17,7 +18,7 @@ public class MyTrainBean {
     public boolean success;
     public List<ListBean> list;
 
-    public static class ListBean {
+    public static class ListBean implements Serializable {
         /**
          * level : Level-1
          * strength : 0~20

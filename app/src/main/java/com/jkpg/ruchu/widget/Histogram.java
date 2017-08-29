@@ -48,7 +48,7 @@ public class Histogram extends View {
     int countInOne = 7;//一屏幕宽度显示的圆柱个数
 
     HistogramClickListener mListener;
-    int[] tempdatas;
+    float[] tempdatas;
 
     boolean isNoMore = false;//时候滚到边界
 
@@ -63,7 +63,7 @@ public class Histogram extends View {
     public void setmDatas(List<PPHistogramBean> mDatas, int max, boolean isAnim) {
         this.mDatas = mDatas;
         this.MAX = max;
-        tempdatas = new int[mDatas.size()];
+        tempdatas = new float[mDatas.size()];
         for (int i = 0; i < tempdatas.length; i++) {
             if (isAnim) {
                 tempdatas[i] = 0;
@@ -185,7 +185,7 @@ public class Histogram extends View {
         //第一行的Y轴坐标
         float textY = YofX + (textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top) - UIUtils.dip2Px(1);
         //第二行的Y轴坐标
-       // float textY2 = textY + (textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top) - UIUtils.dip2Px(6);
+        // float textY2 = textY + (textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top) - UIUtils.dip2Px(6);
         //X轴日期的颜色
         textPaint.setColor(getResources().getColor(R.color.colorGray3));
         for (int i = 0; i < mDatas.size(); i++) {
@@ -214,6 +214,7 @@ public class Histogram extends View {
         float step = (YofX - borderBottom) / 5;
         float textH = (textPaint.getFontMetrics().bottom + textPaint.getFontMetrics().top) / 2;
         //写纵坐标数字
+
         for (int i = 0; i <= 5; i++) {
             //文字右对齐
             float x = textPaint.measureText(MAX + "") - textPaint.measureText(i * MAX / 5 + "");
@@ -361,16 +362,16 @@ public class Histogram extends View {
      * 数据结构
      */
     public static class PPHistogramBean {
-        int value;
+        float value;
         String startTime;
         String endTime;
 
-        public PPHistogramBean(int value, String time) {
+        public PPHistogramBean(float value, String time) {
             this.value = value;
             this.endTime = time;
         }
 
-        public int getValue() {
+        public float getValue() {
             return value;
         }
 
@@ -397,5 +398,9 @@ public class Histogram extends View {
 
     public void setCountInOne(int countInOne) {
         this.countInOne = countInOne;
+    }
+
+    public void setLastStartX(float lastStartX) {
+        this.lastStartX = lastStartX;
     }
 }

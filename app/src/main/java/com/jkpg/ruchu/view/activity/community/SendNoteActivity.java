@@ -44,6 +44,7 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.PermissionUtils;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -231,17 +232,17 @@ public class SendNoteActivity extends BaseActivity {
                 }
             });
             return;*/
-            PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
-                @Override
-                public void onPermissionGranted() {
-                    initLocation();
-                }
+        PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+                initLocation();
+            }
 
-                @Override
-                public void onPermissionDenied(String[] deniedPermissions) {
-                    mSendNoteCbPosition.setChecked(false);
-                }
-            });
+            @Override
+            public void onPermissionDenied(String[] deniedPermissions) {
+                mSendNoteCbPosition.setChecked(false);
+            }
+        });
 //        }
     }
 
@@ -298,8 +299,8 @@ public class SendNoteActivity extends BaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            if (locationList == null){
-                ToastUtils.showShort(UIUtils.getContext(),"获取地址失败");
+            if (locationList == null) {
+                ToastUtils.showShort(UIUtils.getContext(), "获取地址失败");
                 return;
             }
             Address address = locationList.get(0);//得到Address实例
@@ -375,7 +376,7 @@ public class SendNoteActivity extends BaseActivity {
                         public void onSuccess(String s, Call call, Response response) {
                             EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
-                            if (successBean.success){
+                            if (successBean.success) {
                                 finish();
                             }
                         }
@@ -386,7 +387,7 @@ public class SendNoteActivity extends BaseActivity {
             for (int i = 0; i < selectedPhotos.size(); i++) {
                 Uri uri = Uri.fromFile(new File(selectedPhotos.get(i)));
                 Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
-                String s = FileUtils.saveBitmapByQuality(bm, 10);
+                String s = FileUtils.saveBitmapByQuality(bm, 80);
                 files.add(new File(s));
             }
             OkGo
@@ -405,7 +406,7 @@ public class SendNoteActivity extends BaseActivity {
                         public void onSuccess(String s, Call call, Response response) {
                             EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
-                            if (successBean.success){
+                            if (successBean.success) {
                                 finish();
                             }
                         }
@@ -434,7 +435,14 @@ public class SendNoteActivity extends BaseActivity {
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
         mPopupWindow.setOutsideTouchable(false);
         mPopupWindow.setFocusable(true);
+        PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
         mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
+        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+            @Override
+            public void onDismiss() {
+                PopupWindowUtils.darkenBackground(SendNoteActivity.this, 1f);
+            }
+        });
     }
 
     @Override

@@ -3,27 +3,26 @@
               android:layout_width="match_parent"
               android:id="@+id/register_ll_three"
               android:layout_height="match_parent"
-              android:layout_marginTop="56dp"
-              android:background="#22000000"
               android:clickable="true"
               android:gravity="center"
-              android:visibility="gone"
+              android:visibility="visible"
               android:orientation="vertical">
 
     <LinearLayout
         android:id="@+id/register_ll_success"
-        android:layout_width="320dp"
-        android:layout_height="357dp"
-        android:background="@drawable/register_success"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="22dp"
+        android:layout_marginRight="22dp"
+        android:background="@drawable/dialog_bg"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="160dp"
             android:text=" 注册成功！"
-            android:textColor="#3ACF8A"
+            android:textColor="@color/colorPink"
             android:textSize="20sp"/>
 
         <TextView
@@ -32,7 +31,7 @@
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
             android:layout_marginTop="35dp"
-            android:text="    恭喜您成功注册如初康复APP，并获得2天的会员体验期，赶快跟我们一起锻炼吧！"
+            android:text="    恭喜您成功注册如初康复APP，赶快跟我们一起锻炼吧！"
             android:textSize="16sp"
             />
 

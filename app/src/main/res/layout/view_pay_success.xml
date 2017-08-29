@@ -30,7 +30,6 @@
             android:layout_below="@+id/textView3"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
-            android:text="    您已成功开通如初会员,有效期为45天，可在“我的”界面里查看"
             android:textSize="16sp"/>
 
         <Button

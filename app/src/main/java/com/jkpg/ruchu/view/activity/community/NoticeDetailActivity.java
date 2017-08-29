@@ -42,6 +42,7 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
 import com.jkpg.ruchu.view.adapter.NoticeDetailReplyAdapter;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
@@ -124,14 +125,15 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     private int mIndex;
     private String mUserid;
     private PopupWindow mPopupWindow;
+    private String mBbsid;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_detail_revise);
         ButterKnife.bind(this);
-        String bbsid = getIntent().getStringExtra("bbsid");
-        initData(bbsid);
+        mBbsid = getIntent().getStringExtra("bbsid");
+        initData(mBbsid);
         initHeader();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
@@ -140,10 +142,16 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void initZan() {
-        mNoticeDetailTvDz.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        mNoticeDetailTvDz.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
+            public void onClick(View v) {
+                // TODO: 2017/8/11
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+                    return;
+                }
+                if (mNoticeDetailTvDz.isChecked()) {
+
                     OkGo
                             .post(AppUrl.UPVOTE)
                             .params("bbsid", mbbsid)
@@ -159,6 +167,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                     } else {
                                         ToastUtils.showShort(UIUtils.getContext(), "点赞失败");
                                     }
+                                    EventBus.getDefault().post("Community");
                                 }
 
                                 @Override
@@ -184,6 +193,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                     } else {
                                         ToastUtils.showShort(UIUtils.getContext(), "取消点赞失败");
                                     }
+                                    EventBus.getDefault().post("Community");
                                 }
 
                                 @Override
@@ -193,6 +203,13 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                 }
                             });
                 }
+            }
+        });
+
+        mNoticeDetailTvDz.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+
             }
         });
     }
@@ -239,7 +256,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         mNoticeDetailTvDz.setText(list1Bean.zan);
         mNoticeDetailTvDz.setChecked(list1Bean.iszan);
 
-        mNoticeDetailTvReply.setText(list1Bean.reply);
+        mNoticeDetailTvReply.setText(mList2.size()+"");
         mNoticeDetailTvTitle.setText(list1Bean.title);
         mNoticeDetailTvTime.setText(list1Bean.createtime);
         mNoticeDetailTvContent.setText(list1Bean.content);
@@ -336,6 +353,10 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
 
                         break;
                     case R.id.item_notice_reply_cb_love:
+                        if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                            startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+                            return;
+                        }
                         loveNotice((CheckBox) view, position);
                         break;
 
@@ -373,6 +394,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void toUserMain(String userid) {
+        // TODO: 2017/8/11
+        if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+            startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+            return;
+        }
         Intent intent = new Intent(NoticeDetailActivity.this, FansCenterActivity.class);
         intent.putExtra("fansId", userid);
         startActivity(intent);
@@ -431,6 +457,12 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
             case R.id.header_iv_right2:
 
                 if (!isCollect) {
+                    if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                        startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+
+                        return;
+                    }
+
                     OkGo
                             .post(AppUrl.BBS_COLLECT)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -456,6 +488,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                 }
                             });
                 } else {
+                    if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                        startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+
+                        return;
+                    }
                     OkGo
                             .post(AppUrl.BBS_COLLECT)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -524,6 +561,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void replyLZ() {
+        //// TODO: 2017/8/11
+        if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+            startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+            return;
+        }
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
         final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         editWindow.setBackgroundDrawable(null);
@@ -548,12 +590,13 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onClick(View v) {
                 String string = replyEdit.getText().toString().trim();
-                if (string.length() == 0) {
-                    return;
-                }
                 if (isShowImage == View.VISIBLE) {
 
                     if (selectedPhotos.size() == 0) {
+                        if (string.length() == 0) {
+                            ToastUtils.showShort(UIUtils.getContext(),"请输入内容哦!");
+                            return;
+                        }
                         OkGo
                                 .post(AppUrl.BBS_REPLY
                                         + "?bbsid=" + mbbsid
@@ -564,6 +607,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
                                         editWindow.dismiss();
+                                        EventBus.getDefault().post("Community");
                                         OkGo
                                                 .post(AppUrl.BBS_DETAILS)
                                                 .params("bbsid", mbbsid)
@@ -627,6 +671,10 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
 
                     }
                 } else {
+                    if (string.length() == 0) {
+                        ToastUtils.showShort(UIUtils.getContext(),"请输入内容哦!");
+                        return;
+                    }
                     OkGo
                             .post(AppUrl.BBS_REPLY
                                     + "?bbsid=" + mbbsid
@@ -700,11 +748,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
             selectedPhotos.clear();
 
             if (photos != null) {
-
                 selectedPhotos.addAll(photos);
                 mReplyRecyclerView.setVisibility(View.VISIBLE);
             } else {
-
                 mReplyRecyclerView.setVisibility(View.GONE);
             }
             photoAdapter.notifyDataSetChanged();
@@ -745,10 +791,14 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                 PopupWindowUtils.darkenBackground(NoticeDetailActivity.this, 1f);
             }
         });
-        final UMWeb mWeb = new UMWeb(mList1.get(0).shearurl);
+        final UMWeb mWeb = new UMWeb(AppUrl.BASEURL + mList1.get(0).shearurl);
         mWeb.setTitle(mList1.get(0).title);//标题
-        mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));  //缩略图
-        mWeb.setDescription(getString(R.string.share_description));//描述
+        if (mList1.get(0).images.get(0) == null) {
+            mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));
+        } else {
+            mWeb.setThumb(new UMImage(UIUtils.getContext(), AppUrl.BASEURL + mList1.get(0).images.get(0)));
+        }
+        mWeb.setDescription(mList1.get(0).content);//描述
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -870,6 +920,8 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                             mNoticeDetailReplyRecycler.scrollToPosition(mIndex + 1);
                         }
                     });
+        } else if (mess.message.equals("Login")) {
+            initData(mBbsid);
         }
     }
 }

@@ -11,6 +11,10 @@ import android.view.WindowManager;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 
 /**
@@ -65,10 +69,17 @@ public class WelcomeActivity extends BaseActivity {
                             }
                         });
 */
-                Intent intentLogin = new Intent(WelcomeActivity.this, LoginActivity.class);
-                Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
-                startActivities(new Intent[]{intentMain,intentLogin});
-                finish();
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+
+                    Intent intentLogin = new Intent(WelcomeActivity.this, LoginActivity.class);
+                    Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivities(new Intent[]{intentMain, intentLogin});
+                    finish();
+                } else {
+                    Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
+                    startActivity(intentMain);
+                    finish();
+                }
 
             }
         }, 1000);

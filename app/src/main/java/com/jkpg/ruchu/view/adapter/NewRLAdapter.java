@@ -23,10 +23,10 @@ import butterknife.ButterKnife;
  */
 
 public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainViewHolder> implements View.OnClickListener {
-    List<VideoBean.VideoMSBean> vedioMS;
+    List<VideoBean.ItemBean> vedioMS;
     Context context;
 
-    public NewRLAdapter(Context context, List<VideoBean.VideoMSBean> vedioMS) {
+    public NewRLAdapter(Context context, List<VideoBean.ItemBean> vedioMS) {
         this.context = context;
         this.vedioMS = vedioMS;
     }
@@ -36,7 +36,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (VideoBean.VideoMSBean.VideomessBean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (VideoBean.ItemBean) v.getTag());
         }
     }
 
@@ -49,16 +49,15 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
 
     @Override
     public void onBindViewHolder(NewTrainViewHolder holder, int position) {
-        holder.itemView.setTag(vedioMS.get(position).videomess);
-        VideoBean.VideoMSBean videoBean = vedioMS.get(position);
+        holder.itemView.setTag(vedioMS.get(position));
+        VideoBean.ItemBean videoBean = vedioMS.get(position);
         holder.mItemNewTitle.setText(videoBean.title);
-        holder.mItemNewTime.setText(videoBean.videotime);
+        holder.mItemNewTime.setText("");
         Glide.with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + videoBean.imageUrl)
 //                .placeholder(R.drawable.new_guide_bg)
                 .crossFade()
                 .centerCrop()
-                .error(R.drawable.new_guide_bg)
                 .into(holder.mItemRL);
     }
 
@@ -85,7 +84,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
     }
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, VideoBean.VideoMSBean.VideomessBean data);
+        void onItemClick(View view, VideoBean.ItemBean data);
 
     }
 

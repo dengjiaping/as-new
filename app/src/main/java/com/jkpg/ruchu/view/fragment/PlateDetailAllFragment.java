@@ -17,13 +17,18 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateDetailBean;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.community.SendNoteActivity;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.adapter.NoticRVAdapter;
 import com.jkpg.ruchu.view.adapter.PlateDetailRVAdapter;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
 
@@ -97,11 +102,14 @@ public class PlateDetailAllFragment extends Fragment {
 
     private void initData() {
         mPlateid = ((PlateDetailActivity) getActivity()).getPlateid();
+        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         OkGo
                 .post(AppUrl.BBS_LOOKUP)
                 .params("plateid", mPlateid)
                 .params("flag", flag)
                 .params("isgood", 0)
+                .cacheKey("BBS_LOOKUP")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringCallback() {
 
 
@@ -125,11 +133,19 @@ public class PlateDetailAllFragment extends Fragment {
                         super.onAfter(s, e);
                         mPlateDetailRefresh.setRefreshing(false);
                     }
+
+//                    @Override
+//                    public void onCacheSuccess(String s, Call call) {
+//                        super.onCacheSuccess(s, call);
+//                        PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
+//                        mNotice = plateDetailBean.notice;
+//                        mList = plateDetailBean.list;
+//                        initPlateDetailRecyclerView(mNotice, mList);
+//                    }
                 });
     }
 
     private void initPlateDetailRecyclerView(List<PlateDetailBean.NoticeBean> notice, final List<PlateDetailBean.ListBean> list) {
-        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mAdapter = new PlateDetailRVAdapter(R.layout.item_plate_detail, list);
         mPlateDetailRecyclerView.setAdapter(mAdapter);
         final View view = View.inflate(UIUtils.getContext(), R.layout.view_notice, null);
@@ -205,6 +221,13 @@ public class PlateDetailAllFragment extends Fragment {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.plate_detail_fab:
+
+
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+
+                    return;
+                }
                 Intent intent = new Intent(getActivity(), SendNoteActivity.class);
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
                 intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
@@ -217,7 +240,7 @@ public class PlateDetailAllFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -225,13 +248,13 @@ public class PlateDetailAllFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void eventMess(String mess){
+    public void eventMess(String mess) {
         if (mess.equals("send"))
             initData();
     }

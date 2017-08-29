@@ -230,8 +230,8 @@ public class SmoothCheckBox extends View implements Checkable {
 
         mLeftLineDistance = (float) Math.sqrt(Math.pow(mTickPoints[1].x - mTickPoints[0].x, 2) +
                 Math.pow(mTickPoints[1].y - mTickPoints[0].y, 2));
-        mRightLineDistance = (float) Math.sqrt(Math.pow(mTickPoints[2].x - mTickPoints[1].x, 2) +
-                Math.pow(mTickPoints[2].y - mTickPoints[1].y, 2));
+        mRightLineDistance = (float) Math.sqrt(Math.pow(mTickPoints[2].x - mTickPoints[1].x, 2)
+                + Math.pow(mTickPoints[2].y - mTickPoints[1].y, 2));
         mTickPaint.setStrokeWidth(mStrokeWidth);
     }
 

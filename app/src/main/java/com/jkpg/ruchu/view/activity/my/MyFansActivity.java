@@ -27,6 +27,10 @@ import com.jkpg.ruchu.view.adapter.MyFansRVAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +66,9 @@ public class MyFansActivity extends BaseActivity {
         ButterKnife.bind(this);
         initHeader();
         initData();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void initData() {
@@ -189,6 +196,7 @@ public class MyFansActivity extends BaseActivity {
                 LogUtils.i(fansIndex + "fansIndex");
             }
         }, mMyFansRecyclerView);
+        fansRVAdapter.setEmptyView(R.layout.view_no_data);
 
         fansRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -198,6 +206,7 @@ public class MyFansActivity extends BaseActivity {
                 startActivity(intent);
             }
         });
+
     }
 
     private void initHeader() {
@@ -210,9 +219,17 @@ public class MyFansActivity extends BaseActivity {
         finish();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshData(String mess) {
+        if (mess.equals("fans"))
+            initData();
+    }
+
     @Override
-    protected void onRestart() {
-        super.onRestart();
-        initData();
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

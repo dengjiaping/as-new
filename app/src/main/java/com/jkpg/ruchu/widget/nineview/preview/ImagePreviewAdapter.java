@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
@@ -18,7 +19,6 @@ import com.github.chrisbanes.photoview.PhotoView;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.widget.nineview.ImageInfo;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
-import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.List;
 
@@ -71,7 +71,7 @@ public class ImagePreviewAdapter extends PagerAdapter implements OnPhotoTapListe
     @Override
     public Object instantiateItem(ViewGroup container, int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_photoview, container, false);
-        final AVLoadingIndicatorView pb = (AVLoadingIndicatorView) view.findViewById(R.id.pb);
+        final ProgressBar pb = (ProgressBar) view.findViewById(R.id.pb);
         final PhotoView imageView = (PhotoView) view.findViewById(R.id.pv);
 
         ImageInfo info = this.imageInfo.get(position);

@@ -51,10 +51,10 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
         helper.setText(R.id.item_notice_reply_name, item.nick);
         helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
         helper.setText(R.id.item_notice_reply_body, item.content);
-        helper.setText(R.id.item_notice_reply_floor, (helper.getPosition() + 1) + "楼");
+        helper.setText(R.id.item_notice_reply_floor, (helper.getPosition()) + "楼");
         helper.setText(R.id.item_notice_reply_time, item.replytime);
         helper.setText(R.id.item_notice_reply_cb_love, item.zan + "");
-        helper.setText(R.id.item_notice_reply_tv_reply, item.reply);
+        helper.setText(R.id.item_notice_reply_tv_reply, (item.items.size()) + "");
         helper.setChecked(R.id.item_notice_reply_cb_love, item.iszan);
         List<NoticeDetailBean.List2Bean.ItemsBean> items = item.items;
         if (items.size() == 0) {

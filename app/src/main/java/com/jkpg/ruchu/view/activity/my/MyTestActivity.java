@@ -21,6 +21,7 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.train.TestTrainActivity;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -71,6 +72,8 @@ public class MyTestActivity extends BaseActivity {
         OkGo
                 .post(AppUrl.MYTEST)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .cacheKey("MYTEST")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -83,6 +86,25 @@ public class MyTestActivity extends BaseActivity {
                             mMyTestLlBtnAgainTest.setVisibility(View.VISIBLE);
 
 
+                            mMyTestTvBody.setText(myTestBean.report.content);
+                            mMyTestTvTime.setText(myTestBean.report.createtime);
+                            mMyTestTvGrade.setText(myTestBean.report.count + "分");
+                            mMyTestTvLevel.setText(myTestBean.report.level);
+
+                        }
+
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        MyTestBean myTestBean = new Gson().fromJson(s, MyTestBean.class);
+                        if (myTestBean.istest.equals("1")) {
+                            mMyTestHeader.setVisibility(View.VISIBLE);
+                            mMyTestHeaderNo.setVisibility(View.GONE);
+                            mMyTestSl.setVisibility(View.VISIBLE);
+                            mMyTestLl.setVisibility(View.GONE);
+                            mMyTestLlBtnAgainTest.setVisibility(View.VISIBLE);
                             mMyTestTvBody.setText(myTestBean.report.content);
                             mMyTestTvTime.setText(myTestBean.report.createtime);
                             mMyTestTvGrade.setText(myTestBean.report.count + "分");

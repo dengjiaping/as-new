@@ -20,28 +20,28 @@ public final class SPUtils {
         SharedPreferences sp = context.getSharedPreferences(name, mode);
         Editor edit = sp.edit();
         edit.putBoolean(key, value);
-        edit.commit();
+        edit.apply();
     }
 
     public static void saveInt(Context context, String key, int value) {
         SharedPreferences sp = context.getSharedPreferences(name, mode);
         Editor edit = sp.edit();
         edit.putInt(key, value);
-        edit.commit();
+        edit.apply();
     }
 
     public static void saveString(Context context, String key, String value) {
         SharedPreferences sp = context.getSharedPreferences(name, mode);
         Editor edit = sp.edit();
         edit.putString(key, value);
-        edit.commit();
+        edit.apply();
     }
 
     public static void saveFloat(Context context, String key, float value) {
         SharedPreferences sp = context.getSharedPreferences(name, mode);
         Editor edit = sp.edit();
         edit.putFloat(key, value);
-        edit.commit();
+        edit.apply();
     }
 
 

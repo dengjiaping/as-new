@@ -15,4 +15,6 @@
     <color name="colorYellow">#F8DC2C</color>
     <color name="ic_default_bg_color">#00000000</color>
 
+    <color name="navpage">#FFE1E8EB</color>
+
 </resources>

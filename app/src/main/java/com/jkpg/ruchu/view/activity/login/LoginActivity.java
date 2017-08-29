@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.LoginQQBean;
+import com.jkpg.ruchu.bean.LoginStateBean;
 import com.jkpg.ruchu.bean.LoginWxBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -102,12 +103,9 @@ public class LoginActivity extends BaseActivity {
                 break;
             case R.id.login_btn_random:
 //                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "587a253d-3d07-11e7-aebf-fa163e547655");
-                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "d523f793-3ee1-11e7-aebf-fa163e534242");
-                // TODO: 2017/7/21
-               /* startActivity(new Intent(LoginActivity.this, MainActivity.class));
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);*/
-                EventBus.getDefault().post(new MessageEvent("Login"));
+//                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "d523f793-3ee1-11e7-aebf-fa163e534242");
                 finish();
+
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                 break;
         }
@@ -134,7 +132,7 @@ public class LoginActivity extends BaseActivity {
     private void LoginQQ() {
         UMShareAPI mShareAPI = UMShareAPI.get(LoginActivity.this);
         if (mShareAPI.isInstall(LoginActivity.this, SHARE_MEDIA.QQ)) {
-            // mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
+//             mShareAPI.doOauthVerify(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
             mShareAPI.getPlatformInfo(LoginActivity.this, SHARE_MEDIA.QQ, umAuthListener);
         } else {
             ToastUtils.showShort(UIUtils.getContext(), "未安装QQ");
@@ -160,89 +158,127 @@ public class LoginActivity extends BaseActivity {
     }
 
     private UMAuthListener umAuthListener = new UMAuthListener() {
+
+
         @Override
         public void onStart(SHARE_MEDIA platform) {
-            //授权开始的回调
         }
 
         @Override
-        public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
-
-            //Toast.makeText(UIUtils.getContext(), "Authorize succeed", Toast.LENGTH_SHORT).show();
-
+        public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
+           LogUtils.d(data.toString());
             if (platform == SHARE_MEDIA.WEIXIN) {
-              /*  String temp = "";
-                for (String key : data.keySet()) {
-                    temp = temp + key + " : " + data.get(key) + "\n";
-                }
-                LogUtils.i(temp);*/
-
                 OkGo
-                        .post(AppUrl.WXLOGIN)
+                        .post(AppUrl.SELECTUNIONIDORQQUID)
                         .params("unionid", data.get("unionid"))
-                        .params("appwxnikename", data.get("name"))
-                        .params("appwxurlimage", data.get("iconurl"))
                         .execute(new StringDialogCallback(LoginActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
-                                if (loginWxBean.state == 200) {
-                                    if (loginWxBean.backMess.loginCount.equals("1")) {
-                                        startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    }
-                                    EventBus.getDefault().post(new MessageEvent("Login"));
-                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
-                                    finish();
+                                LoginStateBean loginStateBean = new Gson().fromJson(s, LoginStateBean.class);
+                                if (loginStateBean.isHave) {
+                                    OkGo
+                                            .post(AppUrl.WXLOGIN)
+                                            .params("unionid", data.get("unionid"))
+                                            .params("appwxnikename", data.get("name"))
+                                            .params("appwxurlimage", data.get("iconurl"))
+                                            .params("tele", "")
+                                            .params("password", "")
+                                            .params("flag", "1")
+                                            .execute(new StringDialogCallback(LoginActivity.this) {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
+                                                    if (loginWxBean.state == 200) {
+                                                        if (loginWxBean.backMess.loginCount.equals("1")) {
+                                                            startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
+                                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                        }
+                                                        EventBus.getDefault().post(new MessageEvent("Login"));
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
+                                                        finish();
+                                                    } else {
+                                                        ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
+                                                    }
+                                                    LogUtils.i(s);
+                                                }
+                                            });
                                 } else {
-                                    ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
+                                    Intent intent = new Intent(LoginActivity.this, BindingPhoneActivity.class);
+                                    intent.putExtra("unionid", data.get("unionid"));
+                                    intent.putExtra("name", data.get("name"));
+                                    intent.putExtra("iconurl", data.get("iconurl"));
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, data.get("iconurl"));
+                                    startActivity(intent);
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
                                 }
-                                LogUtils.i(s);
                             }
                         });
-
             } else if (platform == SHARE_MEDIA.QQ) {
-                /*String temp = "";
-                for (String key : data.keySet()) {
-                    temp = temp + key + " : " + data.get(key) + "\n";
-                }
-                LogUtils.i(temp);*/
-
                 OkGo
-                        .post(AppUrl.QQLOGIN)
-                        .params("uid", data.get("uid"))
-                        .params("appqqnikename", data.get("name"))
-                        .params("appqqurlimage", data.get("iconurl"))
+                        .post(AppUrl.SELECTUNIONIDORQQUID)
+                        .params("qquid", data.get("uid"))
                         .execute(new StringDialogCallback(LoginActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                LoginQQBean loginQQBean = new Gson().fromJson(s, LoginQQBean.class);
-                                if (loginQQBean.state == 200) {
-                                    if (loginQQBean.backMess.loginCount.equals("1")){
-                                        startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
-                                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                    }
-                                    EventBus.getDefault().post(new MessageEvent("Login"));
-                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQQBean.backMess.userId);
-                                    finish();
+                                LoginStateBean loginStateBean = new Gson().fromJson(s, LoginStateBean.class);
+                                if (loginStateBean.isHave) {
+                                    OkGo
+                                            .post(AppUrl.QQLOGIN)
+                                            .params("uid", data.get("uid"))
+                                            .params("appqqnikename", data.get("name"))
+                                            .params("appqqurlimage", data.get("iconurl"))
+                                            .params("tele", "")
+                                            .params("password", "")
+                                            .params("flag", "1")
+                                            .execute(new StringDialogCallback(LoginActivity.this) {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    LoginQQBean loginQQBean = new Gson().fromJson(s, LoginQQBean.class);
+                                                    if (loginQQBean.state == 200) {
+                                                        if (loginQQBean.backMess.loginCount.equals("1")) {
+                                                            startActivity(new Intent(LoginActivity.this, BindingPhoneActivity.class));
+                                                            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                                        }
+                                                        EventBus.getDefault().post(new MessageEvent("Login"));
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQQBean.backMess.userId);
+                                                        finish();
+                                                    } else {
+                                                        ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
+                                                    }
+                                                }
+                                            });
+
                                 } else {
-                                    ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
+                                    Intent intent = new Intent(LoginActivity.this, BindingPhoneActivity.class);
+                                    intent.putExtra("uid", data.get("uid"));
+                                    intent.putExtra("name", data.get("name"));
+                                    intent.putExtra("iconurl", data.get("iconurl"));
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, data.get("iconurl"));
+                                    LogUtils.d( data.get("name")+"");
+                                    LogUtils.d( data.get("iconurl")+"");
+                                    startActivity(intent);
+                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                                    finish();
                                 }
                             }
                         });
+//                mShow.dismiss();
             }
-
         }
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
             Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
             LogUtils.i(t + "");
+//            mShow.dismiss();
+
         }
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
             Toast.makeText(getApplicationContext(), "登陆取消", Toast.LENGTH_SHORT).show();
+//            mShow.dismiss();
         }
     };
 

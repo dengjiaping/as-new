@@ -3,20 +3,21 @@ package com.jkpg.ruchu.bean;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by qindi on 2017/6/8.
  */
 
-public class CommunityMianBean {
+public class CommunityMianBean implements Serializable {
 
 
     public List<List2Bean> list2;
     public List<List3Bean> list3;
     public List<List1Bean> list1;
 
-    public static class List2Bean implements Parcelable {
+    public static class List2Bean implements Parcelable, Serializable {
         /**
          * zongshu : 5
          * plateimg : headImg/100343110.png
@@ -65,7 +66,7 @@ public class CommunityMianBean {
         }
     }
 
-    public static class List3Bean {
+    public static class List3Bean implements Serializable {
         /**
          * createtime : 2017-06-22 15:35:52.0
          * title : 测试一下
@@ -80,7 +81,7 @@ public class CommunityMianBean {
 
         public String createtime;
         public String title;
-        public String  nick;
+        public String nick;
         public int zan;
         public String headimg;
         public String userid;
@@ -89,7 +90,7 @@ public class CommunityMianBean {
         public int plateid;
     }
 
-    public static class List1Bean {
+    public static class List1Bean implements Serializable {
         /**
          * title : 我的天老爷!!!!
          * images : bbsImg/156484564.png

@@ -1,5 +1,9 @@
 package com.jkpg.ruchu.view.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -12,14 +16,26 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.MyMessageBean;
+import com.jkpg.ruchu.bean.SmsEvent;
+import com.jkpg.ruchu.bean.showBean;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.service.SmsService;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.MySMSActivity;
+import com.jkpg.ruchu.view.activity.my.VipManageActivity;
 import com.jkpg.ruchu.view.fragment.CommunityModuleFragment;
 import com.jkpg.ruchu.view.fragment.MyFragment;
 import com.jkpg.ruchu.view.fragment.TrainFragment;
 import com.jkpg.ruchu.widget.BottomNavigationViewEx;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -27,6 +43,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import okhttp3.Call;
+import okhttp3.Response;
 
 
 /**
@@ -53,6 +71,9 @@ public class MainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         initBottomNavigationView();
         if (savedInstanceState != null) {
             mTrainFragment = (TrainFragment) getSupportFragmentManager().findFragmentByTag("mTrainFragment");
@@ -62,6 +83,42 @@ public class MainActivity extends BaseActivity {
         }
         initShop();
         switchFragment(TAG);
+        initSms();
+        Intent startIntent = new Intent(this, SmsService.class);
+        startService(startIntent);
+
+    }
+
+    private void initSms() {
+        OkGo
+                .post(AppUrl.MYMASSAGE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("flag", 0)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        MyMessageBean myMessageBean = new Gson().fromJson(s, MyMessageBean.class);
+                        if (myMessageBean.notice || myMessageBean.reply || myMessageBean.zan) {
+                            EventBus.getDefault().post(new SmsEvent(true));
+                            Notification.Builder builder = new Notification.Builder(MainActivity.this);
+                            Intent intent = new Intent(MainActivity.this, MySMSActivity.class);  //需要跳转指定的页面
+                            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                            builder.setContentIntent(pendingIntent);
+                            builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+                            builder.setContentTitle("我的消息");// 设置通知的标题
+                            builder.setContentText("你有未读消息");// 设置通知的内容
+                            builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+                            builder.setAutoCancel(true); //自己维护通知的消失
+                            builder.setTicker("你有未读消息");// 第一次提示消失的时候显示在通知栏上的
+                            builder.setOngoing(true);
+                            Notification notification = builder.build();
+                            notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+                            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+                        } else {
+                            EventBus.getDefault().post(new SmsEvent(false));
+                        }
+                    }
+                });
     }
 
     private void initShop() {
@@ -183,25 +240,45 @@ public class MainActivity extends BaseActivity {
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (!EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().register(this);
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void EventMass(String mess) {
         if (mess.equals("Train")) {
             switchFragment(R.id.menu_train);
+            mMainBottomNavigationView.setCurrentItem(0);
+        }
+        if (mess.equals("initSms")) {
+            initSms();
+        }
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEventMainThread(showBean mess) {
+        if (mess.mess.equals("showMess")){
+            Notification.Builder builder = new Notification.Builder(MainActivity.this);
+            Intent intent = new Intent(MainActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+            builder.setContentIntent(pendingIntent);
+            builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+            builder.setContentTitle("恭喜你");// 设置通知的标题
+            builder.setContentText("增送您15天体验会员");// 设置通知的内容
+            builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+            builder.setAutoCancel(true); //自己维护通知的消失
+            builder.setTicker("增送您15天体验会员");// 第一次提示消失的时候显示在通知栏上的
+            builder.setOngoing(true);
+            Notification notification = builder.build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
         }
     }
+
+
 }
 

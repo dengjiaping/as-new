@@ -24,8 +24,10 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -66,6 +68,7 @@ public class TestDetailedActivity extends BaseActivity {
     private int viewPagerPosition;
     private String mFlag;
     private List<TrainQuestionNextBean.ListBean> mList;
+    private String mAnswer;
 
 
     @Override
@@ -209,53 +212,42 @@ public class TestDetailedActivity extends BaseActivity {
                 break;
             case R.id.test_detail_btn:
                 if (mTestDetailViewPager.getCurrentItem() != 2 && mTestDetailViewPager.getCurrentItem() == mViewList.size() - 1) {
-                    String answer = new Gson().toJson(jsonElements);
-
-                    OkGo
-                            .post(AppUrl.BACKDOCTOR)
-                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                            .params("questionid", mFlag)
-                            .params("answer", answer)
-                            .execute(new StringDialogCallback(TestDetailedActivity.this) {
-                                @Override
-                                public void onSuccess(String s, Call call, Response response) {
-                                    TestResultBean testResultBean = new Gson().fromJson(s, TestResultBean.class);
-                                    Intent intent = new Intent(TestDetailedActivity.this, TestResultActivity.class);
-                                    intent.putExtra("testResultBean", testResultBean);
-                                    startActivity(intent);
-                                    finish();
-                                    /*startActivity(new Intent(TestDetailedActivity.this, TestResultActivity.class));
-                                    finish();*/
-                                }
-                            });
-
-                }
-                NormalFragment normalFragment = mViewList.get(mTestDetailViewPager.getCurrentItem());
-                String flag = normalFragment.getFlag();
-                String tid = normalFragment.getTid();
-
-
-                TrainQuestionNextBean.ListBean listBean = normalFragment.getListBean();
-                if (flag.equals("")) {
-                    ToastUtils.showShort(UIUtils.getContext(), "请选择后再继续下一题");
-                } else {
-
-                    JsonObject jsonObject = new JsonObject();
-                    jsonObject.addProperty("tid", tid);
-                    jsonObject.addProperty("answer", flag);
-                    jsonElements.add(jsonObject);
-
-
-                    if (listBean != null && listBean.tiaozhuanselect != null && listBean.tiaozhuanselect.equals(flag)) {
-                        int i = Integer.parseInt(listBean.tz_titlesum) - Integer.parseInt(listBean.questionid);
-                        int id = mTestDetailViewPager.getCurrentItem() + i;
-                        mTestDetailViewPager.setCurrentItem(id);
-                        mViewList.get(id).getListBean().fromquestionid = i + "";
-
+                    mAnswer = new Gson().toJson(jsonElements);
+                    //login
+                    if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                        startActivity(new Intent(TestDetailedActivity.this, LoginActivity.class));
                     } else {
-                        int id = mTestDetailViewPager.getCurrentItem() + 1;
-                        mTestDetailViewPager.setCurrentItem(id);
+                        lookReport(mAnswer);
+                    }
+
+                } else {
+                    NormalFragment normalFragment = mViewList.get(mTestDetailViewPager.getCurrentItem());
+                    String flag = normalFragment.getFlag();
+                    String tid = normalFragment.getTid();
+
+
+                    TrainQuestionNextBean.ListBean listBean = normalFragment.getListBean();
+                    if (flag.equals("")) {
+                        ToastUtils.showShort(UIUtils.getContext(), "请选择后再继续下一题");
+                    } else {
+
+                        JsonObject jsonObject = new JsonObject();
+                        jsonObject.addProperty("tid", tid);
+                        jsonObject.addProperty("answer", flag);
+                        jsonElements.add(jsonObject);
+
+
+                        if (listBean != null && listBean.tiaozhuanselect != null && listBean.tiaozhuanselect.equals(flag)) {
+                            int i = Integer.parseInt(listBean.tz_titlesum) - Integer.parseInt(listBean.questionid);
+                            int id = mTestDetailViewPager.getCurrentItem() + i;
+                            mTestDetailViewPager.setCurrentItem(id);
+                            mViewList.get(id).getListBean().fromquestionid = i + "";
+
+                        } else {
+                            int id = mTestDetailViewPager.getCurrentItem() + 1;
+                            mTestDetailViewPager.setCurrentItem(id);
 //                        mViewList.get(id).getListBean().fromquestionid = id + "";
+                        }
                     }
                 }
                 break;
@@ -278,11 +270,37 @@ public class TestDetailedActivity extends BaseActivity {
         }
     }
 
+    private void lookReport(String answer) {
+        OkGo
+                .post(AppUrl.BACKDOCTOR)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("questionid", mFlag)
+                .params("answer", answer)
+                .execute(new StringDialogCallback(TestDetailedActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        TestResultBean testResultBean = new Gson().fromJson(s, TestResultBean.class);
+                        Intent intent = new Intent(TestDetailedActivity.this, TestResultActivity.class);
+                        intent.putExtra("testResultBean", testResultBean);
+                        startActivity(intent);
+
+
+                        EventBus.getDefault().post("TrainFragment");
+                        finish();
+                    /*startActivity(new Intent(TestDetailedActivity.this, TestResultActivity.class));
+                    finish();*/
+                    }
+                });
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void getFlagEvent(MessageEvent event) {
         if (event.message.equals("flag") && viewPagerPosition == 2) {
             if (!mFragment.getFlag().equals(mFlag))
                 getNext(mFragment);
+        }
+        if (event.message.equals("Login")) {
+            lookReport(mAnswer);
         }
     }
 

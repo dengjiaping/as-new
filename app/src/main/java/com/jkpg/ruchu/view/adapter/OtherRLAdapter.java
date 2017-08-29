@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.OtherVideoBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -22,9 +23,9 @@ import butterknife.ButterKnife;
  */
 
 public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTrainViewHolder> implements View.OnClickListener {
-    private List<OtherVideoBean.VideoMS2Bean> videos;
+    private List<OtherVideoBean.ItemBean> videos;
 
-    public OtherRLAdapter(List<OtherVideoBean.VideoMS2Bean> videos) {
+    public OtherRLAdapter(List<OtherVideoBean.ItemBean> videos) {
         this.videos = videos;
     }
 
@@ -37,16 +38,21 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
 
     @Override
     public void onBindViewHolder(OtherTrainViewHolder holder, int position) {
-        OtherVideoBean.VideoMS2Bean vedioMS2Bean = videos.get(position);
+        OtherVideoBean.ItemBean vedioMS2Bean = videos.get(position);
         holder.itemView.setTag(videos.get(position));
         holder.mItemTrainTvTitle.setText(vedioMS2Bean.title);
-        holder.mItemTrainTvTime.setText(vedioMS2Bean.videotime);
+        holder.mItemTrainTv1.setText(vedioMS2Bean.level + "    " + vedioMS2Bean.times + "人参与训练");
+        holder.mItemTrainTvTime.setText("视频时长" + vedioMS2Bean.video_time);
+        holder.mItemTrainTv2.setText(vedioMS2Bean.content);
         Glide
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + vedioMS2Bean.imageUrl)
                 .crossFade()
                 .centerCrop()
                 .into(holder.mItemTrainRlBg);
+        boolean cached = MyApplication.getProxy(UIUtils.getContext())
+                .isCached(AppUrl.BASEURLHTTP + vedioMS2Bean.video_url);
+        holder.mdownload.setVisibility(cached ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -61,19 +67,24 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (OtherVideoBean.VideoMS2Bean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (OtherVideoBean.ItemBean) v.getTag());
         }
     }
 
     static class OtherTrainViewHolder extends RecyclerView.ViewHolder {
-        @BindView(R.id.item_train_iv_start)
-        ImageView mItemTrainIvStart;
+
         @BindView(R.id.item_train_rl_bg)
         ImageView mItemTrainRlBg;
         @BindView(R.id.item_train_tv_title)
         TextView mItemTrainTvTitle;
         @BindView(R.id.item_train_tv_time)
         TextView mItemTrainTvTime;
+        @BindView(R.id.item_train_tv_1)
+        TextView mItemTrainTv1;
+        @BindView(R.id.item_train_tv_2)
+        TextView mItemTrainTv2;
+        @BindView(R.id.download_icon)
+        ImageView mdownload;
 
         OtherTrainViewHolder(View view) {
             super(view);
@@ -82,7 +93,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     }
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, OtherVideoBean.VideoMS2Bean data);
+        void onItemClick(View view, OtherVideoBean.ItemBean data);
     }
 
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;

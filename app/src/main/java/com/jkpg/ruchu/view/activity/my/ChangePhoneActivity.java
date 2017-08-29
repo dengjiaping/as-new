@@ -16,11 +16,11 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.CodeBean;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -100,6 +100,10 @@ public class ChangePhoneActivity extends BaseActivity {
 
     private void next() {
         final String phone = mEtPhone.getText().toString();
+        if (StringUtils.isEmpty(phone)) {
+            ToastUtils.showShort(UIUtils.getContext(), "请输入手机号");
+            return;
+        }
         String mycode = mEtCode.getText().toString();
         if (StringUtils.isEmpty(mycode)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入验证码");
@@ -109,6 +113,36 @@ public class ChangePhoneActivity extends BaseActivity {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
+        OkGo.post(AppUrl.CODE)
+                .params("tele", phone)
+                .params("code", mycode)
+                .execute(new StringDialogCallback(this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (successBean.success) {
+                            OkGo
+                                    .post(AppUrl.UPDATE_TEL)
+                                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                    .params("tele", phone)
+                                    .params("flag", "1")
+                                    .execute(new StringDialogCallback(ChangePhoneActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+                                            SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                            if (successBean.success) {
+                                                showDialogSuccess();
+                                            } else {
+                                                ToastUtils.showShort(UIUtils.getContext(), "手机号更新失败");
+                                            }
+                                        }
+                                    });
+                        } else {
+                            ToastUtils.showShort(UIUtils.getContext(), "验证码错误");
+                        }
+                    }
+                });
+
     }
 
     private void sendSMS() {
@@ -140,8 +174,11 @@ public class ChangePhoneActivity extends BaseActivity {
                                     .execute(new StringDialogCallback(ChangePhoneActivity.this) {
                                         @Override
                                         public void onSuccess(String s, Call call, Response response) {
-                                            // TODO: 2017/7/22
-                                            LogUtils.i(s);
+                                            CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
+                                            if (!codeBean.success) {
+                                                ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                                return;
+                                            }
                                             new Thread(new Runnable() {
                                                 @Override
                                                 public void run() {
@@ -159,9 +196,6 @@ public class ChangePhoneActivity extends BaseActivity {
                                                     handler.sendEmptyMessage(CODE_REPEAT);
                                                 }
                                             }).start();
-
-
-                                            showDialogSuccess();
 
                                         }
                                     });

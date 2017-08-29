@@ -14,6 +14,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.VipManageBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -23,6 +24,11 @@ import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.VipManageVPAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,12 +76,17 @@ public class VipManageActivity extends BaseActivity {
         ButterKnife.bind(this);
         initHeader();
         initData();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     private void initData() {
         OkGo
                 .post(AppUrl.VIPMANAGE)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .cacheKey("VIPMANAGE")
                 .execute(new StringDialogCallback(VipManageActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -84,6 +95,15 @@ public class VipManageActivity extends BaseActivity {
                         List<VipManageBean.ListBean> list = vipManageBean.list;
                         initViewPager(list);
 
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        VipManageBean vipManageBean = new Gson().fromJson(s, VipManageBean.class);
+                        initVipHeader(vipManageBean);
+                        List<VipManageBean.ListBean> list = vipManageBean.list;
+                        initViewPager(list);
                     }
                 });
 
@@ -101,6 +121,7 @@ public class VipManageActivity extends BaseActivity {
             mVipManagerTvNotOpen.setVisibility(View.GONE);
             mVipManagerTvRenew.setVisibility(View.VISIBLE);
             mVipManagerTvRenew.setText(vipManageBean.VIPTime);
+            mVipManagerBtnOpenVip.setText("续费会员");
         }
 
         Glide
@@ -123,7 +144,7 @@ public class VipManageActivity extends BaseActivity {
 //        viewTitle.add("咨询特权");
 //        viewTitle.add("社区特权");
         mVipManagerTabLayout.setupWithViewPager(mVipManagerViewPager);
-        mVipManagerViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle,list));
+        mVipManagerViewPager.setAdapter(new VipManageVPAdapter(viewList, viewTitle, list));
     }
 
 
@@ -144,6 +165,21 @@ public class VipManageActivity extends BaseActivity {
             case R.id.vip_manager_btn_open_vip:
                 startActivity(new Intent(VipManageActivity.this, OpenVipActivity.class));
                 break;
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void openVip(MessageEvent mess) {
+        if (mess.message.equals("Vip")) {
+            initData();
         }
     }
 }

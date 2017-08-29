@@ -1,12 +1,13 @@
 package com.jkpg.ruchu.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by qindi on 2017/7/21.
  */
 
-public class VipManageBean {
+public class VipManageBean  implements Serializable{
 
     /**
      * headImg : headImg/243R7K8LQW7M.jpg
@@ -22,7 +23,7 @@ public class VipManageBean {
     public String isVIP;
     public List<ListBean> list;
 
-    public static class ListBean {
+    public static class ListBean implements Serializable {
         /**
          * content : 这是关于训练特权的描述！！！
          * title : 训练特权

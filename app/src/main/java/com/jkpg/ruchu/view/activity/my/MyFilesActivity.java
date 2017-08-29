@@ -29,6 +29,7 @@ import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.ViewPagerAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -134,10 +135,19 @@ public class MyFilesActivity extends BaseActivity {
                 .params("test42", "")
                 .params("power", "")
                 .params("obstacle", "")
+                .cacheKey("UPDATE_MYARCHIVE")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringDialogCallback(MyFilesActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         // LogUtils.i(s);
+                        MyFilesBean myFilesBean = new Gson().fromJson(s, MyFilesBean.class);
+                        init(myFilesBean);
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
                         MyFilesBean myFilesBean = new Gson().fromJson(s, MyFilesBean.class);
                         init(myFilesBean);
                     }
@@ -235,7 +245,7 @@ public class MyFilesActivity extends BaseActivity {
                         mView_bearing_tv_pdjl.getText().equals("");
                         mView_bearing_tv_gnza.getText().equals("");
                     }
-                    ToastUtils.showShort(UIUtils.getContext(),"请完善信息");
+                    ToastUtils.showShort(UIUtils.getContext(), "请完善信息");
                 } else {
                     if (!NetworkUtils.isConnected()) {
                         ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
@@ -244,6 +254,7 @@ public class MyFilesActivity extends BaseActivity {
                     OkGo
                             .post(AppUrl.UPDATE_MYARCHIVE)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .params("type", "1")
                             .params("ispublic", mMyFilesCb.isChecked() ? 1 : 0)
                             .params("taici", mView_bearing_tv_tc.getText().toString())
                             .params("mode", mView_bearing_tv_fmfs.getText().toString())

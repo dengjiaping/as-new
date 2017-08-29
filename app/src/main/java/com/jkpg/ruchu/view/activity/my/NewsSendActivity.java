@@ -4,12 +4,15 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,6 +58,56 @@ public class NewsSendActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_send);
         ButterKnife.bind(this);
+        mHeaderTvTitle.setText("消息推送");
+        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", false));
+        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", false));
+        mNewsSendSwitchSms.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchSms", false));
+        mNewsSendSwitchTime1.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime1", false));
+        mNewsSendSwitchTime2.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime2", false));
+        mNewsSendSwitchTime3.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime3", false));
+        mNewsSendTvTime1.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime1","09:00"));
+        mNewsSendTvTime2.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime2","14:00"));
+        mNewsSendTvTime3.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime3","19:00"));
+        mNewsSendSwitchComment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchComment", isChecked);
+            }
+        });
+        mNewsSendSwitchZan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchZan", isChecked);
+
+            }
+        });
+        mNewsSendSwitchSms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchSms", isChecked);
+            }
+        });
+        mNewsSendSwitchTime1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime1", isChecked);
+
+            }
+        });
+        mNewsSendSwitchTime2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime2", isChecked);
+
+            }
+        });
+        mNewsSendSwitchTime3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime3", isChecked);
+
+            }
+        });
     }
 
     @OnClick({R.id.news_send_iv_time1, R.id.news_send_iv_time2, R.id.news_send_iv_time3, R.id.header_iv_left})
@@ -81,8 +134,8 @@ public class NewsSendActivity extends BaseActivity {
         picker.setRangeEnd(23, 59);//23:59
 //        int currentHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
 //        int currentMinute = Calendar.getInstance().get(Calendar.MINUTE);
-        int currentHour = Integer.parseInt((view.getText().subSequence(0,2).toString()));
-        int currentMinute = Integer.parseInt((view.getText().subSequence(3,4).toString()));
+        int currentHour = Integer.parseInt((view.getText().subSequence(0, 2).toString()));
+        int currentMinute = Integer.parseInt((view.getText().subSequence(3, 4).toString()));
         picker.setSelectedItem(currentHour, currentMinute);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
@@ -95,6 +148,7 @@ public class NewsSendActivity extends BaseActivity {
             @Override
             public void onTimePicked(String hour, String minute) {
                 view.setText(hour + ":" + minute);
+                SPUtils.saveString(UIUtils.getContext(), view + "", hour + ":" + minute);
             }
         });
         picker.show();

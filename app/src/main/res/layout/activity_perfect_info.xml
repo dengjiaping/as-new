@@ -133,7 +133,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="本信息仅供咨询医师和宝妈交流作参考"/>
+        android:text="本信息仅供宝妈交流作参考"/>
 
 
 </LinearLayout>

@@ -1,9 +1,11 @@
 package com.jkpg.ruchu.view.fragment;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,15 +18,22 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.SmsEvent;
 import com.jkpg.ruchu.bean.TrainMainBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.WebViewActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
 import com.jkpg.ruchu.view.activity.train.OtherTrainActivity;
@@ -36,6 +45,7 @@ import com.jkpg.ruchu.widget.banner.Transformer;
 import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
 import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
 
@@ -93,6 +103,10 @@ public class TrainFragment extends Fragment {
     RelativeLayout mBaseRetry;
     @BindView(R.id.id_loading_and_retry)
     FrameLayout mBaseLoading;
+    @BindView(R.id.train_tv_level)
+    TextView mTrainTvLevel;
+    @BindView(R.id.train_ll)
+    LinearLayout mTrainLl;
     private TrainMainBean mTrainMainBean;
 
     @Nullable
@@ -106,7 +120,7 @@ public class TrainFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        TrainFragment.this.initData();
+        initData();
         initHeader();
 
     }
@@ -116,6 +130,8 @@ public class TrainFragment extends Fragment {
         OkGo
                 .post(AppUrl.HEADERLUNBOIMAGE)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .cacheKey("HEADERLUNBOIMAGE")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -124,6 +140,16 @@ public class TrainFragment extends Fragment {
                         mBaseLoading.setVisibility(View.GONE);
                         mBaseRetry.setVisibility(View.GONE);
                     }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        mTrainMainBean = new Gson().fromJson(s, TrainMainBean.class);
+                        initContent();
+                        mBaseLoading.setVisibility(View.GONE);
+                        mBaseRetry.setVisibility(View.GONE);
+                    }
+
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
@@ -134,6 +160,13 @@ public class TrainFragment extends Fragment {
                     @Override
                     public void onBefore(BaseRequest request) {
                         super.onBefore(request);
+
+                        mTrainIvNewHand.setVisibility(View.VISIBLE);
+                        mTrainTvTip.setVisibility(View.VISIBLE);
+                        mTrainLlTest.setVisibility(View.VISIBLE);
+                        mTrainLl.setVisibility(View.GONE);
+                        mTrainLlTrain.setVisibility(View.GONE);
+
                         mBaseLoading.setVisibility(View.VISIBLE);
                     }
                 });
@@ -145,7 +178,14 @@ public class TrainFragment extends Fragment {
             mTrainIvNewHand.setVisibility(View.GONE);
         }
         if (mTrainMainBean.uIsstest.equals("1")) {
+            mTrainTvLevel.setText("当前训练等级:" + mTrainMainBean.uLevel);
+            mTrainLl.setVisibility(View.VISIBLE);
             initTestBtn();
+        } else {
+            mTrainLl.setVisibility(View.GONE);
+            mTrainTvTip.setVisibility(View.VISIBLE);
+            mTrainLlTest.setVisibility(View.VISIBLE);
+            mTrainLlTrain.setVisibility(View.GONE);
         }
         initBanner();
     }
@@ -160,7 +200,7 @@ public class TrainFragment extends Fragment {
     private void initHeader() {
         mHeaderIvLeft.setVisibility(View.GONE);
         mHeaderTvTitle.setText("盆底肌训练");
-//        mHeaderIvRight.setImageResource(R.drawable.icon_sms_red);
+        mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
     }
 
     private void initBanner() {
@@ -188,7 +228,9 @@ public class TrainFragment extends Fragment {
             @Override
             public void OnBannerClick(int position) {
                 String allcontent = headerLunBoImage.get(position).allcontent;
-                ToastUtils.showShort(UIUtils.getContext(),allcontent);
+                Intent intent = new Intent(getActivity(), WebViewActivity.class);
+                intent.putExtra("URL", allcontent);
+                startActivity(intent);
             }
         });
         //设置指示器位置（当banner模式中有指示器时）
@@ -202,8 +244,12 @@ public class TrainFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.id_btn_retry, R.id.header_iv_right, R.id.train_ll_new, R.id.train_ll_my, R.id.train_bt_train, R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
+    @OnClick({R.id.train_ll, R.id.id_btn_retry, R.id.header_iv_right, R.id.train_ll_new, R.id.train_ll_my, R.id.train_bt_train, R.id.train_ll_other, R.id.train_tv_tip, R.id.train_bt_test})
     public void onViewClicked(View view) {
+        if (!NetworkUtils.isConnected()) {
+            ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+            return;
+        }
         switch (view.getId()) {
             case R.id.id_btn_retry:
                 TrainFragment.this.initData();
@@ -216,14 +262,14 @@ public class TrainFragment extends Fragment {
                 startActivity(new Intent(getActivity(), NewTrainActivity.class));
                 break;
             case R.id.train_ll_my:
-                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     break;
                 }
                 startActivity(new Intent(getActivity(), MyTrainActivity.class));
                 break;
             case R.id.train_ll_other:
-                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     break;
                 }
@@ -233,20 +279,75 @@ public class TrainFragment extends Fragment {
                 mTrainTvTip.setVisibility(View.GONE);
                 break;
             case R.id.train_bt_test:
-                if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
+                startActivity(new Intent(getActivity(), TestTrainActivity.class));
+                break;
+            case R.id.train_bt_train:
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     break;
                 }
-                startActivity(new Intent(getActivity(), TestTrainActivity.class));
-//
-                break;
-            case R.id.train_bt_train:
-                startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
-//
+                OkGo
+                        .post(AppUrl.SELECTISVIP)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(getActivity()) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+                                if (isVipBean.isVIP) {
+                                    startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
+                                } else {
+                                    new AlertDialog.Builder(getContext())
+                                            .setMessage("只有会员才能训练哦")
+                                            .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    startActivity(new Intent(getActivity(), OpenVipActivity.class));
+                                                }
+                                            })
+                                            .setNegativeButton("放弃训练", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
+                        });
                 break;
             case R.id.header_iv_right:
                 startActivity(new Intent(getActivity(), MySMSActivity.class));
                 break;
+            case R.id.train_ll:
+                new AlertDialog.Builder(getActivity())
+                        .setMessage(mTrainMainBean.userInfos.introduction)
+                        .setTitle("您当前的训练等级" + mTrainMainBean.uLevel)
+                        .setNegativeButton("确定", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
+
+                break;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
         }
     }
 
@@ -254,20 +355,41 @@ public class TrainFragment extends Fragment {
     public void onStop() {
         super.onStop();
         mTrainBanner.stopAutoPlay();
-        EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void onStart() {
         super.onStart();
         mTrainBanner.startAutoPlay();
-        EventBus.getDefault().register(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         /* Do something */
-        if (event.message.equals("Login"))
+        if (event.message.equals("Login") || event.message.equals("Quit")) {
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                }
+            }, 500);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void Mess(String s) {
+        if (s.equals("TrainFragment")) {
             initData();
+        }
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewMess(SmsEvent sms) {
+        if (sms.sms) {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms);
+        } else {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
+        }
     }
 }

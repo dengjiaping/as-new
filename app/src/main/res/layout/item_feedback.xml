@@ -17,8 +17,8 @@
 
             <com.jkpg.ruchu.widget.CircleImageView
                 android:id="@+id/item_feedback_photo"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_marginLeft="12dp"
                 android:src="@drawable/icon_photo"
                 app:civ_border_color="@color/colorPinkTran"
@@ -36,20 +36,16 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="name"
                     android:textColor="@color/colorPink"
-                    android:textSize="16sp"/>
+                    android:textSize="14sp"/>
 
                 <TextView
                     android:id="@+id/item_feedback_time"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:text="time"
                     android:textColor="@android:color/darker_gray"
-
-                    android:textSize="16sp"
+                    android:textSize="14sp"
                     />
 
                 <TextView
@@ -59,7 +55,6 @@
                     android:layout_alignParentRight="true"
                     android:layout_below="@id/item_feedback_name"
                     android:layout_marginTop="5dp"
-                    android:text="hahhahhahhah"
                     android:textColor="@android:color/darker_gray"
                     android:textSize="16sp"
                     />

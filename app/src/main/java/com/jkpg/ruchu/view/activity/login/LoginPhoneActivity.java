@@ -25,7 +25,6 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.MainActivity;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -118,12 +117,15 @@ public class LoginPhoneActivity extends BaseActivity {
                                     ToastUtils.showShort(UIUtils.getContext(), "手机号或密码错误");
                                 } else if (login.isfirst == 1) {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
-                                    EventBus.getDefault().postSticky(new MessageEvent("Login"));
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, login.nick);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, login.headImg);
                                     finish();
                                 } else {
-                                    // TODO: 2017/7/21
-                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
+//                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
                                     finish();
                                 }
                             }

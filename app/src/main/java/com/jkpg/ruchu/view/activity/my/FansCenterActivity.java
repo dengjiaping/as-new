@@ -34,6 +34,8 @@ import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -208,6 +210,7 @@ public class FansCenterActivity extends BaseActivity {
                                     ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
 
                                 } else {
+                                    EventBus.getDefault().post("fans");
                                     mFansShowFollow.setVisibility(View.VISIBLE);
                                     mFansTvAddFollow.setVisibility(View.GONE);
                                 }
@@ -256,6 +259,7 @@ public class FansCenterActivity extends BaseActivity {
                                 } else {
                                     mFansShowFollow.setVisibility(View.GONE);
                                     mFansTvAddFollow.setVisibility(View.VISIBLE);
+                                    EventBus.getDefault().post("fans");
                                     popupWindow.dismiss();
                                 }
                             }

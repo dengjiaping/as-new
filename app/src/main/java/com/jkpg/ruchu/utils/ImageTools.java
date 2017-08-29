@@ -53,17 +53,17 @@ public final class ImageTools {
         return bitmap;  
     }  
   
-    /** 
-     * Bitmap to drawable 
-     *  
-     * @param bitmap 
-     * @return 
-     */  
-    public static Drawable bitmapToDrawable(Bitmap bitmap) {
-        return new BitmapDrawable(bitmap);
-    }
+//    /**
+//     * Bitmap to drawable
+//     *
+//     * @param bitmap
+//     * @return
+//     */
+//    public static Drawable bitmapToDrawable(Bitmap bitmap) {
+//        return new BitmapDrawable(bitmap);
+//    }
   
-    /** 
+    /**
      * Input stream to bitmap 
      *  
      * @param inputStream 

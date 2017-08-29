@@ -11,6 +11,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
+import android.media.MediaPlayer;
 import android.media.SoundPool;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -111,6 +112,10 @@ public class StartTrainActivity2 extends BaseActivity {
     TextView mStartTrainTotalOne;
     @BindView(R.id.start_train_tip)
     ImageView mStartTrainTip;
+    @BindView(R.id.line_start_iv)
+    ImageView mLineStartIv;
+    @BindView(R.id.line_start_tv)
+    TextView mLineStartTv;
 
     private List<float[]> charts;       //图表集合
     private List<float[]> chartsX;       //图表x集合
@@ -121,7 +126,8 @@ public class StartTrainActivity2 extends BaseActivity {
     private LinearLayoutManager mLinearLayoutManager;
 
 
-    private int timeCount; // 计时
+    private int timeCount = -500; // 计时
+    private int lineTimeCount = -500; // 计时
     private int numLine = -1; //第几条线
     private int numChart = 0; //第几个表
     private ObjectAnimator mAnimator;
@@ -136,12 +142,18 @@ public class StartTrainActivity2 extends BaseActivity {
     private StartTrainBean mStartTrainBean;
     private String mStartTime;
     private MyVolumeReceiver mVolumeReceiver;
+    private HashMap<String, Integer> mSoundID;
+    private boolean isFirst = true;
+    private AlertDialog dialog;
+    private MediaPlayer mMediaPlayer;
+    private boolean isLoad;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_train2);
         ButterKnife.bind(this);
+
 
         initData();
         initHeader();
@@ -156,15 +168,27 @@ public class StartTrainActivity2 extends BaseActivity {
         if (streamVolume > 0) {
             mStartTrainIvVoice.setChecked(true);
         }
-
         myRegisterReceiver();
-
-
         if (mTask == null) {
             mTask = new AutoProgressTask();
         }
-
         recordTime();
+        mMediaPlayer = MediaPlayer.create(this, R.raw.start);
+        mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                isFirst = false;
+                mTask.start();
+                isTrain = true;
+                mLineChart.setVisibility(View.VISIBLE);
+                mLineStartIv.setVisibility(View.GONE);
+                mLineStartTv.setVisibility(View.GONE);
+
+            }
+        });
+        mLineChart.setVisibility(View.GONE);
+
+
     }
 
     private void recordTime() {
@@ -201,7 +225,35 @@ public class StartTrainActivity2 extends BaseActivity {
                         mStartTrainBean = new Gson().fromJson(s, StartTrainBean.class);
                         init(mStartTrainBean);
                         initDot(mStartTrainBean);
+                    }
 
+                    @Override
+                    public void onAfter(@Nullable String s, @Nullable Exception e) {
+                        super.onAfter(s, e);
+                        if (!isLoad) {
+                            final long[] firstTime = {0};
+                            AlertDialog.Builder mBuilder = new AlertDialog.Builder(StartTrainActivity2.this, R.style.dialog);
+                            mBuilder.setView(View.inflate(UIUtils.getContext(), R.layout.view_animation, null));
+                            dialog = mBuilder.show();
+                            dialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                                @Override
+                                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                                    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+                                        if (System.currentTimeMillis() - firstTime[0] > 2000) {
+//                        Toast.makeText(UIUtils.getContext(), "再按一次", Toast.LENGTH_SHORT).show();
+                                            firstTime[0] = System.currentTimeMillis();
+                                        } else {
+                                            finish();
+                                        }
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+                            });
+                            dialog.setCancelable(false);
+                            dialog.setCanceledOnTouchOutside(false);
+                        }
                     }
                 });
 
@@ -221,60 +273,79 @@ public class StartTrainActivity2 extends BaseActivity {
         }
         initRecycleView();
         initLineChart(0, (int) chartsX.get(0)[(chartsX.get(0).length) - 1] * 2); // 默认显示第一个图
-//        mStartTrainSection.setText(1 + "/" + charts.size() + "节"); //初始化小节
         mStartTrainNowOne.setText("当前为第1节");
-//        mStartTrainTotalOne.setText("共" + charts.size() + "节");
         mStartTrainProgressBar.setMax(Integer.parseInt(startTrainBean.totaltime) * 1000);
-
-        /*charts = new ArrayList<>();
-        chartsX = new ArrayList<>();
-        charts.add(new float[]{1, 2, 3, 5, 5});
-        chartsX.add(new float[]{0, 2, 5, 7, 14});
-        charts.add(new float[]{1, 5, 5, 1});
-        chartsX.add(new float[]{0, 6, 9, 10});
-        charts.add(new float[]{1, 5, 5, 1});
-        chartsX.add(new float[]{0, 6, 9, 10});
-        charts.add(new float[]{1, 2, 3, 5, 5});
-        chartsX.add(new float[]{0, 2, 5, 7, 14});*/
-
-
     }
 
     private void init(StartTrainBean startTrainBean) {
         mStartTrainTitle.setText("产后康复 " + startTrainBean.level);
         String dateFormat = DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm分ss秒");
-        mStartTrainTotalTime.setText("共计"+dateFormat);
-        mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2 +"级");
+        mStartTrainTotalTime.setText("共计" + dateFormat);
+        mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2 + "级");
         mStartTrainTotalOne.setText("共" + startTrainBean.programme.size() + "节");
         mStartTrainTvProgressTotal.setText(DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm:ss"));
 
     }
 
     private void initSound() {
-        HashMap<Integer, Integer> soundID = new HashMap<>();
+        mSoundID = new HashMap<>();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
-        soundID.put(0, mSoundPool.load(this, R.raw.a, 1));
-        soundID.put(1, mSoundPool.load(this, R.raw.b, 1));
-        soundID.put(2, mSoundPool.load(this, R.raw.c, 1));
-
+        mSoundID.put("end", mSoundPool.load(this, R.raw.end, 1));
+        mSoundID.put("y1", mSoundPool.load(this, R.raw.y1, 1));
+        mSoundID.put("y2", mSoundPool.load(this, R.raw.y2, 1));
+        mSoundID.put("y3", mSoundPool.load(this, R.raw.y3, 1));
+        mSoundID.put("y4", mSoundPool.load(this, R.raw.y4, 1));
+        mSoundID.put("y5", mSoundPool.load(this, R.raw.y5, 1));
+        mSoundID.put("y6", mSoundPool.load(this, R.raw.y6, 1));
+        mSoundID.put("y7", mSoundPool.load(this, R.raw.y7, 1));
+        mSoundID.put("y8", mSoundPool.load(this, R.raw.y8, 1));
+        mSoundID.put("y9", mSoundPool.load(this, R.raw.y9, 1));
+        mSoundID.put("y10", mSoundPool.load(this, R.raw.y10, 1));
+        mSoundID.put("y11", mSoundPool.load(this, R.raw.y11, 1));
+        mSoundID.put("y12", mSoundPool.load(this, R.raw.y12, 1));
+        mSoundID.put("y13", mSoundPool.load(this, R.raw.y13, 1));
+        mSoundID.put("y14", mSoundPool.load(this, R.raw.y14, 1));
+        mSoundID.put("y15", mSoundPool.load(this, R.raw.y15, 1));
+//        mSoundID.put("y16", mSoundPool.load(this, R.raw.y16, 1));
+        mSoundID.put("y17", mSoundPool.load(this, R.raw.y17, 1));
+        mSoundID.put("y18", mSoundPool.load(this, R.raw.y18, 1));
+        mSoundID.put("y19", mSoundPool.load(this, R.raw.y19, 1));
+        mSoundID.put("y20", mSoundPool.load(this, R.raw.y20, 1));
+        mSoundID.put("yy4", mSoundPool.load(this, R.raw.yy4, 1));
+        mSoundID.put("yy3", mSoundPool.load(this, R.raw.yy3, 1));
+        mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                isLoad = true;
+                if (dialog != null && dialog.isShowing()) {
+                    dialog.dismiss();
+                }
+//                ToastUtils.showShort(UIUtils.getContext(),"------");
+            }
+        });
     }
 
     @OnClick({R.id.header_iv_left, R.id.start_train_start, R.id.start_train_iv_voice})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
-                if (isTrain) {
-                    if (mAnimator == null || mTask == null || mSoundPool == null) {
-                        finish();
-                    } else {
-                        mAnimator.pause();
-                        mTask.stop();
-                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
-                        mSoundPool.pause(nowSound);
-                        okOut();
-                    }
+                if (mMediaPlayer.isPlaying()) {
+                    okOut();
+                    mMediaPlayer.pause();
                 } else {
-                    finish();
+                    if (isTrain) {
+                        if (mAnimator == null || mTask == null || mSoundPool == null) {
+                            finish();
+                        } else {
+                            mAnimator.pause();
+                            mTask.stop();
+                            mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+                            mSoundPool.pause(nowSound);
+                            okOut();
+                        }
+                    } else {
+                        finish();
+                    }
                 }
                 break;
             case R.id.start_train_start:
@@ -316,33 +387,44 @@ public class StartTrainActivity2 extends BaseActivity {
             initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
             mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
             scrollRecyclerView(numChart);
-//            mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
             mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
         } else {
-            mTask.start();
-            isTrain = true;
-            if (mAnimator != null) {
-                mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
-                LogUtils.i("start one -- click");
-
-//                if (mAnimator.isPaused()) {
-                if (isPause) {
-                    isPause = false;
-                    mAnimator.resume();
-                    mTask.start();
-                    mSoundPool.resume(nowSound);
-                    LogUtils.i("start -- click");
-                    mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
-
-//                } else if (!mAnimator.isPaused() && mAnimator.isStarted()) {
-                } else /*if (isPause)*/ {
-                    isPause = true;
-                    mAnimator.pause();
-                    mTask.stop();
-                    mSoundPool.pause(nowSound);
-                    LogUtils.i("stop -- click");
+            if (isFirst) {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
                     mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
 
+                } else {
+                    mMediaPlayer.start();
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+                }
+//
+            } else {
+                mTask.start();
+                isTrain = true;
+                if (mAnimator != null) {
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+                    LogUtils.i("start one -- click");
+
+//                if (mAnimator.isPaused()) {
+                    if (isPause) {
+                        isPause = false;
+                        mAnimator.resume();
+                        mTask.start();
+                        mSoundPool.resume(nowSound);
+                        LogUtils.i("start -- click");
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+
+//                } else if (!mAnimator.isPaused() && mAnimator.isStarted()) {
+                    } else /*if (isPause)*/ {
+                        isPause = true;
+                        mAnimator.pause();
+                        mTask.stop();
+                        mSoundPool.pause(nowSound);
+                        LogUtils.i("stop -- click");
+                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+
+                    }
                 }
             }
         }
@@ -374,13 +456,13 @@ public class StartTrainActivity2 extends BaseActivity {
             mStartTrain.addView(lineChart);
             mLines.add(lineChart);
         }
-        if (mStartTrainBean.programme.get(index).ishavezero.equals("1")){
+        if (mStartTrainBean.programme.get(index).ishavezero.equals("1")) {
             mLineText.setText("充分放松盆底肌");
         } else {
             mLineText.setText("");
         }
-        LogUtils.i("mLines = " + mLines.size());
-        LogUtils.i("index = " + index);
+//        LogUtils.i("mLines = " + mLines.size());
+//        LogUtils.i("index = " + index);
     }
 
     private List<AxisValue> getAxisValuesX(int numberX) {
@@ -405,7 +487,7 @@ public class StartTrainActivity2 extends BaseActivity {
 
     private List<AxisValue> getAxisValuesY() {
         List<AxisValue> axisValues = new ArrayList<>();
-        for (int i = 0; i < 7; i++) {
+        for (int i = 0; i < 6; i++) {
             AxisValue value = new AxisValue();
             value.setLabel(String.valueOf(i) + "  ");
             axisValues.add(value);
@@ -417,12 +499,12 @@ public class StartTrainActivity2 extends BaseActivity {
         List<PointValue> pointValues = new ArrayList<>();
         for (int i = 0; i < points.length; i++) {
             if (i == 0) {
-                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 5f));
                 LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
                 continue;
             }
             if (pointsX[i] - pointsX[i - 1] == 0.5f) {
-                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
+                pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 5f));
                 LogUtils.i("x=" + pointsX[i] + "y=" + points[i]);
                 continue;
             }
@@ -430,20 +512,11 @@ public class StartTrainActivity2 extends BaseActivity {
                 float v = (pointsX[i] - pointsX[i - 1]) * 2;
                 for (float j = 0; j < v; j++) {
                     float y = (points[i] - points[i - 1]) / (pointsX[i] - pointsX[i - 1]) * 0.5f;
-                    pointValues.add(new PointValue((.5f * (j + 1) + pointsX[i - 1]) / pointsX[pointsX.length - 1], (y * (j + 1) + points[i - 1]) / 6f));
+                    pointValues.add(new PointValue((.5f * (j + 1) + pointsX[i - 1]) / pointsX[pointsX.length - 1], (y * (j + 1) + points[i - 1]) / 5f));
                     LogUtils.i("x=" + (.5f * (j + 1) + pointsX[i - 1]) + "y=" + (y * (j + 1) + points[i - 1]));
                 }
             }
-//            pointValues.add(new PointValue(pointsX[i] / pointsX[pointsX.length - 1], points[i] / 6f));
-
-
         }
-//            pointValues.add(new PointValue((i / (float) (points.length - 1)), points[i] / 6f));
-       /* pointValues.add(new PointValue(0 / 10f, 1 / 6f));
-        pointValues.add(new PointValue(6 / 10f, 5 / 6f));
-        pointValues.add(new PointValue(9 / 10f, 5 / 6f));
-        pointValues.add(new PointValue(10 / 10f, 1 / 6f));
-*/
         Line line = new Line(pointValues);
         line.setLineColor(Color.parseColor("#FAD719"))
                 .setLineWidth(3)
@@ -464,49 +537,55 @@ public class StartTrainActivity2 extends BaseActivity {
     }
 
     private class AutoProgressTask implements Runnable {
+
+        private List<Float> mTimearr;
+        private List<String> mVideoarr;
+
         @Override
         public void run() {
             mStartTrainProgressBar.setProgress(timeCount);
-            String s = DateUtil.dateFormat(timeCount + "", "mm:ss");
-            mStartTrainTvProgressTime.setText(s);
+            if (timeCount >= 0) {
+                String s = DateUtil.dateFormat(timeCount + "", "mm:ss");
+                mStartTrainTvProgressTime.setText(s);
+            }
             LogUtils.i("timeCount=" + timeCount);
-            LogUtils.i(s + "= 00:00");
+//            LogUtils.i(s + "= 00:00");
             timeCount += 100;
-            // FIXME: 2017/7/5
+            lineTimeCount += 100;
+            LogUtils.i("lineTimeCount=" + lineTimeCount);
             if (timeCount % 500 == 0) {
 //                timeCount = 0;
                 if (numLine >= chartsX.get(numChart)[(chartsX.get(numChart).length) - 1] * 2 - 1) {
                     numChart++;
                     numLine = -1;
-                   /* LogUtils.i("numChart=" + numChart);
-                    LogUtils.i("charts.size()=" + (charts.size()));*/
                     if (numChart >= charts.size()) {
                         mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
 
                         LogUtils.i("-----怎么不结束！！！！");
-                        isTrain = false;
-                        mTask.stop();
-                        showSuccess();
+
+                        mSoundPool.play(mSoundID.get("end"), 1, 1, 0, 0, 1);
+                        MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                showSuccess();
+                                isTrain = false;
+                                mTask.stop();
+                            }
+                        }, 3000);
+
                         return;
                     } else {
-                       /* for (int i = 0; i < mAnimators.size(); i++) {
-                            ((ObjectAnimator) mAnimators.get(i)).setCurrentPlayTime(0);
-                        }*/
                         for (int i = 0; i < mLines.size(); i++) {
                             mStartTrain.removeView(mLines.get(i));
                         }
                         initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
-
-//                        mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
                         scrollRecyclerView(numChart);
-//                        mLinearLayoutManager.scrollToPosition(numChart);
-
                         mMap.put(numChart, true);
                         mMap.put(numChart - 1, false);
                         mAdapter.notifyDataSetChanged();
-
-//                        mStartTrainSection.setText(numChart + 1 + "/" + charts.size() + "节");
                         mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
+                        lineTimeCount = 0;
+                        LogUtils.d("lineTimeCount = =" + lineTimeCount);
 
 
                     }
@@ -515,46 +594,45 @@ public class StartTrainActivity2 extends BaseActivity {
                     mAnimator.cancel();
                 }
                 numLine++;
-                LogUtils.i("numLine" + numLine);
                 LineChart lineChart = mLines.get(numLine);
                 lineChart.setLineData(mLine);
                 lineChart.setI(numLine);
-//                lineChart.showWithAnimation(1000);
                 lineChart.showWithAnimation(500);
-                // FIXME: 2017/7/5
                 mAnimator = lineChart.getAnimator();
                 mAnimators.add(mAnimator);
                 mAnimator.start();
-               /* // sound!!
-                float[] points = charts.get(numChart);
-                if (points[numLine] > points[numLine + 1]) {
-                    mSoundPool.stop(soundID.get(1));
-                    mSoundPool.stop(soundID.get(2));
-                    int play = mSoundPool.play(soundID.get(0), 1, 1, 0, 0, 1);
-                    nowSound = play;
-                    LogUtils.i(">" + nowSound + "   play=" + play);
-                } else if (points[numLine] == points[numLine + 1]) {
-                    mSoundPool.stop(soundID.get(0));
-                    mSoundPool.stop(soundID.get(2));
-                    int play = mSoundPool.play(soundID.get(1), 1, 1, 0, 0, 1);
-                    nowSound = play;
-                    LogUtils.i("=" + nowSound + "   play=" + play);
 
-                } else if (points[numLine] < points[numLine + 1]) {
-                    mSoundPool.stop(soundID.get(0));
-                    mSoundPool.stop(soundID.get(1));
-                    int play = mSoundPool.play(soundID.get(2), 1, 1, 0, 0, 1);
-                    nowSound = play;
-                    LogUtils.i("<" + nowSound + "   play=" + play);
-
-                }*/
+                mTimearr = mStartTrainBean.programme.get(numChart).timearr;
+                mVideoarr = mStartTrainBean.programme.get(numChart).videoarr;
+                float v = (float) (lineTimeCount / 1000.0);
+                LogUtils.d("VV=" + v);
+                if (mTimearr.contains(v)) {
+                    LogUtils.d("V=" + v);
+                    nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
+                    mTimearr.remove(0);
+                    mVideoarr.remove(0);
+                }
             }
             start();
         }
 
         private void start() {
             stop();
+            mTimearr = mStartTrainBean.programme.get(numChart).timearr;
+            mVideoarr = mStartTrainBean.programme.get(numChart).videoarr;
+//            if (mTimearr.contains(0f)) {
+//                nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
+//                mTimearr.remove(0);
+//                mVideoarr.remove(0);
+//            }
+            if (timeCount == -500 && mTimearr.contains(0f)){
+                nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
+                mTimearr.remove(0);
+                mVideoarr.remove(0);
+            }
+
             MyApplication.getMainThreadHandler().postDelayed(this, 100);
+
         }
 
         private void stop() {
@@ -576,11 +654,16 @@ public class StartTrainActivity2 extends BaseActivity {
                 .setPositiveButton("继续训练", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mAnimator.resume();
-                        mTask.start();
-                        LogUtils.i("start");
-                        mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
-                        dialog.dismiss();
+                        if (isFirst) {
+                            if (mMediaPlayer != null)
+                                mMediaPlayer.start();
+                        } else {
+                            mAnimator.resume();
+                            mTask.start();
+                            LogUtils.i("start");
+                            mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+                            dialog.dismiss();
+                        }
                     }
                 })
                 .show();
@@ -592,6 +675,10 @@ public class StartTrainActivity2 extends BaseActivity {
         MyApplication.getMainThreadHandler().removeCallbacks(mTask);
         mSoundPool.release();
         unregisterReceiver(mVolumeReceiver);
+        if (mMediaPlayer.isPlaying()) {
+            mMediaPlayer.stop();
+        }
+        mMediaPlayer.release();
         EventBus.getDefault().post("Train");
     }
 
@@ -599,29 +686,25 @@ public class StartTrainActivity2 extends BaseActivity {
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
-                if (isTrain) {
-                    if (mAnimator == null || mTask == null || mSoundPool == null) {
-                        finish();
-
-                    } else {
-                        mAnimator.pause();
-                        mTask.stop();
-                        mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
-                        mSoundPool.pause(nowSound);
-                        okOut();
-                    }
+                if (mMediaPlayer.isPlaying()) {
+                    okOut();
+                    mMediaPlayer.pause();
                 } else {
-                    finish();
+                    if (isTrain) {
+                        if (mAnimator == null || mTask == null || mSoundPool == null) {
+                            finish();
+                        } else {
+                            mAnimator.pause();
+                            mTask.stop();
+                            mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+                            mSoundPool.pause(nowSound);
+                            okOut();
+                        }
+                    } else {
+                        finish();
+                    }
                 }
                 return true;
-           /* case KeyEvent.KEYCODE_VOLUME_UP:
-                if (getMediaVolume() > 0)
-                    mStartTrainIvVoice.setChecked(true);
-                return super.onKeyDown(keyCode, event);
-            case KeyEvent.KEYCODE_VOLUME_DOWN:
-                if (getMediaVolume() == 0)
-                    mStartTrainIvVoice.setChecked(false);
-                return super.onKeyDown(keyCode, event);*/
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -660,9 +743,9 @@ public class StartTrainActivity2 extends BaseActivity {
     private void showSuccess() {
         OkGo
                 .post(AppUrl.EXERCISEEND)
-                .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
-                .params("starttime",mStartTime)
-                .params("alltimelong",mStartTrainBean.totaltime)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("starttime", mStartTime)
+                .params("alltimelong", mStartTrainBean.totaltime)
                 .execute(new StringDialogCallback(StartTrainActivity2.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
@@ -697,8 +780,6 @@ public class StartTrainActivity2 extends BaseActivity {
                 });
 
 
-
-
     }
 
     public void scrollRecyclerView(final int item) {
@@ -714,7 +795,7 @@ public class StartTrainActivity2 extends BaseActivity {
 //                mStartTrainRecycleView.smoothScrollBy(item,animatedValue);
                 mLinearLayoutManager.scrollToPositionWithOffset(item, UIUtils.dip2Px(130) - animatedValue);
 
-                LogUtils.i("animatedValue=" + animatedValue);
+//                LogUtils.i("animatedValue=" + animatedValue);
             }
 
         });

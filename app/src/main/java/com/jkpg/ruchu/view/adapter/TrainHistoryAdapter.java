@@ -37,11 +37,7 @@ public class TrainHistoryAdapter extends RecyclerView.Adapter<TrainHistoryAdapte
     @Override
     public void onBindViewHolder(TrainHistoryViewHolder holder, int position) {
         TrainHistoryBean.ItemsBean itemsBean = items.get(position);
-//        holder.mItemHistoryContainer.addView(View.inflate(UIUtils.getContext(), R.layout.item_history_time, null));
-//        holder.mItemHistoryContainer.addView(View.inflate(UIUtils.getContext(), R.layout.item_history_time, null));
-//        holder.mItemHistoryContainer.addView(View.inflate(UIUtils.getContext(), R.layout.item_history_time, null));
         holder.mItemHistoryTvTime.setText(itemsBean.currenttime);
-//        android:text="今日训练2次,训练总时长共计14分钟30秒"
         int time = Integer.parseInt(itemsBean.sumtime) * 1000;
         String dateFormat = "";
         if (time >= 3600000) {
@@ -54,6 +50,7 @@ public class TrainHistoryAdapter extends RecyclerView.Adapter<TrainHistoryAdapte
         if (items.size() - 1 == position) {
             holder.mItemHistoryLine.setVisibility(View.GONE);
         }
+        holder.mItemHistoryContainer.removeAllViewsInLayout();
         for (int i = 0; i < itemsBean.record.size(); i++) {
             TrainHistoryBean.ItemsBean.RecordBean recordBean = itemsBean.record.get(i);
             View view = View.inflate(UIUtils.getContext(), R.layout.item_history_time, null);

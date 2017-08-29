@@ -11,4 +11,9 @@ public class SuccessBean {
      */
 
     public boolean success;
+    public boolean giveVIP;
+
+    public int error;
+
+
 }

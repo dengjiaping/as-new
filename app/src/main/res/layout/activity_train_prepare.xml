@@ -33,7 +33,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="请保持身心放松"
-                android:textColor="#f87a6f"
+                android:textColor="#f86165"
                 android:textSize="18sp"/>
 
             <TextView
@@ -42,7 +42,7 @@
                 android:layout_marginTop="22dp"
                 android:text="选择安静舒适的环境"
 
-                android:textColor="#eaa138"
+                android:textColor="#f47047"
                 android:textSize="18sp"/>
 
             <TextView
@@ -52,7 +52,7 @@
                 android:layout_marginTop="22dp"
                 android:text="务必要排空膀胱"
 
-                android:textColor="#f87f6f"
+                android:textColor="#f49c47"
                 android:textSize="18sp"/>
 
             <TextView

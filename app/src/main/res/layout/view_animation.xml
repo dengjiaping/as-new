@@ -7,12 +7,12 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-    <com.wang.avi.AVLoadingIndicatorView
-        android:background="@android:color/transparent"
-        style="@style/AVLoadingIndicatorView"
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:indicatorColor="@color/colorPink"
-        app:indicatorName="PacmanIndicator"
+        android:indeterminateTint="@color/colorPink"
         />
 </RelativeLayout>

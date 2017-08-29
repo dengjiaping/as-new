@@ -14,11 +14,14 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.MyIndex;
-import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.bean.MyMessageBean;
+import com.jkpg.ruchu.bean.SmsEvent;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -34,6 +37,8 @@ import com.jkpg.ruchu.view.activity.my.TrainHistoryActivity;
 import com.jkpg.ruchu.view.activity.my.VipManageActivity;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,6 +100,7 @@ public class MyFragment extends Fragment {
     @BindView(R.id.center_tv_name)
     TextView mCenterTvName;
 
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -114,6 +120,23 @@ public class MyFragment extends Fragment {
         }
         initHeader();
 
+        OkGo
+                .post(AppUrl.MYMASSAGE)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .params("flag", 0)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        MyMessageBean myMessageBean = new Gson().fromJson(s, MyMessageBean.class);
+                        if (myMessageBean.notice || myMessageBean.reply || myMessageBean.zan) {
+                            mHeaderIvRight.setImageResource(R.drawable.icon_sms);
+                        } else {
+                            mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
+                        }
+
+                    }
+                });
+
     }
 
     private void initData() {
@@ -121,14 +144,29 @@ public class MyFragment extends Fragment {
         OkGo
                 .post(AppUrl.MYINDEX)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .execute(new StringDialogCallback(getActivity()) {
+                .cacheKey("MYINDEX")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         MyIndex myIndex = new Gson().fromJson(s, MyIndex.class);
                         MyIndex.MymessBean mymess = myIndex.mymess;
                         initMess(mymess);
-                        mCenterNoLogin.setVisibility(View.GONE);
+                        if (!SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+                            mCenterNoLogin.setVisibility(View.GONE);
+                        }
 
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        MyIndex myIndex = new Gson().fromJson(s, MyIndex.class);
+                        MyIndex.MymessBean mymess = myIndex.mymess;
+                        initMess(mymess);
+                        if (!SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+                            mCenterNoLogin.setVisibility(View.GONE);
+                        }
                     }
                 });
 
@@ -146,6 +184,8 @@ public class MyFragment extends Fragment {
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + mymess.uImgurl)
                 .error(R.drawable.icon_photo)
+                .centerCrop()
+                .crossFade()
                 .into(mCenterCivPhoto);
         mCenterTvName.setText(mymess.uNick);
         mCenterTvEmpiric.setText(mymess.experience);
@@ -171,8 +211,12 @@ public class MyFragment extends Fragment {
 
     @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans, R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test, R.id.center_ll_history, R.id.center_ll_setup})
     public void onViewClicked(View view) {
+        if (!NetworkUtils.isConnected()) {
+            ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+            return;
+        }
         if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
-            ToastUtils.showShort(UIUtils.getContext(), "未登录");
+//            ToastUtils.showShort(UIUtils.getContext(), "未登录");
             startActivity(new Intent(getActivity(), LoginActivity.class));
             return;
         }
@@ -233,16 +277,22 @@ public class MyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
-        /* Do something */
-        if (event.message.equals("Login") || event.message.equals("MyFragment"))
-            initData();
+        if (event.message.equals("Login") || event.message.equals("MyFragment")
+                || event.message.equals("Quit") || event.message.equals("Vip")) {
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    initData();
+                }
+            }, 500);
+        }
     }
 
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!EventBus.getDefault().isRegistered(this)){
+        if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
@@ -250,9 +300,17 @@ public class MyFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (EventBus.getDefault().isRegistered(this)){
+        if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void newMess(SmsEvent sms) {
+        if (sms.sms) {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms);
+        } else {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
+        }
+    }
 }

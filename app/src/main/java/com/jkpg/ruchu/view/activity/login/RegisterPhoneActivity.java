@@ -20,10 +20,10 @@ import com.jkpg.ruchu.bean.CodeBean;
 import com.jkpg.ruchu.bean.RegisterPhoneBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
-import com.jkpg.ruchu.utils.AnimationUtil;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
+import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -214,7 +214,8 @@ public class RegisterPhoneActivity extends BaseActivity {
                                 } else {
                                     mRegisterLlThree.setVisibility(View.VISIBLE);
                                     mHeaderIvLeft.setClickable(false);
-                                    mRegisterLlSuccess.setAnimation(AnimationUtil.createPanInAnim(2000));
+                                    PopupWindowUtils.darkenBackground(RegisterPhoneActivity.this,.5f);
+//                                    mRegisterLlSuccess.setAnimation(AnimationUtil.createPanInAnim(2000));
                                 }
                             }
                         });

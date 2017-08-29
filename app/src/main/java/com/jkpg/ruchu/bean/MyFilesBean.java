@@ -1,10 +1,12 @@
 package com.jkpg.ruchu.bean;
 
+import java.io.Serializable;
+
 /**
  * Created by qindi on 2017/7/19.
  */
 
-public class MyFilesBean {
+public class MyFilesBean implements Serializable {
 
     /**
      * uid : 28768982

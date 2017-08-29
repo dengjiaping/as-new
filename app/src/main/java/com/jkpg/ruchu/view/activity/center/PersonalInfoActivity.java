@@ -320,7 +320,6 @@ public class PersonalInfoActivity extends BaseActivity {
                         if (!successBean.success) {
                             ToastUtils.showShort(UIUtils.getContext(), "昵称已存在");
                         } else {
-
 //                            EventBus.getDefault().post();
                             EventBus.getDefault().post(new MessageEvent("MyFragment"));
 
@@ -461,7 +460,7 @@ public class PersonalInfoActivity extends BaseActivity {
                     textInputLayout.setError("");
                     isOk[0] = true;
                 } else {
-                    textInputLayout.setError("不能超过12个字符和特殊字符");
+                    textInputLayout.setError("不能超过20个字符和特殊字符");
                     isOk[0] = false;
                 }
 

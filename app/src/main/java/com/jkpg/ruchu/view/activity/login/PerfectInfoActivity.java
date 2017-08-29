@@ -17,7 +17,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,9 +24,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
@@ -35,6 +36,7 @@ import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.NetworkUtils;
+import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -107,20 +109,26 @@ public class PerfectInfoActivity extends BaseActivity {
         setContentView(R.layout.activity_perfect_info);
         ButterKnife.bind(this);
         initHeader();
-
         initPhoto();
     }
 
 
     private void initPhoto() {
-        String imgPath = SPUtils.getString(UIUtils.getContext(), Constants.PERSONAIMAGE, "");
+        String imgPath = SPUtils.getString(UIUtils.getContext(), Constants.USERIMAGE, "");
+        LogUtils.d(imgPath + "imgPath");
+        String name = SPUtils.getString(UIUtils.getContext(), Constants.USERNANE, "");
         if (!StringUtils.isEmpty(imgPath)) {
             Glide
                     .with(UIUtils.getContext())
-                    .load(new File(imgPath))
+                    .load(imgPath)
+                    .crossFade()
+                    .centerCrop()
                     .error(R.drawable.icon_photo)
                     .into(mPerfectCivPhoto);
+            mPerfectEtName.setText(name);
+            mPerfectEtName.setSelection(name.length());
         }
+        LogUtils.d(AppUrl.BASEURL + imgPath);
     }
 
 
@@ -131,7 +139,7 @@ public class PerfectInfoActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.header_iv_left, R.id.header_tv_right, /*R.id.perfect_civ_photo,*/ R.id.perfect_tv_birth, R.id.perfect_tv_height, R.id.perfect_tv_weight, R.id.perfect_btn_save})
+    @OnClick({R.id.header_iv_left, R.id.header_tv_right, R.id.perfect_civ_photo, R.id.perfect_tv_birth, R.id.perfect_tv_height, R.id.perfect_tv_weight, R.id.perfect_btn_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -141,9 +149,9 @@ public class PerfectInfoActivity extends BaseActivity {
                 EventBus.getDefault().post(new MessageEvent("Login"));
                 finish();
                 break;
-           /* case R.id.perfect_civ_photo:
+            case R.id.perfect_civ_photo:
                 showDialogSelect();
-                break;*/
+                break;
             case R.id.perfect_tv_birth:
                 onYearMonthDayPicker();
                 break;
@@ -189,37 +197,54 @@ public class PerfectInfoActivity extends BaseActivity {
             ToastUtils.showShort(UIUtils.getContext(), "请输入你的产后时间");
             return;
         }*/
+
+        String s = mPerfectEtName.getText().toString().trim();
+        if (RegexUtils.isMatch(RegexUtils.REGEX_NAME, s) && RegexUtils.getStrlength(s) <= 20) {
+
+        } else {
+            ToastUtils.showShort(UIUtils.getContext(), "不能超过20个字符和特殊字符");
+            return;
+        }
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
-        OkGo
-                .post(AppUrl.UPDATEHEADIMG + "?userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .isMultipart(true)
-                .params("image", new File(mScaleImgPath))
-                .execute(new StringDialogCallback(this) {
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
+        if (!StringUtils.isEmpty(mScaleImgPath)) {
 
-                    }
+            OkGo
+                    .post(AppUrl.UPDATEHEADIMG + "?userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .isMultipart(true)
+                    .params("image", new File(mScaleImgPath))
+                    .execute(new StringDialogCallback(this) {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
 
-                    @Override
-                    public void onError(Call call, Response response, Exception e) {
-                        super.onError(call, response, e);
-                        ToastUtils.showShort(UIUtils.getContext(), "头像保存失败");
-                    }
-                });
+                        }
+
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            ToastUtils.showShort(UIUtils.getContext(), "头像保存失败");
+                        }
+                    });
+        }
 
         OkGo
                 .post(AppUrl.LOGINNEXTADDMESS)
                 .params("birthday", mPerfectTvBirth.getText().toString())
                 .params("taici", mPerfectTvHeight.getText().toString())
                 .params("chanHouShiJian", mPerfectTvWeight.getText().toString())
+                .params("nick", s)
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        EventBus.getDefault().post(new MessageEvent("Login"));
-                        finish();
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (successBean.error == 233) {
+                            ToastUtils.showShort(UIUtils.getContext(), "昵称重复,请修改昵称后提交");
+                        } else {
+                            EventBus.getDefault().post(new MessageEvent("Login"));
+                            finish();
+                        }
                     }
                 });
     }
@@ -392,10 +417,24 @@ public class PerfectInfoActivity extends BaseActivity {
 
 
     private void pickPictureFromSystem() {
-        Intent intent = new Intent(Intent.ACTION_PICK, null);
-        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                "image");
-        startActivityForResult(intent, REQ_ALBUM);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            //如果是6.0或6.0以上，则要申请运行时权限，这里需要申请拍照和写入SD卡的权限
+            requestRuntimePermission(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionListener() {
+                @Override
+                public void onGranted() {
+                    Intent intent = new Intent(Intent.ACTION_PICK, null);
+                    intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                            "image");
+                    startActivityForResult(intent, REQ_ALBUM);
+                }
+
+                @Override
+                public void onDenied(List<String> deniedPermissions) {
+                }
+            });
+            return;
+        }
+
     }
 
 
@@ -457,7 +496,6 @@ public class PerfectInfoActivity extends BaseActivity {
                                         .with(UIUtils.getContext())
                                         .load(new File(mScaleImgPath))
                                         .into(mPerfectCivPhoto);
-                                SPUtils.saveString(UIUtils.getContext(), Constants.PERSONAIMAGE, mScaleImgPath);
                                 //mPerfectCivPhoto.setImageBitmap(bm);
                             }
                         } else {
@@ -494,12 +532,12 @@ public class PerfectInfoActivity extends BaseActivity {
         }
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            moveTaskToBack(false);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            moveTaskToBack(false);
+//            return true;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 }

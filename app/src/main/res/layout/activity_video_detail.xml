@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -13,23 +14,77 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-
-        <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
-            android:id="@+id/video_player"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"/>
-
-        <TextView
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp"
-            android:layout_marginLeft="22dp"
-            android:layout_marginTop="12dp"
-            android:drawableLeft="@drawable/icon_feedback"
-            android:drawablePadding="15dp"
-            android:text="训练反馈"
-            android:textSize="16sp"/>
+            android:layout_height="wrap_content">
 
+
+            <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+                android:id="@+id/video_player"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+
+            <View
+                android:id="@+id/view_start"
+                android:clickable="true"
+                android:layout_width="match_parent"
+                android:layout_height="200dp"/>
+        </RelativeLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="#22000000"/>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:drawableLeft="@drawable/icon_feedback"
+                android:drawablePadding="15dp"
+                android:text="训练反馈"
+                android:textSize="16sp"/>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true">
+
+                <com.jkpg.ruchu.widget.FreshDownloadView
+                    android:id="@+id/download"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+
+                    app:circular_color="@color/colorGray2"
+                    app:circular_progress_color="@color/colorPink"
+                    app:circular_width="2dp"
+                    app:progress_text_size="@dimen/dp_10"/>
+
+                <TextView
+                    android:id="@+id/download_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="22dp"
+                    android:text="缓存进度"
+                    android:textColor="@color/colorPink"
+                    android:textSize="16sp"/>
+
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height=".5dp"
+            android:background="#22000000"/>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/video_recycler_view"
@@ -45,34 +100,39 @@
             android:background="@color/colorGray2"/>
     </LinearLayout>
 
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
+
     <LinearLayout
-            android:background="@android:color/white"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="5dp"
-            >
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:padding="5dp"
+        >
 
-            <EditText
-                android:id="@+id/video_et_feedback_body"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="12dp"
-                android:layout_weight="1"
-                android:background="@drawable/shap_rectangle_white"
-                android:hint="我也要反馈... ..."
-                android:textSize="15sp"/>
+        <EditText
+            android:id="@+id/video_et_feedback_body"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_weight="1"
+            android:background="@drawable/shap_rectangle_white"
+            android:hint="我也要反馈... ..."
+            android:textSize="15sp"/>
 
-            <Button
-                android:id="@+id/video_btn_feedback"
-                style="?android:attr/borderlessButtonStyle"
-                android:layout_width="70dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center"
-                android:background="@drawable/random_bg"
-                android:text="反馈"
-                android:textColor="#ff5070"
-                android:textSize="15sp"/>
-        </LinearLayout>
+        <Button
+            android:id="@+id/video_btn_feedback"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="70dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center"
+            android:background="@drawable/random_bg"
+            android:text="反馈"
+            android:textColor="#ff5070"
+            android:textSize="14sp"/>
+    </LinearLayout>
 
 
 </LinearLayout>

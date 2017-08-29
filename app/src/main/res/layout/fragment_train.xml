@@ -146,22 +146,63 @@
                         android:text="难度进一步提升"/>
                 </LinearLayout>
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height=".5dp"
                 android:background="#22000000"/>
-            <TextView
-                android:id="@+id/train_tv_tip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPinkTran"
-                android:drawableRight="@drawable/icon_cancel"
-                android:paddingBottom="5dp"
-                android:paddingLeft="22dp"
-                android:paddingRight="22dp"
-                android:paddingTop="5dp"
-                android:text="请先完成健康测试，在进行训练哦！"
-                android:textSize="10sp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/train_tv_tip"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/colorPinkTran"
+                    android:drawableRight="@drawable/icon_cancel"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="5dp"
+                    android:text="请先完成健康测试，在进行训练哦！"
+                    android:textSize="10sp"/>
+
+                <LinearLayout
+                    android:id="@+id/train_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+
+                    android:background="@color/colorPinkTran"
+
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/train_tv_level"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="22dp"
+                        android:paddingRight="22dp"
+                        android:paddingTop="5dp"
+                        android:textSize="10sp"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="22dp"
+                        android:paddingRight="22dp"
+                        android:paddingTop="5dp"
+                        android:text="查看详情"
+                        android:textColor="@color/colorPink"
+                        android:textSize="10sp"/>
+                </LinearLayout>
+
+            </RelativeLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"

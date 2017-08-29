@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -25,8 +26,11 @@ import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.MainActivity;
 import com.jkpg.ruchu.view.activity.login.LoginPhoneActivity;
 import com.lzy.okgo.OkGo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -82,6 +86,10 @@ public class RevisePwdActivity extends BaseActivity {
             ToastUtils.showShort(UIUtils.getContext(), mReviseEtNewOne.getHint().toString());
             return;
         }
+        if (mReviseEtOld.getText().toString().trim().equals(pwd1)) {
+            ToastUtils.showShort(UIUtils.getContext(), "请输入新的密码");
+            return;
+        }
         if (!mReviseEtNewTwo.getText().toString().trim().equals(pwd1)) {
             ToastUtils.showShort(UIUtils.getContext(), "两次密码不一致");
             return;
@@ -106,17 +114,24 @@ public class RevisePwdActivity extends BaseActivity {
                             dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
                                 @Override
                                 public void onDismiss(DialogInterface dialog) {
-                                    startActivity(new Intent(RevisePwdActivity.this, LoginPhoneActivity.class));
+                                    Intent intentLogin = new Intent(RevisePwdActivity.this, LoginPhoneActivity.class);
+                                    Intent intentMain = new Intent(RevisePwdActivity.this, MainActivity.class);
+                                    startActivities(new Intent[]{intentMain, intentLogin});
+
                                     SPUtils.clear();
+                                    EventBus.getDefault().post(new MessageEvent("Quit"));
                                     finish();
                                 }
                             });
                             MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                    startActivity(new Intent(RevisePwdActivity.this, LoginPhoneActivity.class));
                                     SPUtils.clear();
                                     dialog.dismiss();
+                                    Intent intentLogin = new Intent(RevisePwdActivity.this, LoginPhoneActivity.class);
+                                    Intent intentMain = new Intent(RevisePwdActivity.this, MainActivity.class);
+                                    startActivities(new Intent[]{intentMain, intentLogin});
+                                    EventBus.getDefault().post(new MessageEvent("Quit"));
                                     finish();
                                 }
                             }, 3000);
