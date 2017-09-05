@@ -23,7 +23,9 @@ public class TrainMainBean implements Serializable {
     public int state;
     public String mess;
     public String uIsstest;
+    public String excisedays;
     public String uLevel;
+    public String advise;
     public List<HeaderLunBoImageBean> headerLunBoImage;
 
     public static class UserInfosBean implements Serializable {

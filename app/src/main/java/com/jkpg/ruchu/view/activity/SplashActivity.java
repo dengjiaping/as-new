@@ -13,13 +13,14 @@ import android.view.WindowManager;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
-import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.widget.CircleIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,7 +49,6 @@ public class SplashActivity extends BaseActivity {
         initIndicator();
         initBar();
 
-
     }
 
     private void initBar() {
@@ -64,12 +64,15 @@ public class SplashActivity extends BaseActivity {
 
     private void initData() {
         viewList = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < 3; i++) {
-            View view = new View(this);
-            view.setBackgroundColor(0xff000000 | random.nextInt(0x00ffffff));
-            viewList.add(view);
-        }
+        View view = new View(this);
+        view.setBackgroundResource(R.drawable.splash1);
+        View view1 = new View(this);
+        view1.setBackgroundResource(R.drawable.splash2);
+        View view2 = new View(this);
+        view2.setBackgroundResource(R.drawable.splash3);
+        viewList.add(view);
+        viewList.add(view1);
+        viewList.add(view2);
     }
 
     private void initIndicator() {
@@ -113,11 +116,17 @@ public class SplashActivity extends BaseActivity {
             @Override
             public void onPageSelected(int position) {
                 if (position == viewList.size() - 1) {
-//                    SPUtils.saveBoolean(UIUtils.getContext(), "isFirst", false);
 
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                    finish();
-                    LogUtils.i("" + position);
+                    viewList.get(position).setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            SPUtils.saveBoolean(UIUtils.getContext(), Constants.FIRST, false);
+                            Intent intentLogin = new Intent(SplashActivity.this, LoginActivity.class);
+                            Intent intentMain = new Intent(SplashActivity.this, MainActivity.class);
+                            startActivities(new Intent[]{intentMain, intentLogin});
+                            finish();
+                        }
+                    });
                 }
             }
 

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <WebView
+        android:id="@+id/web_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_marginLeft="22dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_marginTop="12dp">
+
+        <CheckBox
+            android:id="@+id/notice_detail_tv_dz"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@null"
+            android:drawableLeft="@drawable/selector_zan"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/select_bd_text_color" />
+
+        <TextView
+            android:id="@+id/notice_detail_tv_reply"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="42dp"
+            android:drawableLeft="@drawable/huifu2"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text=""
+            android:textColor="@color/colorGray2" />
+    </LinearLayout>
+    <TextView
+        android:id="@+id/notice_detail_tv_num"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorXmlBg"
+        android:paddingBottom="12dp"
+        android:paddingLeft="22dp"
+        android:paddingTop="12dp" />
+
+
+
+</LinearLayout>

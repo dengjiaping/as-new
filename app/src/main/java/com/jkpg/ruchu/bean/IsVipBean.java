@@ -13,4 +13,5 @@ public class IsVipBean {
 
     public boolean isgiveVIP;
     public boolean isVIP;
+    public boolean excisedays;
 }

@@ -1,8 +1,10 @@
 package com.jkpg.ruchu.view.activity.train;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -12,12 +14,15 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.IsVipBean;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.OtherVideoBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.adapter.OtherRLAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
@@ -45,6 +50,7 @@ public class OtherTrainActivity extends BaseActivity {
     RecyclerView mOtherRecyclerView;
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
+    private IsVipBean mIsVipBean;
 
 
     @Override
@@ -57,6 +63,7 @@ public class OtherTrainActivity extends BaseActivity {
         ButterKnife.bind(this);
         initHeader();
         initData();
+
     }
 
     private void initData() {
@@ -84,20 +91,57 @@ public class OtherTrainActivity extends BaseActivity {
 
                     }
                 });
+        OkGo
+                .post(AppUrl.SELECTISVIP)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(OtherTrainActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        mIsVipBean = new Gson().fromJson(s, IsVipBean.class);
+
+                    }
+                });
 
     }
 
-    private void initRecycleView(List<OtherVideoBean.ItemBean> vedioMS2) {
+    private void initRecycleView(final List<OtherVideoBean.ItemBean> vedioMS2) {
         mOtherRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mOtherRecyclerView.setHasFixedSize(true);
         OtherRLAdapter otherRLAdapter = new OtherRLAdapter(vedioMS2);
         mOtherRecyclerView.setAdapter(otherRLAdapter);
         otherRLAdapter.setOnItemClickListener(new OtherRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
-            public void onItemClick(View view, OtherVideoBean.ItemBean data) {
-                Intent intent = new Intent(OtherTrainActivity.this, VideoDetailActivity.class);
-                intent.putExtra("tid", data.tid);
-                startActivity(intent);
+            public void onItemClick(View view, int data) {
+                if (data == 0) {
+                    Intent intent = new Intent(OtherTrainActivity.this, VideoDetailActivity.class);
+                    intent.putExtra("tid", vedioMS2.get(data).tid);
+                    intent.putExtra("position", data + "");
+                    startActivity(intent);
+                } else {
+                    if (mIsVipBean.isVIP) {
+                        Intent intent = new Intent(OtherTrainActivity.this, VideoDetailActivity.class);
+                        intent.putExtra("tid", vedioMS2.get(data).tid);
+                        intent.putExtra("postion", data);
+                        startActivity(intent);
+                    } else {
+                        new AlertDialog.Builder(OtherTrainActivity.this)
+                                .setMessage("只有会员才能观看哦")
+                                .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(OtherTrainActivity.this, OpenVipActivity.class));
+                                    }
+                                })
+                                .setNegativeButton("放弃观看", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .show();
+                    }
+                }
+
             }
         });
 
@@ -122,6 +166,13 @@ public class OtherTrainActivity extends BaseActivity {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refresh(String mess) {
         if (mess.equals("OtherTrain")) {
+            initData();
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(MessageEvent mess) {
+        if (mess.message.equals("Vip")) {
             initData();
         }
     }

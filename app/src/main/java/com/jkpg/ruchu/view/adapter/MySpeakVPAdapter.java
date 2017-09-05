@@ -1,8 +1,8 @@
 package com.jkpg.ruchu.view.adapter;
 
-import android.support.v4.view.PagerAdapter;
-import android.view.View;
-import android.view.ViewGroup;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.List;
 
@@ -10,14 +10,16 @@ import java.util.List;
  * Created by qindi on 2017/5/27.
  */
 
-public class MySpeakVPAdapter extends PagerAdapter {
-    private List<View> views;
+public class MySpeakVPAdapter extends FragmentPagerAdapter {
+    private List<Fragment> views;
     private List<String> titles;
 
-    public MySpeakVPAdapter(List<View> views, List<String> titles) {
+    public MySpeakVPAdapter(FragmentManager fm, List<Fragment> views, List<String> titles) {
+        super(fm);
         this.views = views;
         this.titles = titles;
     }
+
 
     @Override
     public int getCount() {
@@ -25,23 +27,13 @@ public class MySpeakVPAdapter extends PagerAdapter {
     }
 
     @Override
-    public boolean isViewFromObject(View view, Object object) {
-        return view == object;
-    }
-
-    @Override
-    public Object instantiateItem(ViewGroup container, int position) {
-        container.addView(views.get(position));
-        return views.get(position);
-    }
-
-    @Override
-    public void destroyItem(ViewGroup container, int position, Object object) {
-        container.removeView((View) object);
-    }
-    @Override
     public CharSequence getPageTitle(int position) {
 
         return titles.get(position);
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return views.get(position);
     }
 }

@@ -145,7 +145,7 @@ public class MySMSActivity extends BaseActivity {
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                mMySpeakTabLayout.hideMsg(position + 1);
+                                mMySpeakTabLayout.hideMsg(position);
 
                             }
                         });

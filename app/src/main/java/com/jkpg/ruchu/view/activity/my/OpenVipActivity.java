@@ -151,7 +151,11 @@ public class OpenVipActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         mOpenVipBean = new Gson().fromJson(s, OpenVipBean.class);
-                        mOpenVipLlWx.setVisibility(mOpenVipBean.WXStatus ? View.GONE : View.VISIBLE);
+                        if (mOpenVipBean.isgivenVIP.equals("1")){
+                            mOpenVipLlWx.setVisibility(View.GONE);
+                        } else {
+                            mOpenVipLlWx.setVisibility(mOpenVipBean.WXStatus ? View.GONE : View.VISIBLE);
+                        }
                         for (int i = 0; i < mOpenVipBean.list.size(); i++) {
                             mPriceViews.get(i).setText("￥ " + mOpenVipBean.list.get(i).cardprice);
                             mTimeViews.get(i).setText(mOpenVipBean.list.get(i).cardname);

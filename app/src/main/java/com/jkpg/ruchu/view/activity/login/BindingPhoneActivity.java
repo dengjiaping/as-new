@@ -126,6 +126,8 @@ public class BindingPhoneActivity extends BaseActivity {
                     OkGo
                             .post(AppUrl.WXLOGIN)
                             .params("unionid", mUnionid)
+                            .params("phoneflag", 1)
+
                             .params("appwxnikename", mName)
                             .params("appwxurlimage", mIconurl)
                             .params("tele", "")
@@ -154,6 +156,7 @@ public class BindingPhoneActivity extends BaseActivity {
                     OkGo
                             .post(AppUrl.QQLOGIN)
                             .params("uid", mUid)
+                            .params("phoneflag", 1)
                             .params("appqqnikename", mName)
                             .params("appqqurlimage", mIconurl)
                             .params("tele", "")
@@ -205,7 +208,7 @@ public class BindingPhoneActivity extends BaseActivity {
                         CodeBean code = new Gson().fromJson(s, CodeBean.class);
                         if (code.success) {
                             String password = "";
-                            if (mForgetBtNext.getVisibility() == View.VISIBLE) {
+                            if (mBindingLl.getVisibility() == View.VISIBLE) {
                                 if (StringUtils.isEmpty(mBindingEtPwd.getText().toString())) {
 
                                     ToastUtils.showShort(UIUtils.getContext(), "请输入密码");
@@ -218,6 +221,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                 OkGo
                                         .post(AppUrl.WXLOGIN)
                                         .params("unionid", mUnionid)
+                                        .params("phoneflag", 1)
                                         .params("appwxnikename", mName)
                                         .params("appwxurlimage", mIconurl)
                                         .params("tele", phone)
@@ -243,6 +247,8 @@ public class BindingPhoneActivity extends BaseActivity {
                                 OkGo
                                         .post(AppUrl.QQLOGIN)
                                         .params("uid", mUid)
+                                        .params("phoneflag", 1)
+
                                         .params("appqqnikename", mName)
                                         .params("appqqurlimage", mIconurl)
                                         .params("tele", phone)
@@ -268,35 +274,35 @@ public class BindingPhoneActivity extends BaseActivity {
                         }
                     }
                 });
-    //        String password = "";
-    //        if (mForgetBtNext.getVisibility() == View.VISIBLE) {
-    //            if (StringUtils.isEmpty(mBindingEtPwd.getText().toString())) {
-    //
-    //                ToastUtils.showShort(UIUtils.getContext(), "请输入密码");
-    //                return;
-    //            }
-    //            password = mBindingEtPwd.getText().toString();
-    //            password = Md5Utils.getMD5(password);
-    //        }
-    //        if (StringUtils.isEmpty(mUid)) {
-    //            OkGo
-    //                    .post(AppUrl.WXLOGIN)
-    //                    .params("unionid", mUnionid)
-    //                    .params("appwxnikename", mName)
-    //                    .params("appwxurlimage", mIconurl)
-    //                    .params("tele", phone)
-    //                    .params("password", password)
-    //                    .params("flag", flag)
-    //                    .execute(new StringDialogCallback(BindingPhoneActivity.this) {
-    //                        @Override
-    //                        public void onSuccess(String s, Call call, Response response) {
-    //                            LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
-    //                            LogUtils.d("giveVIP" + loginWxBean.giveVIP);
-    //                            LogUtils.d("giveVIP" + flag);
-    //                            if (loginWxBean.giveVIP) {
-    //                                EventBus.getDefault().post(new showBean("showMess"));
-    //                                showMess();
-    //                            }
+        //        String password = "";
+        //        if (mForgetBtNext.getVisibility() == View.VISIBLE) {
+        //            if (StringUtils.isEmpty(mBindingEtPwd.getText().toString())) {
+        //
+        //                ToastUtils.showShort(UIUtils.getContext(), "请输入密码");
+        //                return;
+        //            }
+        //            password = mBindingEtPwd.getText().toString();
+        //            password = Md5Utils.getMD5(password);
+        //        }
+        //        if (StringUtils.isEmpty(mUid)) {
+        //            OkGo
+        //                    .post(AppUrl.WXLOGIN)
+        //                    .params("unionid", mUnionid)
+        //                    .params("appwxnikename", mName)
+        //                    .params("appwxurlimage", mIconurl)
+        //                    .params("tele", phone)
+        //                    .params("password", password)
+        //                    .params("flag", flag)
+        //                    .execute(new StringDialogCallback(BindingPhoneActivity.this) {
+        //                        @Override
+        //                        public void onSuccess(String s, Call call, Response response) {
+        //                            LoginWxBean loginWxBean = new Gson().fromJson(s, LoginWxBean.class);
+        //                            LogUtils.d("giveVIP" + loginWxBean.giveVIP);
+        //                            LogUtils.d("giveVIP" + flag);
+        //                            if (loginWxBean.giveVIP) {
+        //                                EventBus.getDefault().post(new showBean("showMess"));
+        //                                showMess();
+        //                            }
 //                            SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
 //                            SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, loginWxBean.backMess.uNick);
 //                            SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, loginWxBean.backMess.uImgurl);

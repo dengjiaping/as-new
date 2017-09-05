@@ -1,6 +1,7 @@
 package com.jkpg.ruchu.view.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -27,6 +29,7 @@ import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
+import com.jkpg.ruchu.view.activity.my.GrowthValueActivity;
 import com.jkpg.ruchu.view.activity.my.MyFansActivity;
 import com.jkpg.ruchu.view.activity.my.MyFilesActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
@@ -51,6 +54,8 @@ import butterknife.Unbinder;
 import okhttp3.Call;
 import okhttp3.Response;
 
+import static com.jkpg.ruchu.R.id.center_tv_name;
+
 /**
  * Created by qindi on 2017/5/16.
  */
@@ -73,10 +78,10 @@ public class MyFragment extends Fragment {
     @BindView(R.id.center_ll_setup)
     LinearLayout mCenterLlSetup;
     Unbinder unbinder;
-    @BindView(R.id.header_iv_left)
-    ImageView mHeaderIvLeft;
-    @BindView(R.id.header_tv_title)
-    TextView mHeaderTvTitle;
+//    @BindView(R.id.header_iv_left)
+//    ImageView mHeaderIvLeft;
+//    @BindView(R.id.header_tv_title)
+//    TextView mHeaderTvTitle;
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
     @BindView(R.id.center_tv_empiric)
@@ -97,8 +102,10 @@ public class MyFragment extends Fragment {
     LinearLayout mCenterLlFans;
     @BindView(R.id.center_no_login)
     LinearLayout mCenterNoLogin;
-    @BindView(R.id.center_tv_name)
+    @BindView(center_tv_name)
     TextView mCenterTvName;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
 
 
     @Nullable
@@ -112,7 +119,9 @@ public class MyFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
         if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
             mCenterNoLogin.setVisibility(View.VISIBLE);
         } else {
@@ -136,6 +145,21 @@ public class MyFragment extends Fragment {
 
                     }
                 });
+        mCenterTvName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!NetworkUtils.isConnected()) {
+                    ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
+                    return;
+                }
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+//            ToastUtils.showShort(UIUtils.getContext(), "未登录");
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
+                startActivity(new Intent(getActivity(), PersonalInfoActivity.class));
+            }
+        });
 
     }
 
@@ -173,8 +197,8 @@ public class MyFragment extends Fragment {
     }
 
     private void initHeader() {
-        mHeaderTvTitle.setText("");
-        mHeaderIvLeft.setVisibility(View.GONE);
+//        mHeaderTvTitle.setText("");
+//        mHeaderIvLeft.setVisibility(View.GONE);
         mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
     }
 
@@ -209,7 +233,9 @@ public class MyFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans, R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test, R.id.center_ll_history, R.id.center_ll_setup})
+    @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans,
+            R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test,
+            R.id.center_ll_history, R.id.center_ll_setup,R.id.center_ll_on1,R.id.center_ll_on2})
     public void onViewClicked(View view) {
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
@@ -265,6 +291,10 @@ public class MyFragment extends Fragment {
                 break;
             case R.id.header_iv_right:
                 startActivity(new Intent(getActivity(), MySMSActivity.class));
+                break;
+            case R.id.center_ll_on1:
+            case R.id.center_ll_on2:
+                startActivity(new Intent(getActivity(), GrowthValueActivity.class));
                 break;
         }
     }

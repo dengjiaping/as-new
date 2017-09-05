@@ -17,5 +17,6 @@ public class RegisterPhoneBean {
     public int flag_status;
     public String userid;
     public String error;
+    public String username;
     public boolean success;
 }

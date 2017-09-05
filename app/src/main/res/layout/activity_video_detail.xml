@@ -19,7 +19,7 @@
             android:layout_height="wrap_content">
 
 
-            <fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard
+            <com.jkpg.ruchu.widget.JCVideoPlayerStandard
                 android:id="@+id/video_player"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"/>
@@ -37,6 +37,7 @@
             android:background="#22000000"/>
 
         <RelativeLayout
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 

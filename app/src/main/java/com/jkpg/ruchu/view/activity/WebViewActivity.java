@@ -22,6 +22,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static android.view.KeyEvent.KEYCODE_BACK;
+
 /**
  * Created by qindi on 2017/8/1.
  */
@@ -107,17 +109,18 @@ public class WebViewActivity extends BaseActivity {
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if ((keyCode == KEYCODE_BACK) && mWebView.canGoBack()) {
-//            mWebView.goBack();
-//            return true;
-//        }
-        if (!mUrl.equals("")) {
+        if ((keyCode == KEYCODE_BACK)) {
 
-            mWebView.loadUrl(AppUrl.BASEURLHTTP + getIntent().getStringExtra("URL"));
-            mUrl = "";
+
+            if (!mUrl.equals("")) {
+
+                mWebView.loadUrl(AppUrl.BASEURLHTTP + getIntent().getStringExtra("URL"));
+                mUrl = "";
+                return true;
+            } else {
+                finish();
+            }
             return true;
-        } else {
-            finish();
         }
         return super.onKeyDown(keyCode, event);
     }

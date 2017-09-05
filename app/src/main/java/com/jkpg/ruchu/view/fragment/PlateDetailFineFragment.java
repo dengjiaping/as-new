@@ -34,6 +34,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -59,8 +60,8 @@ public class PlateDetailFineFragment extends Fragment {
     private PlateDetailRVAdapter mAdapter;
 
     int flag = 1;
-    private List<PlateDetailBean.NoticeBean> mNotice;
-    private List<PlateDetailBean.ListBean> mList;
+    private List<PlateDetailBean.NoticeBean> mNotice= new ArrayList<>();
+    private List<PlateDetailBean.ListBean> mList= new ArrayList<>();
     private String mPlateid;
 
     @Nullable
@@ -74,6 +75,8 @@ public class PlateDetailFineFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPlateid = ((PlateDetailActivity) getActivity()).getPlateid();
+        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         initData();
         initRefreshLayout();
     }
@@ -83,20 +86,54 @@ public class PlateDetailFineFragment extends Fragment {
         mPlateDetailRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                if ( mList != null) {
-                    mList.clear();
-                } else {
-                    return;
-                }
-                flag = 1;
-                initData();
+//                if ( mList != null) {
+//                    mList.clear();
+//                } else {
+//                    return;
+//                }
+//                flag = 1;
+//                initData();
+                refresh();
             }
         });
 
     }
+    private void refresh(){
+        flag = 1;
+        OkGo
+                .post(AppUrl.BBS_LOOKUP)
+                .params("plateid", mPlateid)
+                .params("flag", flag)
+                .params("isgood", 1)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        mPlateDetailRefresh.setRefreshing(true);
+                        mAdapter.setEnableLoadMore(false);
+
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
+                        mList.clear();
+                        mList.addAll(plateDetailBean.list);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        super.onAfter(s, e);
+                        mPlateDetailRefresh.setRefreshing(false);
+                        mAdapter.setEnableLoadMore(true);
+
+                    }
+                });
+    }
 
     private void initData() {
-        mPlateid = ((PlateDetailActivity) getActivity()).getPlateid();
         OkGo
                 .post(AppUrl.BBS_LOOKUP)
                 .params("plateid", mPlateid)
@@ -121,7 +158,11 @@ public class PlateDetailFineFragment extends Fragment {
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mPlateDetailRefresh.setRefreshing(false);
+                        try {
+                            mPlateDetailRefresh.setRefreshing(false);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
                     }
                 });
 
@@ -129,9 +170,12 @@ public class PlateDetailFineFragment extends Fragment {
     }
 
     private void initPlateDetailRecyclerView(List<PlateDetailBean.NoticeBean> notice, final List<PlateDetailBean.ListBean> list) {
-        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mAdapter = new PlateDetailRVAdapter(R.layout.item_plate_detail, list);
-        mPlateDetailRecyclerView.setAdapter(mAdapter);
+        try {
+            mPlateDetailRecyclerView.setAdapter(mAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
@@ -141,16 +185,20 @@ public class PlateDetailFineFragment extends Fragment {
 
             }
         });
-        mPlateDetailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                if (newState == 1)
-                    mPlateDetailFab.hide();
-                else if (newState == 0)
-                    mPlateDetailFab.show();
-            }
-        });
+        try {
+            mPlateDetailRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+                @Override
+                public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                    super.onScrollStateChanged(recyclerView, newState);
+                    if (newState == 1)
+                        mPlateDetailFab.hide();
+                    else if (newState == 0)
+                        mPlateDetailFab.show();
+                }
+            });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {

@@ -58,6 +58,8 @@ public class MyTestActivity extends BaseActivity {
     LinearLayout mMyTestHeaderNo;
     @BindView(R.id.my_test_header)
     LinearLayout mMyTestHeader;
+    @BindView(R.id.tip)
+    TextView mTip;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,6 +68,12 @@ public class MyTestActivity extends BaseActivity {
         ButterKnife.bind(this);
         initHeader();
         initData();
+        mTip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mTip.setVisibility(View.GONE);
+            }
+        });
     }
 
     private void initData() {

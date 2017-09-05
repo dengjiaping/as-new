@@ -29,6 +29,7 @@ public class CommunityMianBean implements Serializable {
         public String plateimg;
         public String remark;
         public String platename;
+        public String simpleremark;
         public int tid;
 
         protected List2Bean(Parcel in) {
@@ -36,6 +37,7 @@ public class CommunityMianBean implements Serializable {
             plateimg = in.readString();
             remark = in.readString();
             platename = in.readString();
+            simpleremark = in.readString();
             tid = in.readInt();
         }
 
@@ -62,6 +64,7 @@ public class CommunityMianBean implements Serializable {
             dest.writeString(plateimg);
             dest.writeString(remark);
             dest.writeString(platename);
+            dest.writeString(simpleremark);
             dest.writeInt(tid);
         }
     }

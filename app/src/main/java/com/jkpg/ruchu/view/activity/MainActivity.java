@@ -242,6 +242,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OkGo.getInstance().cancelAll();
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -261,7 +262,7 @@ public class MainActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEventMainThread(showBean mess) {
-        if (mess.mess.equals("showMess")){
+        if (mess.mess.equals("showMess")) {
             Notification.Builder builder = new Notification.Builder(MainActivity.this);
             Intent intent = new Intent(MainActivity.this, VipManageActivity.class);  //需要跳转指定的页面
             PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -271,7 +272,7 @@ public class MainActivity extends BaseActivity {
             builder.setContentText("增送您15天体验会员");// 设置通知的内容
             builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
             builder.setAutoCancel(true); //自己维护通知的消失
-            builder.setTicker("增送您15天体验会员");// 第一次提示消失的时候显示在通知栏上的
+            builder.setTicker("增送您3天体验会员");// 第一次提示消失的时候显示在通知栏上的
             builder.setOngoing(true);
             Notification notification = builder.build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除

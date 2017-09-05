@@ -263,11 +263,14 @@ public final class ImageTools {
      */  
     public static Bitmap getPhotoFromSDCard(String path, String photoName){
         Bitmap photoBitmap = BitmapFactory.decodeFile(path + "/" +photoName +".png");
+
         if (photoBitmap == null) {  
             return null;  
         }else {  
-            return photoBitmap;  
-        }  
+            return photoBitmap;
+        }
+
+
     }  
       
     /** 

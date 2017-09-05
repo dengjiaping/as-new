@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -62,8 +63,8 @@ public class PlateDetailAllFragment extends Fragment {
 
     private int flag = 1;
     private String mPlateid;
-    private List<PlateDetailBean.NoticeBean> mNotice;
-    private List<PlateDetailBean.ListBean> mList;
+    private List<PlateDetailBean.NoticeBean> mNotice= new ArrayList<>();
+    private List<PlateDetailBean.ListBean> mList= new ArrayList<>();
 
 
     @Nullable
@@ -77,6 +78,8 @@ public class PlateDetailAllFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mPlateid = ((PlateDetailActivity) getActivity()).getPlateid();
+        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         initData();
         initRefreshLayout();
     }
@@ -86,28 +89,77 @@ public class PlateDetailAllFragment extends Fragment {
         mPlateDetailRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
+//                if (mList == null || mList.size() == 0) {
+//                    mPlateDetailRefresh.setRefreshing(false);
+//                    return;
+//                }
+//                if (mNotice != null && mList != null) {
+//                    mNotice.clear();
+//                    mList.clear();
+//                } else {
+//                    return;
+//                }
+                refresh();
 
-                if (mNotice != null && mList != null) {
-                    mNotice.clear();
-                    mList.clear();
-                } else {
-                    return;
-                }
-                flag = 1;
-                initData();
             }
+
+
         });
 
     }
-
-    private void initData() {
-        mPlateid = ((PlateDetailActivity) getActivity()).getPlateid();
-        mPlateDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
+    private void refresh() {
+        flag = 1;
         OkGo
                 .post(AppUrl.BBS_LOOKUP)
                 .params("plateid", mPlateid)
                 .params("flag", flag)
                 .params("isgood", 0)
+                .tag(this)
+                .cacheKey("BBS_LOOKUP")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(new StringCallback() {
+
+
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        mPlateDetailRefresh.setRefreshing(true);
+                        mAdapter.setEnableLoadMore(false);
+
+
+                    }
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
+                        mNotice.clear();
+                        mList.clear();
+                        mNotice.addAll(plateDetailBean.notice);
+                        mList.addAll(plateDetailBean.list);
+                        mAdapter.notifyDataSetChanged();
+                    }
+
+                    @Override
+                    public void onAfter(String s, Exception e) {
+                        super.onAfter(s, e);
+                        try {
+                            mPlateDetailRefresh.setRefreshing(false);
+                            mAdapter.setEnableLoadMore(true);
+                        } catch (Exception e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+
+                });
+    }
+    private void initData() {
+
+        OkGo
+                .post(AppUrl.BBS_LOOKUP)
+                .params("plateid", mPlateid)
+                .params("flag", flag)
+                .params("isgood", 0)
+                .tag(this)
                 .cacheKey("BBS_LOOKUP")
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringCallback() {
@@ -123,6 +175,9 @@ public class PlateDetailAllFragment extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
+                       /* if (mList != null && mList.size() == plateDetailBean.list.size()) {
+                            return;
+                        }*/
                         mNotice = plateDetailBean.notice;
                         mList = plateDetailBean.list;
                         initPlateDetailRecyclerView(mNotice, mList);
@@ -134,7 +189,12 @@ public class PlateDetailAllFragment extends Fragment {
                         mPlateDetailRefresh.setRefreshing(false);
                     }
 
-//                    @Override
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        mPlateDetailRefresh.setRefreshing(false);
+                    }
+                    //                    @Override
 //                    public void onCacheSuccess(String s, Call call) {
 //                        super.onCacheSuccess(s, call);
 //                        PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
@@ -184,6 +244,7 @@ public class PlateDetailAllFragment extends Fragment {
                         .post(AppUrl.BBS_LOOKUP)
                         .params("plateid", mPlateid)
                         .params("flag", flag)
+                        .tag(this)
                         .params("isgood", 0)
                         .execute(new StringCallback() {
 
@@ -248,6 +309,7 @@ public class PlateDetailAllFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        OkGo.getInstance().cancelTag(this);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -255,7 +317,8 @@ public class PlateDetailAllFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void eventMess(String mess) {
-        if (mess.equals("send"))
-            initData();
+        if (mess.equals("send") || mess.equals("Community"))
+            refresh();
+
     }
 }

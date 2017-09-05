@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.FineNoteBean;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class FineNoteRVAdapter extends BaseQuickAdapter<FineNoteBean.ListBean, B
                 .setText(R.id.item_fine_note_tv_time, item.createtime)
                 .setText(R.id.item_fine_note_tv_eulogy, item.zan)
                 .setText(R.id.item_fine_note_tv_reply, item.reply)
-                .setText(R.id.item_fine_note_iv_body, item.remark);
-        Glide.with(UIUtils.getContext()).load(item.image).crossFade().into((ImageView) helper.getView(R.id.item_fine_note_tv_image));
+                .setText(R.id.item_fine_note_iv_body, item.simplecontent);
+        Glide.with(UIUtils.getContext()).load(AppUrl.BASEURL + item.images).crossFade().centerCrop().into((ImageView) helper.getView(R.id.item_fine_note_tv_image));
     }
 }

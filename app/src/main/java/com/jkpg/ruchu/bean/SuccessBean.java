@@ -14,6 +14,8 @@ public class SuccessBean {
     public boolean giveVIP;
 
     public int error;
+    public String msg;
+    public int state;
 
 
 }

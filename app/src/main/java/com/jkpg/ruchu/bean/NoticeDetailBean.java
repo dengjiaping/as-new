@@ -1,17 +1,18 @@
 package com.jkpg.ruchu.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by qindi on 2017/7/24.
  */
 
-public class NoticeDetailBean {
+public class NoticeDetailBean implements Serializable {
 
     public List<List2Bean> list2;
     public List<List1Bean> list1;
 
-    public static class List2Bean {
+    public static class List2Bean implements Serializable{
         /**
          * chanhoutime : 2月零1天
          * headimg : headImg/243QVGHZB7M8.jpg
@@ -44,7 +45,7 @@ public class NoticeDetailBean {
         public List<ItemsBean> items;
         public List<String> images;
 
-        public static class ItemsBean  {
+        public static class ItemsBean implements Serializable {
             /**
              * content : 方法很不简单,望有用
              * userid2 : ed6cdb60-3eb2-11e7-aebf-fa163e547655
@@ -68,7 +69,7 @@ public class NoticeDetailBean {
         }
     }
 
-    public static class List1Bean {
+    public static class List1Bean implements Serializable {
         /**
          * site : 济南市
          * chanhoutime : 2个月01天
@@ -103,7 +104,7 @@ public class NoticeDetailBean {
         public String reply;
         public int tid;
         public String isGood;
-        public String shearurl;
+        public String shareurl;
         public List<String> images;
     }
 }

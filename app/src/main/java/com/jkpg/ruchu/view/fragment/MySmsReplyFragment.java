@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
@@ -45,6 +46,8 @@ public class MySmsReplyFragment extends Fragment {
     SwipeRefreshLayout mRefreshLayout;
     Unbinder unbinder;
     private int PIndex = 1;
+    private List<MySmsReplyBean.BackMessBean> mBackMess;
+    private MyCommentAdapter mMyCommentAdapter;
 
 
     @Nullable
@@ -68,8 +71,8 @@ public class MySmsReplyFragment extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         MySmsReplyBean mySmsReplyBean = new Gson().fromJson(s, MySmsReplyBean.class);
-                        List<MySmsReplyBean.BackMessBean> backMess = mySmsReplyBean.backMess;
-                        initRecyclerView(backMess);
+                        mBackMess = mySmsReplyBean.backMess;
+                        initRecyclerView(mBackMess);
 
                     }
 
@@ -99,7 +102,12 @@ public class MySmsReplyFragment extends Fragment {
                             public void onSuccess(String s, Call call, Response response) {
                                 MySmsReplyBean mySmsReplyBean = new Gson().fromJson(s, MySmsReplyBean.class);
                                 List<MySmsReplyBean.BackMessBean> backMess = mySmsReplyBean.backMess;
-                                initRecyclerView(backMess);
+                                if (backMess != null) {
+                                    mBackMess.clear();
+                                    mBackMess.addAll(backMess);
+                                    mMyCommentAdapter.notifyDataSetChanged();
+                                }
+//                                initRecyclerView(backMess);
 
                             }
 
@@ -107,12 +115,15 @@ public class MySmsReplyFragment extends Fragment {
                             public void onAfter(String s, Exception e) {
                                 super.onAfter(s, e);
                                 mRefreshLayout.setRefreshing(false);
+                                mMyCommentAdapter.setEnableLoadMore(true);
+
                             }
 
                             @Override
                             public void onBefore(BaseRequest request) {
                                 super.onBefore(request);
                                 mRefreshLayout.setRefreshing(true);
+                                mMyCommentAdapter.setEnableLoadMore(false);
                             }
                         });
             }
@@ -121,14 +132,14 @@ public class MySmsReplyFragment extends Fragment {
     }
 
     private void initRecyclerView(final List<MySmsReplyBean.BackMessBean> backMess) {
-        final MyCommentAdapter myCommentAdapter = new MyCommentAdapter(R.layout.item_personal_comment, backMess);
+        mMyCommentAdapter = new MyCommentAdapter(R.layout.item_personal_comment, backMess);
 
         try {
-            mRecyclerView.setAdapter(myCommentAdapter);
+            mRecyclerView.setAdapter(mMyCommentAdapter);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        myCommentAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mMyCommentAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (backMess.get(position).flag.equals("1")) {
@@ -142,7 +153,7 @@ public class MySmsReplyFragment extends Fragment {
                 }
             }
         });
-        myCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mMyCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
@@ -150,7 +161,7 @@ public class MySmsReplyFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        myCommentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        mMyCommentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 PIndex++;
@@ -164,18 +175,21 @@ public class MySmsReplyFragment extends Fragment {
                                 MySmsReplyBean mySmsReplyBean = new Gson().fromJson(s, MySmsReplyBean.class);
                                 List<MySmsReplyBean.BackMessBean> backMess = mySmsReplyBean.backMess;
                                 if (backMess == null) {
-                                    myCommentAdapter.loadMoreEnd();
+                                    mMyCommentAdapter.loadMoreEnd();
                                 } else if (backMess.size() == 0) {
-                                    myCommentAdapter.loadMoreEnd();
+                                    mMyCommentAdapter.loadMoreEnd();
                                 } else {
-                                    myCommentAdapter.addData(backMess);
-                                    myCommentAdapter.loadMoreComplete();
+                                    mMyCommentAdapter.addData(backMess);
+                                    mMyCommentAdapter.loadMoreComplete();
                                 }
                             }
                         });
             }
         }, mRecyclerView);
-        myCommentAdapter.setEmptyView(R.layout.view_no_data);
+        View view = View.inflate(UIUtils.getContext(), R.layout.view_no_data, null);
+        TextView textView = (TextView) view.findViewById(R.id.no_data_text);
+        textView.setText("你还没有消息哦!");
+        mMyCommentAdapter.setEmptyView(view);
     }
 
     @Override

@@ -7,7 +7,7 @@ import java.util.List;
  * Created by qindi on 2017/7/21.
  */
 
-public class VipManageBean  implements Serializable{
+public class VipManageBean implements Serializable {
 
     /**
      * headImg : headImg/243R7K8LQW7M.jpg
@@ -21,6 +21,7 @@ public class VipManageBean  implements Serializable{
     public String nick;
     public String VIPTime;
     public String isVIP;
+    public boolean isoverdue;
     public List<ListBean> list;
 
     public static class ListBean implements Serializable {

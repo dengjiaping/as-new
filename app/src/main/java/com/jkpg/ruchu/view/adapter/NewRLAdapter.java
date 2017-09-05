@@ -52,7 +52,7 @@ public class NewRLAdapter extends RecyclerView.Adapter<NewRLAdapter.NewTrainView
         holder.itemView.setTag(vedioMS.get(position));
         VideoBean.ItemBean videoBean = vedioMS.get(position);
         holder.mItemNewTitle.setText(videoBean.title);
-        holder.mItemNewTime.setText("");
+//        holder.mItemNewTime.setText("");
         Glide.with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + videoBean.imageUrl)
 //                .placeholder(R.drawable.new_guide_bg)

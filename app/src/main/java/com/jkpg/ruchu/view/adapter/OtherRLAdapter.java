@@ -39,10 +39,10 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     @Override
     public void onBindViewHolder(OtherTrainViewHolder holder, int position) {
         OtherVideoBean.ItemBean vedioMS2Bean = videos.get(position);
-        holder.itemView.setTag(videos.get(position));
+        holder.itemView.setTag(position);
         holder.mItemTrainTvTitle.setText(vedioMS2Bean.title);
         holder.mItemTrainTv1.setText(vedioMS2Bean.level + "    " + vedioMS2Bean.times + "人参与训练");
-        holder.mItemTrainTvTime.setText("视频时长" + vedioMS2Bean.video_time);
+        holder.mItemTrainTvTime.setText("视频时长: " + vedioMS2Bean.video_time);
         holder.mItemTrainTv2.setText(vedioMS2Bean.content);
         Glide
                 .with(UIUtils.getContext())
@@ -67,7 +67,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     public void onClick(View v) {
         if (mOnItemClickListener != null) {
             //注意这里使用getTag方法获取数据
-            mOnItemClickListener.onItemClick(v, (OtherVideoBean.ItemBean) v.getTag());
+            mOnItemClickListener.onItemClick(v, (int) v.getTag());
         }
     }
 
@@ -93,7 +93,7 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
     }
 
     public interface OnRecyclerViewItemClickListener {
-        void onItemClick(View view, OtherVideoBean.ItemBean data);
+        void onItemClick(View view, int data);
     }
 
     private OnRecyclerViewItemClickListener mOnItemClickListener = null;

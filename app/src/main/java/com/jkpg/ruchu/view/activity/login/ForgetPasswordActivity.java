@@ -16,6 +16,7 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.CodeBean;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
@@ -144,35 +145,52 @@ public class ForgetPasswordActivity extends BaseActivity {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
             return;
         }
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                for (int i = 60; i > 0; i--) {
-                    handler.sendEmptyMessage(CODE_ING);
-                    if (i <= 0) {
-                        break;
-                    }
-                    try {
-                        Thread.sleep(1000);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                }
-                handler.sendEmptyMessage(CODE_REPEAT);
-            }
-        }).start();
-        OkGo.
-                post(AppUrl.SMS)
+        OkGo
+                .post(AppUrl.UPDATE_TEL)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("tele", phone)
+                .params("flag", "0")
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
-                        if (!codeBean.success) {
-                            ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (successBean.success) {
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    for (int i = 60; i > 0; i--) {
+                                        handler.sendEmptyMessage(CODE_ING);
+                                        if (i <= 0) {
+                                            break;
+                                        }
+                                        try {
+                                            Thread.sleep(1000);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                    handler.sendEmptyMessage(CODE_REPEAT);
+                                }
+                            }).start();
+                            OkGo.
+                                    post(AppUrl.SMS)
+                                    .params("tele", phone)
+                                    .execute(new StringDialogCallback(ForgetPasswordActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+                                            CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
+                                            if (!codeBean.success) {
+                                                ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                            }
+                                        }
+                                    });
+                        } else {
+                            ToastUtils.showShort(UIUtils.getContext(), "手机号不存在");
                         }
                     }
                 });
+
     }
 
     @Override

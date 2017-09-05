@@ -1,6 +1,7 @@
 package com.jkpg.ruchu.view.activity.my;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -55,7 +58,7 @@ public class VipManageActivity extends BaseActivity {
     @BindView(R.id.vip_manager_tv_renew)
     TextView mVipManagerTvRenew;
     @BindView(R.id.vip_manager_tv_not_open)
-    TextView mVipManagerTvNotOpen;
+    LinearLayout mVipManagerTvNotOpen;
     @BindView(R.id.vip_manager_tab_layout)
     TabLayout mVipManagerTabLayout;
     @BindView(R.id.vip_manager_view_pager)
@@ -64,6 +67,15 @@ public class VipManageActivity extends BaseActivity {
     Button mVipManagerBtnOpenVip;
     @BindView(R.id.vip_manager_iv_vip)
     ImageView mVipManagerIvVip;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
+    @BindView(R.id.vip_title)
+    TextView mVipTitle;
+    @BindView(R.id.vip_image)
+    ImageView mVipImage;
+    @BindView(R.id.vip_manager_tv_not_open_text)
+    TextView mVipManagerTvNotOpenText;
+
 
     private List<View> viewList;
     private List<String> viewTitle;
@@ -74,6 +86,9 @@ public class VipManageActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vip_manage);
         ButterKnife.bind(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
         initHeader();
         initData();
         if (!EventBus.getDefault().isRegistered(this)) {
@@ -92,8 +107,8 @@ public class VipManageActivity extends BaseActivity {
                     public void onSuccess(String s, Call call, Response response) {
                         VipManageBean vipManageBean = new Gson().fromJson(s, VipManageBean.class);
                         initVipHeader(vipManageBean);
-                        List<VipManageBean.ListBean> list = vipManageBean.list;
-                        initViewPager(list);
+//                        List<VipManageBean.ListBean> list = vipManageBean.list;
+//                        initViewPager(list);
 
                     }
 
@@ -116,12 +131,21 @@ public class VipManageActivity extends BaseActivity {
             mVipManagerIvVip.setImageResource(R.drawable.icon_vip2);
             mVipManagerTvNotOpen.setVisibility(View.VISIBLE);
             mVipManagerTvRenew.setVisibility(View.GONE);
+            mVipTitle.setText("现在开通如初会员，即可享受以下特权：");
+            mVipImage.setImageResource(R.drawable.open_vip);
         } else {
             mVipManagerIvVip.setImageResource(R.drawable.icon_vip1);
             mVipManagerTvNotOpen.setVisibility(View.GONE);
             mVipManagerTvRenew.setVisibility(View.VISIBLE);
-            mVipManagerTvRenew.setText(vipManageBean.VIPTime);
+            mVipManagerTvRenew.setText(vipManageBean.VIPTime + " 到期");
             mVipManagerBtnOpenVip.setText("续费会员");
+            mVipTitle.setText("您已开通如初会员，赶快加入训练吧！");
+        }
+        if (vipManageBean.isoverdue) {
+            mVipManagerBtnOpenVip.setText("续费会员");
+            mVipTitle.setText("您的会员已经过期，赶快续费吧!");
+            mVipManagerTvNotOpenText.setText("已过期");
+            mVipImage.setImageResource(R.drawable.expired_vip);
         }
 
         Glide

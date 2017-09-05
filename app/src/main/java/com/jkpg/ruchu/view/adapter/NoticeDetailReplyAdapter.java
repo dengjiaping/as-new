@@ -60,6 +60,8 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
         if (items.size() == 0) {
             helper.setVisible(R.id.item_notice_reply_to, false);
         } else if (items.size() >= 2) {
+            helper.setVisible(R.id.item_notice_reply_to, true);
+
             NoticeDetailBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
             helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
             helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);
@@ -69,6 +71,8 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
             NoticeDetailBean.List2Bean.ItemsBean itemsBean1 = items.get(1);
             if (itemsBean1.parentid.equals(item.tid + "")) {
                 helper.setVisible(R.id.item_notice_reply_to_0, true);
+                helper.setVisible(R.id.item_notice_reply_to_1, false);
+
                 helper.setText(R.id.item_notice_reply_to_name0, itemsBean1.nick + ":");
                 helper.setText(R.id.item_notice_reply_to_body0, itemsBean1.content);
                 helper.addOnClickListener(R.id.item_notice_reply_to_name0);
@@ -76,6 +80,8 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
 
             } else {
                 helper.setVisible(R.id.item_notice_reply_to_1, true);
+                helper.setVisible(R.id.item_notice_reply_to_0, false);
+
                 helper.setText(R.id.item_notice_reply_to_name1, itemsBean1.nick);
                 helper.setText(R.id.item_notice_reply_to_name2, itemsBean1.nick2 + ":");
                 helper.setText(R.id.item_notice_reply_to_body1, itemsBean1.content);
@@ -95,6 +101,8 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
         if (items.size() <= 2) {
             helper.setVisible(R.id.item_notice_reply_to_more, false);
         } else {
+            helper.setVisible(R.id.item_notice_reply_to_more, true);
+
             helper.setText(R.id.item_notice_reply_to_more, "更多" + (items.size() - 2) + "条回复");
             helper.addOnClickListener(R.id.item_notice_reply_to_more);
 

@@ -123,7 +123,7 @@ public class MyApplication extends Application {
             Glide.with(context).load(url)//
                     .error(R.drawable.photo_error)//
                     .crossFade()
-                    .thumbnail(0.5f)
+                    .thumbnail(0.3f)
                     .into(imageView);
         }
 

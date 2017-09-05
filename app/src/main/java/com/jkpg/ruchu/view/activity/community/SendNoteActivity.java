@@ -46,6 +46,7 @@ import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
@@ -53,6 +54,7 @@ import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.PlateNameRVAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.request.BaseRequest;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -283,6 +285,7 @@ public class SendNoteActivity extends BaseActivity {
         }
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
+            ToastUtils.showShort(UIUtils.getContext(), "请检查位置权限是否打开");
 
             return;
         }
@@ -306,7 +309,7 @@ public class SendNoteActivity extends BaseActivity {
             Address address = locationList.get(0);//得到Address实例
 
             mLocality = address.getLocality();
-            ToastUtils.showShort(UIUtils.getContext(), mLocality);
+            ToastUtils.showShort(UIUtils.getContext(), "你的位置:" + mLocality);
         }
     }
 
@@ -352,15 +355,34 @@ public class SendNoteActivity extends BaseActivity {
                         .hideSoftInputFromWindow(SendNoteActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 break;
             case R.id.send_note_iv_image:
+//                PhotoPicker.builder()
+//                        .setPhotoCount(9)
+//                        .setGridColumnCount(4)
+//                        .start(SendNoteActivity.this);
                 PhotoPicker.builder()
                         .setPhotoCount(9)
                         .setGridColumnCount(4)
+                        .setShowCamera(true)
+                        .setPreviewEnabled(false)
+                        .setSelected(selectedPhotos)
                         .start(SendNoteActivity.this);
                 break;
         }
     }
 
     private void send() {
+        if (StringUtils.isEmpty(mSendNoteEtTitle.getText().toString())) {
+            ToastUtils.showShort(UIUtils.getContext(), "请输入标题");
+            return;
+        }
+        if (mSendNoteEtBody.getText().toString().length() < 10) {
+            ToastUtils.showShort(UIUtils.getContext(), "请输入内容长度不能少于10");
+            return;
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(SendNoteActivity.this, R.style.dialog).
+                setView(View.inflate(SendNoteActivity.this.getApplicationContext(), R.layout.view_animation, null));
+        final AlertDialog show = builder.show();
+        mHeaderTvRight.setClickable(false);
         if (selectedPhotos.size() == 0) {
             OkGo
                     .post(AppUrl.BBS_POST
@@ -374,20 +396,40 @@ public class SendNoteActivity extends BaseActivity {
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
+                            mHeaderTvRight.setClickable(true);
+
                             EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success) {
                                 finish();
+                            } else {
+                                ToastUtils.showShort(UIUtils.getContext(), "发帖失败");
                             }
+
+                        }
+
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            mHeaderTvRight.setClickable(true);
+
+                        }
+
+                        @Override
+                        public void onBefore(BaseRequest request) {
+                            super.onBefore(request);
+                            show.dismiss();
                         }
                     });
         } else {
 
             ArrayList<File> files = new ArrayList<>();
             for (int i = 0; i < selectedPhotos.size(); i++) {
-                Uri uri = Uri.fromFile(new File(selectedPhotos.get(i)));
+                File file = new File(selectedPhotos.get(i));
+
+                Uri uri = Uri.fromFile(file);
                 Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
-                String s = FileUtils.saveBitmapByQuality(bm, 80);
+                String s = FileUtils.saveBitmapByQuality(bm, 10);
                 files.add(new File(s));
             }
             OkGo
@@ -404,11 +446,27 @@ public class SendNoteActivity extends BaseActivity {
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
+                            mHeaderTvRight.setClickable(true);
                             EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success) {
                                 finish();
+                            } else {
+                                ToastUtils.showShort(UIUtils.getContext(), "发帖失败");
                             }
+                        }
+
+                        @Override
+                        public void onError(Call call, Response response, Exception e) {
+                            super.onError(call, response, e);
+                            mHeaderTvRight.setClickable(true);
+
+                        }
+
+                        @Override
+                        public void onBefore(BaseRequest request) {
+                            super.onBefore(request);
+                            show.dismiss();
                         }
                     });
         }

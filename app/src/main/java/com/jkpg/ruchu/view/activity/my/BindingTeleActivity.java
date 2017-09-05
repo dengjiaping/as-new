@@ -159,6 +159,7 @@ public class BindingTeleActivity extends BaseActivity {
     }
 
     private void next() {
+        mBindingEtPwd.clearFocus();
         final String phone = mForgetEtPhone.getText().toString();
         if (StringUtils.isEmpty(phone)) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入手机号");
@@ -230,4 +231,11 @@ public class BindingTeleActivity extends BaseActivity {
             }
         }, 3000);
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
 }

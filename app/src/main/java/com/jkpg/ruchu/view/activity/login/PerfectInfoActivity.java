@@ -125,9 +125,11 @@ public class PerfectInfoActivity extends BaseActivity {
                     .centerCrop()
                     .error(R.drawable.icon_photo)
                     .into(mPerfectCivPhoto);
-            mPerfectEtName.setText(name);
-            mPerfectEtName.setSelection(name.length());
+            if (name != null && name.length() == 0) {
+                mPerfectEtName.setSelection(name.length());
+            }
         }
+        mPerfectEtName.setText(name);
         LogUtils.d(AppUrl.BASEURL + imgPath);
     }
 
@@ -263,6 +265,7 @@ public class PerfectInfoActivity extends BaseActivity {
         picker.setDividerVisible(false);
         picker.setShadowColor(Color.WHITE, 80);
         picker.setSelectedIndex(2, 1);
+        picker.setCanceledOnTouchOutside(true);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
@@ -308,7 +311,7 @@ public class PerfectInfoActivity extends BaseActivity {
     //胎次
     private void countPicker() {
         OptionPicker picker = new OptionPicker(PerfectInfoActivity.this, new String[]{"无", "头胎", "二胎", "三胎及以上"});
-        picker.setCanceledOnTouchOutside(false);
+        picker.setCanceledOnTouchOutside(true);
         picker.setDividerRatio(WheelView.DividerConfig.WRAP);
         picker.setShadowColor(Color.WHITE, 40);
         picker.setSelectedIndex(0);

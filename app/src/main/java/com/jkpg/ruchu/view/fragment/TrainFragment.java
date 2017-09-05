@@ -1,7 +1,9 @@
 package com.jkpg.ruchu.view.fragment;
 
+import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +36,7 @@ import com.jkpg.ruchu.view.activity.WebViewActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
+import com.jkpg.ruchu.view.activity.train.FullActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
 import com.jkpg.ruchu.view.activity.train.OtherTrainActivity;
@@ -107,6 +110,10 @@ public class TrainFragment extends Fragment {
     TextView mTrainTvLevel;
     @BindView(R.id.train_ll)
     LinearLayout mTrainLl;
+    @BindView(R.id.train_image)
+    ImageView mTrainImage;@BindView(R.id.train_image1)
+    ImageView mTrainImage1;
+
     private TrainMainBean mTrainMainBean;
 
     @Nullable
@@ -122,7 +129,16 @@ public class TrainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initData();
         initHeader();
-
+        mTrainImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    startActivity(new Intent(getActivity(), FullActivity.class), ActivityOptions.makeSceneTransitionAnimation(getActivity(), mTrainImage1, "sharedView").toBundle());
+                } else {
+                    startActivity(new Intent(getActivity(), FullActivity.class));
+                }
+            }
+        });
     }
 
 
@@ -174,11 +190,11 @@ public class TrainFragment extends Fragment {
 
     private void initContent() {
 
-        if (mTrainMainBean.uIsfirst.equals("1")) {
+        if (mTrainMainBean.uIsfirst != null && mTrainMainBean.uIsfirst.equals("1")) {
             mTrainIvNewHand.setVisibility(View.GONE);
         }
-        if (mTrainMainBean.uIsstest.equals("1")) {
-            mTrainTvLevel.setText("当前训练等级:" + mTrainMainBean.uLevel);
+        if (mTrainMainBean.uIsstest != null && mTrainMainBean.uIsstest.equals("1")) {
+            mTrainTvLevel.setText("当前训练等级: 难度 " + mTrainMainBean.uLevel + "        第" + mTrainMainBean.excisedays + "天");
             mTrainLl.setVisibility(View.VISIBLE);
             initTestBtn();
         } else {
@@ -199,7 +215,7 @@ public class TrainFragment extends Fragment {
 
     private void initHeader() {
         mHeaderIvLeft.setVisibility(View.GONE);
-        mHeaderTvTitle.setText("盆底肌训练");
+        mHeaderTvTitle.setText("如初康复");
         mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
     }
 
@@ -207,6 +223,9 @@ public class TrainFragment extends Fragment {
         images = new ArrayList<>();
         titles = new ArrayList<>();
         final List<TrainMainBean.HeaderLunBoImageBean> headerLunBoImage = mTrainMainBean.headerLunBoImage;
+        if (headerLunBoImage == null) {
+            return;
+        }
         for (int i = 0; i < headerLunBoImage.size(); i++) {
             images.add(AppUrl.BASEURL + headerLunBoImage.get(i).imageUrl);
             titles.add(headerLunBoImage.get(i).title);
@@ -293,8 +312,60 @@ public class TrainFragment extends Fragment {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
                                 IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+
                                 if (isVipBean.isVIP) {
-                                    startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
+                                    if (!isVipBean.excisedays) {
+                                        final String[] array = new String[]{"循环当前难度训练", "进入下一难度训练"};
+                                        final int[] selectedIndex = {0};
+                                        new AlertDialog.Builder(getContext())
+                                                .setTitle("您已完成难度" + mTrainMainBean.uLevel + "全部天数的训练,接下来你可以选择进行:")
+                                                .setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        selectedIndex[0] = which;
+                                                    }
+                                                })
+                                                .setNeutralButton("查看全部", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        startActivity(new Intent(getActivity(), MyTrainActivity.class));
+                                                    }
+                                                })
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        if (selectedIndex[0] == 0) {
+                                                            OkGo
+                                                                    .post(AppUrl.RESTARTTHISLEVEL)
+                                                                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                                    .execute(new StringDialogCallback(getActivity()) {
+                                                                        @Override
+                                                                        public void onSuccess(String s, Call call, Response response) {
+                                                                            initData();
+
+                                                                            startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
+
+                                                                        }
+                                                                    });
+                                                        } else {
+                                                            OkGo
+                                                                    .post(AppUrl.OPENMYPRACTICE)
+                                                                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                                    .params("level", (mTrainMainBean.uLevel + 1 + ""))
+                                                                    .execute(new StringDialogCallback(getActivity()) {
+                                                                        @Override
+                                                                        public void onSuccess(String s, Call call, Response response) {
+                                                                            initData();
+                                                                            startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
+                                                                        }
+                                                                    });
+                                                        }
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        startActivity(new Intent(getActivity(), TrainPrepareActivity.class));
+                                    }
                                 } else {
                                     new AlertDialog.Builder(getContext())
                                             .setMessage("只有会员才能训练哦")
@@ -312,16 +383,21 @@ public class TrainFragment extends Fragment {
                                             })
                                             .show();
                                 }
+
                             }
                         });
                 break;
             case R.id.header_iv_right:
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                    return;
+                }
                 startActivity(new Intent(getActivity(), MySMSActivity.class));
                 break;
             case R.id.train_ll:
                 new AlertDialog.Builder(getActivity())
-                        .setMessage(mTrainMainBean.userInfos.introduction)
-                        .setTitle("您当前的训练等级" + mTrainMainBean.uLevel)
+                        .setMessage(mTrainMainBean.userInfos.introduction + "\n\n建议强度: " + mTrainMainBean.advise)
+                        .setTitle("您当前的训练等级: 难度" + mTrainMainBean.uLevel)
                         .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

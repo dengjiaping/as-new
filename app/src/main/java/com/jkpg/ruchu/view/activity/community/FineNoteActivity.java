@@ -22,6 +22,9 @@ import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
 
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,6 +49,7 @@ public class FineNoteActivity extends BaseActivity {
 
     private FineNoteRVAdapter mAdapter;
     private int flag = 1;
+    private List<FineNoteBean.ListBean> mList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,8 +67,8 @@ public class FineNoteActivity extends BaseActivity {
         mFineNoteRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                flag = 1;
-                initData();
+//                initData();
+                mFineNoteRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -72,8 +76,7 @@ public class FineNoteActivity extends BaseActivity {
 
     private void initData() {
         OkGo
-                .post(AppUrl.BBS_LOOKGOOD)
-                .params("flag", flag)
+                .post(AppUrl.ARTICLEINFOS)
                 .execute(new StringCallback() {
 
                     @Override
@@ -85,8 +88,8 @@ public class FineNoteActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         FineNoteBean fineNoteBean = new Gson().fromJson(s, FineNoteBean.class);
-                        List<FineNoteBean.ListBean> list = fineNoteBean.list;
-                        initRecyclerView(list);
+                        mList = fineNoteBean.list;
+                        initRecyclerView();
 
                     }
 
@@ -99,51 +102,84 @@ public class FineNoteActivity extends BaseActivity {
                 });
     }
 
-    private void initRecyclerView(List<FineNoteBean.ListBean> list) {
+    private void initRecyclerView() {
         mFineNoteRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mAdapter = new FineNoteRVAdapter(R.layout.item_fine_note, list);
+        mAdapter = new FineNoteRVAdapter(R.layout.item_fine_note, mList);
         mFineNoteRecyclerView.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                startActivity(new Intent(FineNoteActivity.this, FineNoteDetailActivity.class));
+                Intent intent = new Intent(FineNoteActivity.this, FineNoteDetailWebActivity.class);
+                intent.putExtra("art_id", mList.get(position).articleid + "");
+                startActivity(intent);
             }
         });
 //        mAdapter.openLoadAnimation(BaseQuickAdapter.SCALEIN);
-        mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
-            @Override
-            public void onLoadMoreRequested() {
-                mFineNoteRefreshLayout.setRefreshing(false);
-                flag++;
-
-                OkGo
-                        .post(AppUrl.BBS_LOOKGOOD)
-                        .params("flag", flag)
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(String s, Call call, Response response) {
-                                FineNoteBean fineNoteBean = new Gson().fromJson(s, FineNoteBean.class);
-                                List<FineNoteBean.ListBean> list = fineNoteBean.list;
-                                if (list == null) {
-                                    mAdapter.setEnableLoadMore(false);
-                                } else if (list.size() == 0) {
-                                    mAdapter.setEnableLoadMore(false);
-                                } else {
-                                    mAdapter.addData(list);
-                                    mAdapter.loadMoreComplete();
-                                }
-                            }
-                        });
-            }
-        }, mFineNoteRecyclerView);
+//        mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+//            @Override
+//            public void onLoadMoreRequested() {
+//                mFineNoteRefreshLayout.setRefreshing(false);
+//                flag++;
+//
+//                OkGo
+//                        .post(AppUrl.BBS_LOOKGOOD)
+//                        .params("flag", flag)
+//                        .execute(new StringCallback() {
+//                            @Override
+//                            public void onSuccess(String s, Call call, Response response) {
+//                                FineNoteBean fineNoteBean = new Gson().fromJson(s, FineNoteBean.class);
+//                                List<FineNoteBean.ListBean> list = fineNoteBean.list;
+//                                if (list == null) {
+//                                    mAdapter.setEnableLoadMore(false);
+//                                } else if (list.size() == 0) {
+//                                    mAdapter.setEnableLoadMore(false);
+//                                } else {
+//                                    mAdapter.addData(list);
+//                                    mAdapter.loadMoreComplete();
+//                                }
+//                            }
+//                        });
+//            }
+//        }, mFineNoteRecyclerView);
     }
 
     private void initHeader() {
-        mHeaderTvTitle.setText("精选帖子");
+        mHeaderTvTitle.setText("精选文章");
     }
 
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {
         finish();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(String mess) {
+        if (mess.equals("Community")) {
+            OkGo
+                    .post(AppUrl.ARTICLEINFOS)
+                    .execute(new StringCallback() {
+
+                        @Override
+                        public void onBefore(BaseRequest request) {
+                            super.onBefore(request);
+                            mFineNoteRefreshLayout.setRefreshing(true);
+                        }
+
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            FineNoteBean fineNoteBean = new Gson().fromJson(s, FineNoteBean.class);
+                            mList.clear();
+                            mList.addAll(fineNoteBean.list);
+                            mAdapter.notifyDataSetChanged();
+                        }
+
+                        @Override
+                        public void onAfter(String s, Exception e) {
+                            super.onAfter(s, e);
+                            mFineNoteRefreshLayout.setRefreshing(false);
+
+                        }
+                    });
+        }
     }
 }

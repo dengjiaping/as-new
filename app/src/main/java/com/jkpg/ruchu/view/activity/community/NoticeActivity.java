@@ -14,6 +14,7 @@ import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.NoticeBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.NoticeDetailRVAdapter;
 import com.lzy.okgo.OkGo;
@@ -63,7 +64,13 @@ public class NoticeActivity extends BaseActivity {
                         NoticeBean noticeBean = new Gson().fromJson(s, NoticeBean.class);
                         List<NoticeBean.ListBean> list = noticeBean.list;
                         initRecyclerView(list);
-                        mNoticeTvIntroduce.setText(noticeBean.json.platename);
+                        String[] ns = noticeBean.json.remark.trim().split(" ");
+                        String ss = "";
+                        for (int i = 0; i < ns.length; i++) {
+                            ss = ss + "        " + ns[i] + "\n\n";
+                            LogUtils.d(ss);
+                        }
+                        mNoticeTvIntroduce.setText(ss);
                     }
                 });
 

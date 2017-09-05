@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -18,6 +19,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.MyNoteEditRVAdapter;
 import com.lzy.okgo.OkGo;
@@ -49,6 +51,10 @@ public class MyCollectEditActivity extends BaseActivity {
     TextView mHeaderTvLeft;
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
+    @BindView(R.id.no_data_text)
+    TextView mNoDataText;
+    @BindView(R.id.no_data)
+    RelativeLayout mNoData;
 
     private MyNoteEditRVAdapter mAdapter;
 
@@ -125,6 +131,7 @@ public class MyCollectEditActivity extends BaseActivity {
                             });
                 }
             }
+
             @Override
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
@@ -155,9 +162,17 @@ public class MyCollectEditActivity extends BaseActivity {
                 .params("flag", pageIndex + "")
                 .execute(new StringDialogCallback(MyCollectEditActivity.this) {
                     @Override
-                    public void onSuccess(String s, Call call, Response response) {
+                    public void onSuccess(String s, Call call, Response reonse) {
+
                         MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
                         mList = myCollectBean.list;
+                        if (mList != null && mList.size() == 0) {
+                            mNoData.setVisibility(View.VISIBLE);
+                            mNoDataText.setText("你还没有收藏哦!");
+                        } else {
+                            mNoData.setVisibility(View.GONE);
+
+                        }
                         initRecyclerView(mList);
 
                     }
@@ -207,6 +222,9 @@ public class MyCollectEditActivity extends BaseActivity {
                     mAdapter.notifyDataSetChanged();
                 }
                 LogUtils.i(s);
+                if (StringUtils.isEmpty(s)) {
+                    return;
+                }
 
                 OkGo
                         .post(AppUrl.BBS_DELCOLLECTION)
@@ -226,6 +244,8 @@ public class MyCollectEditActivity extends BaseActivity {
                                 mAdapter.notifyDataSetChanged();
                                 isEdit = false;
 
+                                pageIndex = 1;
+                                mList.clear();
                                 OkGo.
                                         post(AppUrl.BBS_LOOKCOLLECTION)
                                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -235,23 +255,40 @@ public class MyCollectEditActivity extends BaseActivity {
                                             public void onSuccess(String s, Call call, Response response) {
                                                 MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
                                                 if (myCollectBean.list == null) {
-                                                    mAdapter.changeState(2);
+                                                    mNoData.setVisibility(View.VISIBLE);
+                                                    mNoDataText.setText("你还没有收藏哦!");
 
+                                                    mAdapter.notifyDataSetChanged();
                                                 } else {
-                                                    List<MyCollectBean.ListBean> listMore = myCollectBean.list;
-                                                    if (listMore.size() == 10) {
-                                                        mAdapter.changeState(2);
 
-                                                    } else if (listMore.size() <= 10) {
-                                                        mAdapter.changeState(2);
-                                                        mList.addAll(listMore);
-
+                                                    mList.addAll(myCollectBean.list);
+                                                    mAdapter.notifyDataSetChanged();
+                                                    if (mList != null && mList.size() == 0) {
+                                                        mNoData.setVisibility(View.VISIBLE);
+                                                        mNoDataText.setText("你还没有收藏哦!");
                                                     } else {
-                                                        mAdapter.changeState(1);
-                                                        mList.addAll(listMore);
+                                                        mNoData.setVisibility(View.GONE);
+
                                                     }
                                                 }
+//                                                if (myCollectBean.list == null) {
+//                                                    mAdapter.changeState(2);
+//
+//                                                } else {
+//                                                    List<MyCollectBean.ListBean> listMore = myCollectBean.list;
+//                                                    if (listMore.size() == 10) {
+//                                                        mAdapter.changeState(2);
+//
+//                                                    } else if (listMore.size() <= 10) {
+//                                                        mAdapter.changeState(2);
+//                                                        mList.addAll(listMore);
+//
+//                                                    } else {
+//                                                        mAdapter.changeState(1);
+//                                                        mList.addAll(listMore);
+//                                                    }
                                             }
+
                                         });
                             }
                         });
@@ -266,7 +303,6 @@ public class MyCollectEditActivity extends BaseActivity {
                 mHeaderIvRight.setVisibility(View.GONE);
                 mHeaderTvRight.setVisibility(View.VISIBLE);
                 mHeaderTvLeft.setVisibility(View.VISIBLE);
-
                 isEdit = true;
                 break;
         }

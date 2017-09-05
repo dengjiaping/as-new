@@ -1,36 +1,49 @@
 package com.jkpg.ruchu.view.activity.login;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.CodeBean;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.RegisterPhoneBean;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.HtmlActivity;
 import com.jkpg.ruchu.widget.CountDownTimer;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +85,7 @@ public class RegisterPhoneActivity extends BaseActivity {
     @BindView(R.id.register_et_password_two)
     EditText mRegisterEtPasswordTwo;
     @BindView(R.id.register_bt_ok)
-    TextView mRegisterBtOk;
+    Button mRegisterBtOk;
     @BindView(R.id.register_bt_info)
     Button mRegisterBtInfo;
     @BindView(R.id.register_ll_success)
@@ -98,14 +111,17 @@ public class RegisterPhoneActivity extends BaseActivity {
     private String mCode;
     private String mPwdone;
     private String mPwdtwo;
+    private PopupWindow mPopupWindowSuccess;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_phone);
+
         ButterKnife.bind(this);
 
         initTitle();
+        mRegisterLlThree.setVisibility(View.GONE);
         mRegisterTvProtocol.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
     }
 
@@ -116,8 +132,9 @@ public class RegisterPhoneActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mRegisterLlThree.getVisibility() == View.VISIBLE) {
-                moveTaskToBack(false);
+            if (mRegisterLlOne.getVisibility() == View.GONE && mRegisterLlTwo.getVisibility() == View.VISIBLE) {
+                startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
+                finish();
                 return true;
             }
             if (mRegisterLlOne.getVisibility() == View.VISIBLE) {
@@ -135,7 +152,7 @@ public class RegisterPhoneActivity extends BaseActivity {
 
 
     @OnClick({R.id.header_iv_left, R.id.register_tv_protocol, R.id.register_bt_obtain, R.id.register_bt_time, R.id.register_bt_ok, R.id.register_bt_info})
-    public void onViewClicked(View view) {
+    public void onViewClicked(final View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
 
@@ -148,8 +165,9 @@ public class RegisterPhoneActivity extends BaseActivity {
                 }
                 break;
             case R.id.register_tv_protocol:
-
-                // TODO: 2017/5/13
+                Intent intent = new Intent(RegisterPhoneActivity.this, HtmlActivity.class);
+                intent.putExtra("URL", Constants.XIEYI);
+                startActivity(intent);
                 break;
             case R.id.register_bt_obtain:
                 sendPhone();
@@ -200,6 +218,7 @@ public class RegisterPhoneActivity extends BaseActivity {
                         .post(AppUrl.REGISTERTEL)
                         .params("tele", mPhone)
                         .params("code", mCode)
+                        .params("phoneflag", 1)
                         .params("password", mPwdone)
                         .execute(new StringDialogCallback(this) {
                             @Override
@@ -212,18 +231,38 @@ public class RegisterPhoneActivity extends BaseActivity {
                                         ToastUtils.showShort(UIUtils.getContext(), "验证码不正确");
                                     }
                                 } else {
-                                    mRegisterLlThree.setVisibility(View.VISIBLE);
+                                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                                    imm.hideSoftInputFromWindow(RegisterPhoneActivity.this.getCurrentFocus().getWindowToken(), 0);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERID, registerPhoneBean.userid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, registerPhoneBean.username);
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
+                                    mRegisterLlThree.setVisibility(View.GONE);
                                     mHeaderIvLeft.setClickable(false);
-                                    PopupWindowUtils.darkenBackground(RegisterPhoneActivity.this,.5f);
-//                                    mRegisterLlSuccess.setAnimation(AnimationUtil.createPanInAnim(2000));
+                                    mPopupWindowSuccess = new PopupWindow(RegisterPhoneActivity.this);
+                                    mPopupWindowSuccess.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+                                    mPopupWindowSuccess.setHeight(LinearLayout.LayoutParams.MATCH_PARENT);
+                                    View viewPay = LayoutInflater.from(RegisterPhoneActivity.this).inflate(R.layout.view_register_success, null);
+                                    viewPay.findViewById(R.id.register_bt_info).setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            mPopupWindowSuccess.dismiss();
+                                            startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
+                                            finish();
+
+                                        }
+                                    });
+                                    mPopupWindowSuccess.setContentView(viewPay);
+                                    mPopupWindowSuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
+                                    mPopupWindowSuccess.setOutsideTouchable(false);
+                                    mPopupWindowSuccess.setFocusable(false);
+                                    mPopupWindowSuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.CENTER, 0, 0);
+                                    PopupWindowUtils.darkenBackground(RegisterPhoneActivity.this, .4f);
                                 }
                             }
                         });
 
                 break;
             case R.id.register_bt_info:
-                startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
-                finish();
                 break;
         }
     }
@@ -243,27 +282,43 @@ public class RegisterPhoneActivity extends BaseActivity {
             return;
         }
         // 网络请求
-
         OkGo
-                .post(AppUrl.SMS)
+                .post(AppUrl.UPDATE_TEL)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("tele", mPhone)
+                .params("flag", "0")
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        LogUtils.i(s + "onSuccess");
-                        CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
-                        if (codeBean.success) {
-                            mRegisterTvInfo.setText(mPhone);
-                            mRegisterLlOne.setVisibility(View.GONE);
-                            mRegisterLlTwo.setVisibility(View.VISIBLE);
-                            timer.start();
+                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                        if (!successBean.success) {
+                            ToastUtils.showShort(UIUtils.getContext(), "手机号已存在");
                         } else {
-                            ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,明天重试");
+                            OkGo
+                                    .post(AppUrl.SMS)
+                                    .params("tele", mPhone)
+                                    .execute(new StringDialogCallback(RegisterPhoneActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+                                            LogUtils.i(s + "onSuccess");
+                                            CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
+                                            if (codeBean.success) {
+                                                mRegisterTvInfo.setText(mPhone);
+                                                mRegisterLlOne.setVisibility(View.GONE);
+                                                mRegisterLlTwo.setVisibility(View.VISIBLE);
+                                                timer.start();
+                                            } else {
+                                                ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,明天重试");
+                                            }
+
+
+                                        }
+                                    });
                         }
-
-
                     }
                 });
+
+
     }
 
     @Override

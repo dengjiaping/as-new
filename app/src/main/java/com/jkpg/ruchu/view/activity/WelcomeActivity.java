@@ -37,40 +37,10 @@ public class WelcomeActivity extends BaseActivity {
         MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                /*OkGo
-                        .post(AppUrl.LOGINSTATUS)
-                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                        .connTimeOut(3000)
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(String s, Call call, Response response) {
-                                Login login = new Gson().fromJson(s, Login.class);
-                                if (!login.success) {
-                                    startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-                                    finish();
-                                } *//*else if(login.birth.equals("")) {
-                                    startActivity(new Intent(WelcomeActivity.this, PerfectInfoActivity.class));
-                                    finish();
-                                } *//* else {
-                                    startActivity(new Intent(WelcomeActivity.this, MainActivity.class));
-                                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-
-                                    finish();
-                                }
-                            }
-
-                            @Override
-                            public void onError(Call call, Response response, Exception e) {
-                                startActivity(new Intent(WelcomeActivity.this, LoginActivity.class));
-                                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                                finish();
-                            }
-                        });
-*/
-                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
-
+                if (SPUtils.getBoolean(UIUtils.getContext(), Constants.FIRST, true)) {
+                    startActivity(new Intent(WelcomeActivity.this, SplashActivity.class));
+                    finish();
+                } else if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
                     Intent intentLogin = new Intent(WelcomeActivity.this, LoginActivity.class);
                     Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivities(new Intent[]{intentMain, intentLogin});
@@ -82,7 +52,7 @@ public class WelcomeActivity extends BaseActivity {
                 }
 
             }
-        }, 1000);
+        }, 1600);
     }
 
     //优化用户体验，禁掉返回键

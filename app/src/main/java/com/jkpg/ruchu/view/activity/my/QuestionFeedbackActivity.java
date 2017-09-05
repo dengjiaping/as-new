@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -67,8 +69,8 @@ public class QuestionFeedbackActivity extends BaseActivity {
     }
 
     private void showDialog() {
-        if (StringUtils.isEmpty(mQuestionFeedbackEt.getText().toString())){
-            ToastUtils.showShort(UIUtils.getContext(),"请输入你的反馈内容再提交~");
+        if (StringUtils.isEmpty(mQuestionFeedbackEt.getText().toString())) {
+            ToastUtils.showShort(UIUtils.getContext(), "请输入你的反馈内容再提交~");
             return;
         }
         OkGo
@@ -80,9 +82,21 @@ public class QuestionFeedbackActivity extends BaseActivity {
                     public void onSuccess(String s, Call call, Response response) {
                         SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                         if (successBean.success) {
-                            new AlertDialog.Builder(QuestionFeedbackActivity.this)
+                            AlertDialog show = new AlertDialog.Builder(QuestionFeedbackActivity.this)
                                     .setView(R.layout.view_question_feedback_success)
                                     .show();
+                            show.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                @Override
+                                public void onDismiss(DialogInterface dialog) {
+                                    finish();
+                                }
+                            });
+                            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    finish();
+                                }
+                            },3000);
                         } else {
                             ToastUtils.showShort(UIUtils.getContext(), "提交失败");
                         }

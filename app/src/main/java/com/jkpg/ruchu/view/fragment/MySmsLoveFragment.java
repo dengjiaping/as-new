@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
@@ -46,6 +47,8 @@ public class MySmsLoveFragment extends Fragment {
     Unbinder unbinder;
 
     private int PIndex = 1;
+    private MySmsLoveAdapter mMySmsLoveAdapter;
+    private List<MySmsLoveBean.BackMessBean> mBackMess;
 
     @Nullable
     @Override
@@ -62,13 +65,17 @@ public class MySmsLoveFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         OkGo
                 .post(AppUrl.MYDIANZAN)
+                .tag(this)
+
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("fenyeid", PIndex)
                 .execute(new StringCallback() {
+
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         MySmsLoveBean mySmsLoveBean = new Gson().fromJson(s, MySmsLoveBean.class);
-                        initRecyclerView(mySmsLoveBean.backMess);
+                        mBackMess = mySmsLoveBean.backMess;
+                        initRecyclerView(mBackMess);
                     }
                     @Override
                     public void onAfter(String s, Exception e) {
@@ -89,24 +96,33 @@ public class MySmsLoveFragment extends Fragment {
                 PIndex = 1;
                 OkGo
                         .post(AppUrl.MYDIANZAN)
+                        .tag(this)
                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("fenyeid", PIndex)
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
                                 MySmsLoveBean mySmsLoveBean = new Gson().fromJson(s, MySmsLoveBean.class);
-                                initRecyclerView(mySmsLoveBean.backMess);
+                                if (mySmsLoveBean.backMess != null){
+                                    mBackMess.clear();
+                                    mBackMess.addAll(mySmsLoveBean.backMess);
+                                    mMySmsLoveAdapter.notifyDataSetChanged();
+                                }
                             }
                             @Override
                             public void onAfter(String s, Exception e) {
                                 super.onAfter(s, e);
                                 mRefreshLayout.setRefreshing(false);
+                                mMySmsLoveAdapter.setEnableLoadMore(true);
+
                             }
 
                             @Override
                             public void onBefore(BaseRequest request) {
                                 super.onBefore(request);
                                 mRefreshLayout.setRefreshing(true);
+                                mMySmsLoveAdapter.setEnableLoadMore(false);
+
                             }
                         });
             }
@@ -115,9 +131,9 @@ public class MySmsLoveFragment extends Fragment {
     }
 
     private void initRecyclerView(final List<MySmsLoveBean.BackMessBean> backMess) {
-        final MySmsLoveAdapter mySmsLoveAdapter = new MySmsLoveAdapter(R.layout.item_personal_comment, backMess);
-        mRecyclerView.setAdapter(mySmsLoveAdapter);
-        mySmsLoveAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mMySmsLoveAdapter = new MySmsLoveAdapter(R.layout.item_personal_comment, backMess);
+        mRecyclerView.setAdapter(mMySmsLoveAdapter);
+        mMySmsLoveAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 if (backMess.get(position).flag.equals("1")) {
@@ -131,7 +147,7 @@ public class MySmsLoveFragment extends Fragment {
                 }
             }
         });
-        mySmsLoveAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mMySmsLoveAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
@@ -139,12 +155,13 @@ public class MySmsLoveFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        mySmsLoveAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        mMySmsLoveAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 PIndex++;
                 OkGo
                         .post(AppUrl.MYDIANZAN)
+                        .tag(this)
                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("fenyeid", PIndex)
                         .execute(new StringCallback() {
@@ -153,23 +170,27 @@ public class MySmsLoveFragment extends Fragment {
                                 MySmsLoveBean mySmsLoveBean = new Gson().fromJson(s, MySmsLoveBean.class);
                                 List<MySmsLoveBean.BackMessBean> backMess = mySmsLoveBean.backMess;
                                 if (backMess == null) {
-                                    mySmsLoveAdapter.loadMoreEnd();
+                                    mMySmsLoveAdapter.loadMoreEnd();
                                 } else if (backMess.size() == 0) {
-                                    mySmsLoveAdapter.loadMoreEnd();
+                                    mMySmsLoveAdapter.loadMoreEnd();
                                 } else {
-                                    mySmsLoveAdapter.addData(backMess);
-                                    mySmsLoveAdapter.loadMoreComplete();
+                                    mMySmsLoveAdapter.addData(backMess);
+                                    mMySmsLoveAdapter.loadMoreComplete();
                                 }
                             }
                         });
             }
         }, mRecyclerView);
-        mySmsLoveAdapter.setEmptyView(R.layout.view_no_data);
+        View view = View.inflate(UIUtils.getContext(), R.layout.view_no_data, null);
+        TextView textView = (TextView) view.findViewById(R.id.no_data_text);
+        textView.setText("你还没有消息哦!");
+        mMySmsLoveAdapter.setEmptyView(view);
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        OkGo.getInstance().cancelTag(this);
         unbinder.unbind();
     }
 }

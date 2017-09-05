@@ -13,6 +13,7 @@ public class Constants {
      */
     public static final int DEBUGLEVEL = LogUtils.LEVEL_ALL;
     public static final String PHONE = "phone";
+    public static final String FIRST = "first";
 
     public static final String USERID = "user_id";
     public static final String USERNANE = "user_name";
@@ -33,6 +34,8 @@ public class Constants {
 
 
     public static final String YZ_CLIENT_ID = "2d230f061c23006b4e";
+    public static final String SECRET = "file:///android_asset/secret.html";
+    public static final String XIEYI = "file:///android_asset/xieyi.html";
 
 
 }

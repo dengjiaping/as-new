@@ -4,15 +4,16 @@
     <string name="share_url">https://ruchu.top/</string>
     <string name="share_title">快下载如初APP吧</string>
     <string name="share_description">专注产后女性盆底康复平台</string>
-    <string name="about_phone">15610117781</string>
+    <string name="about_phone">如初康复</string>
     <string name="about_email">jkpg@jkpg.com.cn</string>
     <string name="AccounntWX">微信已绑定其他账号</string>
     <string name="AccounntQQ">QQ已绑定其他账号</string>
     <string name="AccountPWD">未设置密码</string>
-    <string name="PresentVipTip">恭喜您,赠送您3天体验会员</string>
     <string name="vipTip">赠送您3天体验会员</string>
     <string name="vipTipHeader">恭喜你</string>
-    <string name="_xml_vip">绑定会员，即送3天会员叠加包</string>
+    <string name="_xml_vip">绑定微信，即送3天会员叠加包</string>
+    <string name="wx">如初康复</string>
+
 
 
 </resources>

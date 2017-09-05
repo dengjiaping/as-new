@@ -32,6 +32,7 @@ import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
+import com.jkpg.ruchu.view.activity.community.FineNoteDetailWebActivity;
 import com.jkpg.ruchu.view.activity.community.HotNoteActivity;
 import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
@@ -94,6 +95,11 @@ public class CommunityModuleFragment extends Fragment {
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
     private CommunityMianBean mCommunityMianBean;
+    private List<CommunityMianBean.List1Bean> mList1 = new ArrayList<>();
+    private List<CommunityMianBean.List2Bean> mList2 = new ArrayList<>();
+    private List<CommunityMianBean.List3Bean> mList3 = new ArrayList<>();
+    private CommunityPlateRLAdapter mCommunityPlateRLAdapter;
+    private HotPlateRLAdapter mHotPlateRLAdapter;
 
 
     @Nullable
@@ -124,13 +130,13 @@ public class CommunityModuleFragment extends Fragment {
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                                List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
-                                List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
-                                List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
-                                initBanner(list1);
-                                initPlateRecyclerView(list2);
-                                initHotRecyclerView(list3);
+                                CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                mList2.clear();
+                                mList3.clear();
+                                mList2.addAll(communityMianBean.list2);
+                                mList3.addAll(communityMianBean.list3);
+                                mCommunityPlateRLAdapter.notifyDataSetChanged();
+                                mHotPlateRLAdapter.notifyDataSetChanged();
                                 mRefreshLayout.setRefreshing(false);
                             }
                         });
@@ -148,12 +154,12 @@ public class CommunityModuleFragment extends Fragment {
                     public void onSuccess(String s, Call call, Response response) {
 //                        LogUtils.i(s);
                         mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                        List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
-                        List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
-                        List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
-                        initBanner(list1);
-                        initPlateRecyclerView(list2);
-                        initHotRecyclerView(list3);
+                        mList1 = mCommunityMianBean.list1;
+                        mList2 = mCommunityMianBean.list2;
+                        mList3 = mCommunityMianBean.list3;
+                        initBanner(mList1);
+                        initPlateRecyclerView(mList2);
+                        initHotRecyclerView(mList3);
 
                         mIdLoadingAndRetry.setVisibility(View.GONE);
                         mErrorStateRelativeLayout.setVisibility(View.GONE);
@@ -201,10 +207,10 @@ public class CommunityModuleFragment extends Fragment {
         }
         mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 1));
 //        mCommunityRlPlate.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        CommunityPlateRLAdapter communityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
-        mCommunityRlPlate.setAdapter(communityPlateRLAdapter);
+        mCommunityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
+        mCommunityRlPlate.setAdapter(mCommunityPlateRLAdapter);
         mCommunityRlPlate.addItemDecoration(new GridDividerItemDecoration(1, Color.parseColor("#22000000")));
-        communityPlateRLAdapter.setOnItemClickListener(new CommunityPlateRLAdapter.OnRecyclerViewItemClickListener() {
+        mCommunityPlateRLAdapter.setOnItemClickListener(new CommunityPlateRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, CommunityMianBean.List2Bean data) {
                 Intent intent = new Intent(getActivity(), PlateDetailActivity.class);
@@ -219,9 +225,9 @@ public class CommunityModuleFragment extends Fragment {
 
     private void initHotRecyclerView(final List<CommunityMianBean.List3Bean> list3) {
         mCommunityRlHot.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        HotPlateRLAdapter hotPlateRLAdapter = new HotPlateRLAdapter(R.layout.item_fans_post, list3);
-        mCommunityRlHot.setAdapter(hotPlateRLAdapter);
-        hotPlateRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mHotPlateRLAdapter = new HotPlateRLAdapter(R.layout.item_fans_post, list3);
+        mCommunityRlHot.setAdapter(mHotPlateRLAdapter);
+        mHotPlateRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 int tid = list3.get(position).tid;
@@ -260,7 +266,10 @@ public class CommunityModuleFragment extends Fragment {
             @Override
             public void OnBannerClick(int position) {
                 int tid = list1.get(position).tid;
-                ToastUtils.showShort(UIUtils.getContext(), tid + "");
+                Intent intent = new Intent(getActivity(), FineNoteDetailWebActivity.class);
+                intent.putExtra("art_id", tid + "");
+                startActivity(intent);
+//                ToastUtils.showShort(UIUtils.getContext(), tid + "");
                 //startActivity(new Intent(getActivity(), FineNoteDetailActivity.class));
             }
         });
@@ -335,13 +344,13 @@ public class CommunityModuleFragment extends Fragment {
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
-                            mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                            List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
-                            List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
-                            List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
-                            initBanner(list1);
-                            initPlateRecyclerView(list2);
-                            initHotRecyclerView(list3);
+                            CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                            mList2.clear();
+                            mList3.clear();
+                            mList2.addAll(communityMianBean.list2);
+                            mList3.addAll(communityMianBean.list3);
+                            mCommunityPlateRLAdapter.notifyDataSetChanged();
+                            mHotPlateRLAdapter.notifyDataSetChanged();
                         }
                     });
         }

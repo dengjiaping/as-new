@@ -24,6 +24,7 @@ public class OpenVipBean {
     public String VIPTime;
     public boolean WXStatus;
     public String isVIP;
+    public String isgivenVIP;
     public String msg;
     public List<ListBean> list;
 

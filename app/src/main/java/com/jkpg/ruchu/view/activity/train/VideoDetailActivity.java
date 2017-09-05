@@ -1,9 +1,11 @@
 package com.jkpg.ruchu.view.activity.train;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -21,21 +23,29 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.IsVipBean;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.bean.VideoDetailBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.WebViewActivity;
 import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.adapter.FeedBackRLAdapter;
 import com.jkpg.ruchu.widget.FreshDownloadView;
+import com.jkpg.ruchu.widget.JCVideoPlayerStandard;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.List;
@@ -43,8 +53,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import fm.jiecao.jcvideoplayer_lib.JCUtils;
 import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
-import fm.jiecao.jcvideoplayer_lib.JCVideoPlayerStandard;
 import okhttp3.Call;
 import okhttp3.Response;
 
@@ -76,13 +86,23 @@ public class VideoDetailActivity extends BaseActivity {
     private String mTid;
     private String mDetailsUrl;
     private FeedBackRLAdapter mFeedBackRLAdapter;
+    private String mPosition;
+    private AlertDialog mShow;
+    private AlertDialog.Builder mBuilder;
+    private MyRunnable mMyRunnable;
+    private VideoDetailBean mVideoDetailBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_detail);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
         mTid = getIntent().getStringExtra("tid");
+        mPosition = getIntent().getStringExtra("position");
+
         initData();
         mDownload.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,7 +110,7 @@ public class VideoDetailActivity extends BaseActivity {
                 ToastUtils.showShort(UIUtils.getContext(), "边缓存边播哦");
             }
         });
-
+        mMyRunnable = new MyRunnable();
     }
 
     private void initData() {
@@ -101,14 +121,93 @@ public class VideoDetailActivity extends BaseActivity {
                 .execute(new StringDialogCallback(VideoDetailActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        VideoDetailBean videoDetailBean = new Gson().fromJson(s, VideoDetailBean.class);
-                        initVideoPlayer(videoDetailBean.videoMS);
-                        initRecyclerView(videoDetailBean.videoMS.discuss);
-                        mDetailsUrl = videoDetailBean.videoMS.detailsUrl;
-                        initHeader(videoDetailBean.videoMS.title);
+                        mVideoDetailBean = new Gson().fromJson(s, VideoDetailBean.class);
+                        initVideoPlayer(mVideoDetailBean.videoMS);
+                        initRecyclerView(mVideoDetailBean.videoMS.discuss);
+                        mDetailsUrl = mVideoDetailBean.videoMS.detailsUrl;
+                        initHeader(mVideoDetailBean.videoMS.title);
+                        isVip();
                     }
                 });
 
+
+    }
+
+    private void isVip() {
+        OkGo
+                .post(AppUrl.SELECTISVIP)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .execute(new StringDialogCallback(VideoDetailActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+
+                        if (!isVipBean.isVIP) {
+                            if (mPosition.equals("0")) {
+//                                mMyRunnable.start();
+                                mMyRunnable = new MyRunnable();
+                                MyApplication.getMainThreadHandler().postDelayed(mMyRunnable, 1000);
+                                JCUtils.clearSavedProgress(VideoDetailActivity.this, AppUrl.BASEURLHTTP + mVideoDetailBean.videoMS.videourl);
+                            } else {
+                                new AlertDialog.Builder(VideoDetailActivity.this)
+                                        .setMessage("只有会员才能观看哦!")
+                                        .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                startActivity(new Intent(VideoDetailActivity.this, OpenVipActivity.class));
+                                            }
+                                        })
+                                        .setNegativeButton("放弃开通", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                finish();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .show();
+                                mVideoPlayer.setUiWitStateAndScreen(JCVideoPlayer.NORMAL_ORIENTATION);
+//                                                mVideoPlayer.changeUiToNormal();
+                            }
+                        }
+
+                    }
+                });
+    }
+
+    private class MyRunnable implements Runnable {
+
+        @Override
+        public void run() {
+            LogUtils.d("currentPosition" + mVideoPlayer.getCurrentPosition());
+            if (mVideoPlayer.getCurrentPosition() >= 5 * 60 * 1000) {
+                if (mShow != null && mShow.isShowing()) {
+                    return;
+                }
+                mBuilder = new AlertDialog.Builder(VideoDetailActivity.this)
+                        .setMessage("开会员后继续观看哦!")
+                        .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(VideoDetailActivity.this, OpenVipActivity.class));
+                            }
+                        })
+                        .setNegativeButton("放弃开通", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+//                                MyApplication.getMainThreadHandler().removeCallbacks(mMyRunnable);
+//                                mShow.dismiss();
+                            }
+                        })
+                        .setCancelable(false);
+                mShow = mBuilder.show();
+//                                            mVideoPlayer.setUiWitStateAndScreen(JCVideoPlayer.NORMAL_ORIENTATION);
+//                                                            mVideoPlayer.changeUiToNormal();
+                mVideoPlayer.startButton.performClick();
+            }
+            MyApplication.getMainThreadHandler().postDelayed(this, 1000);
+
+        }
 
     }
 
@@ -118,6 +217,8 @@ public class VideoDetailActivity extends BaseActivity {
         if (proxy.isCached(AppUrl.BASEURLHTTP + videoMS.videourl)) {
             mDownloadText.setText("已缓存");
             mDownload.showDownloadOk();
+            mVideoPlayer.bottomProgressBar.setSecondaryProgress(100);
+
         } else {
             mDownload.reset();
         }
@@ -132,28 +233,17 @@ public class VideoDetailActivity extends BaseActivity {
             @Override
             public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
                 if (percentsAvailable == 1) {
+//                    ToastUtils.showShort(UIUtils.getContext(), "边播边缓存");
+
                     mDownload.startDownload();
                 }
                 mDownload.upDateProgress(percentsAvailable);
+                mVideoPlayer.bottomProgressBar.setSecondaryProgress(percentsAvailable);
                 if (percentsAvailable == 100) {
                     mDownloadText.setText("已经缓存");
                 }
             }
         }, AppUrl.BASEURLHTTP + videoMS.videourl);
-//        mVideoPlayer.startButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                mDownload.startDownload();
-//                if (proxy.isCached(AppUrl.BASEURLHTTP + videoMS.videourl)) {
-//                    mDownloadText.setText("已缓存");
-//                    mDownload.showDownloadOk();
-//                } else {
-//                    mDownload.reset();
-//
-//                }
-//
-//            }
-//        });
         mViewStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -167,6 +257,8 @@ public class VideoDetailActivity extends BaseActivity {
                 }
             }
         });
+
+
     }
 
 
@@ -228,9 +320,14 @@ public class VideoDetailActivity extends BaseActivity {
                                 .execute(new StringDialogCallback(VideoDetailActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
-                                        VideoDetailBean videoDetailBean = new Gson().fromJson(s, VideoDetailBean.class);
-                                        initRecyclerView(videoDetailBean.videoMS.discuss);
-                                        mVideoRecyclerView.scrollToPosition(videoDetailBean.videoMS.discuss.size() - 1);
+                                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                        if (successBean.state == 200) {
+                                            VideoDetailBean videoDetailBean = new Gson().fromJson(s, VideoDetailBean.class);
+                                            initRecyclerView(videoDetailBean.videoMS.discuss);
+                                            mVideoRecyclerView.scrollToPosition(videoDetailBean.videoMS.discuss.size() - 1);
+                                        } else {
+                                            ToastUtils.showShort(UIUtils.getContext(), "反馈失败");
+                                        }
                                     }
                                 });
                     }
@@ -264,6 +361,20 @@ public class VideoDetailActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+        MyApplication.getMainThreadHandler().removeCallbacks(mMyRunnable);
         EventBus.getDefault().post("OtherTrain");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refresh(MessageEvent mess) {
+        if (mess.message.equals("Vip")) {
+            MyApplication.getMainThreadHandler().removeCallbacks(mMyRunnable);
+            if (mShow != null && mShow.isShowing()) {
+                mShow.dismiss();
+            }
+        }
     }
 }

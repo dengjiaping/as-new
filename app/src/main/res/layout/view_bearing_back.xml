@@ -194,7 +194,7 @@
                     android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
-                    android:text="盆地肌力"
+                    android:text="盆底肌力"
                     android:textColor="@color/colorGray3"
                     android:textSize="15sp"/>
 

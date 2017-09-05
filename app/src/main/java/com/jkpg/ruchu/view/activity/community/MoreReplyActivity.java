@@ -69,6 +69,14 @@ public class MoreReplyActivity extends BaseActivity {
         initData();
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mBbsid = intent.getStringExtra("bbsid");
+        mReplyid = intent.getStringExtra("replyid");
+        initData();
+    }
+
     private void initData() {
         OkGo
                 .post(AppUrl.BBS_LOOKMOREREPLIES)

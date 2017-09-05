@@ -41,6 +41,7 @@ public class AppUrl {
     public static final String OPENMYPRACTICE = BASEURL + "OpenMyPracticeServlet ";
     public static final String BACKDOCTOR = BASEURL + "BackDoctorServlet ";
     public static final String SELECTISVIP = BASEURL + "SelectIsVIPServlet ";
+    public static final String RESTARTTHISLEVEL = BASEURL + "RestartThisLevelServlet ";
 
     public static final String BBS_INFOS = BASEURL + "BBS_InfosServlet";
     public static final String BBS_LOOKCOLLECTION = BASEURL + "BBS_LookCollectionServlet";
@@ -53,6 +54,7 @@ public class AppUrl {
     //点赞
     public static final String UPVOTE = BASEURL + "UpvoteServlet";
     public static final String UPVOTEREPLY = BASEURL + "UpvoteReplyServlet";
+    public static final String ARTICLEDETAIL = BASEURL + "ArticleDetailsServlet";
 
 
 
@@ -61,6 +63,12 @@ public class AppUrl {
     public static final String BBS_LOOKGOOD = BASEURL + "BBS_LookGoodServlet";
     public static final String BBS_LOOKHOT = BASEURL + "BBS_LookHotServlet";
     public static final String BBS_LOOKMOREREPLIES = BASEURL + "BBS_LookMoreRepliesServlet";
+    public static final String ARTICLEINFOS = BASEURL + "ArticleInfosServlet";
+    public static final String ARTICLEPRAISE = BASEURL + "ArticlePraiseServlet";
+    public static final String ARTICLECOLLECTION = BASEURL + "ArticleCollectionServlet";
+    public static final String ArticleReply = BASEURL + "ArticleReplyServlet";
+    public static final String ARTICLEREPLYPRAISE = BASEURL + "ArticleReplyPraiseServlet";
+    public static final String ARTICLELOOKMOREREPLIES = BASEURL + "ArticleLookMoreRepliesServlet";
 
 
 

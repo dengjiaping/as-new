@@ -19,23 +19,20 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="12dp"
-            app:stroke_width="0.5dp"
             android:visibility="gone"
-            app:color_checked="@color/colorPink"/>
+            />
 
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/item_feedback_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="12dp"
-            app:civ_border_color="@color/colorPinkTran"
-            app:civ_border_overlay="true"
-            app:civ_border_width="1dp"/>
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
             android:orientation="vertical">
 

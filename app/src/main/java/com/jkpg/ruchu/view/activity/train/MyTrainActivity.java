@@ -49,7 +49,8 @@ public class MyTrainActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_train);
         ButterKnife.bind(this);
-        mHeaderTvTitle.setText("我的训练");
+        mHeaderTvTitle.setText("全部难度" +
+                "");
         initData();
     }
 
@@ -103,7 +104,7 @@ public class MyTrainActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
                 new AlertDialog.Builder(MyTrainActivity.this)
-                        .setMessage(list.get(position).introduction)
+                        .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
                         .setNegativeButton("取消", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -130,7 +131,7 @@ public class MyTrainActivity extends BaseActivity {
                                         });
                             }
                         })
-                        .setTitle("要启用 " + list.get(position).level + " 难度训练吗？")
+                        .setTitle("要启用难度 " + (position + 1) + " 训练吗？")
                         .show();
             }
         });

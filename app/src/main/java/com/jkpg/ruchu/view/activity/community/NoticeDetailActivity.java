@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
@@ -53,7 +54,9 @@ import com.jkpg.ruchu.widget.nineview.ImageInfo;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.jkpg.ruchu.widget.nineview.preview.NineGridViewClickAdapter;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -97,6 +100,8 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     RecyclerView mNoticeDetailReplyRecycler;
     @BindView(R.id.notice_detail_reply)
     TextView mNoticeDetailReply;
+    @BindView(R.id.refresh_layout)
+    SwipeRefreshLayout mRefreshLayout;
 
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
@@ -133,11 +138,78 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_notice_detail_revise);
         ButterKnife.bind(this);
         mBbsid = getIntent().getStringExtra("bbsid");
+        LogUtils.d(mBbsid+"bbsid");
+
         initData(mBbsid);
         initHeader();
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
+
+        mRefreshLayout.setColorSchemeResources(R.color.colorPink, R.color.colorPink2);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                OkGo
+                        .post(AppUrl.BBS_DETAILS)
+                        .params("bbsid", mBbsid)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringCallback() {
+
+
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                                mList1.clear();
+                                mList2.clear();
+                                mList1.addAll(noticeDetailBean.list1);
+                                mList2.addAll(noticeDetailBean.list2);
+                                mNoticeDetailReplyAdapter.notifyDataSetChanged();
+
+                            }
+
+                            @Override
+                            public void onAfter(@Nullable String s, @Nullable Exception e) {
+                                super.onAfter(s, e);
+                                mRefreshLayout.setRefreshing(false);
+                            }
+                        });
+            }
+        });
+
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mBbsid = intent.getStringExtra("bbsid");
+        LogUtils.d(mBbsid+"bbsid");
+//        OkGo
+//                .post(AppUrl.BBS_DETAILS)
+//                .params("bbsid", mBbsid)
+//                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+//                .execute(new StringCallback() {
+//
+//
+//                    @Override
+//                    public void onSuccess(String s, Call call, Response response) {
+//                        NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+//                        mList1.clear();
+//                        mList2.clear();
+//                        mList1.addAll(noticeDetailBean.list1);
+//                        mList2.addAll(noticeDetailBean.list2);
+//                        mNoticeDetailReplyAdapter.notifyDataSetChanged();
+//
+//                    }
+//
+//                    @Override
+//                    public void onAfter(@Nullable String s, @Nullable Exception e) {
+//                        super.onAfter(s, e);
+//                        mRefreshLayout.setRefreshing(false);
+//                    }
+//                });
+        initData(mBbsid);
+
 
     }
 
@@ -145,9 +217,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         mNoticeDetailTvDz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: 2017/8/11
                 if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
                     startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
+                    mNoticeDetailTvDz.setChecked(false);
                     return;
                 }
                 if (mNoticeDetailTvDz.isChecked()) {
@@ -218,8 +290,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         OkGo
                 .post(AppUrl.BBS_DETAILS)
                 .params("bbsid", bbsid)
+                .tag(this)
+                .cacheKey("BBS_DETAILS" + bbsid)
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .execute(new StringDialogCallback(NoticeDetailActivity.this) {
+                .execute(new StringCallback() {
 
 
                     @Override
@@ -228,9 +303,20 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                         mList1 = noticeDetailBean.list1;
                         mList2 = noticeDetailBean.list2;
                         initRecyclerView(mList2);
-
-
                     }
+
+                    @Override
+                    public void onAfter(@Nullable String s, @Nullable Exception e) {
+                        super.onAfter(s, e);
+                        mRefreshLayout.setRefreshing(false);
+                    }
+
+                    @Override
+                    public void onBefore(BaseRequest request) {
+                        super.onBefore(request);
+                        mRefreshLayout.setRefreshing(true);
+                    }
+
                 });
     }
 
@@ -256,7 +342,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         mNoticeDetailTvDz.setText(list1Bean.zan);
         mNoticeDetailTvDz.setChecked(list1Bean.iszan);
 
-        mNoticeDetailTvReply.setText(mList2.size()+"");
+        mNoticeDetailTvReply.setText(mList2.size() + "");
         mNoticeDetailTvTitle.setText(list1Bean.title);
         mNoticeDetailTvTime.setText(list1Bean.createtime);
         mNoticeDetailTvContent.setText(list1Bean.content);
@@ -385,9 +471,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         initZan();
         initNotice(mList1);
         if (mList2.size() > 0) {
-            mNoticeDetailTvNum.setText("共有" + mList2.size() + "条回帖");
+            mNoticeDetailTvNum.setText("全部回复");
         } else {
-            mNoticeDetailTvNum.setText("暂无回帖");
+            mNoticeDetailTvNum.setText("暂无回复");
         }
 
 
@@ -475,6 +561,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                     if (successBean.success) {
                                         isCollect = true;
                                         mHeaderIvRight2.setImageResource(R.drawable.icon_collect_ok);
+                                        ToastUtils.showShort(UIUtils.getContext(), "收藏成功");
                                     } else {
                                         ToastUtils.showShort(UIUtils.getContext(), "收藏失败");
                                     }
@@ -561,6 +648,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     }
 
     private void replyLZ() {
+        selectedPhotos.clear();
         //// TODO: 2017/8/11
         if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
             startActivity(new Intent(NoticeDetailActivity.this, LoginActivity.class));
@@ -594,7 +682,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
 
                     if (selectedPhotos.size() == 0) {
                         if (string.length() == 0) {
-                            ToastUtils.showShort(UIUtils.getContext(),"请输入内容哦!");
+                            ToastUtils.showShort(UIUtils.getContext(), "请输入内容哦!");
                             return;
                         }
                         OkGo
@@ -672,7 +760,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                     }
                 } else {
                     if (string.length() == 0) {
-                        ToastUtils.showShort(UIUtils.getContext(),"请输入内容哦!");
+                        ToastUtils.showShort(UIUtils.getContext(), "请输入内容哦!");
                         return;
                     }
                     OkGo
@@ -791,9 +879,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                 PopupWindowUtils.darkenBackground(NoticeDetailActivity.this, 1f);
             }
         });
-        final UMWeb mWeb = new UMWeb(AppUrl.BASEURL + mList1.get(0).shearurl);
+        final UMWeb mWeb = new UMWeb(AppUrl.BASEURL + mList1.get(0).shareurl + "?bbsid=" + mbbsid);
         mWeb.setTitle(mList1.get(0).title);//标题
-        if (mList1.get(0).images.get(0) == null) {
+        if (mList1.get(0).images.size() == 0) {
             mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));
         } else {
             mWeb.setThumb(new UMImage(UIUtils.getContext(), AppUrl.BASEURL + mList1.get(0).images.get(0)));
@@ -885,6 +973,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OkGo.getInstance().cancelTag(this);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
@@ -903,15 +992,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                             NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
                             mList1.clear();
                             mList2.clear();
-                            mList1 = noticeDetailBean.list1;
-                            mList2 = noticeDetailBean.list2;
-                            initRecyclerView(mList2);
-//                                                    int size = mList2.size();
-//                                                    mList2.clear();
-//                                                    mNoticeDetailReplyAdapter.notifyItemRangeRemoved(0,size);
-//                                                    mList2.addAll(noticeDetailBean.list2);
-//                                                    mNoticeDetailReplyAdapter.notifyItemRangeInserted(0,mList2.size());
-//                                                    ((SimpleItemAnimator) mNoticeDetailReplyRecycler.getItemAnimator()).setSupportsChangeAnimations(false);
+                            mList1.addAll(noticeDetailBean.list1);
+                            mList2.addAll(noticeDetailBean.list2);
+                            mNoticeDetailReplyAdapter.notifyDataSetChanged();
                         }
 
                         @Override
@@ -921,7 +1004,36 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                         }
                     });
         } else if (mess.message.equals("Login")) {
-            initData(mBbsid);
+            OkGo
+                    .post(AppUrl.BBS_DETAILS)
+                    .params("bbsid", mBbsid)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .execute(new StringCallback() {
+
+
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
+                            mList1.clear();
+                            mList2.clear();
+                            mList1.addAll(noticeDetailBean.list1);
+                            mList2.addAll(noticeDetailBean.list2);
+                            mNoticeDetailReplyAdapter.notifyDataSetChanged();
+
+                        }
+
+                        @Override
+                        public void onAfter(@Nullable String s, @Nullable Exception e) {
+                            super.onAfter(s, e);
+                            mRefreshLayout.setRefreshing(false);
+                        }
+
+                        @Override
+                        public void onBefore(BaseRequest request) {
+                            super.onBefore(request);
+                            mRefreshLayout.setRefreshing(true);
+                        }
+                    });
         }
     }
 }

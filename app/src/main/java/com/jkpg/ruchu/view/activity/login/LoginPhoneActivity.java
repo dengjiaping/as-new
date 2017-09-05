@@ -69,8 +69,8 @@ public class LoginPhoneActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            startActivity(new Intent(LoginPhoneActivity.this, LoginActivity.class));
             finish();
+            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
             return true;
         }
         return super.onKeyDown(keyCode, event);
@@ -115,14 +115,14 @@ public class LoginPhoneActivity extends BaseActivity {
                                 Login login = new Gson().fromJson(s, Login.class);
                                 if (!login.success) {
                                     ToastUtils.showShort(UIUtils.getContext(), "手机号或密码错误");
-                                } else if (login.isfirst == 1) {
+                                } /*else if (login.isfirst == 1) {
                                     startActivity(new Intent(LoginPhoneActivity.this, PerfectInfoActivity.class));
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, login.nick);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, login.headImg);
                                     finish();
-                                } else {
+                                }*/ else {
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
 //                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));

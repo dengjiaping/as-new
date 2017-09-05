@@ -2,6 +2,7 @@ package com.jkpg.ruchu.view.activity.my;
 
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutCompat;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -19,13 +21,16 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.FansCenterBean;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
@@ -79,6 +84,8 @@ public class FansCenterActivity extends BaseActivity {
     TextView mFansTvChat;
     @BindView(R.id.fans_tv_more)
     TextView mFansTvMore;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
 
     @BindView(R.id.fans_show_follow)
     LinearLayout mFansShowFollow;
@@ -94,7 +101,27 @@ public class FansCenterActivity extends BaseActivity {
         setContentView(R.layout.activity_fans_center);
         ButterKnife.bind(this);
         initHeader();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
         mFansId = getIntent().getStringExtra("fansId");
+        if (StringUtils.isEmpty(mFansId)) {
+            ToastUtils.showShort(UIUtils.getContext(), "用户不存在哦");
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 1000);
+        } else {
+            initData(mFansId);
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        mFansId= intent.getStringExtra("fansId");
         initData(mFansId);
     }
 
@@ -196,6 +223,10 @@ public class FansCenterActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fans_tv_add_follow:
+                if (mFansId.equals(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    ToastUtils.showShort(UIUtils.getContext(), "自己不能关注自己哦");
+                    return;
+                }
 
                 OkGo
                         .post(AppUrl.ATTENTION)
@@ -211,6 +242,7 @@ public class FansCenterActivity extends BaseActivity {
 
                                 } else {
                                     EventBus.getDefault().post("fans");
+                                    EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     mFansShowFollow.setVisibility(View.VISIBLE);
                                     mFansTvAddFollow.setVisibility(View.GONE);
                                 }
@@ -260,6 +292,8 @@ public class FansCenterActivity extends BaseActivity {
                                     mFansShowFollow.setVisibility(View.GONE);
                                     mFansTvAddFollow.setVisibility(View.VISIBLE);
                                     EventBus.getDefault().post("fans");
+
+                                    EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     popupWindow.dismiss();
                                 }
                             }

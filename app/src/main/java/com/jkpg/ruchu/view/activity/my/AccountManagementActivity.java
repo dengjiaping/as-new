@@ -24,6 +24,7 @@ import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -155,7 +156,7 @@ public class AccountManagementActivity extends BaseActivity {
                                                         mAccountManageRbWx.setText("绑定");
                                                         isWX = false;
                                                     } else {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "解绑失败");
+                                                        ToastUtils.showShort(UIUtils.getContext(), successBean.msg);
                                                     }
                                                 }
                                             });
@@ -194,7 +195,7 @@ public class AccountManagementActivity extends BaseActivity {
                                                         mAccountManageRbQq.setText("绑定");
                                                         isQQ = false;
                                                     } else {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "解绑失败");
+                                                        ToastUtils.showShort(UIUtils.getContext(), successBean.msg);
                                                     }
                                                 }
                                             });
@@ -211,6 +212,7 @@ public class AccountManagementActivity extends BaseActivity {
             case R.id.account_manage_btn_logout:
                 SPUtils.clear();
                 startActivity(new Intent(AccountManagementActivity.this, LoginActivity.class));
+                SPUtils.saveBoolean(UIUtils.getContext(), Constants.FIRST, false);
                 EventBus.getDefault().post(new MessageEvent("Quit"));
                 EventBus.getDefault().post(new MessageEvent("Login"));
                 finish();
@@ -311,8 +313,6 @@ public class AccountManagementActivity extends BaseActivity {
                                 }
                             }
                         });
-
-
             }
 
         }
@@ -349,5 +349,11 @@ public class AccountManagementActivity extends BaseActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         UMShareAPI.get(this).onSaveInstanceState(outState);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        initData();
+        LogUtils.d("-----------");
     }
 }

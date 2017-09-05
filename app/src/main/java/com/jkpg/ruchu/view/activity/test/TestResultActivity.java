@@ -1,20 +1,33 @@
 package com.jkpg.ruchu.view.activity.test;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.TestResultBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
+import com.lzy.okgo.OkGo;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/20.
@@ -66,8 +79,35 @@ public class TestResultActivity extends BaseActivity {
                 startActivity(intent);
                 break;
             case R.id.result_btn_start:
-                startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
-                finish();
+                OkGo
+                        .post(AppUrl.SELECTISVIP)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(TestResultActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+                                if (isVipBean.isVIP) {
+                                    startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                                    finish();
+                                } else {
+                                    new AlertDialog.Builder(TestResultActivity.this)
+                                            .setMessage("只有会员才能训练哦")
+                                            .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    startActivity(new Intent(TestResultActivity.this, OpenVipActivity.class));
+                                                }
+                                            })
+                                            .setNegativeButton("放弃训练", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
+                        });
                 break;
         }
     }

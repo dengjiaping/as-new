@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
+              android:background="@drawable/ripple_with_color"
               android:orientation="vertical">
 
     <LinearLayout
@@ -9,8 +10,9 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:layout_marginTop="12dp"
-        android:background="@drawable/shap_rectangle_white_grayline"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp"
+        android:background="@drawable/shap_rectangle_white_line_void"
         android:orientation="vertical"
         android:padding="12dp">
 
@@ -19,12 +21,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
+            android:lines="1"
+            android:ellipsize="end"
             android:textSize="16sp"
             />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="5dp"
             android:layout_marginTop="5dp">
 
             <TextView
@@ -49,7 +54,9 @@
                     android:drawableLeft="@drawable/zan"
                     android:drawablePadding="5dp"
                     android:text="0"
-                    android:textColor="@color/colorGray3"/>
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorGray2"/>
 
                 <TextView
                     android:id="@+id/item_fine_note_tv_reply"
@@ -60,7 +67,9 @@
                     android:drawablePadding="5dp"
                     android:paddingLeft="5dp"
                     android:text="0"
-                    android:textColor="@color/colorGray3"/>
+                    android:textSize="12sp"
+                    android:gravity="center_vertical"
+                    android:textColor="@color/colorGray2"/>
             </LinearLayout>
         </RelativeLayout>
 
@@ -72,12 +81,12 @@
             />
 
         <TextView
+            android:layout_marginTop="12dp"
             android:id="@+id/item_fine_note_iv_body"
-
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:lines="2"
+            android:maxLines="2"
             />
     </LinearLayout>
 

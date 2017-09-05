@@ -18,8 +18,8 @@
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/vip_manager_civ_photo"
 
-            android:layout_width="90dp"
-            android:layout_height="90dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:src="@drawable/icon_photo"/>
 
         <LinearLayout
@@ -61,27 +61,54 @@
                     android:layout_width="wrap_content"
                     android:layout_height="30dp"
                     android:drawablePadding="5dp"
-                    android:drawableRight="@drawable/icon_renew"
                     android:gravity="center"
                     android:textColor="@android:color/white"
                     android:textSize="16sp"
                     />
 
-                <TextView
+                <LinearLayout
                     android:id="@+id/vip_manager_tv_not_open"
-                    android:layout_width="wrap_content"
 
-                    android:layout_height="30dp"
-                    android:drawableLeft="@drawable/icon_notopen"
-                    android:drawablePadding="5dp"
-                    android:gravity="center"
-                    android:text="开通会员享受特权"
-                    android:textColor="@android:color/white"
-                    android:textSize="14sp"
-                    android:visibility="gone"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp">
+
+                    <TextView
+                        android:id="@+id/vip_manager_tv_not_open_text"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/vip_bg"
+                        android:gravity="center"
+                        android:text="未开通"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+
+                        android:layout_height="30dp"
+                        android:drawablePadding="5dp"
+                        android:layout_marginLeft="5dp"
+                        android:gravity="center"
+                        android:text="开通会员享受特权"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"
+                        />
+                </LinearLayout>
+
+
             </RelativeLayout>
         </LinearLayout>
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/vip_title"
+        android:layout_width="match_parent"
+        android:layout_height="46dp"
+        android:background="@android:color/white"
+        android:elevation="2dp"
+        android:gravity="center"
+        android:textColor="@color/colorPink"
+        android:textSize="16sp"/>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/vip_manager_tab_layout"
@@ -89,18 +116,33 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:elevation="2dp"
+        android:visibility="gone"
         app:tabSelectedTextColor="@color/colorPink"
         app:tabTextColor="@color/colorGray2">
 
 
     </android.support.design.widget.TabLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/vip_manager_view_pager"
-
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1"
+        android:background="@android:color/white">
+
+        <ImageView
+            android:id="@+id/vip_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:adjustViewBounds="true"/>
+    </ScrollView>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/vip_manager_view_pager"
+        android:layout_width="match_parent"
+
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone"/>
 
 
     <LinearLayout

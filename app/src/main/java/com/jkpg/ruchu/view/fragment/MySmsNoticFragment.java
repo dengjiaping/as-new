@@ -40,6 +40,8 @@ public class MySmsNoticFragment extends Fragment {
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
     Unbinder unbinder;
+    private List<MySmsNoticeBean.ListBean> mList;
+    private MySmsNoticeAdapter mMyCommentAdapter;
 
 
     @Nullable
@@ -58,9 +60,11 @@ public class MySmsNoticFragment extends Fragment {
                 .post(AppUrl.MYNOTICE)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .execute(new StringCallback() {
+
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         MySmsNoticeBean mySmsNoticeBean = new Gson().fromJson(s, MySmsNoticeBean.class);
+                        mList = mySmsNoticeBean.list;
                         initRecyclerView(mySmsNoticeBean.list);
                     }
 
@@ -87,19 +91,27 @@ public class MySmsNoticFragment extends Fragment {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
                                 MySmsNoticeBean mySmsNoticeBean = new Gson().fromJson(s, MySmsNoticeBean.class);
-                                initRecyclerView(mySmsNoticeBean.list);
+                                if (mySmsNoticeBean.list != null) {
+                                    mList.clear();
+                                    mList.addAll(mySmsNoticeBean.list);
+                                    mMyCommentAdapter.notifyDataSetChanged();
+                                }
                             }
 
                             @Override
                             public void onAfter(String s, Exception e) {
                                 super.onAfter(s, e);
                                 mRefreshLayout.setRefreshing(false);
+                                mMyCommentAdapter.setEnableLoadMore(true);
+
                             }
 
                             @Override
                             public void onBefore(BaseRequest request) {
                                 super.onBefore(request);
                                 mRefreshLayout.setRefreshing(true);
+                                mMyCommentAdapter.setEnableLoadMore(false);
+
                             }
                         });
             }
@@ -111,9 +123,15 @@ public class MySmsNoticFragment extends Fragment {
     private void initRecyclerView(List<MySmsNoticeBean.ListBean> list) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(UIUtils.getContext());
         layoutManager.setStackFromEnd(true);
-        mRecyclerView.setLayoutManager(layoutManager);
-        MySmsNoticeAdapter myCommentAdapter = new MySmsNoticeAdapter(R.layout.item_sms_notic, list);
-        mRecyclerView.setAdapter(myCommentAdapter);
+
+        try {
+            mRecyclerView.setLayoutManager(layoutManager);
+            mMyCommentAdapter = new MySmsNoticeAdapter(R.layout.item_sms_notic, list);
+            mRecyclerView.setAdapter(mMyCommentAdapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 //        mRecyclerView.smoothScrollToPosition(list.size() - 1);
     }
 

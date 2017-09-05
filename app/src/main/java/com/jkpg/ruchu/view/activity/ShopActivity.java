@@ -164,6 +164,7 @@ public class ShopActivity extends BaseActivity {
                     } else {
                         OkGo
                                 .post(AppUrl.YOUZANINITTOKEN)
+                                .tag(UIUtils.getContext())
 //                                .params("client_id", Constants.YZ_CLIENT_ID)
 //                                .params("client_secret", Constants.YZ_CLIENT_SECRET)
                                 .execute(new StringDialogCallback(ShopActivity.this) {
@@ -186,6 +187,8 @@ public class ShopActivity extends BaseActivity {
                 } else {
                     OkGo
                             .post(AppUrl.YOUZAN)
+                            .tag(UIUtils.getContext())
+
 //                            .params("client_id", Constants.YZ_CLIENT_ID)
 //                            .params("client_secret", Constants.YZ_CLIENT_SECRET)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -320,6 +323,7 @@ public class ShopActivity extends BaseActivity {
         if (event.message.equals("Login")) {
             OkGo
                     .post(AppUrl.YOUZAN)
+                    .tag(UIUtils.getContext())
 //                    .params("client_id", Constants.YZ_CLIENT_ID)
 //                    .params("client_secret", Constants.YZ_CLIENT_SECRET)
                     .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))

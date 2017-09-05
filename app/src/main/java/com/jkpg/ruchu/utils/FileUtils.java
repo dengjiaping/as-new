@@ -30,13 +30,16 @@ public class FileUtils {
 
     public static final String ROOT_DIR = "Android/data/"
             + UIUtils.getPackageName();
-    public static final String DOWNLOAD_DIR = "download";
-    public static final String CACHE_DIR = "cache";
-    public static final String ICON_DIR = "icon";
+    public static final String DOWNLOAD_DIR = "ruchu";
+//    public static final String DOWNLOAD_DIR = "download";
+    public static final String CACHE_DIR = "ruchu";
+//    public static final String CACHE_DIR = "cache";
+    public static final String ICON_DIR = "ruchu";
+//    public static final String ICON_DIR = "icon";
     public static final String IMAGE_LOADER_DIR = "ruchu";
     public static final String MAP_CACHE_DIR = "map";
 
-    public static final String APP_STORAGE_ROOT = "RuChu";
+    public static final String APP_STORAGE_ROOT = "ruchu";
 
     /**
      * 判断SD卡是否挂载
@@ -76,11 +79,11 @@ public class FileUtils {
      */
     public static String getDir(String name) {
         StringBuilder sb = new StringBuilder();
-        if (isSDCardAvailable()) {
-            sb.append(getExternalStoragePath());
-        } else {
+//        if (isSDCardAvailable()) {
+//            sb.append(getExternalStoragePath());
+//        } else {
             sb.append(getCachePath());
-        }
+//        }
         sb.append(name);
         sb.append(File.separator);
         String path = sb.toString();

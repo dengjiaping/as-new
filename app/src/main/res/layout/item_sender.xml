@@ -14,15 +14,13 @@
         android:orientation="horizontal">
 
         <com.jkpg.ruchu.widget.CircleImageView
-            android:visibility="gone"
             android:id="@+id/item_feedback_photo"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="12dp"
             android:src="@drawable/icon_photo"
-            app:civ_border_color="@color/colorPinkTran"
-            app:civ_border_overlay="true"
-            app:civ_border_width="1dp"/>
+            android:visibility="gone"
+            />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -36,50 +34,48 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lines="1"
-                android:text="@string/app_name"
                 android:textColor="@color/colorGray3"
                 android:textSize="16sp"/>
 
             <LinearLayout
-                android:layout_marginTop="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="22dp"
+                >
 
                 <TextView
                     android:id="@+id/item_tv_post_body"
-
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1"
                     android:lines="1"
-                    android:text="hahhahahahhahahah"
                     android:textColor="@color/colorGray3"
                     android:textSize="14sp"/>
+
                 <TextView
                     android:id="@+id/item_tv_post_unread"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2"
+                    android:background="@drawable/shape_circle_gray"
+                    android:gravity="center"
+                    android:layout_gravity="center_vertical"
                     android:textColor="@android:color/white"
-                    android:textSize="12sp"
-                    android:background="@drawable/shap_rectangle_gray2"/>
+                    android:textSize="12sp"/>
 
                 <ImageView
-                    android:layout_marginLeft="5dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
                     android:src="@drawable/icon_next"
                     />
             </LinearLayout>
 
 
             <TextView
-                android:layout_marginTop="5dp"
                 android:id="@+id/item_tv_post_time"
 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="2017-05-21 09:20"
                 android:textColor="@color/colorGray3"
                 android:textSize="12sp"/>
 

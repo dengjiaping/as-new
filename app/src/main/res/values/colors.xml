@@ -4,7 +4,7 @@
     <color name="colorAccent">#FF5070</color>
     <color name="colorPink">#FF5070</color>
     <color name="colorPinkTop">#fc6cab</color>
-    <color name="colorPinkTran">#55FF5070</color>
+    <color name="colorPinkTran">#44FF5070</color>
     <color name="colorPinkShallow">#f5d2d9</color>
     <color name="colorPink2">#FCA29A</color>
     <color name="colorGray2">#BDBDBD</color>
@@ -14,7 +14,5 @@
     <color name="colorXmlBg">#F6F4F5</color>
     <color name="colorYellow">#F8DC2C</color>
     <color name="ic_default_bg_color">#00000000</color>
-
-    <color name="navpage">#FFE1E8EB</color>
 
 </resources>

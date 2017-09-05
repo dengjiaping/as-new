@@ -1,14 +1,13 @@
 package com.jkpg.ruchu.view.activity.my;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -45,6 +44,10 @@ public class TrainHistoryActivity extends BaseActivity {
     ImageView mHeaderIvRight;
     @BindView(R.id.history_recycler_view)
     RecyclerView mHistoryRecyclerView;
+    @BindView(R.id.no_data_text)
+    TextView mNoDataText;
+    @BindView(R.id.no_data)
+    RelativeLayout mNoData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,21 +71,11 @@ public class TrainHistoryActivity extends BaseActivity {
                         List<TrainHistoryBean.ItemsBean> items = trainHistoryBean.items;
                         initRecyclerView(items);
                         if (items == null || items.size() == 0) {
-                            new AlertDialog.Builder(TrainHistoryActivity.this)
-                                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            finish();
-                                        }
-                                    })
-                                    .setMessage("你还没有训练哦")
-                                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            finish();
-                                        }
-                                    })
-                                    .show();
+                            mNoData.setVisibility(View.VISIBLE);
+                            mNoDataText.setText("你还没有训练哦!");
+                        } else {
+                            mNoData.setVisibility(View.GONE);
+
                         }
 
                     }

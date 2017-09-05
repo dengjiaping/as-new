@@ -20,10 +20,10 @@
         android:layout_centerVertical="true"
         app:ci_background="@android:color/white"
         app:ci_gravity="center"
-        app:ci_margin="5dp"
+        app:ci_margin="12dp"
         app:ci_mode="outside"
         app:ci_radius="5dp"
-        app:ci_selected_background="0xffe6454a"
+        app:ci_selected_background="@color/colorPink"
         />
 
 </RelativeLayout>

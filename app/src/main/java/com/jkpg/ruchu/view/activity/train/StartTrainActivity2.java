@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.train;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -13,6 +14,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -43,8 +45,10 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.DateUtil;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.MainActivity;
 import com.jkpg.ruchu.view.adapter.ChartRLAdapter;
@@ -57,6 +61,8 @@ import com.jkpg.ruchu.widget.leafchart.bean.PointValue;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -117,6 +123,7 @@ public class StartTrainActivity2 extends BaseActivity {
     @BindView(R.id.line_start_tv)
     TextView mLineStartTv;
 
+
     private List<float[]> charts;       //图表集合
     private List<float[]> chartsX;       //图表x集合
     private List<Animator> mAnimators = new ArrayList<>();//所有的动画列表
@@ -147,14 +154,21 @@ public class StartTrainActivity2 extends BaseActivity {
     private AlertDialog dialog;
     private MediaPlayer mMediaPlayer;
     private boolean isLoad;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_train2);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
         initData();
         initHeader();
         initSound();
@@ -188,8 +202,45 @@ public class StartTrainActivity2 extends BaseActivity {
         });
         mLineChart.setVisibility(View.GONE);
 
+        mStartTrainTip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final PopupWindow popupWindow = new PopupWindow(StartTrainActivity2.this);
+                popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
+                popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+                popupWindow.setOutsideTouchable(true);
+                popupWindow.setFocusable(true);
+                View inflate = View.inflate(StartTrainActivity2.this, R.layout.view_show_tip, null);
+                popupWindow.setContentView(inflate);
+                popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+                popupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.activity_train_prepare, null), Gravity.CENTER, 0, 0);
+                PopupWindowUtils.darkenBackground(StartTrainActivity2.this, .4f);
+                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                    @Override
+                    public void onDismiss() {
+                        PopupWindowUtils.darkenBackground(StartTrainActivity2.this, 1f);
+                    }
+                });
+            }
+        });
+        PermissionUtils.requestPermissions(StartTrainActivity2.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE}, new PermissionUtils.OnPermissionListener() {
+            @Override
+            public void onPermissionGranted() {
+            }
 
+            @Override
+            public void onPermissionDenied(String[] deniedPermissions) {
+                ToastUtils.showShort(UIUtils.getContext(), "您拒绝了,就不能来电暂停了哦,如需要,请到设置应用信息中打开.");
+            }
+        });
     }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        PermissionUtils.onRequestPermissionsResult(StartTrainActivity2.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE});
+    }
+
+
 
     private void recordTime() {
         mStartTrainTvProgressTime.addTextChangedListener(new TextWatcher() {
@@ -225,6 +276,7 @@ public class StartTrainActivity2 extends BaseActivity {
                         mStartTrainBean = new Gson().fromJson(s, StartTrainBean.class);
                         init(mStartTrainBean);
                         initDot(mStartTrainBean);
+
                     }
 
                     @Override
@@ -253,6 +305,8 @@ public class StartTrainActivity2 extends BaseActivity {
                             });
                             dialog.setCancelable(false);
                             dialog.setCanceledOnTouchOutside(false);
+
+
                         }
                     }
                 });
@@ -625,7 +679,7 @@ public class StartTrainActivity2 extends BaseActivity {
 //                mTimearr.remove(0);
 //                mVideoarr.remove(0);
 //            }
-            if (timeCount == -500 && mTimearr.contains(0f)){
+            if (timeCount == -500 && mTimearr.contains(0f)) {
                 nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
                 mTimearr.remove(0);
                 mVideoarr.remove(0);
@@ -673,6 +727,9 @@ public class StartTrainActivity2 extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         MyApplication.getMainThreadHandler().removeCallbacks(mTask);
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         mSoundPool.release();
         unregisterReceiver(mVolumeReceiver);
         if (mMediaPlayer.isPlaying()) {
@@ -801,6 +858,34 @@ public class StartTrainActivity2 extends BaseActivity {
         });
         valueAnimator.start();
 
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+//        ToastUtils.showLong(UIUtils.geContext(),"常驻后台会被系统关闭哦!");
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void callPhone(String mess) {
+        if (mess.equals("CallPhone")) {
+            LogUtils.d("CallPhone----train");
+            if (isFirst) {
+                if (mMediaPlayer.isPlaying()) {
+                    mMediaPlayer.pause();
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+                }
+            } else if (isTrain) {
+                if (!isPause) {
+                    isPause = true;
+                    mAnimator.pause();
+                    mTask.stop();
+                    mSoundPool.pause(nowSound);
+                    LogUtils.i("CallPhone -- click");
+                    mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
+                }
+            }
+        }
     }
 
 }

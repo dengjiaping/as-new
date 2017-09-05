@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
-        android:text="1. hahha \n\n2.haha\n\n3.haha"
+        android:text="为确保大家有一个良好的社区氛围，以下帖子一经发现，小编会予以严肃处理，轻则禁言，重则封号。请各位仙女妈咪们遵守~\r\nA：广告、代理、虚假信息帖\r\nB：无意义水帖、重复发帖\r\nC：暴露个人社交账号的帖子"
         android:textColor="@color/colorGray3"
         android:textSize="14sp"/>
 

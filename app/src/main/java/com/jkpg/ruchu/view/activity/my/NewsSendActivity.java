@@ -65,9 +65,9 @@ public class NewsSendActivity extends BaseActivity {
         mNewsSendSwitchTime1.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime1", false));
         mNewsSendSwitchTime2.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime2", false));
         mNewsSendSwitchTime3.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime3", false));
-        mNewsSendTvTime1.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime1","09:00"));
-        mNewsSendTvTime2.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime2","14:00"));
-        mNewsSendTvTime3.setText(SPUtils.getString(UIUtils.getContext(),"mNewsSendTvTime3","19:00"));
+        mNewsSendTvTime1.setText(SPUtils.getString(UIUtils.getContext(), 1 + "", "09:00"));
+        mNewsSendTvTime2.setText(SPUtils.getString(UIUtils.getContext(), 2 + "", "14:00"));
+        mNewsSendTvTime3.setText(SPUtils.getString(UIUtils.getContext(), 3 + "", "19:00"));
         mNewsSendSwitchComment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -114,13 +114,13 @@ public class NewsSendActivity extends BaseActivity {
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.news_send_iv_time1:
-                showTimePicker(mNewsSendTvTime1);
+                showTimePicker(mNewsSendTvTime1, 1);
                 break;
             case R.id.news_send_iv_time2:
-                showTimePicker(mNewsSendTvTime2);
+                showTimePicker(mNewsSendTvTime2, 2);
                 break;
             case R.id.news_send_iv_time3:
-                showTimePicker(mNewsSendTvTime3);
+                showTimePicker(mNewsSendTvTime3, 3);
                 break;
             case R.id.header_iv_left:
                 finish();
@@ -128,7 +128,7 @@ public class NewsSendActivity extends BaseActivity {
         }
     }
 
-    private void showTimePicker(final TextView view) {
+    private void showTimePicker(final TextView view, final int a) {
         TimePicker picker = new TimePicker(this, TimePicker.HOUR_24);
         picker.setRangeStart(0, 0);//00:00
         picker.setRangeEnd(23, 59);//23:59
@@ -148,7 +148,9 @@ public class NewsSendActivity extends BaseActivity {
             @Override
             public void onTimePicked(String hour, String minute) {
                 view.setText(hour + ":" + minute);
-                SPUtils.saveString(UIUtils.getContext(), view + "", hour + ":" + minute);
+                SPUtils.saveString(UIUtils.getContext(), a + "", hour + ":" + minute);
+
+
             }
         });
         picker.show();

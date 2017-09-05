@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.FansBean;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -57,6 +58,8 @@ public class MyFansActivity extends BaseActivity {
     private int fansIndex = 1;
     private Map<Integer, String> mMap = new HashMap<>();
     private int mFlag;
+    private List<FansBean.list> mList;
+    private MyFansRVAdapter mFansRVAdapter;
 
 
     @Override
@@ -81,29 +84,29 @@ public class MyFansActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         FansBean fansBean = new Gson().fromJson(s, FansBean.class);
-                        List<FansBean.list> list = fansBean.list;
-                        initRecyclerView(list);
-                        for (int i = 0; i < list.size(); i++) {
-                            mMap.put(i, list.get(i).flag);
+                        mList = fansBean.list;
+                        initRecyclerView();
+                        for (int i = 0; i < mList.size(); i++) {
+                            mMap.put(i, mList.get(i).flag);
                         }
 
                     }
                 });
     }
 
-    private void initRecyclerView(final List<FansBean.list> list) {
-
+    private void initRecyclerView() {
+        mMyFansRecyclerView.removeAllViews();
         mMyFansRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        final MyFansRVAdapter fansRVAdapter = new MyFansRVAdapter(R.layout.item_fans, list, mMap);
-        mMyFansRecyclerView.setAdapter(fansRVAdapter);
-        fansRVAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        mFansRVAdapter = new MyFansRVAdapter(R.layout.item_fans, mList, mMap);
+        mMyFansRecyclerView.setAdapter(mFansRVAdapter);
+        mFansRVAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, final int position) {
                 final CheckBox checkBox = (CheckBox) view;
                 if (checkBox.isChecked()) {
                     OkGo
                             .post(AppUrl.CANCLEATT)
-                            .params("fansid", list.get(position).userid)
+                            .params("fansid", mList.get(position).userid)
                             .params("myuserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                             .execute(new StringDialogCallback(MyFansActivity.this) {
                                 @Override
@@ -116,8 +119,9 @@ public class MyFansActivity extends BaseActivity {
                                     } else {
                                         checkBox.setText("加关注");
                                         mMap.put(position, "0");
+                                        EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     }
-                                    fansRVAdapter.notifyDataSetChanged();
+                                    mFansRVAdapter.notifyDataSetChanged();
                                 }
 
                                 @Override
@@ -126,7 +130,7 @@ public class MyFansActivity extends BaseActivity {
                                     ToastUtils.showShort(UIUtils.getContext(), "取消关注失败");
                                     checkBox.setText("已关注");
                                     mMap.put(position, "1");
-                                    fansRVAdapter.notifyDataSetChanged();
+                                    mFansRVAdapter.notifyDataSetChanged();
                                 }
                             });
                 } else {
@@ -134,7 +138,7 @@ public class MyFansActivity extends BaseActivity {
                     mMap.put(position, "1");
                     OkGo
                             .post(AppUrl.ATTENTION)
-                            .params("followUserid", list.get(position).userid)
+                            .params("followUserid", mList.get(position).userid)
                             .params("MyUserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                             .execute(new StringDialogCallback(MyFansActivity.this) {
                                 @Override
@@ -148,8 +152,9 @@ public class MyFansActivity extends BaseActivity {
                                     } else {
                                         checkBox.setText("已关注");
                                         mMap.put(position, "1");
+                                        EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     }
-                                    fansRVAdapter.notifyDataSetChanged();
+                                    mFansRVAdapter.notifyDataSetChanged();
 
                                 }
 
@@ -159,14 +164,14 @@ public class MyFansActivity extends BaseActivity {
                                     ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
                                     checkBox.setText("加关注");
                                     mMap.put(position, "0");
-                                    fansRVAdapter.notifyDataSetChanged();
+                                    mFansRVAdapter.notifyDataSetChanged();
                                 }
                             });
                 }
-                fansRVAdapter.notifyDataSetChanged();
+                mFansRVAdapter.notifyDataSetChanged();
             }
         });
-        fansRVAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
+        mFansRVAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
                 fansIndex++;
@@ -181,28 +186,35 @@ public class MyFansActivity extends BaseActivity {
                                 FansBean fansBean = new Gson().fromJson(s, FansBean.class);
                                 List<FansBean.list> list = fansBean.list;
                                 if (list == null) {
-                                    fansRVAdapter.loadMoreEnd();
+                                    mFansRVAdapter.loadMoreEnd();
                                 } else if (list.size() == 0) {
-                                    fansRVAdapter.loadMoreEnd();
+                                    mFansRVAdapter.loadMoreEnd();
                                 } else {
                                     for (int i = 0; i < list.size(); i++) {
                                         mMap.put(mMap.size(), list.get(i).flag);
                                     }
-                                    fansRVAdapter.addData(list);
-                                    fansRVAdapter.loadMoreComplete();
+                                    mFansRVAdapter.addData(list);
+                                    mFansRVAdapter.loadMoreComplete();
                                 }
                             }
                         });
                 LogUtils.i(fansIndex + "fansIndex");
             }
         }, mMyFansRecyclerView);
-        fansRVAdapter.setEmptyView(R.layout.view_no_data);
+        View view = View.inflate(UIUtils.getContext(), R.layout.view_no_data, null);
+        TextView textView = (TextView) view.findViewById(R.id.no_data_text);
+        if (mFlag == 1) {
+            textView.setText("你还没有关注哦!");
+        } else {
+            textView.setText("你还没有粉丝哦!");
+        }
+        mFansRVAdapter.setEmptyView(view);
 
-        fansRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+        mFansRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(MyFansActivity.this, FansCenterActivity.class);
-                intent.putExtra("fansId", list.get(position).userid);
+                intent.putExtra("fansId", mList.get(position).userid);
                 startActivity(intent);
             }
         });
@@ -221,8 +233,29 @@ public class MyFansActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshData(String mess) {
-        if (mess.equals("fans"))
-            initData();
+        if (mess.equals("fans")) {
+            fansIndex = 1;
+            OkGo
+                    .post(AppUrl.FANS)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                    .params("flag", mFlag)
+                    .params("fenyeid", fansIndex)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            FansBean fansBean = new Gson().fromJson(s, FansBean.class);
+                            mList.clear();
+                            mMap.clear();
+
+                            mList.addAll(fansBean.list);
+                            mFansRVAdapter.notifyDataSetChanged();
+                            for (int i = 0; i < mList.size(); i++) {
+                                mMap.put(i, mList.get(i).flag);
+                            }
+                        }
+
+                    });
+        }
     }
 
     @Override

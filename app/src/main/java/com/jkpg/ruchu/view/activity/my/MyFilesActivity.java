@@ -1,6 +1,5 @@
 package com.jkpg.ruchu.view.activity.my;
 
-import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +27,7 @@ import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.ViewPagerAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
+import com.jkpg.ruchu.widget.MultiSelectPicker;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 
@@ -195,7 +195,7 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_tv_42jc.setText(myFilesBean.test42);
         mView_bearing_tv_pdjl.setText(myFilesBean.power);
         mView_bearing_tv_gnza.setText(myFilesBean.obstacle);
-        if (myFilesBean.test42.equals("未做")) {
+        if (myFilesBean.test42.equals("未做") || myFilesBean.test42.equals("")) {
             mView_bearing_pdjl.setVisibility(View.GONE);
             mView_bearing_gnza.setVisibility(View.GONE);
         } else {
@@ -272,20 +272,20 @@ public class MyFilesActivity extends BaseActivity {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
                                     // LogUtils.i(s);
-                                    AlertDialog dialog = new AlertDialog.Builder(MyFilesActivity.this)
+                                    final AlertDialog dialog = new AlertDialog.Builder(MyFilesActivity.this)
                                             .setView(View.inflate(MyFilesActivity.this, R.layout.view_save_success, null))
                                             .show();
-                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-                                        @Override
-                                        public void onDismiss(DialogInterface dialog) {
-                                            MyFilesActivity.this.finish();
-                                        }
-                                    });
+//                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+//                                        @Override
+//                                        public void onDismiss(DialogInterface dialog) {
+//                                            MyFilesActivity.this.finish();
+//                                        }
+//                                    });
 
                                     MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            MyFilesActivity.this.finish();
+                                            dialog.dismiss();
                                         }
                                     }, 3000);
                                 }
@@ -320,6 +320,7 @@ public class MyFilesActivity extends BaseActivity {
                 picker.setDividerVisible(false);
                 picker.setShadowColor(Color.WHITE, 80);
                 picker.setSelectedIndex(2, 1);
+                picker.setCanceledOnTouchOutside(true);
                 picker.setTextColor(getResources().getColor(R.color.colorPink));
                 picker.setDividerColor(Color.parseColor("#ffffff"));
                 picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
@@ -363,7 +364,7 @@ public class MyFilesActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 OptionPicker picker = new OptionPicker(MyFilesActivity.this, new String[]{"已做", "未做"});
-                picker.setCanceledOnTouchOutside(false);
+                picker.setCanceledOnTouchOutside(true);
                 picker.setDividerRatio(WheelView.DividerConfig.WRAP);
                 picker.setShadowColor(Color.WHITE, 40);
                 picker.setSelectedIndex(0);
@@ -409,9 +410,34 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_gnza.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSinglePicker(new String[]{"器官膨出", "器官拖垂", "漏尿"}, mView_bearing_tv_gnza);
-
-
+//                showSinglePicker(new String[]{"器官膨出", "器官脱垂", "漏尿"}, mView_bearing_tv_gnza);
+                final List<String> f = new ArrayList<>();
+                f.add("");
+                f.add("器官膨出");
+                final List<String> s = new ArrayList<>();
+                s.add("");
+                s.add("器官脱垂");
+                final List<String> t = new ArrayList<>();
+                t.add("");
+                t.add("漏尿");
+                final MultiSelectPicker picker = new MultiSelectPicker(MyFilesActivity.this, f, s, t);
+                picker.setCanceledOnTouchOutside(true);
+                picker.setShadowColor(Color.WHITE, 40);
+                picker.setTextSize(14);
+                picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+                picker.setTextColor(getResources().getColor(R.color.colorPink));
+                picker.setDividerColor(Color.parseColor("#ffffff"));
+                picker.setSubmitTextColor(Color.parseColor("#000000"));
+                picker.setCancelTextColor(Color.parseColor("#000000"));
+                picker.setTopLineColor(Color.parseColor("#ffffff"));
+                picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                picker.setOnPickListener(new MultiSelectPicker.OnPickListener() {
+                    @Override
+                    public void onPicked(int selectedFirstIndex, int selectedSecondIndex, int selectedThirdIndex) {
+                        mView_bearing_tv_gnza.setText(f.get(selectedFirstIndex) + " " + s.get(selectedSecondIndex) + " " + t.get(selectedThirdIndex));
+                    }
+                });
+                picker.show();
             }
         });
 
@@ -477,14 +503,14 @@ public class MyFilesActivity extends BaseActivity {
 
     private void showSinglePicker(String[] strings, final TextView text) {
         OptionPicker picker = new OptionPicker(MyFilesActivity.this, strings);
-        picker.setCanceledOnTouchOutside(false);
+        picker.setCanceledOnTouchOutside(true);
         picker.setDividerRatio(WheelView.DividerConfig.WRAP);
         picker.setShadowColor(Color.WHITE, 40);
         picker.setSelectedIndex(0);
         picker.setCycleDisable(true);
         picker.setTextSize(14);
+        picker.setCanceledOnTouchOutside(true);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
-
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));

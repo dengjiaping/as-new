@@ -3,38 +3,41 @@
               xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/colorXmlBg"
               android:orientation="vertical"
     >
 
     <!--<include layout="@layout/view_header"/>-->
 
-        <FrameLayout
-            android:id="@+id/main_frame_layout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-
-        </FrameLayout>
-    <View
+    <FrameLayout
+        android:id="@+id/main_frame_layout"
         android:layout_width="match_parent"
-        android:layout_height=".5dp"
-        android:background="#22000000"/>
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+
+    </FrameLayout>
+
     <RelativeLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        >
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <com.jkpg.ruchu.widget.BottomNavigationViewEx
-                android:id="@+id/main_bottom_navigation_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"
-                app:menu="@menu/menu_bottomnav"/>
+            android:id="@+id/main_bottom_navigation_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:elevation="2dp"
+            android:background="@android:color/white"
+            app:menu="@menu/menu_bottomnav"/>
+
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="56dp">
