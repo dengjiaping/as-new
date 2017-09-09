@@ -6,8 +6,10 @@ package com.jkpg.ruchu.bean;
 
 public class PlateBean {
     public String title;
+    public String plateid;
 
-    public PlateBean(String title) {
+    public PlateBean(String title, String plateid) {
         this.title = title;
+        this.plateid = plateid;
     }
 }

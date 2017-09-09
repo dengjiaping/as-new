@@ -193,7 +193,7 @@
                     android:layout_marginTop="14dp"
                     android:drawableRight="@drawable/icon_next"
                     android:gravity="center_vertical"
-                    android:text="分娩损伤"
+                    android:text="外阴损伤"
                     android:textColor="@color/colorGray3"
                     android:textSize="15sp"/>
 

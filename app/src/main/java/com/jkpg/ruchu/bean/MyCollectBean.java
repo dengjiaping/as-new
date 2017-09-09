@@ -12,21 +12,29 @@ public class MyCollectBean {
 
     public static class ListBean {
         /**
-         * createtime : 2017-07-20 10:16:59.0
-         * title : 哦啦啦
-         * headImg : headImg/243RHX9KAV50.jpg
-         * nick : 百里守约
-         * zan : 0
-         * reply : 2
-         * bbsid : 10
+         * content : 测试
+         * createtime : 2017-08-29 17:08:30
+         * title : 你好
+         * headImg : headImg/24437SXV9CHC.jpg
+         * nick : 帆♡峰
+         * zan : 2
+         * images : []
+         * reply : 16
+         * tid : 81
+         * type : 1
+         * bbsid : 15
          */
 
+        public String content;
         public String createtime;
         public String title;
         public String headImg;
         public String nick;
         public String zan;
+        public String images;
         public String reply;
+        public int tid;
+        public String type;
         public int bbsid;
     }
 }

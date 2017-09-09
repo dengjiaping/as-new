@@ -234,12 +234,12 @@ public class StartTrainActivity2 extends BaseActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         PermissionUtils.onRequestPermissionsResult(StartTrainActivity2.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE});
     }
-
 
 
     private void recordTime() {
@@ -616,7 +616,9 @@ public class StartTrainActivity2 extends BaseActivity {
                         mStartTrainStart.setBackgroundResource(R.drawable.icon_start);
 
                         LogUtils.i("-----怎么不结束！！！！");
-
+                        String s = DateUtil.dateFormat((timeCount + 100) + "", "mm:ss");
+                        mStartTrainTvProgressTime.setText(s);
+//                        mStartTrainProgressBar.setProgress(timeCount + 1000);
                         mSoundPool.play(mSoundID.get("end"), 1, 1, 0, 0, 1);
                         MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
                             @Override

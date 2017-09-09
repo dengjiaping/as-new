@@ -147,6 +147,9 @@
             <intent-filter>
                 <action android:name="com.umeng.message.message.handler.action" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="com.umeng.message.message.sendmessage.action" />
+            </intent-filter>
         </service>
 
         <service

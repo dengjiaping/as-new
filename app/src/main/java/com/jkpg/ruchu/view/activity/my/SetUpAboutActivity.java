@@ -3,9 +3,12 @@ package com.jkpg.ruchu.view.activity.my;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -78,9 +81,14 @@ public class SetUpAboutActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.set_up_about_phone:
-                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm.setPrimaryClip(ClipData.newPlainText(null, getString(R.string.about_phone)));
-                ToastUtils.showShort(UIUtils.getContext(), "已复制到剪切板,去关注吧!");
+                Intent intenturl = new Intent();
+                intenturl.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse("http://weibo.com/u/6289196115");
+                intenturl.setData(content_url);
+                startActivity(intenturl);
+//                ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//                cm.setPrimaryClip(ClipData.newPlainText(null, getString(R.string.about_phone)));
+//                ToastUtils.showShort(UIUtils.getContext(), "已复制到剪切板,去关注吧!");
                 // 将文本内容放到系统剪贴板里。
 //                PermissionUtils.requestPermissions(SetUpAboutActivity.this, 100, new String[]{Manifest.permission.CALL_PHONE}, new PermissionUtils.OnPermissionListener() {
 //                    @Override
@@ -102,9 +110,20 @@ public class SetUpAboutActivity extends BaseActivity {
 
                 break;
             case R.id.set_up_about_wx:
-                ClipboardManager cm1 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                cm1.setPrimaryClip(ClipData.newPlainText(null, getString(R.string.wx)));
-                ToastUtils.showShort(UIUtils.getContext(), "已复制到剪切板");
+
+                new AlertDialog.Builder(this)
+                        .setTitle("如初康复")
+                        .setMessage("欢迎关注如初康复微信公众号: ruchukangfu")
+                        .setPositiveButton("复制", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                ClipboardManager cm1 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                                cm1.setPrimaryClip(ClipData.newPlainText(null, getString(R.string.wx)));
+                                ToastUtils.showShort(UIUtils.getContext(), "已复制到剪切板,欢迎关注");
+                                dialog.dismiss();
+                            }
+                        })
+                        .show();
                 break;
 
             case R.id.set_up_about_email:

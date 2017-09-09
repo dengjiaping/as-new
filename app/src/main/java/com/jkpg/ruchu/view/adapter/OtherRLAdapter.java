@@ -41,8 +41,8 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
         OtherVideoBean.ItemBean vedioMS2Bean = videos.get(position);
         holder.itemView.setTag(position);
         holder.mItemTrainTvTitle.setText(vedioMS2Bean.title);
-        holder.mItemTrainTv1.setText(vedioMS2Bean.level + "    " + vedioMS2Bean.times + "人参与训练");
-        holder.mItemTrainTvTime.setText("视频时长: " + vedioMS2Bean.video_time);
+        holder.mItemTrainTv1.setText(/*vedioMS2Bean.level + "    " +*/ vedioMS2Bean.times + "  人参与训练");
+        holder.mItemTrainTvTime.setText("时长: " + vedioMS2Bean.video_time);
         holder.mItemTrainTv2.setText(vedioMS2Bean.content);
         Glide
                 .with(UIUtils.getContext())

@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.train;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.transition.Transition;
@@ -28,7 +29,9 @@ public class FullActivity extends BaseActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.view_show_header);
         Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
-        getWindow().setExitTransition(explode);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(explode);
+        }
         ButterKnife.bind(this);
         mTipClose.setVisibility(View.GONE);
     }

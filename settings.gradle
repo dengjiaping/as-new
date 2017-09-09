@@ -1,1 +1,1 @@
-include ':app', ':PhotoPicker', ':PushSDK'
+include ':app', ':PhotoPicker', ':Push'

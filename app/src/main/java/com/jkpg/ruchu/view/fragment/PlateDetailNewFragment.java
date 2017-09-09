@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateDetailBean;
+import com.jkpg.ruchu.bean.SendNoteMess;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -242,6 +243,7 @@ public class PlateDetailNewFragment extends Fragment {
                 Intent intent = new Intent(getActivity(), SendNoteActivity.class);
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
                 intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());
+                intent.putStringArrayListExtra("plateId", ((PlateDetailActivity) getActivity()).getPlateId());
                 intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
                 startActivity(intent);
                 break;
@@ -269,5 +271,12 @@ public class PlateDetailNewFragment extends Fragment {
     public void eventMess(String mess) {
         if (mess.equals("send"))
             refresh();
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void send(SendNoteMess mess) {
+        if (mess.mess.equals("sendSkip")) {
+            mPlateid = mess.id;
+            refresh();
+        }
     }
 }

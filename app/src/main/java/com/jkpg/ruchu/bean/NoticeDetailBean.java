@@ -12,7 +12,7 @@ public class NoticeDetailBean implements Serializable {
     public List<List2Bean> list2;
     public List<List1Bean> list1;
 
-    public static class List2Bean implements Serializable{
+    public static class List2Bean implements Serializable {
         /**
          * chanhoutime : 2月零1天
          * headimg : headImg/243QVGHZB7M8.jpg
@@ -94,6 +94,7 @@ public class NoticeDetailBean implements Serializable {
         public String headimg;
         public String userid;
         public boolean iscollect;
+        public boolean isHideName;
         public String content;
         public String taici;
         public String createtime;

@@ -97,7 +97,7 @@ public class MyTestActivity extends BaseActivity {
                             mMyTestTvBody.setText(myTestBean.report.content);
                             mMyTestTvTime.setText(myTestBean.report.createtime);
                             mMyTestTvGrade.setText(myTestBean.report.count + "分");
-                            mMyTestTvLevel.setText(myTestBean.report.level);
+                            mMyTestTvLevel.setText("产后康复 【" + myTestBean.report.level + "】");
 
                         }
 
@@ -116,7 +116,7 @@ public class MyTestActivity extends BaseActivity {
                             mMyTestTvBody.setText(myTestBean.report.content);
                             mMyTestTvTime.setText(myTestBean.report.createtime);
                             mMyTestTvGrade.setText(myTestBean.report.count + "分");
-                            mMyTestTvLevel.setText(myTestBean.report.level);
+                            mMyTestTvLevel.setText("产后康复 【" + myTestBean.report.level + "】");
 
                         }
                     }

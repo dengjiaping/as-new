@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.ExperienceBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.MyIndex;
 import com.jkpg.ruchu.bean.MyMessageBean;
@@ -25,6 +26,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
@@ -78,7 +80,7 @@ public class MyFragment extends Fragment {
     @BindView(R.id.center_ll_setup)
     LinearLayout mCenterLlSetup;
     Unbinder unbinder;
-//    @BindView(R.id.header_iv_left)
+    //    @BindView(R.id.header_iv_left)
 //    ImageView mHeaderIvLeft;
 //    @BindView(R.id.header_tv_title)
 //    TextView mHeaderTvTitle;
@@ -235,7 +237,7 @@ public class MyFragment extends Fragment {
 
     @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans,
             R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test,
-            R.id.center_ll_history, R.id.center_ll_setup,R.id.center_ll_on1,R.id.center_ll_on2})
+            R.id.center_ll_history, R.id.center_ll_setup, R.id.center_ll_on1, R.id.center_ll_on2})
     public void onViewClicked(View view) {
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
@@ -341,6 +343,25 @@ public class MyFragment extends Fragment {
             mHeaderIvRight.setImageResource(R.drawable.icon_sms);
         } else {
             mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void newnewMess(ExperienceBean sms) {
+            if (!StringUtils.isEmpty(SPUtils.getString(UIUtils
+                    .getContext(), Constants.USERID, ""))) {
+                OkGo
+                        .post(AppUrl.SELECTINTEGRAL)
+                        .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+                        .execute(new StringCallback() {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                ExperienceBean experienceBean = new Gson().fromJson(s, ExperienceBean.class);
+                                mCenterTvEmpiric.setText(experienceBean.experience);
+                                mCenterTvGrade.setText(experienceBean.levelname);
+                                mCenterTvMark.setText(experienceBean.amount);
+                            }
+                        });
         }
     }
 }

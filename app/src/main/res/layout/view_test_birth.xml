@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="请选择你的出生年月"
+            android:text="1. 请选择你的出生日期"
             android:textColor="@android:color/black"
             android:textSize="18sp"/>
 
@@ -41,9 +41,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:hint="出生日期"
+                android:text=""
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
-                android:text=""/>
+                android:textSize="16sp"/>
 
             <View
                 android:layout_width="0dp"
@@ -52,23 +53,23 @@
                 android:background="#22000000"/>
         </LinearLayout>
     </LinearLayout>
-   <!-- <Button
-        android:id="@+id/test_detail_btn"
+    <!-- <Button
+         android:id="@+id/test_detail_btn"
 
-        style="@style/btn_pink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="22dp"
-        android:text="继续"
-        android:textSize="16sp"/>
+         style="@style/btn_pink"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_margin="22dp"
+         android:text="继续"
+         android:textSize="16sp"/>
 
-    <TextView
-        android:id="@+id/test_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="22dp"
-        android:text="返回上一题"
-        android:visibility="invisible"
-        android:textColor="@color/colorPink"/>-->
+     <TextView
+         android:id="@+id/test_detail_back"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:padding="22dp"
+         android:text="返回上一题"
+         android:visibility="invisible"
+         android:textColor="@color/colorPink"/>-->
 </LinearLayout>

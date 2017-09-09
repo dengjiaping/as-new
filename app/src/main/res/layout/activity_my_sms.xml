@@ -8,6 +8,7 @@
     <include layout="@layout/view_header"/>
 
     <com.flyco.tablayout.SlidingTabLayout
+        android:elevation="1dp"
         android:id="@+id/my_speak_tab_layout"
         android:layout_width="match_parent"
         android:layout_height="48dp"

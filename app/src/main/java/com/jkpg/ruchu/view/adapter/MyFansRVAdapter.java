@@ -30,7 +30,7 @@ public class MyFansRVAdapter extends BaseQuickAdapter<FansBean.list, BaseViewHol
     @Override
     protected void convert(BaseViewHolder helper, FansBean.list item) {
         helper.setText(R.id.item_fans_tv_name, item.nike);
-        helper.setText(R.id.item_fans_tv_body, item.introduction);
+        helper.setText(R.id.item_fans_tv_body, item.taici + "    " + item.chanhoutime);
         int position = helper.getLayoutPosition();
         if (map.get(position).equals("0")) {
             helper.setText(R.id.item_fans_cb_follow, "加关注");

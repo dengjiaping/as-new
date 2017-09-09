@@ -39,6 +39,7 @@ public class FineNoteWebBean {
         public boolean iscollect;
         public String Title;
         public String shareurl;
+        public String simplecontent;
 
 
         public String ReportTime;

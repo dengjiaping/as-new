@@ -16,13 +16,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="请选择你的身高"
+            android:text="2. 请选择你的身高"
             android:textColor="@android:color/black"
             android:textSize="18sp"/>
 
         <LinearLayout
             android:id="@+id/view_test_height"
-
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="22dp"
@@ -38,15 +37,13 @@
 
             <TextView
                 android:id="@+id/view_test_height_text"
-
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
+                android:hint="身高"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
-
-                android:text=""/>
+                android:textSize="16sp"/>
 
             <View
                 android:layout_width="0dp"
@@ -59,7 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="请选择你的体重"
+            android:text="3. 请选择你的体重"
             android:textColor="@android:color/black"
             android:textSize="18sp"/>
 
@@ -80,15 +77,16 @@
                 android:background="#22000000"/>
 
             <TextView
-                android:textSize="16sp"
-
                 android:id="@+id/view_test_weight_text"
+
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:textColor="@android:color/black"
                 android:layout_marginRight="16dp"
-                android:text=""/>
+                android:hint="体重"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                />
 
             <View
                 android:layout_width="0dp"
@@ -98,22 +96,22 @@
         </LinearLayout>
     </LinearLayout>
 
-   <!-- <Button
-        android:id="@+id/test_detail_btn"
+    <!-- <Button
+         android:id="@+id/test_detail_btn"
 
-        style="@style/btn_pink"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="22dp"
-        android:text="继续"
-        android:textSize="16sp"/>
+         style="@style/btn_pink"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_margin="22dp"
+         android:text="继续"
+         android:textSize="16sp"/>
 
-    <TextView
-        android:id="@+id/test_detail_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:padding="22dp"
-        android:text="返回上一题"
-        android:textColor="@color/colorPink"/>-->
+     <TextView
+         android:id="@+id/test_detail_back"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_gravity="center"
+         android:padding="22dp"
+         android:text="返回上一题"
+         android:textColor="@color/colorPink"/>-->
 </LinearLayout>

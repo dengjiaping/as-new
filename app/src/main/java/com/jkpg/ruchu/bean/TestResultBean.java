@@ -30,6 +30,9 @@ public class TestResultBean implements Parcelable {
     public int age;
     public String userid;
     public String testtime;
+    public int levelid;
+    public boolean ischange;
+
 
     protected TestResultBean(Parcel in) {
         content = in.readString();
@@ -41,6 +44,8 @@ public class TestResultBean implements Parcelable {
         age = in.readInt();
         userid = in.readString();
         testtime = in.readString();
+        levelid = in.readInt();
+        ischange = in.readByte() != 0;
     }
 
     public static final Creator<TestResultBean> CREATOR = new Creator<TestResultBean>() {
@@ -71,5 +76,7 @@ public class TestResultBean implements Parcelable {
         dest.writeInt(age);
         dest.writeString(userid);
         dest.writeString(testtime);
+        dest.writeInt(levelid);
+        dest.writeByte((byte) (ischange ? 1 : 0));
     }
 }

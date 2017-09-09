@@ -6,6 +6,13 @@
               android:orientation="vertical">
 
     <include layout="@layout/view_header"/>
+    <ImageView
+        android:id="@+id/image"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:src="@drawable/other_train_header"
+        android:adjustViewBounds="true"
+        android:layout_height="wrap_content"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/other_recycler_view"

@@ -205,6 +205,10 @@ public class CommunityModuleFragment extends Fragment {
         for (int i = 0; i < list2.size(); i++) {
             plateNameList.add(list2.get(i).platename);
         }
+        final ArrayList<String> plateIdList = new ArrayList<>();
+        for (int i = 0; i < list2.size(); i++) {
+            plateIdList.add(list2.get(i).tid + "");
+        }
         mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 1));
 //        mCommunityRlPlate.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mCommunityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
@@ -217,6 +221,7 @@ public class CommunityModuleFragment extends Fragment {
                 intent.putExtra("plateid", data.tid + "");
                 intent.putExtra("title", data.platename);
                 intent.putStringArrayListExtra("plate", plateNameList);
+                intent.putStringArrayListExtra("plateId", plateIdList);
                 startActivity(intent);
 
             }

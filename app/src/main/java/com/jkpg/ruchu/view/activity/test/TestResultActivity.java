@@ -23,6 +23,8 @@ import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
 import com.lzy.okgo.OkGo;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -60,7 +62,7 @@ public class TestResultActivity extends BaseActivity {
     private void initData() {
         mTestResultBean = getIntent().getParcelableExtra("testResultBean");
         mResultTvGrade.setText(mTestResultBean.count + "分");
-        mResultTvPlan.setText(mTestResultBean.level);
+        mResultTvPlan.setText("产后康复  【" + mTestResultBean.level + "】");
     }
 
     private void initHeader() {
@@ -87,8 +89,41 @@ public class TestResultActivity extends BaseActivity {
                             public void onSuccess(String s, Call call, Response response) {
                                 IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
                                 if (isVipBean.isVIP) {
-                                    startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
-                                    finish();
+                                    if (mTestResultBean.ischange) {
+                                        new AlertDialog.Builder(TestResultActivity.this)
+                                                .setMessage("开始训练后，您的当前难度将被调至【" + mTestResultBean.level + "】")
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        OkGo
+                                                                .post(AppUrl.OPENMYPRACTICE)
+                                                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                                .params("level", ((mTestResultBean.levelid) + ""))
+                                                                .execute(new StringDialogCallback(TestResultActivity.this) {
+                                                                    @Override
+                                                                    public void onSuccess(String s, Call call, Response response) {
+                                                                        EventBus.getDefault().post("TrainFragment");
+//                                                                    initData();
+                                                                        startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                                                                        finish();
+                                                                    }
+                                                                });
+
+                                                    }
+                                                })
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        startActivity(new Intent(TestResultActivity.this, TrainPrepareActivity.class));
+                                        finish();
+                                    }
+
                                 } else {
                                     new AlertDialog.Builder(TestResultActivity.this)
                                             .setMessage("只有会员才能训练哦")

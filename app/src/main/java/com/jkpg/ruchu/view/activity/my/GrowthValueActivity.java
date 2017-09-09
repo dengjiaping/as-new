@@ -24,7 +24,7 @@ public class GrowthValueActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.avtivity_growth_value);
         ButterKnife.bind(this);
-        mHeaderTvTitle.setText("成长值");
+        mHeaderTvTitle.setText("经验、等级与积分");
 
     }
 

@@ -1,9 +1,5 @@
 package com.jkpg.ruchu.view.activity.login;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -41,7 +37,6 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.my.VipManageActivity;
 import com.lzy.okgo.OkGo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -338,20 +333,20 @@ public class BindingPhoneActivity extends BaseActivity {
     }
 
     private void showMess() {
-        Notification.Builder builder = new Notification.Builder(BindingPhoneActivity.this);
-        Intent intent = new Intent(BindingPhoneActivity.this, VipManageActivity.class);  //需要跳转指定的页面
-        PendingIntent pendingIntent = PendingIntent.getActivity(BindingPhoneActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        builder.setContentIntent(pendingIntent);
-        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
-        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
-        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-        builder.setAutoCancel(true); //自己维护通知的消失
-        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
-        builder.setOngoing(true);
-        Notification notification = builder.build();
-        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+//        Notification.Builder builder = new Notification.Builder(BindingPhoneActivity.this);
+//        Intent intent = new Intent(BindingPhoneActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+//        PendingIntent pendingIntent = PendingIntent.getActivity(BindingPhoneActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        builder.setContentIntent(pendingIntent);
+//        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+//        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
+//        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
+//        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+//        builder.setAutoCancel(true); //自己维护通知的消失
+//        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
+//        builder.setOngoing(true);
+//        Notification notification = builder.build();
+//        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+//        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
     }
 
     private void sendSMS() {

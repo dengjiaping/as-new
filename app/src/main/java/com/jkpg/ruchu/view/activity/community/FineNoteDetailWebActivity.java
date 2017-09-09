@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -159,8 +160,9 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                     public void onSuccess(String s, Call call, Response response) {
                         FineNoteWebBean fineNoteWebBean = new Gson().fromJson(s, FineNoteWebBean.class);
                         mList1 = fineNoteWebBean.list1;
-                        mList2 = fineNoteWebBean.list2;
-                        initRecyclerView();
+                        mList2 = new ArrayList<>();
+//                        mList2 = fineNoteWebBean.list2;
+                        initRecyclerView(fineNoteWebBean);
                     }
 
                     @Override
@@ -179,13 +181,21 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                 });
     }
 
-    private void initRecyclerView() {
+    private void initRecyclerView(final FineNoteWebBean fineNoteWebBean) {
         mNoticeDetailReplyRecycler.setLayoutManager(new LinearLayoutManager(this));
         mFineNoteDetailWebRVAdapter = new FineNoteDetailWebRVAdapter(R.layout.item_notic_reply, mList2);
         mNoticeDetailReplyRecycler.setAdapter(mFineNoteDetailWebRVAdapter);
-        View inflate = View.inflate(this, R.layout.view_web_view, null);
+        final View inflate = View.inflate(this, R.layout.view_web_view, null);
         mFineNoteDetailWebRVAdapter.addHeaderView(inflate);
         WebView webView = (WebView) inflate.findViewById(R.id.web_view);
+        webView.setWebViewClient(new WebViewClient(){
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                mList2.addAll(fineNoteWebBean.list2);
+                mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
+                inflate.findViewById(R.id.web_view_ll).setVisibility(View.VISIBLE);
+            }
+        });
         webView.loadData(mList1.Content, "text/html; charset=UTF-8", null);
         mNoticeDetailTvDz = (CheckBox) inflate.findViewById(R.id.notice_detail_tv_dz);
         initZan();
@@ -340,7 +350,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
         final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         editWindow.setBackgroundDrawable(null);
-        editWindow.setOutsideTouchable(false);
+        editWindow.setOutsideTouchable(true);
         editWindow.setFocusable(true);
 
         final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
@@ -406,7 +416,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                         for (String selectedPhoto : selectedPhotos) {
                             Uri uri = Uri.fromFile(new File(selectedPhoto));
                             Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
-                            String s = FileUtils.saveBitmapByQuality(bm, 10);
+                            String s = FileUtils.saveBitmapByQuality(bm, 40);
                             files.add(new File(s));
                         }
                         OkGo
@@ -470,7 +480,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                                                     FineNoteWebBean fineNoteWebBean = new Gson().fromJson(s, FineNoteWebBean.class);
                                                     mList2.clear();
                                                     mList2 = fineNoteWebBean.list2;
-                                                    initRecyclerView();
+                                                    initRecyclerView(fineNoteWebBean);
                                                     mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
                                                     mNoticeDetailReplyRecycler.scrollToPosition(mIndex + 1);
                                                 }
@@ -624,14 +634,20 @@ public class FineNoteDetailWebActivity extends BaseActivity {
     private void showShare() {
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
         mPopupWindow = new PopupWindow(this);
+        view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setContentView(view);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
         PopupWindowUtils.darkenBackground(FineNoteDetailWebActivity.this, .5f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -646,7 +662,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
 //        } else {
 //        mWeb.setThumb(new UMImage(UIUtils.getContext(), AppUrl.BASEURL + mList1.get(0).images.get(0)));
 //        }
-        mWeb.setDescription(" ");//描述
+        mWeb.setDescription(mList1.simplecontent);//描述
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

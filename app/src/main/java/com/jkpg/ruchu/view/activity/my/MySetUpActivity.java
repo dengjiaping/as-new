@@ -12,12 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.ShareBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.lzy.okgo.OkGo;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -32,6 +37,8 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/24.
@@ -62,6 +69,10 @@ public class MySetUpActivity extends BaseActivity {
     LinearLayout mSetUpRoot;
     private PopupWindow mPopupWindow;
     private UMWeb mWeb;
+    private String mUrl;
+    private String mContent2;
+    private String mContent;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -70,6 +81,19 @@ public class MySetUpActivity extends BaseActivity {
         ButterKnife.bind(this);
         initHeader();
 
+        OkGo
+                .post(AppUrl.DOWNLOAD)
+                .execute(new StringDialogCallback(MySetUpActivity.this) {
+
+
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        ShareBean shareBean = new Gson().fromJson(s, ShareBean.class);
+                        mUrl = shareBean.url;
+                        mContent = shareBean.content;
+                        mContent2 = shareBean.content2;
+                    }
+                });
 
     }
 
@@ -117,15 +141,22 @@ public class MySetUpActivity extends BaseActivity {
 //        share_intent = Intent.createChooser(share_intent, "分享如初");
 //        startActivity(share_intent);
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
+        view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
         mPopupWindow = new PopupWindow(this);
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setContentView(view);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null));
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.BOTTOM, 0, 0);
         PopupWindowUtils.darkenBackground(MySetUpActivity.this, .5f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
@@ -133,10 +164,10 @@ public class MySetUpActivity extends BaseActivity {
                 PopupWindowUtils.darkenBackground(MySetUpActivity.this, 1f);
             }
         });
-        mWeb = new UMWeb(getString(R.string.share_url));
-        mWeb.setTitle(getString(R.string.share_title));//标题
+        mWeb = new UMWeb(mUrl);
+        mWeb.setTitle(mContent);//标题
         mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));  //缩略图
-        mWeb.setDescription(getString(R.string.share_description));//描述
+        mWeb.setDescription(mContent2);//描述
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

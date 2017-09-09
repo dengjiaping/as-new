@@ -1,24 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/send_note_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@android:color/white"
               android:orientation="vertical"
     >
 
-    <include layout="@layout/view_header"/>
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@android:color/white"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <include layout="@layout/view_header"/>
+
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@android:color/white">
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
 
                 <RelativeLayout
@@ -100,79 +106,79 @@
                 </RelativeLayout>
 
 
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/send_note_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@android:color/white"/>
+            </LinearLayout>
+        </ScrollView>
 
-            <android.support.v7.widget.RecyclerView
-                android:layout_marginTop="12dp"
-                android:layout_marginLeft="22dp"
-                android:layout_marginRight="22dp"
-                android:id="@+id/send_note_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/white"/>
-        </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:background="#22000000"/>
-
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="#22000000"/>
 
-            android:layout_height="wrap_content"
 
-            android:background="@android:color/white"
-            android:orientation="vertical">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="#22000000"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
+
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="22dp"
-                android:layout_marginRight="22dp"
-                android:layout_marginTop="8dp">
 
-                <CheckBox
-                    android:id="@+id/send_note_cb_position"
+                android:background="@android:color/white"
+                android:orientation="vertical">
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="显示位置"
-                    android:textColor="@color/colorGray3"/>
-
-                <CheckBox
-                    android:id="@+id/send_note_cb_no_name"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="12dp"
-                    android:text="匿名"
-                    android:textColor="@color/colorGray3"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="#22000000"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="right|center_vertical">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:layout_marginTop="8dp">
 
-                    <ImageView
-                        android:id="@+id/send_note_iv_image"
+                    <CheckBox
+                        android:id="@+id/send_note_cb_position"
+
                         android:layout_width="wrap_content"
-                        android:layout_height="20dp"
-                        android:src="@drawable/add_photo"/>
-                </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:text="显示位置"
+                        android:textColor="@color/colorGray3"/>
 
+                    <CheckBox
+                        android:id="@+id/send_note_cb_no_name"
+
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="12dp"
+                        android:text="匿名"
+                        android:textColor="@color/colorGray3"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="right|center_vertical">
+
+                        <ImageView
+                            android:id="@+id/send_note_iv_image"
+                            android:layout_width="wrap_content"
+                            android:layout_height="20dp"
+                            android:src="@drawable/add_photo"/>
+                    </LinearLayout>
+
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </LinearLayout>
 </LinearLayout>

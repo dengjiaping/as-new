@@ -74,15 +74,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="通过测试我们为您量身定做的训练计划"
+                android:text="如初为您推荐方案: "
                 android:textColor="@color/colorGray2"
                 android:textSize="16sp"/>
 
             <TextView
-                android:layout_margin="12dp"
                 android:id="@+id/my_test_tv_level"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="12dp"
                 android:gravity="center"
                 android:textColor="@color/colorPink"
                 android:textSize="18sp"/>
@@ -138,8 +138,10 @@
 
                 <TextView
                     android:id="@+id/my_test_tv_body"
+                    android:layout_marginTop="5dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:lineSpacingExtra="5dp"
                     />
             </LinearLayout>
         </ScrollView>

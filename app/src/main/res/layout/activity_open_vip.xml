@@ -11,6 +11,7 @@
     <include layout="@layout/view_header"/>
 
     <LinearLayout
+        android:visibility="gone"
         android:id="@+id/open_vip_ll_wx"
 
         android:layout_width="match_parent"
@@ -39,14 +40,19 @@
             android:textColor="@color/colorPink"/>
 
     </LinearLayout>
+    <ImageView
+        android:id="@+id/vip_image"
+        android:src="@drawable/open_vip2"
+        android:adjustViewBounds="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="12dp"
-        android:paddingBottom="100dp"
         android:layout_weight="1"
-        android:background="@android:color/white">
+        android:background="@android:color/white"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -54,74 +60,79 @@
             android:layout_gravity="center"
             android:layout_marginBottom="12dp"
             android:layout_marginTop="12dp"
+            android:gravity="center"
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_margin="12dp"
-                android:drawableLeft="@drawable/vip_yellow"
-                android:drawablePadding="10dp"
-                android:gravity="center_horizontal"
-                android:text="黄金会员套餐"
-                android:textColor="@android:color/black"
-                android:textSize="18sp"
-                />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="12dp"
+            android:drawableLeft="@drawable/vip_name"
+            android:drawablePadding="10dp"
+            android:gravity="center"
+            android:text="会员套餐"
+            android:textColor="@color/colorPink"
+            android:textSize="18sp"
+            />
 
-            <TextView
-                android:id="@+id/open_vip_tip"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
-                android:gravity="center_horizontal"
-                android:text="开通会员后，将享有所有特权"
-                android:textSize="16sp"
-                />
 
             <RelativeLayout
-                android:visibility="gone"
                 android:id="@+id/open_vip_rl_30"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
-                android:background="@drawable/rectangle_open_vip1">
+                android:layout_marginTop="12dp"
+                android:background="@drawable/rectangle_open_vip1"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/open_vip_tv_30"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="32dp"
-                    android:text="月卡（30天）"
+                    android:layout_marginLeft="22dp"
                     android:textColor="@color/colorPink"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/open_vip_tv_15"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="32dp"
-                    android:text="￥ 15"
-                    android:textColor="@color/colorPink"
-                    android:textSize="16sp"/>
+                    android:layout_centerVertical="true">
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_old_0"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/colorGray2"
+                        android:textSize="12sp"/>
+
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_15"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="22dp"
+                        android:textSize="16sp"/>
+                </LinearLayout>
 
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/open_vip_rl_90"
-android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/rectangle_open_vip2">
+                android:background="@drawable/rectangle_open_vip2"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/open_vip_tv_90"
@@ -129,33 +140,44 @@ android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="32dp"
-                    android:text="季卡（90天）"
+                    android:layout_marginLeft="22dp"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/open_vip_tv_45"
-
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="32dp"
-                    android:text="￥ 45"
-                    android:textSize="16sp"/>
+                    android:layout_centerVertical="true">
 
+                    <TextView
+                        android:id="@+id/open_vip_tv_old_1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/colorGray2"
+
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_45"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="22dp"
+                        android:textSize="16sp"/>
+                </LinearLayout>
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/open_vip_rl_180"
-android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/rectangle_open_vip2">
+                android:background="@drawable/rectangle_open_vip2"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/open_vip_tv_180"
@@ -163,22 +185,33 @@ android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="32dp"
-                    android:text="半年卡（180天）"
+                    android:layout_marginLeft="22dp"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/open_vip_tv_75"
 
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="32dp"
-                    android:text="￥ 75"
-                    android:textSize="16sp"/>
+                    android:layout_centerVertical="true">
 
+                    <TextView
+                        android:id="@+id/open_vip_tv_old_2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/colorGray2"
 
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_75"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="22dp"
+                        android:textSize="16sp"/>
+                </LinearLayout>
             </RelativeLayout>
 
             <RelativeLayout
@@ -187,9 +220,9 @@ android:visibility="gone"
                 android:layout_height="50dp"
                 android:layout_marginLeft="22dp"
                 android:layout_marginRight="22dp"
-                android:visibility="gone"
                 android:layout_marginTop="22dp"
-                android:background="@drawable/rectangle_open_vip2">
+                android:background="@drawable/rectangle_open_vip2"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/open_vip_tv_365"
@@ -197,22 +230,46 @@ android:visibility="gone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="32dp"
-                    android:text="年卡（365天）"
+                    android:layout_marginLeft="22dp"
                     android:textSize="16sp"/>
 
-                <TextView
-                    android:id="@+id/open_vip_tv_135"
 
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="32dp"
-                    android:text="￥ 135"
-                    android:textSize="16sp"/>
+                    android:layout_centerVertical="true">
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_old_3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="10dp"
+                        android:textColor="@color/colorGray2"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/open_vip_tv_135"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="22dp"
+                        android:textSize="16sp"/>
+                </LinearLayout>
 
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/open_vip_tip"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="22dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:gravity="center_horizontal"
+                android:textSize="16sp"
+                android:visibility="visible"
+                />
 
 
         </LinearLayout>

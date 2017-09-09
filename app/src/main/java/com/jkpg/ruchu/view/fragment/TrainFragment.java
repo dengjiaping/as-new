@@ -111,7 +111,8 @@ public class TrainFragment extends Fragment {
     @BindView(R.id.train_ll)
     LinearLayout mTrainLl;
     @BindView(R.id.train_image)
-    ImageView mTrainImage;@BindView(R.id.train_image1)
+    ImageView mTrainImage;
+    @BindView(R.id.train_image1)
     ImageView mTrainImage1;
 
     private TrainMainBean mTrainMainBean;
@@ -145,6 +146,7 @@ public class TrainFragment extends Fragment {
     private void initData() {
         OkGo
                 .post(AppUrl.HEADERLUNBOIMAGE)
+                .params("devicetoken", SPUtils.getString(UIUtils.getContext(), Constants.DEVICETOKEN, ""))
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .cacheKey("HEADERLUNBOIMAGE")
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
@@ -194,7 +196,7 @@ public class TrainFragment extends Fragment {
             mTrainIvNewHand.setVisibility(View.GONE);
         }
         if (mTrainMainBean.uIsstest != null && mTrainMainBean.uIsstest.equals("1")) {
-            mTrainTvLevel.setText("当前训练等级: 难度 " + mTrainMainBean.uLevel + "        第" + mTrainMainBean.excisedays + "天");
+            mTrainTvLevel.setText("当前训练等级: " + mTrainMainBean.uLevel + "        第" + mTrainMainBean.excisedays + "天");
             mTrainLl.setVisibility(View.VISIBLE);
             initTestBtn();
         } else {
@@ -315,10 +317,16 @@ public class TrainFragment extends Fragment {
 
                                 if (isVipBean.isVIP) {
                                     if (!isVipBean.excisedays) {
-                                        final String[] array = new String[]{"循环当前难度训练", "进入下一难度训练"};
+                                        final String[] array;
+                                        if (mTrainMainBean.levelid == 5) {
+                                            array = new String[]{"循环当前难度训练"};
+
+                                        } else {
+                                            array = new String[]{"循环当前难度训练", "进入下一难度训练"};
+                                        }
                                         final int[] selectedIndex = {0};
                                         new AlertDialog.Builder(getContext())
-                                                .setTitle("您已完成难度" + mTrainMainBean.uLevel + "全部天数的训练,接下来你可以选择进行:")
+                                                .setTitle("您已完成" + mTrainMainBean.uLevel + "全部天数的训练,接下来你可以选择进行:")
                                                 .setSingleChoiceItems(array, 0, new DialogInterface.OnClickListener() {
                                                     @Override
                                                     public void onClick(DialogInterface dialog, int which) {
@@ -351,7 +359,7 @@ public class TrainFragment extends Fragment {
                                                             OkGo
                                                                     .post(AppUrl.OPENMYPRACTICE)
                                                                     .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                                                                    .params("level", (mTrainMainBean.uLevel + 1 + ""))
+                                                                    .params("level", ((mTrainMainBean.levelid + 1) + ""))
                                                                     .execute(new StringDialogCallback(getActivity()) {
                                                                         @Override
                                                                         public void onSuccess(String s, Call call, Response response) {
@@ -397,7 +405,7 @@ public class TrainFragment extends Fragment {
             case R.id.train_ll:
                 new AlertDialog.Builder(getActivity())
                         .setMessage(mTrainMainBean.userInfos.introduction + "\n\n建议强度: " + mTrainMainBean.advise)
-                        .setTitle("您当前的训练等级: 难度" + mTrainMainBean.uLevel)
+                        .setTitle("您当前的训练难度: " + mTrainMainBean.uLevel)
                         .setNegativeButton("确定", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

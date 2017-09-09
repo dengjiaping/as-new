@@ -84,12 +84,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:elevation="1dp"
         app:tabSelectedTextColor="@color/colorPink"/>
 
     <android.support.v4.view.ViewPager
-        android:background="#11888888"
         android:id="@+id/my_files_view_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:background="#11888888"/>
 
 </LinearLayout>

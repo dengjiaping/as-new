@@ -64,6 +64,10 @@ public class TestReportActivity extends BaseActivity {
     TextView mReportTvTime;
     @BindView(R.id.register_scroll_view)
     ScrollView mRegisterScrollView;
+    @BindView(R.id.register_view)
+    LinearLayout mRegisterView;
+    @BindView(R.id.report_code)
+    LinearLayout mReportCode;
     private PopupWindow mPopupWindow;
 
     @Override
@@ -78,7 +82,7 @@ public class TestReportActivity extends BaseActivity {
     private void initData() {
         TestResultBean testResultBean = getIntent().getParcelableExtra("testResultBean");
         mReportTvGrade.setText(testResultBean.count + " 分");
-        mReportTvPlan.setText(testResultBean.level);
+        mReportTvPlan.setText("产后康复  【" + testResultBean.level + "】");
         mReportTvName.setText(testResultBean.usernick);
         mReportTvAge.setText(testResultBean.age + " 岁");
         mReportTvHeight.setText(testResultBean.height + " cm");
@@ -104,6 +108,8 @@ public class TestReportActivity extends BaseActivity {
                 PermissionUtils.requestPermissions(this, 200, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionUtils.OnPermissionListener() {
                     @Override
                     public void onPermissionGranted() {
+//                        mReportCode.setVisibility(View.VISIBLE);
+
                         Bitmap bitmap = getBitmapByView(mRegisterScrollView);
                         String pic = FileUtils.saveBitmap(bitmap);
                /* Intent imageIntent = new Intent(Intent.ACTION_SEND);
@@ -133,19 +139,26 @@ public class TestReportActivity extends BaseActivity {
 //        share_intent = Intent.createChooser(share_intent, "分享如初");
 //        startActivity(share_intent);
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
+        view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
         mPopupWindow = new PopupWindow(this);
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setContentView(view);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_report, null), Gravity.BOTTOM, 0, 0);
         PopupWindowUtils.darkenBackground(TestReportActivity.this, .5f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
+//                mReportCode.setVisibility(View.GONE);
                 PopupWindowUtils.darkenBackground(TestReportActivity.this, 1f);
             }
         });

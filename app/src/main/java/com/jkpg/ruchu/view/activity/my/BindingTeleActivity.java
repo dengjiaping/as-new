@@ -22,6 +22,7 @@ import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.RegexUtils;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -172,7 +173,11 @@ public class BindingTeleActivity extends BaseActivity {
         }
         final String pwd = mBindingEtPwd.getText().toString().trim();
         if (StringUtils.isEmpty(pwd)) {
-            ToastUtils.showShort(UIUtils.getContext(), "请输入验证码");
+            ToastUtils.showShort(UIUtils.getContext(), "请输入密码");
+            return;
+        }
+        if (!RegexUtils.isMatch(RegexUtils.REGEX_PWD, pwd)) {
+            ToastUtils.showShort(UIUtils.getContext(), "6-16位密码，包含数字和字母");
             return;
         }
         if (!NetworkUtils.isConnected()) {
@@ -192,7 +197,7 @@ public class BindingTeleActivity extends BaseActivity {
                                     .post(AppUrl.SETTELANDPWD)
                                     .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                                     .params("tele", phone)
-                                    .params("password", pwd)
+                                    .params("password", Md5Utils.getMD5(pwd))
                                     .execute(new StringDialogCallback(BindingTeleActivity.this) {
                                         @Override
                                         public void onSuccess(String s, Call call, Response response) {

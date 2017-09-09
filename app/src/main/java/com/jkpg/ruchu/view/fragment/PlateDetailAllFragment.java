@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.PlateDetailBean;
+import com.jkpg.ruchu.bean.SendNoteMess;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -63,8 +64,8 @@ public class PlateDetailAllFragment extends Fragment {
 
     private int flag = 1;
     private String mPlateid;
-    private List<PlateDetailBean.NoticeBean> mNotice= new ArrayList<>();
-    private List<PlateDetailBean.ListBean> mList= new ArrayList<>();
+    private List<PlateDetailBean.NoticeBean> mNotice = new ArrayList<>();
+    private List<PlateDetailBean.ListBean> mList = new ArrayList<>();
 
 
     @Nullable
@@ -107,6 +108,7 @@ public class PlateDetailAllFragment extends Fragment {
         });
 
     }
+
     private void refresh() {
         flag = 1;
         OkGo
@@ -152,6 +154,7 @@ public class PlateDetailAllFragment extends Fragment {
 
                 });
     }
+
     private void initData() {
 
         OkGo
@@ -293,6 +296,7 @@ public class PlateDetailAllFragment extends Fragment {
                 intent.putExtra("title", ((PlateDetailActivity) getActivity()).getHeaderTitle());
                 intent.putExtra("plateid", ((PlateDetailActivity) getActivity()).getPlateid());
                 intent.putStringArrayListExtra("plate", ((PlateDetailActivity) getActivity()).getPlate());
+                intent.putStringArrayListExtra("plateId", ((PlateDetailActivity) getActivity()).getPlateId());
                 startActivity(intent);
                 break;
         }
@@ -319,6 +323,13 @@ public class PlateDetailAllFragment extends Fragment {
     public void eventMess(String mess) {
         if (mess.equals("send") || mess.equals("Community"))
             refresh();
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void send(SendNoteMess mess) {
+        if (mess.mess.equals("sendSkip")) {
+            mPlateid = mess.id;
+            refresh();
+        }
     }
 }

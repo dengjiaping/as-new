@@ -14,6 +14,7 @@ public class Constants {
     public static final int DEBUGLEVEL = LogUtils.LEVEL_ALL;
     public static final String PHONE = "phone";
     public static final String FIRST = "first";
+    public static final String DEVICETOKEN = "deviceToken";
 
     public static final String USERID = "user_id";
     public static final String USERNANE = "user_name";
@@ -31,6 +32,9 @@ public class Constants {
     public static final String UMENG_MESSAGE_SECRET = "013bc6e7bf034de2c3b4fc2dabc1830d";
     public static final String UMENG_MASTER_SECRET = "52od7cow0hffo0zmscwwco4jp6bqtvd3";
 
+
+    public static final String XIAOMI_ID = "2882303761517607736";
+    public static final String XIAOMI_KEY = "5281760747736";
 
 
     public static final String YZ_CLIENT_ID = "2d230f061c23006b4e";

@@ -7,7 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -47,7 +47,7 @@ public class TrainHistoryActivity extends BaseActivity {
     @BindView(R.id.no_data_text)
     TextView mNoDataText;
     @BindView(R.id.no_data)
-    RelativeLayout mNoData;
+    LinearLayout mNoData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

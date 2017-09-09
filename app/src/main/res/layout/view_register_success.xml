@@ -30,8 +30,8 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="22dp"
             android:layout_marginRight="22dp"
-            android:layout_marginTop="35dp"
-            android:text="    恭喜您成功注册如初康复APP，赶快跟我们一起锻炼吧！"
+            android:layout_marginTop="12dp"
+            android:text="    恭喜您成功注册如初康复，赶快跟我们一起锻炼吧！"
             android:textSize="16sp"
             />
 

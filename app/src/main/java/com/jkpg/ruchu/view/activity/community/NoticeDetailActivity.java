@@ -102,6 +102,8 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     TextView mNoticeDetailReply;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.notice_detail)
+    LinearLayout mNoticeDetail;
 
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
@@ -138,7 +140,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_notice_detail_revise);
         ButterKnife.bind(this);
         mBbsid = getIntent().getStringExtra("bbsid");
-        LogUtils.d(mBbsid+"bbsid");
+        LogUtils.d(mBbsid + "bbsid");
 
         initData(mBbsid);
         initHeader();
@@ -183,7 +185,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
         mBbsid = intent.getStringExtra("bbsid");
-        LogUtils.d(mBbsid+"bbsid");
+        LogUtils.d(mBbsid + "bbsid");
 //        OkGo
 //                .post(AppUrl.BBS_DETAILS)
 //                .params("bbsid", mBbsid)
@@ -473,7 +475,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         if (mList2.size() > 0) {
             mNoticeDetailTvNum.setText("全部回复");
         } else {
-            mNoticeDetailTvNum.setText("暂无回复");
+            ImageView imageView = new ImageView(this);
+            imageView.setImageResource(R.drawable.no_reply);
+            mNoticeDetailReplyAdapter.addHeaderView(imageView, 1);
+//            mNoticeDetailTvNum.setText("暂无回复");
+            mNoticeDetailTvNum.setText("全部回复");
         }
 
 
@@ -657,7 +663,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
         final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         editWindow.setBackgroundDrawable(null);
-        editWindow.setOutsideTouchable(false);
+        editWindow.setOutsideTouchable(true);
         editWindow.setFocusable(true);
 
         final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
@@ -720,7 +726,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                         for (String selectedPhoto : selectedPhotos) {
                             Uri uri = Uri.fromFile(new File(selectedPhoto));
                             Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
-                            String s = FileUtils.saveBitmapByQuality(bm, 10);
+                            String s = FileUtils.saveBitmapByQuality(bm, 40);
                             files.add(new File(s));
                         }
                         OkGo
@@ -852,7 +858,11 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         switch (v.getId()) {
             case R.id.notice_detail_tv_name:
             case R.id.notice_detail_civ_photo:
-                toUserMain(mList1.get(0).userid);
+                if (mList1.get(0).isHideName) {
+                    ToastUtils.showShort(UIUtils.getContext(), "楼主是匿名发帖哦!");
+                } else {
+                    toUserMain(mList1.get(0).userid);
+                }
                 break;
             case R.id.notice_detail_tv_reply:
                 isShowImage = View.VISIBLE;
@@ -864,14 +874,20 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     private void showShare() {
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
         mPopupWindow = new PopupWindow(this);
+        view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         mPopupWindow.setContentView(view);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
         PopupWindowUtils.darkenBackground(NoticeDetailActivity.this, .5f);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override

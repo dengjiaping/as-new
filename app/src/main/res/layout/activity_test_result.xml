@@ -7,6 +7,7 @@
     <include layout="@layout/view_header"/>
 
     <LinearLayout
+        android:elevation="2dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
@@ -49,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
-            android:text="通过测试我们为您量身定做的训练计划："
+            android:text="如初为您推荐方案："
             android:textSize="16sp"/>
 
         <TextView
@@ -59,7 +60,7 @@
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:textColor="@android:color/black"
-            android:textSize="16sp"/>
+            android:textSize="18sp"/>
 
         <Button
             android:id="@+id/result_btn_look"

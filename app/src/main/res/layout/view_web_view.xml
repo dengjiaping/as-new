@@ -9,6 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <LinearLayout
+        android:id="@+id/web_view_ll"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+    <LinearLayout
+
         android:layout_marginLeft="22dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -46,6 +54,8 @@
         android:paddingBottom="12dp"
         android:paddingLeft="22dp"
         android:paddingTop="12dp" />
+    </LinearLayout>
+
 
 
 

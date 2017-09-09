@@ -11,9 +11,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.bean.TestId;
 import com.jkpg.ruchu.bean.TrainQuestionNextBean;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -44,6 +49,8 @@ public class MoreFragment extends NormalFragment {
     CheckBox mTestMoreCb2;
     @BindView(R.id.test_more_cb3)
     CheckBox mTestMoreCb3;
+    @BindView(R.id.test_more_id)
+    TextView mTestMoreId;
 
     private List<CheckBox> mCheckBoxes;
     TrainQuestionNextBean.ListBean listBean;
@@ -167,5 +174,29 @@ public class MoreFragment extends NormalFragment {
         return listBean;
     }
 
+    @Override
+    public void setId(int id) {
+        mTestMoreId.setText(id + ". ");
+    }
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setTitle(TestId mess) {
+        mTestMoreId.setText(mess.testID + ". ");
+    }
 }

@@ -52,7 +52,7 @@ public class WelcomeActivity extends BaseActivity {
                 }
 
             }
-        }, 1600);
+        }, 1500);
     }
 
     //优化用户体验，禁掉返回键

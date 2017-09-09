@@ -1,14 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
+    android:orientation="vertical"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    >
+    <View
+        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/view_share_white"
+        android:layout_height="0dp"/>
+
 
     <LinearLayout
-        android:background="@android:color/white"
         android:layout_alignParentBottom="true"
         android:layout_width="match_parent"
+        android:background="@android:color/white"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -18,15 +25,15 @@
             >
 
             <TextView
-                android:paddingTop="12dp"
-                android:background="@drawable/ripple_with_color"
                 android:id="@+id/share_qq"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ripple_with_color"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/share_qq"
                 android:gravity="center"
+                android:paddingTop="12dp"
                 android:scaleX=".7"
                 android:scaleY=".7"
                 android:text="QQ好友"
@@ -35,33 +42,33 @@
 
             <TextView
                 android:id="@+id/share_wx"
-                android:background="@drawable/ripple_with_color"
-                android:paddingTop="12dp"
-                android:scaleX=".7"
-                android:scaleY=".7"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ripple_with_color"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/share_wx"
                 android:gravity="center"
+                android:paddingTop="12dp"
+                android:scaleX=".7"
+                android:scaleY=".7"
                 android:text="微信好友"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
             <TextView
-                android:background="@drawable/ripple_with_color"
-                android:paddingTop="12dp"
                 android:id="@+id/share_wxq"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:background="@drawable/ripple_with_color"
                 android:drawablePadding="5dp"
                 android:drawableTop="@drawable/share_wxq"
                 android:gravity="center"
-                android:text="微信朋友圈"
+                android:paddingTop="12dp"
                 android:scaleX=".7"
                 android:scaleY=".7"
+                android:text="微信朋友圈"
                 android:textColor="@android:color/black"
                 android:textSize="18sp"/>
 
@@ -73,15 +80,15 @@
             android:background="#22000000"/>
 
         <TextView
-            android:background="@drawable/ripple_with_color"
-
             android:id="@+id/share_cancel"
+
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@drawable/ripple_with_color"
             android:gravity="center"
             android:padding="12dp"
             android:text="取消"
             android:textColor="@android:color/black"
             android:textSize="14sp"/>
     </LinearLayout>
-</RelativeLayout>
+</LinearLayout>

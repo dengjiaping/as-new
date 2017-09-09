@@ -14,6 +14,7 @@ public class AppUrl {
     public static final String BASEURLHTTP = "https://www.ruchu.club/AppServer/";
     public static final String YOUZANINITTOKEN = BASEURL + "YouZanInitTokenServlet";
     public static final String YOUZAN = BASEURL + "YouzanServlet";
+    public static final String DOWNLOAD = BASEURL + "DownLoadServlet";
 
     public static final String SMS = BASEURL + "SmsServlet";
     public static final String LOGIN = BASEURL + "Login_telServlet";
@@ -24,6 +25,7 @@ public class AppUrl {
     public static final String SELECTTELEQQUID = BASEURL + "SelectTeleQQUidServlet";
     public static final String SELECTTELEUNIONID = BASEURL + "SelectTeleUnionidServlet";
     public static final String MYMASSAGE = BASEURL + "MyMassageServlet";
+    public static final String SELECTINTEGRAL = BASEURL + "SelectIntegralServlet";
 
 
     public static final String QQLOGIN = BASEURL + "QQLoginServlet";

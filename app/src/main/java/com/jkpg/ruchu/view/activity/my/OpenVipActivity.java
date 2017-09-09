@@ -1,10 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -38,6 +34,7 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.IpUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.lzy.okgo.OkGo;
@@ -100,6 +97,16 @@ public class OpenVipActivity extends BaseActivity {
     TextView mOpenVipTip;
     @BindView(R.id.open_vip_btn_pay)
     Button mOpenVipBtnPay;
+    @BindView(R.id.open_vip_tv_old_0)
+    TextView mOpenVipTvOld0;
+    @BindView(R.id.open_vip_tv_old_1)
+    TextView mOpenVipTvOld1;
+    @BindView(R.id.open_vip_tv_old_2)
+    TextView mOpenVipTvOld2;
+    @BindView(R.id.open_vip_tv_old_3)
+    TextView mOpenVipTvOld3;
+    @BindView(R.id.vip_image)
+    ImageView mVipImage;
     private PopupWindow mPopupWindowPay;
     private PopupWindow mPopupWindowPaySuccess;
     String day;
@@ -111,6 +118,7 @@ public class OpenVipActivity extends BaseActivity {
     private List<TextView> mPriceViews;
     private List<TextView> mTimeViews;
     private List<RelativeLayout> mRLViews;
+    private ArrayList<TextView> mOldPrice;
 
 
     @Override
@@ -139,6 +147,11 @@ public class OpenVipActivity extends BaseActivity {
         mRLViews.add(mOpenVipRl90);
         mRLViews.add(mOpenVipRl180);
         mRLViews.add(mOpenVipRl365);
+        mOldPrice = new ArrayList<>();
+        mOldPrice.add(mOpenVipTvOld0);
+        mOldPrice.add(mOpenVipTvOld1);
+        mOldPrice.add(mOpenVipTvOld2);
+        mOldPrice.add(mOpenVipTvOld3);
         initData();
 
     }
@@ -151,19 +164,27 @@ public class OpenVipActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         mOpenVipBean = new Gson().fromJson(s, OpenVipBean.class);
-                        if (mOpenVipBean.isgivenVIP.equals("1")){
+                        if (StringUtils.isEmpty(mOpenVipBean.VIPTime)) {
+                            mVipImage.setImageResource(R.drawable.open_vip1);
+                        }
+                        mOpenVipTip.setText(mOpenVipBean.information);
+                        if (mOpenVipBean.isgivenVIP.equals("1")) {
                             mOpenVipLlWx.setVisibility(View.GONE);
                         } else {
+                            mOpenVipLlWx.setVisibility(View.VISIBLE);
+
                             mOpenVipLlWx.setVisibility(mOpenVipBean.WXStatus ? View.GONE : View.VISIBLE);
                         }
                         for (int i = 0; i < mOpenVipBean.list.size(); i++) {
                             mPriceViews.get(i).setText("￥ " + mOpenVipBean.list.get(i).cardprice);
                             mTimeViews.get(i).setText(mOpenVipBean.list.get(i).cardname);
+                            mOldPrice.get(i).setText(mOpenVipBean.list.get(i).oldprice);
+                            mOldPrice.get(i).getPaint().setFlags(Paint.STRIKE_THRU_TEXT_FLAG | Paint.ANTI_ALIAS_FLAG);
                             mRLViews.get(i).setVisibility(View.VISIBLE);
                         }
                         day = mOpenVipBean.list.get(0).cardtime;
                         if (mOpenVipBean.isVIP.equals("1")) {
-                            mOpenVipTip.setText("续费会员后，将继续享有所有特权");
+                            mHeaderTvTitle.setText("会员续期");
                         }
                         cardid = mOpenVipBean.list.get(0).cardid;
 
@@ -358,20 +379,20 @@ public class OpenVipActivity extends BaseActivity {
                                 if (successBean.success) {
                                     mOpenVipLlWx.setVisibility(View.GONE);
                                     if (successBean.giveVIP) {
-                                        Notification.Builder builder = new Notification.Builder(OpenVipActivity.this);
-                                        Intent intent = new Intent(OpenVipActivity.this, VipManageActivity.class);  //需要跳转指定的页面
-                                        PendingIntent pendingIntent = PendingIntent.getActivity(OpenVipActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                        builder.setContentIntent(pendingIntent);
-                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
-                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
-                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-                                        builder.setAutoCancel(true); //自己维护通知的消失
-                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
-                                        builder.setOngoing(true);
-                                        Notification notification = builder.build();
-                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+//                                        Notification.Builder builder = new Notification.Builder(OpenVipActivity.this);
+//                                        Intent intent = new Intent(OpenVipActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+//                                        PendingIntent pendingIntent = PendingIntent.getActivity(OpenVipActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                                        builder.setContentIntent(pendingIntent);
+//                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+//                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
+//                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
+//                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+//                                        builder.setAutoCancel(true); //自己维护通知的消失
+//                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
+//                                        builder.setOngoing(true);
+//                                        Notification notification = builder.build();
+//                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+//                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
                                     }
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), getString(R.string.AccounntWX));

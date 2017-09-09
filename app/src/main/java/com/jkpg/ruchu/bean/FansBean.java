@@ -17,7 +17,8 @@ public class FansBean {
         public String flag;
         public String userid;
         public String tid;
-        public String introduction;
+        public String chanhoutime;
+        public String taici;
         public String imgurl;
         public String nike;
     }

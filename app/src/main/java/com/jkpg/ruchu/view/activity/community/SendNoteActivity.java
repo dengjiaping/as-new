@@ -2,6 +2,7 @@ package com.jkpg.ruchu.view.activity.community;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -36,7 +37,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.PlateBean;
+import com.jkpg.ruchu.bean.SendNoteMess;
 import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -102,6 +105,8 @@ public class SendNoteActivity extends BaseActivity {
     TextView mSendNoteTvPlateContent;
     @BindView(R.id.send_note_recycler_view)
     RecyclerView mSendNoteRecyclerView;
+    @BindView(R.id.send_note_view)
+    LinearLayout mSendNoteView;
     private String mTitle;
     private PopupWindow mPopupWindow;
     private List<PlateBean> data;
@@ -317,21 +322,35 @@ public class SendNoteActivity extends BaseActivity {
         mTitle = getIntent().getStringExtra("title");
         mPlateid = getIntent().getStringExtra("plateid");
         ArrayList<String> plate = getIntent().getStringArrayListExtra("plate");
+        ArrayList<String> plateId = getIntent().getStringArrayListExtra("plateId");
         mSendNoteTvPlateContent.setText(mTitle);
         data = new ArrayList<>();
-        for (String s : plate) {
-            data.add(new PlateBean(s));
+        for (int i = 0; i < plate.size(); i++) {
+            data.add(new PlateBean(plate.get(i), plateId.get(i)));
         }
-        View view = View.inflate(UIUtils.getContext(), R.layout.view_plate_notice, null);
-        final AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(view)
-                .show();
-        view.findViewById(R.id.plate_notice_tv_ok).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.dismiss();
-            }
-        });
+//        for (String s : plate) {
+//            data.add(new PlateBean(s,));
+//        }
+        if (!SPUtils.getBoolean(UIUtils.getContext(), "notice", false)) {
+            View view = View.inflate(UIUtils.getContext(), R.layout.view_plate_notice, null);
+            final AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setView(view)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            SPUtils.saveBoolean(UIUtils.getContext(), "notice", true);
+
+                        }
+                    })
+                    .show();
+            view.findViewById(R.id.plate_notice_tv_ok).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dialog.dismiss();
+
+                }
+            });
+        }
     }
 
     private void initHeader() {
@@ -349,10 +368,16 @@ public class SendNoteActivity extends BaseActivity {
                 send();
                 break;
             case R.id.send_note_tv_plate:
-                showPopupWindow();
+                mSendNoteEtTitle.clearFocus();
                 //隐藏键盘
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(SendNoteActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+               MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                   @Override
+                   public void run() {
+                       showPopupWindow();
+                   }
+               },300);
                 break;
             case R.id.send_note_iv_image:
 //                PhotoPicker.builder()
@@ -398,10 +423,10 @@ public class SendNoteActivity extends BaseActivity {
                         public void onSuccess(String s, Call call, Response response) {
                             mHeaderTvRight.setClickable(true);
 
-                            EventBus.getDefault().post("send");
+//                            EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success) {
-                                finish();
+                                showSuccess();
                             } else {
                                 ToastUtils.showShort(UIUtils.getContext(), "发帖失败");
                             }
@@ -429,7 +454,7 @@ public class SendNoteActivity extends BaseActivity {
 
                 Uri uri = Uri.fromFile(file);
                 Bitmap bm = ImageTools.decodeUriAsBitmap(uri);
-                String s = FileUtils.saveBitmapByQuality(bm, 10);
+                String s = FileUtils.saveBitmapByQuality(bm, 40);
                 files.add(new File(s));
             }
             OkGo
@@ -447,10 +472,10 @@ public class SendNoteActivity extends BaseActivity {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
                             mHeaderTvRight.setClickable(true);
-                            EventBus.getDefault().post("send");
                             SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                             if (successBean.success) {
-                                finish();
+                                showSuccess();
+
                             } else {
                                 ToastUtils.showShort(UIUtils.getContext(), "发帖失败");
                             }
@@ -472,6 +497,49 @@ public class SendNoteActivity extends BaseActivity {
         }
     }
 
+    private void showSuccess() {
+        if (getIntent().getStringExtra("plateid").equals(mPlateid)) {
+            new AlertDialog.Builder(SendNoteActivity.this)
+                    .setTitle("帖子发布成功咯，快喊小伙伴来围观吧~")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    })
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            EventBus.getDefault().post("send");
+                            finish();
+                        }
+                    }).show();
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    finish();
+                }
+            }, 3000);
+        } else {
+            new AlertDialog.Builder(SendNoteActivity.this)
+                    .setTitle("帖子在【" + mSendNoteTvPlateContent.getText() + "】已经发布成功啦，快过去看看吧！")
+                    .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            EventBus.getDefault().post(new SendNoteMess(mSendNoteTvPlateContent.getText().toString(), mPlateid + "", "sendSkip"));
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).show();
+
+        }
+    }
+
     private void showPopupWindow() {
 
         mPopupWindow = new PopupWindow(this);
@@ -486,15 +554,17 @@ public class SendNoteActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 mSendNoteTvPlateContent.setText(data.get(position).title);
+                mPlateid = data.get(position).plateid;
                 mPopupWindow.dismiss();
             }
         });
         mPopupWindow.setContentView(view);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(false);
+        mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
+        mPopupWindow.showAsDropDown(mSendNoteView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

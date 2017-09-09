@@ -80,15 +80,16 @@
 
 
     <LinearLayout
-        android:layout_marginBottom="22dp"
         android:id="@+id/train_prepare_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="22dp"
         android:orientation="vertical">
 
         <TextView
+            android:visibility="gone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/tip_bg"
@@ -103,7 +104,7 @@
             android:drawableLeft="@drawable/train_tip_small"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:text="训练指导"
+            android:text="正确训练"
             android:textColor="@color/colorPink"
             android:textSize="16sp"/>
     </LinearLayout>

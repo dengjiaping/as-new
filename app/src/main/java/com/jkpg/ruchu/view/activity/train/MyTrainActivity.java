@@ -42,6 +42,7 @@ public class MyTrainActivity extends BaseActivity {
     TextView mHeaderTvTitle;
     @BindView(R.id.my_train_recycler_view)
     RecyclerView mMyTrainRecyclerView;
+    private MyTrainBean mMyTrainBean;
 
 
     @Override
@@ -64,15 +65,15 @@ public class MyTrainActivity extends BaseActivity {
                 .execute(new StringDialogCallback(MyTrainActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        MyTrainBean myTrainBean = new Gson().fromJson(s, MyTrainBean.class);
-                        List<MyTrainBean.ListBean> list = myTrainBean.list;
+                        mMyTrainBean = new Gson().fromJson(s, MyTrainBean.class);
+                        List<MyTrainBean.ListBean> list = mMyTrainBean.list;
                         list.get(0).backgroundRes = R.drawable.grade_1;
                         list.get(1).backgroundRes = R.drawable.grade_2;
                         list.get(2).backgroundRes = R.drawable.grade_3;
                         list.get(3).backgroundRes = R.drawable.grade_4;
                         list.get(4).backgroundRes = R.drawable.grade_5;
 
-                        int i = Integer.parseInt(myTrainBean.ulevel) - 1;
+                        int i = Integer.parseInt(mMyTrainBean.ulevel) - 1;
                         list.get(i).isSelect = true;
                         initRecyclerView(list);
 
@@ -103,36 +104,55 @@ public class MyTrainActivity extends BaseActivity {
         myTrainRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
-                new AlertDialog.Builder(MyTrainActivity.this)
-                        .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
-                        .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                            }
-                        })
-                        .setPositiveButton("启用", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                OkGo
-                                        .post(AppUrl.OPENMYPRACTICE)
-                                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                                        .params("level", (position + 1 + ""))
-                                        .execute(new StringDialogCallback(MyTrainActivity.this) {
-                                            @Override
-                                            public void onSuccess(String s, Call call, Response response) {
-                                                for (int i = 0; i < 5; i++) {
-                                                    list.get(i).isSelect = false;
+                if (!list.get(position).isSelect) {
+                    new AlertDialog.Builder(MyTrainActivity.this)
+                            .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton("启用", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    OkGo
+                                            .post(AppUrl.OPENMYPRACTICE)
+                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                            .params("level", (position + 1 + ""))
+                                            .execute(new StringDialogCallback(MyTrainActivity.this) {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    for (int i = 0; i < 5; i++) {
+                                                        list.get(i).isSelect = false;
+                                                    }
+                                                    list.get(position).isSelect = true;
+                                                    myTrainRVAdapter.notifyDataSetChanged();
+                                                    EventBus.getDefault().post("TrainFragment");
                                                 }
-                                                list.get(position).isSelect = true;
-                                                myTrainRVAdapter.notifyDataSetChanged();
-                                                EventBus.getDefault().post("TrainFragment");
-                                            }
-                                        });
-                            }
-                        })
-                        .setTitle("要启用难度 " + (position + 1) + " 训练吗？")
-                        .show();
+                                            });
+                                }
+                            })
+                            .setTitle("要启用 " + list.get(position).level + " 训练吗？")
+                            .show();
+                } else {
+                    new AlertDialog.Builder(MyTrainActivity.this)
+                            .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
+                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setTitle("您当前训练难度为 " + list.get(position).level)
+                            .show();
+                }
             }
         });
     }

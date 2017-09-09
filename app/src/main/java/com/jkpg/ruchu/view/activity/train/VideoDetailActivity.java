@@ -150,7 +150,7 @@ public class VideoDetailActivity extends BaseActivity {
                                 JCUtils.clearSavedProgress(VideoDetailActivity.this, AppUrl.BASEURLHTTP + mVideoDetailBean.videoMS.videourl);
                             } else {
                                 new AlertDialog.Builder(VideoDetailActivity.this)
-                                        .setMessage("只有会员才能观看哦!")
+                                        .setMessage("非会员只能试看前5分钟，继续观看请开通如初会员哦~!")
                                         .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
                                             @Override
                                             public void onClick(DialogInterface dialog, int which) {
@@ -266,6 +266,9 @@ public class VideoDetailActivity extends BaseActivity {
         mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         mFeedBackRLAdapter = new FeedBackRLAdapter(R.layout.item_feedback, discuss);
         mVideoRecyclerView.setAdapter(mFeedBackRLAdapter);
+        ImageView imageView = new ImageView(this);
+        imageView.setImageResource(R.drawable.no_reply);
+        mFeedBackRLAdapter.setEmptyView(imageView);
         mFeedBackRLAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {

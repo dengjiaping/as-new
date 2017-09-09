@@ -1,6 +1,7 @@
 package com.jkpg.ruchu.view.activity.community;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -8,15 +9,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.SendNoteMess;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.view.adapter.PlateDetailVPAdapter;
 import com.jkpg.ruchu.view.fragment.PlateDetailAllFragment;
 import com.jkpg.ruchu.view.fragment.PlateDetailFineFragment;
 import com.jkpg.ruchu.view.fragment.PlateDetailNewFragment;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,22 +47,32 @@ public class PlateDetailActivity extends BaseActivity {
     TabLayout mPlateDetailTabLayout;
     @BindView(R.id.plate_detail_view_pager)
     ViewPager mPlateDetailViewPager;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
 
     private List<Fragment> viewList;
     private List<String> viewTitle;
     public static String mTitle;
     private String mPlateid;
     private ArrayList<String> mPlate;
+    private ArrayList<String> mPlateId;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plate_detail);
         ButterKnife.bind(this);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
 
         mTitle = getIntent().getStringExtra("title");
         mPlateid = getIntent().getStringExtra("plateid");
         mPlate = getIntent().getStringArrayListExtra("plate");
+        mPlateId = getIntent().getStringArrayListExtra("plateId");
         for (String s : mPlate) {
             LogUtils.i(s + "1");
         }
@@ -110,5 +127,25 @@ public class PlateDetailActivity extends BaseActivity {
 
     public ArrayList<String> getPlate() {
         return mPlate;
+    }
+
+    public ArrayList<String> getPlateId() {
+        return mPlateId;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void send(SendNoteMess mess) {
+        if (mess.mess.equals("sendSkip")) {
+            mPlateid = mess.id;
+            mHeaderTvTitle.setText(mess.title);
+        }
     }
 }

@@ -14,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -91,6 +92,8 @@ public class FansCenterActivity extends BaseActivity {
     LinearLayout mFansShowFollow;
     @BindView(R.id.fans_tv_time)
     TextView mFansTvTime;
+    @BindView(R.id.fans_scroll_view)
+    ScrollView mFansScrollView;
 
     private int flag = 1;
     private String mFansId;
@@ -121,7 +124,8 @@ public class FansCenterActivity extends BaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mFansId= intent.getStringExtra("fansId");
+        mFansId = intent.getStringExtra("fansId");
+        flag = 1;
         initData(mFansId);
     }
 
@@ -216,8 +220,10 @@ public class FansCenterActivity extends BaseActivity {
     }
 
     private void initHeader() {
-        mHeaderTvTitle.setVisibility(View.GONE);
+//        mHeaderTvTitle.setVisibility(View.GONE);
+        mHeaderTvTitle.setText("个人主页");
     }
+
 
     @OnClick({R.id.fans_tv_add_follow, R.id.fans_tv_ok_follow, R.id.fans_tv_chat, R.id.fans_tv_more, R.id.header_iv_left})
     public void onViewClicked(View view) {

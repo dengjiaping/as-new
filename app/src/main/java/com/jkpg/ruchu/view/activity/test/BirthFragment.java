@@ -67,7 +67,7 @@ public class BirthFragment extends NormalFragment {
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setRangeStart(1970, 1, 1);
         picker.setUseWeight(false);
-        picker.setRangeEnd(2017, 1, 1);
+        picker.setRangeEnd(2002, 12, 31);
         picker.setSelectedItem(1990, 5, 31);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
@@ -121,5 +121,10 @@ public class BirthFragment extends NormalFragment {
     @Override
     public TrainQuestionNextBean.ListBean getListBean() {
         return null;
+    }
+
+    @Override
+    public void setId(int id) {
+
     }
 }

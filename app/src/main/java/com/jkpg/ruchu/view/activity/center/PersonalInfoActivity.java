@@ -368,8 +368,8 @@ public class PersonalInfoActivity extends BaseActivity {
         picker.setDividerVisible(false);
         picker.setCycleDisable(false);//不禁用循环
         //picker.setOffset(2);//偏移量
-        picker.setRange(30, 150, 1);//数字范围
-        picker.setSelectedItem(45);
+        picker.setRange(30, 120, 1);//数字范围
+        picker.setSelectedItem(60);
         picker.setLabel("Kg");
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setTextColor(getResources().getColor(R.color.colorPink));
@@ -394,8 +394,8 @@ public class PersonalInfoActivity extends BaseActivity {
         picker.setCanceledOnTouchOutside(true);
         picker.setCycleDisable(false);//不禁用循环
         //picker.setOffset(2);//偏移量
-        picker.setRange(145, 200, 1);//数字范围
-        picker.setSelectedItem(168);
+        picker.setRange(140, 200, 1);//数字范围
+        picker.setSelectedItem(160);
         picker.setLabel("cm");
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 
@@ -423,8 +423,8 @@ public class PersonalInfoActivity extends BaseActivity {
         picker.setDividerVisible(false);
         picker.setTopPadding(ConvertUtils.toPx(this, 20));
         picker.setRangeStart(1970, 1, 1);
-        picker.setRangeEnd(2017, 1, 1);
-        picker.setSelectedItem(1990, 5, 20);
+        picker.setRangeEnd(2002, 12, 31);
+        picker.setSelectedItem(1990, 5, 31);
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));

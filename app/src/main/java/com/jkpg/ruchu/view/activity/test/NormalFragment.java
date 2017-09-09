@@ -12,4 +12,5 @@ public abstract class NormalFragment extends Fragment {
     public abstract String getFlag();
     public abstract String getTid();
     public abstract TrainQuestionNextBean.ListBean getListBean();
+    public abstract void setId(int id);
 }

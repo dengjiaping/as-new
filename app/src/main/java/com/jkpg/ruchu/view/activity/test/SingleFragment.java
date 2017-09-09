@@ -12,11 +12,14 @@ import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.TestId;
 import com.jkpg.ruchu.bean.TrainQuestionNextBean;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +48,8 @@ public class SingleFragment extends NormalFragment {
     TextView mTestSingleTitle;
     @BindView(R.id.test_single_subhead)
     TextView mTestSingleSubhead;
+    @BindView(R.id.test_single_id)
+    TextView mTestSingleId;
 
     private TrainQuestionNextBean.ListBean listBean;
     private List<RadioButton> mRadioButtons;
@@ -67,6 +72,7 @@ public class SingleFragment extends NormalFragment {
         super.onViewCreated(view, savedInstanceState);
         initRadioGroup();
         mTestSingleTitle.setText(listBean.title);
+        mTestSingleSubhead.setText(listBean.kuohao);
     }
 
     private void initRadioGroup() {
@@ -139,5 +145,29 @@ public class SingleFragment extends NormalFragment {
         return listBean;
     }
 
+    @Override
+    public void setId(int id) {
+        mTestSingleId.setText(id + ". ");
+    }
 
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setTitle(TestId mess) {
+        mTestSingleId.setText(mess.testID + ". ");
+    }
 }

@@ -17,6 +17,7 @@ import com.google.gson.JsonObject;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.TestId;
 import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.bean.TrainQuestionNextBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
@@ -71,6 +72,10 @@ public class TestDetailedActivity extends BaseActivity {
     private String mAnswer;
 
 
+    private int titleId = 2;
+    private InfoFragment mInfoFragment;
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -101,10 +106,12 @@ public class TestDetailedActivity extends BaseActivity {
     private void initViewPager(TrainQuestionNextBean.ListBean listBean) {
 
         mFragment = new SingleFragment(listBean);
+        mInfoFragment = new InfoFragment();
         mViewList = new ArrayList<>();
         mViewList.add(new BirthFragment());
-        mViewList.add(new InfoFragment());
+        mViewList.add(mInfoFragment);
         mViewList.add(mFragment);
+        mTestDetailViewPager.setOffscreenPageLimit(50);
 
 
         mTestDetailViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -132,6 +139,15 @@ public class TestDetailedActivity extends BaseActivity {
                 } else {
                     mTestDetailBtn.setText("继续");
                 }
+                if (position == 2) {
+                    mFragment.setId(4);
+                    titleId = 4;
+                }
+                if (position == 1){
+                    EventBus.getDefault().post("ViewPager2");
+                }
+
+
             }
 
             @Override
@@ -158,10 +174,10 @@ public class TestDetailedActivity extends BaseActivity {
 
         mTestDetailViewPager.setAdapter(mFragmentPagerAdapter);
 
-        mTestDetailViewPager.setOffscreenPageLimit(mViewList.size() - 1);
+//        mTestDetailViewPager.setOffscreenPageLimit(mViewList.size());
     }
 
-    private void getNext(SingleFragment fragment) {
+    private void getNext(final SingleFragment fragment) {
         mFlag = fragment.getFlag();
         OkGo
                 .post(AppUrl.TEST)
@@ -193,6 +209,7 @@ public class TestDetailedActivity extends BaseActivity {
                             }
                         }
                         mFragmentPagerAdapter.notifyDataSetChanged();
+                        fragment.setId(4);
 
                     }
                 });
@@ -226,10 +243,14 @@ public class TestDetailedActivity extends BaseActivity {
                     String tid = normalFragment.getTid();
 
 
+
                     TrainQuestionNextBean.ListBean listBean = normalFragment.getListBean();
                     if (flag.equals("")) {
                         ToastUtils.showShort(UIUtils.getContext(), "请选择后再继续下一题");
                     } else {
+//                        normalFragment.setId(++titleId);
+//                        LogUtils.i("titleId" + titleId);
+                        EventBus.getDefault().post(new TestId(++titleId + ""));
 
                         JsonObject jsonObject = new JsonObject();
                         jsonObject.addProperty("tid", tid);
@@ -252,7 +273,12 @@ public class TestDetailedActivity extends BaseActivity {
                 }
                 break;
             case R.id.test_detail_back:
+                jsonElements.remove(jsonElements.size() - 1);
                 NormalFragment normal = mViewList.get(mTestDetailViewPager.getCurrentItem());
+//                normal.setId(--titleId);
+//                LogUtils.i("titleId=" + titleId);
+                EventBus.getDefault().post(new TestId(--titleId + ""));
+
                 if (normal.getListBean() != null) {
                     String s = normal.getListBean().fromquestionid;
                     if (s != null && !s.equals("")) {
@@ -262,6 +288,7 @@ public class TestDetailedActivity extends BaseActivity {
                         mTestDetailViewPager.setCurrentItem(mTestDetailViewPager.getCurrentItem() - 1);
 
                     }
+
                 } else {
                     mTestDetailViewPager.setCurrentItem(mTestDetailViewPager.getCurrentItem() - 1);
 
@@ -271,6 +298,7 @@ public class TestDetailedActivity extends BaseActivity {
     }
 
     private void lookReport(String answer) {
+        LogUtils.i(answer);
         OkGo
                 .post(AppUrl.BACKDOCTOR)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))

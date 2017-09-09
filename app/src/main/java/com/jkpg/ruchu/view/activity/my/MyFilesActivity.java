@@ -344,7 +344,7 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_mqtz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNumberPicker(40, 120, 50, "kg", mView_bearing_tv_mqtz);
+                showNumberPicker(30, 120, 60, "kg", mView_bearing_tv_mqtz);
 
             }
         });
@@ -354,7 +354,7 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_sg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNumberPicker(120, 220, 168, "cm", mView_bearing_tv_sg);
+                showNumberPicker(140, 200, 160, "cm", mView_bearing_tv_sg);
             }
         });
 
@@ -469,7 +469,7 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_fmtz.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showNumberPicker(40, 120, 50, "kg", mView_bearing_tv_fmtz);
+                showNumberPicker(30, 120, 60, "kg", mView_bearing_tv_fmtz);
             }
         });
 

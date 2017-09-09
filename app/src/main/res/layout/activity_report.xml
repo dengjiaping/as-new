@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/register_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical">
@@ -16,6 +17,7 @@
         android:scrollbars="none">
 
         <RelativeLayout
+            android:elevation="5dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             >
@@ -53,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="12dp"
-                    android:text="通过测试我们为您量身定做的计划为："
+                    android:text="如初为您推荐方案："
                     android:textSize="16sp"/>
 
                 <TextView
@@ -179,12 +181,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="测试结果"/>
+                        android:text="针对你的情况需要注意:"
+                        />
 
                     <TextView
                         android:id="@+id/report_tv_body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
+                        android:lineSpacingExtra="5dp"
+                        android:textColor="@android:color/black"
                         />
 
                     <View
@@ -208,8 +214,31 @@
                             android:id="@+id/report_tv_time"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:textColor="@android:color/black"
                             />
                     </LinearLayout>
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/report_code"
+                    android:layout_width="match_parent"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+
+
+                <ImageView
+                    android:layout_gravity="center"
+                    android:adjustViewBounds="true"
+                    android:layout_width="180dp"
+                    android:src="@drawable/share_code"
+                    android:layout_height="wrap_content"/>
+                <TextView
+                    android:layout_marginTop="5dp"
+                    android:layout_width="match_parent"
+                    android:gravity="center"
+                    android:layout_marginBottom="12dp"
+                    android:textSize="16sp"
+                    android:text="长按二维码下载如初，测试你的盆底肌!"
+                    android:layout_height="wrap_content"/>
                 </LinearLayout>
             </LinearLayout>
 

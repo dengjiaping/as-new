@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:id="@+id/no_data"
-
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/colorXmlBg"
@@ -9,15 +8,14 @@
 
     <TextView
         android:id="@+id/no_data_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
         android:drawablePadding="22dp"
         android:drawableTop="@drawable/no_data"
         android:gravity="center"
         android:text="你还没有数据哦!"
         android:textColor="#d5d5d5"
-        android:textSize="25sp"/>
+        android:textSize="22sp"/>
 
-</RelativeLayout>
+</LinearLayout>

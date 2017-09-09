@@ -59,9 +59,9 @@ public class NewsSendActivity extends BaseActivity {
         setContentView(R.layout.activity_news_send);
         ButterKnife.bind(this);
         mHeaderTvTitle.setText("消息推送");
-        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", false));
-        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", false));
-        mNewsSendSwitchSms.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchSms", false));
+        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", true));
+        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", true));
+        mNewsSendSwitchSms.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchSms", true));
         mNewsSendSwitchTime1.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime1", false));
         mNewsSendSwitchTime2.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime2", false));
         mNewsSendSwitchTime3.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime3", false));

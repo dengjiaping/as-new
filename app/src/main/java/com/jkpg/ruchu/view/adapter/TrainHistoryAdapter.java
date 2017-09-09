@@ -46,9 +46,11 @@ public class TrainHistoryAdapter extends RecyclerView.Adapter<TrainHistoryAdapte
             dateFormat = DateUtil.dateFormat(time + "", "mm分钟ss秒");
         }
         holder.mItemHistoryTvCount.setText("今日训练" + itemsBean.record.size() + "次,训练总时长共计" + dateFormat);
-        holder.mItemHistoryTvTitle.setText(itemsBean.level);
+        holder.mItemHistoryTvTitle.setText("产后康复 " + itemsBean.level);
         if (items.size() - 1 == position) {
             holder.mItemHistoryLine.setVisibility(View.GONE);
+        } else {
+            holder.mItemHistoryLine.setVisibility(View.VISIBLE);
         }
         holder.mItemHistoryContainer.removeAllViewsInLayout();
         for (int i = 0; i < itemsBean.record.size(); i++) {
@@ -60,6 +62,8 @@ public class TrainHistoryAdapter extends RecyclerView.Adapter<TrainHistoryAdapte
             ((TextView) view.findViewById(R.id.history_time_length)).setText("训练时长" + DateUtil.dateFormat(practice + "", "mm:ss"));
             if (i == itemsBean.record.size() - 1) {
                 view.findViewById(R.id.history_time_line).setVisibility(View.GONE);
+            } else {
+                view.findViewById(R.id.history_time_line).setVisibility(View.VISIBLE);
             }
             holder.mItemHistoryContainer.addView(view);
         }

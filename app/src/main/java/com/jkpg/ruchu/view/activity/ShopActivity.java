@@ -68,6 +68,8 @@ public class ShopActivity extends BaseActivity {
     private static final int CODE_REQUEST_LOGIN = 0x101;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.shop_view)
+    LinearLayout mShopView;
     private PopupWindow mPopupWindow;
     private YouzanToken token;
 
@@ -238,7 +240,7 @@ public class ShopActivity extends BaseActivity {
                 mPopupWindow.setOutsideTouchable(false);
                 mPopupWindow.setFocusable(true);
                 mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-                mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_my_set_up, null), Gravity.BOTTOM, 0, 0);
+                mPopupWindow.showAsDropDown(mShopView, Gravity.BOTTOM, 0, 0);
                 PopupWindowUtils.darkenBackground(ShopActivity.this, .5f);
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
@@ -313,9 +315,11 @@ public class ShopActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mView.pageGoBack()) {
-            super.onBackPressed();
-        }
+//        if (!mView.pageGoBack()) {
+//            super.onBackPressed();
+//        }
+        finish();
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -1,10 +1,12 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.flyco.tablayout.SlidingTabLayout;
@@ -48,6 +50,8 @@ public class MySMSActivity extends BaseActivity {
     SlidingTabLayout mMySpeakTabLayout;
     @BindView(R.id.my_speak_view_pager)
     ViewPager mMySpeakViewPager;
+    @BindView(R.id.header_view)
+    RelativeLayout mHeaderView;
 
 
     @Override
@@ -56,6 +60,7 @@ public class MySMSActivity extends BaseActivity {
         setContentView(R.layout.activity_my_sms);
         ButterKnife.bind(this);
         initHeader();
+
         init();
         OkGo
                 .post(AppUrl.MYMASSAGE)
@@ -102,7 +107,7 @@ public class MySMSActivity extends BaseActivity {
     private void init() {
         List<Fragment> views = new ArrayList<>();
         List<String> title = new ArrayList<>();
-        title.add("私信");
+        title.add("通知");
         title.add("评论");
         title.add("赞");
         MySmsNoticFragment mySmsPrivateFragment = new MySmsNoticFragment();
@@ -162,6 +167,9 @@ public class MySMSActivity extends BaseActivity {
 
     private void initHeader() {
         mHeaderTvTitle.setText("我的消息");
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mHeaderView.setElevation(0);
+        }
     }
 
     @OnClick(R.id.header_iv_left)

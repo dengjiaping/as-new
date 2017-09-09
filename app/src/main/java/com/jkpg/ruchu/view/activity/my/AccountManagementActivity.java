@@ -1,9 +1,5 @@
 package com.jkpg.ruchu.view.activity.my;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -91,6 +87,7 @@ public class AccountManagementActivity extends BaseActivity {
                             mAccountManageTvPhone.setText(tele);
                         } else {
                             mAccountManageTvPhone.setText("点击绑定手机号");
+                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorPink));
                         }
                         isQQ = mAccountManagementBean.qqflag;
                         if (mAccountManagementBean.qqflag) {
@@ -273,20 +270,20 @@ public class AccountManagementActivity extends BaseActivity {
 //                                                    }
 //                                                })
 //                                                .show();
-                                        Notification.Builder builder = new Notification.Builder(AccountManagementActivity.this);
-                                        Intent intent = new Intent(AccountManagementActivity.this, VipManageActivity.class);  //需要跳转指定的页面
-                                        PendingIntent pendingIntent = PendingIntent.getActivity(AccountManagementActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                                        builder.setContentIntent(pendingIntent);
-                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
-                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
-                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-                                        builder.setAutoCancel(true); //自己维护通知的消失
-                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
-                                        builder.setOngoing(true);
-                                        Notification notification = builder.build();
-                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
+//                                        Notification.Builder builder = new Notification.Builder(AccountManagementActivity.this);
+//                                        Intent intent = new Intent(AccountManagementActivity.this, VipManageActivity.class);  //需要跳转指定的页面
+//                                        PendingIntent pendingIntent = PendingIntent.getActivity(AccountManagementActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+//                                        builder.setContentIntent(pendingIntent);
+//                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
+//                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
+//                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
+//                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
+//                                        builder.setAutoCancel(true); //自己维护通知的消失
+//                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
+//                                        builder.setOngoing(true);
+//                                        Notification notification = builder.build();
+//                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
+//                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
                                     }
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), getString(R.string.AccounntWX));
@@ -350,6 +347,7 @@ public class AccountManagementActivity extends BaseActivity {
         super.onSaveInstanceState(outState);
         UMShareAPI.get(this).onSaveInstanceState(outState);
     }
+
     @Override
     public void onResume() {
         super.onResume();

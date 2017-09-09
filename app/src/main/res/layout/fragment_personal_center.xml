@@ -77,7 +77,7 @@
                             android:id="@+id/center_iv_vip"
                             android:layout_width="40dp"
                             android:layout_height="20dp"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:src="@drawable/icon_vip1"/>
 
                     </LinearLayout>
@@ -100,7 +100,7 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:textColor="@android:color/white"
                             android:textSize="15sp"
                             />
@@ -126,7 +126,7 @@
                             android:id="@+id/center_tv_empiric"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:text="0"
                             android:textColor="@android:color/white"
                             android:textSize="15sp"
@@ -144,7 +144,7 @@
                             android:id="@+id/center_tv_mark"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginLeft="5dp"
                             android:text="0"
                             android:textColor="@android:color/white"
                             android:textSize="15sp"
@@ -191,12 +191,13 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textSize="15sp"
                         android:textColor="@android:color/white"/>
-
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="发言"
+                        android:textSize="13sp"
                         android:textColor="@android:color/white"
                         />
 
@@ -219,6 +220,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textSize="15sp"
+
                         android:textColor="@android:color/white"
                         />
 
@@ -226,6 +229,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="关注"
+                        android:textSize="13sp"
+
                         android:textColor="@android:color/white"
                         />
 
@@ -246,6 +251,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="0"
+                        android:textSize="15sp"
+
                         android:textColor="@android:color/white"
                         />
 
@@ -253,6 +260,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="粉丝"
+                        android:textSize="13sp"
+
                         android:textColor="@android:color/white"
                         />
 

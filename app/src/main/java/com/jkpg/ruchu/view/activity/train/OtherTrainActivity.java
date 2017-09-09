@@ -50,6 +50,8 @@ public class OtherTrainActivity extends BaseActivity {
     RecyclerView mOtherRecyclerView;
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
+    @BindView(R.id.image)
+    ImageView mImage;
     private IsVipBean mIsVipBean;
 
 
@@ -61,6 +63,7 @@ public class OtherTrainActivity extends BaseActivity {
             EventBus.getDefault().register(this);
         }
         ButterKnife.bind(this);
+        mImage.setVisibility(View.VISIBLE);
         initHeader();
         initData();
 
@@ -125,7 +128,7 @@ public class OtherTrainActivity extends BaseActivity {
                         startActivity(intent);
                     } else {
                         new AlertDialog.Builder(OtherTrainActivity.this)
-                                .setMessage("只有会员才能观看哦")
+                                .setMessage("观看更多拓展训练，需要开通如初会员才可以哦~")
                                 .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

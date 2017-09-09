@@ -37,6 +37,7 @@
 
 
                         <LinearLayout
+                            android:elevation=".5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:background="@android:color/white">
@@ -49,6 +50,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:elevation=".5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -150,6 +152,7 @@
                         </LinearLayout>
 
                         <LinearLayout
+                            android:elevation="1dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
@@ -217,8 +220,11 @@
 
         </LinearLayout>
 
-        <include layout="@layout/base_retry"/>
+        <include layout="@layout/base_retry"
+            android:visibility="gone"/>
 
-        <include layout="@layout/base_loading"/>
+
+        <include layout="@layout/base_loading"
+            android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

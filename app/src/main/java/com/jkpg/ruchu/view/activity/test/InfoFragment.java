@@ -11,7 +11,12 @@ import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.TrainQuestionNextBean;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,8 +71,8 @@ public class InfoFragment extends NormalFragment {
                 heightPicker.setCanceledOnTouchOutside(true);
                 heightPicker.setCycleDisable(false);//不禁用循环
                 //picker.setOffset(2);//偏移量
-                heightPicker.setRange(145, 200, 1);//数字范围
-                heightPicker.setSelectedItem(168);
+                heightPicker.setRange(140, 200, 1);//数字范围
+                heightPicker.setSelectedItem(160);
                 heightPicker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 
                 heightPicker.setLabel("cm");
@@ -81,7 +86,7 @@ public class InfoFragment extends NormalFragment {
                     @Override
                     public void onNumberPicked(int index, Number item) {
                         mHeight = item.intValue() + "";
-                        mViewTestHeightText.setText(mHeight + " cm");
+                        mViewTestHeightText.setText(item.intValue() + " cm");
                        /* mStringMap.put("height", height.getText().toString());
                         if (mStringMap.containsKey("weight")) {
                             mTestDetailBtn.setEnabled(true);
@@ -99,8 +104,8 @@ public class InfoFragment extends NormalFragment {
                 weightPicker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 //                picker.setItemWidth(picker.getScreenWidthPixels());
                 //picker.setOffset(2);//偏移量
-                weightPicker.setRange(30, 150, 1);//数字范围
-                weightPicker.setSelectedItem(45);
+                weightPicker.setRange(30, 120, 1);//数字范围
+                weightPicker.setSelectedItem(60);
                 weightPicker.setLabel("kg");
                 weightPicker.setTextColor(getResources().getColor(R.color.colorPink));
                 weightPicker.setDividerColor(Color.parseColor("#ffffff"));
@@ -112,7 +117,7 @@ public class InfoFragment extends NormalFragment {
                     @Override
                     public void onNumberPicked(int index, Number item) {
                         mWeight = item.intValue() + "";
-                        mViewTestWeightText.setText(mWeight + " kg");
+                        mViewTestWeightText.setText(item.intValue() + " kg");
                        /* mStringMap.put("weight", weight.getText().toString());
                         if (mStringMap.containsKey("height")) {
                             mTestDetailBtn.setEnabled(true);
@@ -141,5 +146,39 @@ public class InfoFragment extends NormalFragment {
     @Override
     public TrainQuestionNextBean.ListBean getListBean() {
         return null;
+    }
+
+    @Override
+    public void setId(int id) {
+
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void setData(String mess) {
+        if (mess.equals("ViewPager2")) {
+            if (StringUtils.isEmpty(mWeight) || StringUtils.isEmpty(mHeight)) {
+
+            } else {
+                mViewTestWeightText.setText(mWeight + " kg");
+                mViewTestHeightText.setText(mHeight + " cm");
+            }
+
+        }
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
     }
 }

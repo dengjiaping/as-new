@@ -27,6 +27,7 @@ public class TrainMainBean implements Serializable {
     public String uLevel;
     public String advise;
     public List<HeaderLunBoImageBean> headerLunBoImage;
+    public int  levelid;
 
     public static class UserInfosBean implements Serializable {
         /**

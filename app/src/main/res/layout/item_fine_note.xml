@@ -1,93 +1,99 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:background="@drawable/ripple_with_color"
               android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:layout_marginTop="6dp"
-        android:layout_marginBottom="6dp"
-        android:background="@drawable/shap_rectangle_white_line_void"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_marginTop="12dp"
+        android:elevation="1dp"
+        app:cardCornerRadius="4dp">
 
-        <TextView
-            android:id="@+id/item_fine_note_tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@android:color/black"
-            android:lines="1"
-            android:ellipsize="end"
-            android:textSize="16sp"
-            />
-
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:layout_marginTop="5dp">
+            android:background="@drawable/ripple_with_color"
+            android:orientation="vertical"
+            android:padding="12dp">
 
             <TextView
-                android:id="@+id/item_fine_note_tv_time"
-
+                android:id="@+id/item_fine_note_tv_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/colorGray3"
-                android:textSize="12sp"/>
+                android:ellipsize="end"
+                android:lines="1"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                />
 
-
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true">
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp">
 
                 <TextView
-                    android:id="@+id/item_fine_note_tv_eulogy"
+                    android:id="@+id/item_fine_note_tv_time"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableLeft="@drawable/zan"
-                    android:drawablePadding="5dp"
-                    android:text="0"
-                    android:textSize="12sp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorGray2"/>
+                    android:textColor="@color/colorGray3"
+                    android:textSize="12sp"/>
 
-                <TextView
-                    android:id="@+id/item_fine_note_tv_reply"
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="20dp"
-                    android:drawableLeft="@drawable/huifu"
-                    android:drawablePadding="5dp"
-                    android:paddingLeft="5dp"
-                    android:text="0"
-                    android:textSize="12sp"
-                    android:gravity="center_vertical"
-                    android:textColor="@color/colorGray2"/>
-            </LinearLayout>
-        </RelativeLayout>
+                    android:layout_alignParentRight="true">
 
-        <ImageView
-            android:id="@+id/item_fine_note_tv_image"
-            android:layout_width="match_parent"
-            android:layout_height="120dp"
-            android:scaleType="fitXY"
-            />
+                    <TextView
+                        android:id="@+id/item_fine_note_tv_eulogy"
 
-        <TextView
-            android:layout_marginTop="12dp"
-            android:id="@+id/item_fine_note_iv_body"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            />
-    </LinearLayout>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:drawableLeft="@drawable/zan"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:text="0"
+                        android:textColor="@color/colorGray2"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/item_fine_note_tv_reply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:drawableLeft="@drawable/huifu"
+                        android:drawablePadding="5dp"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="5dp"
+                        android:text="0"
+                        android:textColor="@color/colorGray2"
+                        android:textSize="12sp"/>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/item_fine_note_tv_image"
+                android:layout_width="match_parent"
+                android:layout_height="130dp"
+                android:scaleType="fitXY"
+                />
+
+            <TextView
+                android:id="@+id/item_fine_note_iv_body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 </LinearLayout>

@@ -7,19 +7,21 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MyCollectBean;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.MyNoteEditRVAdapter;
 import com.lzy.okgo.OkGo;
@@ -54,7 +56,7 @@ public class MyCollectEditActivity extends BaseActivity {
     @BindView(R.id.no_data_text)
     TextView mNoDataText;
     @BindView(R.id.no_data)
-    RelativeLayout mNoData;
+    LinearLayout mNoData;
 
     private MyNoteEditRVAdapter mAdapter;
 
@@ -105,6 +107,8 @@ public class MyCollectEditActivity extends BaseActivity {
                             post(AppUrl.BBS_LOOKCOLLECTION)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                             .params("flag", pageIndex + "")
+                            .params("type", 1)
+
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
@@ -160,6 +164,7 @@ public class MyCollectEditActivity extends BaseActivity {
                 .post(AppUrl.BBS_LOOKCOLLECTION)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("flag", pageIndex + "")
+                .params("type", 1)
                 .execute(new StringDialogCallback(MyCollectEditActivity.this) {
                     @Override
                     public void onSuccess(String s, Call call, Response reonse) {
@@ -212,11 +217,11 @@ public class MyCollectEditActivity extends BaseActivity {
                 for (int i = map.size() - 1; i >= 0; i--) {
                     if (map.get(i)) {
                         LogUtils.i(i + "map");
-                        LogUtils.i(mList.get(i).bbsid + "=bbsid");
+                        LogUtils.i(mList.get(i).tid + "=bbsid");
                         map.put(i, false);
                         map.remove(map.size() - 1);
                         LogUtils.i(map.size() + "size");
-                        s = s + mList.get(i).bbsid + ",";
+                        s = s + mList.get(i).tid + ",";
                         mList.remove(i);
                     }
                     mAdapter.notifyDataSetChanged();
@@ -229,48 +234,53 @@ public class MyCollectEditActivity extends BaseActivity {
                 OkGo
                         .post(AppUrl.BBS_DELCOLLECTION)
                         .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                        .params("bbsid", s)
+                        .params("tid", s)
                         .execute(new StringDialogCallback(MyCollectEditActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (!successBean.success) {
+                                    ToastUtils.showShort(UIUtils.getContext(), "删除失败");
+                                } else {
 
-                                mHeaderIvLeft.setVisibility(View.VISIBLE);
-                                mHeaderTvLeft.setVisibility(View.GONE);
-                                mHeaderIvRight.setVisibility(View.VISIBLE);
-                                mHeaderTvRight.setVisibility(View.GONE);
-                                mHeaderTvLeft.setText("全选");
-                                isSelectAll = false;
-                                mAdapter.setShowBox();
-                                mAdapter.notifyDataSetChanged();
-                                isEdit = false;
+                                    mHeaderIvLeft.setVisibility(View.VISIBLE);
+                                    mHeaderTvLeft.setVisibility(View.GONE);
+                                    mHeaderIvRight.setVisibility(View.VISIBLE);
+                                    mHeaderTvRight.setVisibility(View.GONE);
+                                    mHeaderTvLeft.setText("全选");
+                                    isSelectAll = false;
+                                    mAdapter.setShowBox();
+                                    mAdapter.notifyDataSetChanged();
+                                    isEdit = false;
 
-                                pageIndex = 1;
-                                mList.clear();
-                                OkGo.
-                                        post(AppUrl.BBS_LOOKCOLLECTION)
-                                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                                        .params("flag", pageIndex + "")
-                                        .execute(new StringCallback() {
-                                            @Override
-                                            public void onSuccess(String s, Call call, Response response) {
-                                                MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
-                                                if (myCollectBean.list == null) {
-                                                    mNoData.setVisibility(View.VISIBLE);
-                                                    mNoDataText.setText("你还没有收藏哦!");
-
-                                                    mAdapter.notifyDataSetChanged();
-                                                } else {
-
-                                                    mList.addAll(myCollectBean.list);
-                                                    mAdapter.notifyDataSetChanged();
-                                                    if (mList != null && mList.size() == 0) {
+                                    pageIndex = 1;
+                                    mList.clear();
+                                    OkGo.
+                                            post(AppUrl.BBS_LOOKCOLLECTION)
+                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                            .params("flag", pageIndex + "")
+                                            .params("type", 1)
+                                            .execute(new StringCallback() {
+                                                @Override
+                                                public void onSuccess(String s, Call call, Response response) {
+                                                    MyCollectBean myCollectBean = new Gson().fromJson(s, MyCollectBean.class);
+                                                    if (myCollectBean.list == null) {
                                                         mNoData.setVisibility(View.VISIBLE);
                                                         mNoDataText.setText("你还没有收藏哦!");
-                                                    } else {
-                                                        mNoData.setVisibility(View.GONE);
 
+                                                        mAdapter.notifyDataSetChanged();
+                                                    } else {
+
+                                                        mList.addAll(myCollectBean.list);
+                                                        mAdapter.notifyDataSetChanged();
+                                                        if (mList != null && mList.size() == 0) {
+                                                            mNoData.setVisibility(View.VISIBLE);
+                                                            mNoDataText.setText("你还没有收藏哦!");
+                                                        } else {
+                                                            mNoData.setVisibility(View.GONE);
+
+                                                        }
                                                     }
-                                                }
 //                                                if (myCollectBean.list == null) {
 //                                                    mAdapter.changeState(2);
 //
@@ -287,9 +297,10 @@ public class MyCollectEditActivity extends BaseActivity {
 //                                                        mAdapter.changeState(1);
 //                                                        mList.addAll(listMore);
 //                                                    }
-                                            }
+                                                }
 
-                                        });
+                                            });
+                                }
                             }
                         });
                 break;

@@ -23,7 +23,9 @@ import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.adapter.VipManageVPAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
@@ -90,7 +92,11 @@ public class VipManageActivity extends BaseActivity {
             mHeaderView.setElevation(0);
         }
         initHeader();
-        initData();
+        if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+            startActivity(new Intent(VipManageActivity.this, LoginActivity.class));
+        } else {
+            initData();
+        }
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -137,12 +143,13 @@ public class VipManageActivity extends BaseActivity {
             mVipManagerIvVip.setImageResource(R.drawable.icon_vip1);
             mVipManagerTvNotOpen.setVisibility(View.GONE);
             mVipManagerTvRenew.setVisibility(View.VISIBLE);
-            mVipManagerTvRenew.setText(vipManageBean.VIPTime + " 到期");
-            mVipManagerBtnOpenVip.setText("续费会员");
+            mVipManagerTvRenew.setText("有效期至" + vipManageBean.VIPTime);
+            mVipManagerBtnOpenVip.setText("会员续期");
+            mVipImage.setImageResource(R.drawable.vip_privilege);
             mVipTitle.setText("您已开通如初会员，赶快加入训练吧！");
         }
         if (vipManageBean.isoverdue) {
-            mVipManagerBtnOpenVip.setText("续费会员");
+            mVipManagerBtnOpenVip.setText("会员续期");
             mVipTitle.setText("您的会员已经过期，赶快续费吧!");
             mVipManagerTvNotOpenText.setText("已过期");
             mVipImage.setImageResource(R.drawable.expired_vip);
@@ -202,7 +209,7 @@ public class VipManageActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void openVip(MessageEvent mess) {
-        if (mess.message.equals("Vip")) {
+        if (mess.message.equals("Vip") || mess.message.equals("Login")) {
             initData();
         }
     }

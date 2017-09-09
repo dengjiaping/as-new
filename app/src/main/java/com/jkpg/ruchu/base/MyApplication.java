@@ -11,14 +11,21 @@ import com.danikula.videocache.HttpProxyCacheServer;
 import com.danikula.videocache.file.FileNameGenerator;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.Md5Utils;
+import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.lzy.okgo.OkGo;
+import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.youzan.sdk.YouzanSDK;
+
+import org.android.agoo.huawei.HuaWeiRegister;
+import org.android.agoo.xiaomi.MiPushRegistar;
 
 import java.util.logging.Level;
 
@@ -64,18 +71,36 @@ public class MyApplication extends Application {
 
         PlatformConfig.setWeixin(Constants.WX_APP_ID, Constants.WX_SECRET);
         PlatformConfig.setQQZone(Constants.QQ_APP_ID, Constants.QQ_SECRET);
+        UMConfigure.init(this, UMConfigure.DEVICE_TYPE_PHONE, Constants.UMENG_MESSAGE_SECRET);
         UMShareAPI.get(this);
 //        Config.isJumptoAppStore = true;
+//        PushAgent mPushAgent = PushAgent.getInstance(this);
+//        //通知栏可以设置最多显示通知的条数，当有新通知到达时，会把旧的通知隐藏。
+//        //mPushAgent.setDisplayNotificationNumber(0);
+//        mPushAgent.setPushCheck(true);
+//        //注册推送服务，每次调用register方法都会回调该接口
+//        mPushAgent.register(new IUmengRegisterCallback() {
+//
+//            @Override
+//            public void onSuccess(String deviceToken) {
+//                //注册成功会返回device token
+//            }
+//
+//            @Override
+//            public void onFailure(String s, String s1) {
+//
+//            }
+//        });
         PushAgent mPushAgent = PushAgent.getInstance(this);
-        //通知栏可以设置最多显示通知的条数，当有新通知到达时，会把旧的通知隐藏。
-        //mPushAgent.setDisplayNotificationNumber(0);
-        mPushAgent.setDebugMode(true);
-        //注册推送服务，每次调用register方法都会回调该接口
+
+//注册推送服务，每次调用register方法都会回调该接口
         mPushAgent.register(new IUmengRegisterCallback() {
 
             @Override
             public void onSuccess(String deviceToken) {
                 //注册成功会返回device token
+                SPUtils.saveString(UIUtils.getContext(),Constants.DEVICETOKEN,deviceToken);
+                LogUtils.i("deviceToken" + deviceToken);
             }
 
             @Override
@@ -83,7 +108,16 @@ public class MyApplication extends Application {
 
             }
         });
+        mPushAgent.setPushCheck(true);
+//        mPushAgent.addAlias("", "", new UTrack.ICallBack() {
+//            @Override
+//            public void onMessage(boolean b, String s) {
+//
+//            }
+//        });
 
+        MiPushRegistar.register(this, Constants.XIAOMI_ID, Constants.XIAOMI_KEY);
+        HuaWeiRegister.register(this);
 
         YouzanSDK.init(this, Constants.YZ_CLIENT_ID);
 
