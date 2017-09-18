@@ -57,6 +57,7 @@
             <View
                 android:id="@+id/main_view_shop"
                 android:layout_width="0dp"
+                android:clickable="true"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 />

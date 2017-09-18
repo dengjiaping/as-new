@@ -22,7 +22,6 @@
 
     <Button
         android:id="@+id/test_detail_btn"
-
         style="@style/btn_pink"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

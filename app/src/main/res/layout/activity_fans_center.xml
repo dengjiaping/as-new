@@ -138,7 +138,6 @@
                     android:layout_alignParentRight="true"
                     android:paddingBottom="12dp"
                     android:paddingTop="12dp"
-                    android:text="山东 济南"
                     android:textColor="@android:color/black"
                     android:textSize="16sp"/>
             </RelativeLayout>
@@ -162,7 +161,7 @@
                     android:layout_height="wrap_content"
                     android:paddingBottom="12dp"
                     android:paddingTop="12dp"
-                    android:text="等级名称"
+                    android:text="等级"
                     android:textSize="16sp"/>
 
                 <TextView
@@ -203,8 +202,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#44000000"/>
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
 
 
     <RelativeLayout
@@ -241,7 +240,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ok"
-                    android:drawablePadding="5dp"
+                    android:drawablePadding="8dp"
                     android:text="已关注"
                     android:textSize="16sp"
                     />
@@ -249,7 +248,8 @@
 
             <View
                 android:layout_width="0.5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
                 android:background="#22000000"/>
 
             <RelativeLayout
@@ -265,7 +265,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/chat"
-                    android:drawablePadding="5dp"
+                    android:drawablePadding="8dp"
                     android:text="聊天"
                     android:textSize="16sp"
                     />
@@ -273,7 +273,8 @@
 
             <View
                 android:layout_width="0.5dp"
-                android:layout_height="wrap_content"
+                android:layout_height="18dp"
+                android:layout_gravity="center"
                 android:background="#22000000"/>
 
             <RelativeLayout
@@ -290,7 +291,7 @@
                     android:layout_centerInParent="true"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/more"
-                    android:drawablePadding="5dp"
+                    android:drawablePadding="8dp"
                     android:text="更多"
                     android:textSize="16sp"
                     />

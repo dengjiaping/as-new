@@ -108,6 +108,8 @@ public class MyFragment extends Fragment {
     TextView mCenterTvName;
     @BindView(R.id.header_view)
     RelativeLayout mHeaderView;
+    @BindView(R.id.center_tv_uid)
+    TextView mCenterTvUid;
 
 
     @Nullable
@@ -220,6 +222,7 @@ public class MyFragment extends Fragment {
         mCenterTvFollow.setText(mymess.mygz);
         mCenterTvFans.setText(mymess.fens);
         mCenterTvGrade.setText(mymess.levelname);
+        mCenterTvUid.setText(mymess.uid + "");
         if (mymess.isVIP.equals("0")) {
             mCenterIvVip.setImageResource(R.drawable.icon_vip2);
         } else {
@@ -295,6 +298,7 @@ public class MyFragment extends Fragment {
                 startActivity(new Intent(getActivity(), MySMSActivity.class));
                 break;
             case R.id.center_ll_on1:
+                break;
             case R.id.center_ll_on2:
                 startActivity(new Intent(getActivity(), GrowthValueActivity.class));
                 break;
@@ -348,20 +352,22 @@ public class MyFragment extends Fragment {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void newnewMess(ExperienceBean sms) {
-            if (!StringUtils.isEmpty(SPUtils.getString(UIUtils
-                    .getContext(), Constants.USERID, ""))) {
-                OkGo
-                        .post(AppUrl.SELECTINTEGRAL)
-                        .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
-                        .execute(new StringCallback() {
-                            @Override
-                            public void onSuccess(String s, Call call, Response response) {
-                                ExperienceBean experienceBean = new Gson().fromJson(s, ExperienceBean.class);
-                                mCenterTvEmpiric.setText(experienceBean.experience);
-                                mCenterTvGrade.setText(experienceBean.levelname);
-                                mCenterTvMark.setText(experienceBean.amount);
-                            }
-                        });
+        if (!StringUtils.isEmpty(SPUtils.getString(UIUtils
+                .getContext(), Constants.USERID, ""))) {
+//                OkGo
+//                        .post(AppUrl.SELECTINTEGRAL)
+//                        .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+//                        .execute(new StringCallback() {
+//                            @Override
+//                            public void onSuccess(String s, Call call, Response response) {
+//                                ExperienceBean experienceBean = new Gson().fromJson(s, ExperienceBean.class);
+//                                mCenterTvEmpiric.setText(experienceBean.experience);
+//                                mCenterTvGrade.setText(experienceBean.levelname);
+//                                mCenterTvMark.setText(experienceBean.amount);
+//                            }
+//                        });
+            initData();
+
         }
     }
 }

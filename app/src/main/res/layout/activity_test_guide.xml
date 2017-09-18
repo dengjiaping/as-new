@@ -12,7 +12,7 @@
         android:layout_marginBottom="22dp"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
-        android:layout_marginTop="100dp"
+        android:layout_marginTop="120dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -32,11 +32,19 @@
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/test_btn_start"
-        style="@style/btn_pink"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="22dp"
-        android:text="开始我的测试"/>
+        android:layout_height="match_parent">
+
+        <Button
+            android:id="@+id/test_btn_start"
+            style="@style/btn_pink"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="80dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:text="开始我的测试"/>
+    </RelativeLayout>
 </LinearLayout>

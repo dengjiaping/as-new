@@ -85,8 +85,15 @@ public class ShopActivity extends BaseActivity {
         mHeaderIvRight.setClickable(false);
 
         mHeaderTvTitle.setText("正在拼命加载中···");
+        final String url;
+        if (StringUtils.isEmpty(getIntent().getStringExtra("url"))) {
+            url = AppUrl.SHOP;
+        } else {
+            url = getIntent().getStringExtra("url");
+        }
 
-        final String url = AppUrl.SHOP;
+        LogUtils.i("url=" + url);
+
         //if (mView.isFromInternal()) {
         //  mView.getInternalUrl();
         //} else {
@@ -132,8 +139,13 @@ public class ShopActivity extends BaseActivity {
 
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {
-        finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (!mView.pageGoBack()) {
+            super.onBackPressed();
+//        } else {
+//            finish();
+//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//        }
+        }
     }
 
     private void setupYouzanView(YouzanClient client) {
@@ -232,6 +244,12 @@ public class ShopActivity extends BaseActivity {
                  * 这里调用系统分享来简单演示分享的过程.
                  */
                 View window = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
+                window.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mPopupWindow.dismiss();
+                    }
+                });
                 mPopupWindow = new PopupWindow(ShopActivity.this);
                 mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
                 mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
@@ -240,7 +258,7 @@ public class ShopActivity extends BaseActivity {
                 mPopupWindow.setOutsideTouchable(false);
                 mPopupWindow.setFocusable(true);
                 mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-                mPopupWindow.showAsDropDown(mShopView, Gravity.BOTTOM, 0, 0);
+                mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_shop, null), Gravity.BOTTOM, 0, 0);
                 PopupWindowUtils.darkenBackground(ShopActivity.this, .5f);
                 mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
                     @Override
@@ -315,11 +333,9 @@ public class ShopActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-//        if (!mView.pageGoBack()) {
-//            super.onBackPressed();
-//        }
-        finish();
-        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+        if (!mView.pageGoBack()) {
+            super.onBackPressed();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

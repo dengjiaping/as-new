@@ -22,7 +22,7 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.community.SendNoteActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
@@ -224,7 +224,7 @@ public class PlateDetailAllFragment extends Fragment {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", list.get(position).tid + "");
                 startActivity(intent);
             }

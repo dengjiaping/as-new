@@ -40,6 +40,7 @@ public class FineNoteWebBean {
         public String Title;
         public String shareurl;
         public String simplecontent;
+        public String header;
 
 
         public String ReportTime;

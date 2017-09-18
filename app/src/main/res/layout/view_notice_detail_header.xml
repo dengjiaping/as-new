@@ -101,7 +101,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="16sp" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/notice_detail_tv_time"
@@ -118,8 +118,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
+            android:lineSpacingExtra="2dp"
             android:textColor="@color/colorGray3"
-            android:textSize="14sp" />
+            android:textSize="16sp" />
 
         <com.jkpg.ruchu.widget.nineview.NineGridView
             android:id="@+id/notice_detail_nine_view"

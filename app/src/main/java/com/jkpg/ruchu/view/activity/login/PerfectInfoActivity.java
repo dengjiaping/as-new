@@ -54,9 +54,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.qqtheme.framework.picker.DatePicker;
-import cn.qqtheme.framework.picker.DoublePicker;
+import cn.qqtheme.framework.picker.LinkagePicker;
 import cn.qqtheme.framework.picker.OptionPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
+import cn.qqtheme.framework.util.DateUtils;
 import cn.qqtheme.framework.widget.WheelView;
 import okhttp3.Call;
 import okhttp3.Response;
@@ -147,9 +148,36 @@ public class PerfectInfoActivity extends BaseActivity {
             case R.id.header_iv_left:
                 break;
             case R.id.header_tv_right:
+                String s = mPerfectEtName.getText().toString().trim();
+                if (RegexUtils.isMatch(RegexUtils.REGEX_NAME, s) && RegexUtils.getStrlength(s) <= 20) {
+
+                } else {
+                    ToastUtils.showShort(UIUtils.getContext(), "昵称不能超过20个字符和特殊字符哦");
+                    return;
+                }
+                OkGo
+                        .post(AppUrl.LOGINNEXTADDMESS)
+                        .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
+                        .params("birthday", "")
+                        .params("taici", "")
+                        .params("chanHouShiJian", "")
+                        .params("nick", s)
+                        .execute(new StringDialogCallback(this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (successBean.error == 233) {
+                                    ToastUtils.showShort(UIUtils.getContext(), "昵称重复了哦,请修改后再提交呢");
+                                } else {
+                                    EventBus.getDefault().post(new MessageEvent("Login"));
+                                    finish();
+                                }
+                            }
+                        });
+
                 // startActivity(new Intent(PerfectInfoActivity.this, MainActivity.class));
-                EventBus.getDefault().post(new MessageEvent("Login"));
-                finish();
+//                EventBus.getDefault().post(new MessageEvent("Login"));
+//                finish();
                 break;
             case R.id.perfect_civ_photo:
                 showDialogSelect();
@@ -204,7 +232,7 @@ public class PerfectInfoActivity extends BaseActivity {
         if (RegexUtils.isMatch(RegexUtils.REGEX_NAME, s) && RegexUtils.getStrlength(s) <= 20) {
 
         } else {
-            ToastUtils.showShort(UIUtils.getContext(), "不能超过20个字符和特殊字符");
+            ToastUtils.showShort(UIUtils.getContext(), "昵称不能超过20个字符和特殊字符哦");
             return;
         }
         if (!NetworkUtils.isConnected()) {
@@ -233,6 +261,7 @@ public class PerfectInfoActivity extends BaseActivity {
 
         OkGo
                 .post(AppUrl.LOGINNEXTADDMESS)
+                .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
                 .params("birthday", mPerfectTvBirth.getText().toString())
                 .params("taici", mPerfectTvHeight.getText().toString())
                 .params("chanHouShiJian", mPerfectTvWeight.getText().toString())
@@ -253,30 +282,129 @@ public class PerfectInfoActivity extends BaseActivity {
 
     // 产后时间
     private void timePicker() {
-        final ArrayList<String> firstData = new ArrayList<>();
-        for (int i = 0; i < 37; i++) {
-            firstData.add(i + "月");
-        }
-        final ArrayList<String> secondData = new ArrayList<>();
-        for (int i = 0; i < 31; i++) {
-            secondData.add(i + "天");
-        }
-        final DoublePicker picker = new DoublePicker(PerfectInfoActivity.this, firstData, secondData);
+//        final ArrayList<String> firstData = new ArrayList<>();
+//        for (int i = 0; i < 37; i++) {
+//            firstData.add(i + "个月");
+//        }
+//        final ArrayList<String> secondData = new ArrayList<>();
+//        for (int i = 0; i < 31; i++) {
+//            secondData.add(i + "天");
+//        }
+//        final DoublePicker picker = new DoublePicker(PerfectInfoActivity.this, firstData, secondData);
+//        picker.setDividerVisible(false);
+//        picker.setShadowColor(Color.WHITE, 80);
+//        picker.setSelectedIndex(2, 1);
+//        picker.setCanceledOnTouchOutside(true);
+//        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
+//        picker.setTextColor(getResources().getColor(R.color.colorPink));
+//        picker.setDividerColor(Color.parseColor("#ffffff"));
+//        picker.setSubmitTextColor(Color.parseColor("#000000"));
+//        picker.setCancelTextColor(Color.parseColor("#000000"));
+//        picker.setTopLineColor(Color.parseColor("#ffffff"));
+//        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+//        picker.setOnPickListener(new DoublePicker.OnPickListener() {
+//            @Override
+//            public void onPicked(int selectedFirstIndex, int selectedSecondIndex) {
+//                mPerfectTvWeight.setText(firstData.get(selectedFirstIndex) + " " + secondData.get(selectedSecondIndex));
+//            }
+//        });
+//        picker.show();
+        LinkagePicker.DataProvider provider = new LinkagePicker.DataProvider() {
+
+            @Override
+            public boolean isOnlyTwo() {
+                return true;
+            }
+
+            @NonNull
+            @Override
+            public List<String> provideFirstData() {
+                ArrayList<String> firstList = new ArrayList<>();
+                for (int i = 0; i < 12; i++) {
+                    firstList.add(i + "个月");
+                }
+                firstList.add("1年");
+                firstList.add("2年");
+                firstList.add("3年");
+                firstList.add("4年");
+                firstList.add("5年");
+
+                return firstList;
+            }
+
+            @NonNull
+            @Override
+            public List<String> provideSecondData(int firstIndex) {
+                ArrayList<String> secondList = new ArrayList<>();
+                if (firstIndex < 12) {
+                    for (int i = 0; i <= 30; i++) {
+                        String str = DateUtils.fillZero(i);
+                        secondList.add(str + "天");
+                    }
+                } else if (firstIndex < 16) {
+                    for (int i = 0; i <= 12; i++) {
+                        String str = DateUtils.fillZero(i);
+                        secondList.add(str + "月");
+                    }
+
+                } else {
+                    secondList.add("及以上");
+
+                }
+                return secondList;
+            }
+
+            @Nullable
+            @Override
+            public List<String> provideThirdData(int firstIndex, int secondIndex) {
+                return null;
+            }
+
+        };
+        LinkagePicker picker = new LinkagePicker(PerfectInfoActivity.this, provider);
+
+
+//                final ArrayList<String> firstData = new ArrayList<>();
+//                for (int i = 0; i < 37; i++) {
+//                    firstData.add(i + "个月");
+//                }
+//                final ArrayList<String> secondData = new ArrayList<>();
+//                for (int i = 0; i < 31; i++) {
+//                    secondData.add(i + "天");
+//                }
+//                final DoublePicker picker = new DoublePicker(MyFilesActivity.this, firstData, secondData);
+        picker.setLabel("", "");
         picker.setDividerVisible(false);
         picker.setShadowColor(Color.WHITE, 80);
         picker.setSelectedIndex(2, 1);
         picker.setCanceledOnTouchOutside(true);
-        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setTextColor(getResources().getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
+        picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
         picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-        picker.setOnPickListener(new DoublePicker.OnPickListener() {
+//                picker.setOnPickListener(new DoublePicker.OnPickListener() {
+//                    @Override
+//                    public void onPicked(int selectedFirstIndex, int selectedSecondIndex) {
+//                        if (firstData.get(selectedFirstIndex).equals("0个月") && secondData.get(selectedSecondIndex).equals("0天")) {
+//                            mView_bearing_tv_chsj.setText("无");
+//                        } else {
+//                            mView_bearing_tv_chsj.setText(firstData.get(selectedFirstIndex) + " " + secondData.get(selectedSecondIndex));
+//                        }
+//                    }
+//                });
+        picker.setOnStringPickListener(new LinkagePicker.OnStringPickListener() {
             @Override
-            public void onPicked(int selectedFirstIndex, int selectedSecondIndex) {
-                mPerfectTvWeight.setText(firstData.get(selectedFirstIndex) + "零" + secondData.get(selectedSecondIndex));
+            public void onPicked(String first, String second, String third) {
+                if (first.equals("0个月") && second.equals("00天")) {
+                    mPerfectTvWeight.setText("无");
+
+                } else {
+                    mPerfectTvWeight.setText(first + " " + second);
+                }
+
             }
         });
         picker.show();
@@ -347,11 +475,6 @@ public class PerfectInfoActivity extends BaseActivity {
                 }
 
             }
-        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
         }).show();
     }
 
@@ -369,6 +492,8 @@ public class PerfectInfoActivity extends BaseActivity {
                 }
             });
             return;
+        } else {
+            openCamera();
         }
     }
 
@@ -436,6 +561,11 @@ public class PerfectInfoActivity extends BaseActivity {
                 }
             });
             return;
+        } else {
+            Intent intent = new Intent(Intent.ACTION_PICK, null);
+            intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
+                    "image");
+            startActivityForResult(intent, REQ_ALBUM);
         }
 
     }

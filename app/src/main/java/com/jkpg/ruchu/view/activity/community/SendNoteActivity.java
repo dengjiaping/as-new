@@ -7,11 +7,11 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
-import android.location.Address;
-import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -38,6 +38,7 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.LocationBaiDuBean;
 import com.jkpg.ruchu.bean.PlateBean;
 import com.jkpg.ruchu.bean.SendNoteMess;
 import com.jkpg.ruchu.bean.SuccessBean;
@@ -46,6 +47,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
@@ -57,15 +59,14 @@ import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.PlateNameRVAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -111,7 +112,7 @@ public class SendNoteActivity extends BaseActivity {
     private PopupWindow mPopupWindow;
     private List<PlateBean> data;
 
-    private LocationManager locationManager;
+    private LocationManager mLocationManager;
     private String provider;
     private PersonalInfoActivity.PermissionListener permissionListener;
 
@@ -120,6 +121,8 @@ public class SendNoteActivity extends BaseActivity {
     private String mLocality = "";
     private String mPlateid;
     private String[] mPermissions;
+    private double mLatitude = 0.0;
+    private double mLongitude = 0.0;
 
 
     @Override
@@ -220,6 +223,9 @@ public class SendNoteActivity extends BaseActivity {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     initPermission();
+                    if (!mLocality.equals("")) {
+                        ToastUtils.showShort(UIUtils.getContext(), "你的位置:" + mLocality);
+                    }
                 }
             }
         });
@@ -239,17 +245,24 @@ public class SendNoteActivity extends BaseActivity {
                 }
             });
             return;*/
-        PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
-            @Override
-            public void onPermissionGranted() {
-                initLocation();
-            }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
+                @Override
+                public void onPermissionGranted() {
+                    initLocation();
+                    LogUtils.i("initLocation");
+                }
 
-            @Override
-            public void onPermissionDenied(String[] deniedPermissions) {
-                mSendNoteCbPosition.setChecked(false);
-            }
-        });
+                @Override
+                public void onPermissionDenied(String[] deniedPermissions) {
+                    mSendNoteCbPosition.setChecked(false);
+                }
+            });
+        } else {
+            initLocation();
+            LogUtils.i("initLocation");
+
+        }
 //        }
     }
 
@@ -272,49 +285,117 @@ public class SendNoteActivity extends BaseActivity {
         }
     }*/
     private void initLocation() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        //获取当前可用的位置控制器
-        List<String> list = locationManager.getProviders(true);
-
-        if (list.contains(LocationManager.GPS_PROVIDER)) {
-            //是否为GPS位置控制器
-            provider = LocationManager.GPS_PROVIDER;
-        } else if (list.contains(LocationManager.NETWORK_PROVIDER)) {
-            //是否为网络位置控制器
-            provider = LocationManager.NETWORK_PROVIDER;
-
-        } else {
-            Toast.makeText(this, "请检查位置权限是否打开",
-                    LENGTH_LONG).show();
-            return;
-        }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            ToastUtils.showShort(UIUtils.getContext(), "请检查位置权限是否打开");
-
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(provider);
-
-        if (location != null) {
-            //获取当前位置，这里只用到了经纬度
-            /*String string = "纬度为：" + location.getLatitude() + ",经度为："
-                    + location.getLongitude();*/
-            Geocoder gc = new Geocoder(this, Locale.getDefault());
-            List<Address> locationList = null;
-            try {
-                locationList = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            if (locationList == null) {
-                ToastUtils.showShort(UIUtils.getContext(), "获取地址失败");
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        //获取当前可用的位置控制器
+//        List<String> list = locationManager.getProviders(true);
+//
+//        if (list.contains(LocationManager.GPS_PROVIDER)) {
+//            //是否为GPS位置控制器
+//            LogUtils.i("是否为GPS位置控制器");
+//            provider = LocationManager.GPS_PROVIDER;
+//        } else if (list.contains(LocationManager.NETWORK_PROVIDER)) {
+//            LogUtils.i("是否为网络位置控制器");
+//
+//            //是否为网络位置控制器
+//            provider = LocationManager.NETWORK_PROVIDER;
+//
+//        } else {
+//            Toast.makeText(this, "请检查位置权限是否打开",
+//                    LENGTH_LONG).show();
+//            return;
+//        }
+//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//            // TODO: Consider calling
+//            ToastUtils.showShort(UIUtils.getContext(), "请检查位置权限是否打开");
+//
+//            return;
+//        }
+//        Location location = locationManager.getLastKnownLocation(provider);
+//
+//        if (location != null) {
+//            LogUtils.i(location.toString());
+//            //获取当前位置，这里只用到了经纬度
+//            /*String string = "纬度为：" + location.getLatitude() + ",经度为："
+//                    + location.getLongitude();*/
+//            Geocoder gc = new Geocoder(this, Locale.getDefault());
+//            List<Address> locationList = null;
+//            try {
+//                locationList = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+////                LogUtils.i(location.toString());
+//
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//            if (locationList == null) {
+//                ToastUtils.showShort(UIUtils.getContext(), "获取地址失败");
+//                return;
+//            }
+//            Address address = locationList.get(0);//得到Address实例
+//
+//            mLocality = address.getLocality();
+//            ToastUtils.showShort(UIUtils.getContext(), "你的位置:" + mLocality);
+        mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        // 判断网络定位是否可用，可替换成 GPS 定位。
+        if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Toast.makeText(this, "请检查位置权限是否打开",
+                        LENGTH_LONG).show();
                 return;
             }
-            Address address = locationList.get(0);//得到Address实例
+            mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                    0, 0, new LocationListener() {
+                        @Override
+                        public void onLocationChanged(Location location) {
+                            //位置发生改变时回调该函数
+                            //纬度
+                            if (mLatitude == 0.0 || mLongitude == 0.0) {
 
-            mLocality = address.getLocality();
-            ToastUtils.showShort(UIUtils.getContext(), "你的位置:" + mLocality);
+                                mLatitude = location.getLatitude();
+                                //经度
+                                mLongitude = location.getLongitude();
+
+
+                                OkGo
+//                                        .post("http://gc.ditu.aliyun.com/regeocoding?l="+mLatitude+","+mLongitude+"&type=010")
+                                        .post("http://api.map.baidu.com/geocoder/v2/?location=" + mLatitude + "," + mLongitude + "&output=json&pois=1&ak=CluAFhAwQB6EftNweYXlFtRy9ZrKqupB")
+//                                        .params("location",mLatitude + "," + mLongitude)
+//                                        .params("ak","2RCMLhMvC1As1KaNoNOb0GVNhwGLtSk4")
+                                        .execute(new StringCallback() {
+                                            @Override
+                                            public void onSuccess(String s, Call call, Response response) {
+                                                LocationBaiDuBean locationBaiDuBean = new Gson().fromJson(s, LocationBaiDuBean.class);
+                                                LogUtils.i(locationBaiDuBean.result.addressComponent.city);
+                                                mLocality = locationBaiDuBean.result.addressComponent.city;
+                                                ToastUtils.showLong(UIUtils.getContext(), "你的位置:" + mLocality);
+
+                                            }
+                                        });
+                                mLocationManager.removeUpdates(this);
+                            }
+
+                            LogUtils.i("latitude:" + mLatitude);
+                            LogUtils.i("longitude:" + mLongitude);
+                        }
+
+                        @Override
+                        public void onStatusChanged(String provider, int status, Bundle extras) {
+                            //状态改变回调
+                            //provider：定位器名称（NetWork,Gps等）
+                            //status: 3中状态，超出服务范围，临时不可用，正常可用
+                            //extras: 包含定位器一些细节信息
+                        }
+
+                        @Override
+                        public void onProviderEnabled(String provider) {
+                            //定位开启回调
+                        }
+
+                        @Override
+                        public void onProviderDisabled(String provider) {
+                            //定位关闭回调
+                        }
+                    });
+
         }
     }
 
@@ -372,12 +453,12 @@ public class SendNoteActivity extends BaseActivity {
                 //隐藏键盘
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(SendNoteActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-               MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
-                   @Override
-                   public void run() {
-                       showPopupWindow();
-                   }
-               },300);
+                MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showPopupWindow();
+                    }
+                }, 300);
                 break;
             case R.id.send_note_iv_image:
 //                PhotoPicker.builder()
@@ -498,6 +579,8 @@ public class SendNoteActivity extends BaseActivity {
     }
 
     private void showSuccess() {
+        EventBus.getDefault().post("send");
+
         if (getIntent().getStringExtra("plateid").equals(mPlateid)) {
             new AlertDialog.Builder(SendNoteActivity.this)
                     .setTitle("帖子发布成功咯，快喊小伙伴来围观吧~")
@@ -546,6 +629,12 @@ public class SendNoteActivity extends BaseActivity {
         mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         View view = View.inflate(UIUtils.getContext(), R.layout.view_recycler_view, null);
+        view.findViewById(R.id.view_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.view_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
         PlateNameRVAdapter adapter = new PlateNameRVAdapter(R.layout.item_plate_name, data);
@@ -559,12 +648,12 @@ public class SendNoteActivity extends BaseActivity {
             }
         });
         mPopupWindow.setContentView(view);
-//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
         PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
-        mPopupWindow.showAsDropDown(mSendNoteView, Gravity.BOTTOM | Gravity.CENTER_HORIZONTAL, 0, 0);
+        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
         mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {

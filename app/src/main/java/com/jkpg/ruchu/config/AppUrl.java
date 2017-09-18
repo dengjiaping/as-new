@@ -6,6 +6,7 @@ package com.jkpg.ruchu.config;
 
 public class AppUrl {
     public static final String SHOP = "https://kdt.im/IOksbr";
+//    public static final String SHOP = "https://h5.youzan.com/v2/feature/10xxttl2z";
 
     //生产环境
 //    public static final String BASEURL = "https://www.ruchuapp.com/AppServer";
@@ -26,6 +27,8 @@ public class AppUrl {
     public static final String SELECTTELEUNIONID = BASEURL + "SelectTeleUnionidServlet";
     public static final String MYMASSAGE = BASEURL + "MyMassageServlet";
     public static final String SELECTINTEGRAL = BASEURL + "SelectIntegralServlet";
+    public static final String APPSEND = BASEURL + "AppSendSelectServlet";
+    public static final String APPSENDSEND = BASEURL + "AppSendServlet";
 
 
     public static final String QQLOGIN = BASEURL + "QQLoginServlet";

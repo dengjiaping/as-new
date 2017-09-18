@@ -85,6 +85,8 @@ public class AccountManagementActivity extends BaseActivity {
                             String tele = mAccountManagementBean.tele;
                             tele = tele.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
                             mAccountManageTvPhone.setText(tele);
+                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorBlack));
+
                         } else {
                             mAccountManageTvPhone.setText("点击绑定手机号");
                             mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorPink));
@@ -247,6 +249,7 @@ public class AccountManagementActivity extends BaseActivity {
         public void onComplete(SHARE_MEDIA platform, int action, Map<String, String> data) {
 
             if (platform == SHARE_MEDIA.WEIXIN) {
+                LogUtils.d(data.toString());
 
                 OkGo
                         .post(AppUrl.BIND_WECHAT)
@@ -259,6 +262,7 @@ public class AccountManagementActivity extends BaseActivity {
                                 if (successBean.success) {
                                     mAccountManageRbWx.setChecked(false);
                                     mAccountManageRbWx.setText("已绑定");
+                                    EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     isWX = true;
                                     if (successBean.giveVIP) {
 //                                        new AlertDialog.Builder(AccountManagementActivity.this)

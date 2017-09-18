@@ -88,6 +88,7 @@ public class CommunityMianBean implements Serializable {
         public int zan;
         public String headimg;
         public String userid;
+        public String type;
         public int reply;
         public int tid;
         public int plateid;
@@ -102,6 +103,7 @@ public class CommunityMianBean implements Serializable {
 
         public String title;
         public String images;
+        public String type;
         public int tid;
     }
 }

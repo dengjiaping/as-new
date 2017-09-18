@@ -34,7 +34,7 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.adapter.FanCenterRvAdapter;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
@@ -119,6 +119,7 @@ public class FansCenterActivity extends BaseActivity {
         } else {
             initData(mFansId);
         }
+        LogUtils.i("mFansId"+mFansId);
     }
 
     @Override
@@ -154,7 +155,9 @@ public class FansCenterActivity extends BaseActivity {
                 .into(mFansCivPhoto);
         mFansTvTime.setText(fansCenterBean.chanhoutime);
         mFansTvName.setText(fansCenterBean.nick);
-        if (!fansCenterBean.isVIP.equals("1")) {
+        if (fansCenterBean.isVIP.equals("2")) {
+            mFansIvVip.setImageResource(R.drawable.icon_vip1);
+        } else {
             mFansIvVip.setImageResource(R.drawable.icon_vip2);
         }
         mFansTvFollow.setText(fansCenterBean.attNum);
@@ -183,7 +186,7 @@ public class FansCenterActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
 
-                Intent intent = new Intent(FansCenterActivity.this, NoticeDetailActivity.class);
+                Intent intent = new Intent(FansCenterActivity.this, NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", bbslist.get(position).tid + "");
                 startActivity(intent);
             }
@@ -230,6 +233,7 @@ public class FansCenterActivity extends BaseActivity {
         switch (view.getId()) {
             case R.id.fans_tv_add_follow:
                 if (mFansId.equals(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+
                     ToastUtils.showShort(UIUtils.getContext(), "自己不能关注自己哦");
                     return;
                 }
@@ -244,7 +248,7 @@ public class FansCenterActivity extends BaseActivity {
 
                                 SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                                 if (!successBean.success) {
-                                    ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
+                                    ToastUtils.showShort(UIUtils.getContext(), successBean.msg);
 
                                 } else {
                                     EventBus.getDefault().post("fans");

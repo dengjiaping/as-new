@@ -20,7 +20,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.adapter.MySpeakNoteRVAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -171,7 +171,7 @@ public class MySpeakFragment extends Fragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 String bbsid = mySpeak.get(position).tid;
-                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", bbsid + "");
                 startActivity(intent);
             }

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -104,26 +105,37 @@ public class TestReportActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.header_iv_right:
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 
-                PermissionUtils.requestPermissions(this, 200, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionUtils.OnPermissionListener() {
-                    @Override
-                    public void onPermissionGranted() {
+                    PermissionUtils.requestPermissions(this, 200, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionUtils.OnPermissionListener() {
+                        @Override
+                        public void onPermissionGranted() {
 //                        mReportCode.setVisibility(View.VISIBLE);
 
-                        Bitmap bitmap = getBitmapByView(mRegisterScrollView);
-                        String pic = FileUtils.saveBitmap(bitmap);
+                            Bitmap bitmap = getBitmapByView(mRegisterScrollView);
+                            String pic = FileUtils.saveBitmap(bitmap);
                /* Intent imageIntent = new Intent(Intent.ACTION_SEND);
                 imageIntent.setType("image/jpeg");
                 imageIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pic));
                 startActivity(Intent.createChooser(imageIntent, "分享我的报告"));*/
-                        showShare(bitmap);
-                    }
+                            showShare(bitmap);
+                        }
 
-                    @Override
-                    public void onPermissionDenied(String[] deniedPermissions) {
+                        @Override
+                        public void onPermissionDenied(String[] deniedPermissions) {
 
-                    }
-                });
+                        }
+                    });
+                } else {
+
+                    Bitmap bitmap = getBitmapByView(mRegisterScrollView);
+                    String pic = FileUtils.saveBitmap(bitmap);
+               /* Intent imageIntent = new Intent(Intent.ACTION_SEND);
+                imageIntent.setType("image/jpeg");
+                imageIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pic));
+                startActivity(Intent.createChooser(imageIntent, "分享我的报告"));*/
+                    showShare(bitmap);
+                }
 
                 break;
         }

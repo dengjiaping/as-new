@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="50dp"
                 android:layout_centerInParent="true"
-                android:background="@drawable/shap_rectangle_gray4"
+                android:background="@android:color/transparent"
                 android:orientation="horizontal"
                 android:paddingLeft="12dp"
                 android:paddingRight="12dp"
@@ -55,14 +55,19 @@
 
                 <TextView
                     android:id="@id/bannerTitle"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1000"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@drawable/shap_rectangle_gray4"
                     android:ellipsize="marquee"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
                     android:gravity="center"
-                    android:singleLine="true"
+                    android:text="
+                                                   "
+
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:maxLines="1"
                     android:textColor="#ffffff"
                     android:visibility="gone"/>
 
@@ -90,10 +95,10 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_marginTop="12dp"
         android:id="@id/indicatorInside"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
         android:gravity="center"
         android:orientation="horizontal"
         android:visibility="gone"/>

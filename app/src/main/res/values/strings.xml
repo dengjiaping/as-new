@@ -8,7 +8,7 @@
     <string name="about_email">jkpg@jkpg.com.cn</string>
     <string name="AccounntWX">微信已绑定其他账号</string>
     <string name="AccounntQQ">QQ已绑定其他账号</string>
-    <string name="AccountPWD">未设置密码</string>
+    <string name="AccountPWD">请先绑定手机号设置密码哦</string>
     <string name="vipTip">赠送您3天体验会员</string>
     <string name="vipTipHeader">恭喜你</string>
     <string name="_xml_vip">绑定微信，即送3天会员叠加包</string>

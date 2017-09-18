@@ -86,7 +86,7 @@ public class MyCollectEditActivity extends BaseActivity {
                     mAdapter.setSelectItem(position);
                 } else {
                     int bbsid = list.get(position).bbsid;
-                    Intent intent = new Intent(MyCollectEditActivity.this, NoticeDetailActivity.class);
+                    Intent intent = new Intent(MyCollectEditActivity.this, NoticeDetailFixActivity.class);
                     intent.putExtra("bbsid", bbsid + "");
                     startActivity(intent);
                 }

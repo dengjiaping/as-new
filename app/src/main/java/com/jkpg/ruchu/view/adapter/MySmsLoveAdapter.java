@@ -10,9 +10,12 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.MySmsLoveBean;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.List;
+
+import static com.jkpg.ruchu.R.id.sms_reply;
 
 /**
  * Created by qindi on 2017/8/12.
@@ -51,7 +54,12 @@ public class MySmsLoveAdapter extends BaseQuickAdapter<MySmsLoveBean.BackMessBea
             helper.setText(R.id.sms_name, item.nick3);
             helper.setText(R.id.sms_time, item.retime);
             helper.setText(R.id.sms_content, item.text);
-            helper.setText(R.id.sms_reply, item.replycontent);
+            if (StringUtils.isEmpty(item.replycontent)) {
+                helper.setText(sms_reply, "图片");
+
+            } else {
+                helper.setText(sms_reply, item.replycontent);
+            }
         }
 
         helper.setText(R.id.sms_content2, item.fttitle);

@@ -9,15 +9,25 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.SendBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import cn.qqtheme.framework.picker.TimePicker;
+import okhttp3.Call;
+import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/25.
@@ -59,52 +69,172 @@ public class NewsSendActivity extends BaseActivity {
         setContentView(R.layout.activity_news_send);
         ButterKnife.bind(this);
         mHeaderTvTitle.setText("消息推送");
-        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", true));
-        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", true));
-        mNewsSendSwitchSms.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchSms", true));
-        mNewsSendSwitchTime1.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime1", false));
-        mNewsSendSwitchTime2.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime2", false));
-        mNewsSendSwitchTime3.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime3", false));
-        mNewsSendTvTime1.setText(SPUtils.getString(UIUtils.getContext(), 1 + "", "09:00"));
-        mNewsSendTvTime2.setText(SPUtils.getString(UIUtils.getContext(), 2 + "", "14:00"));
-        mNewsSendTvTime3.setText(SPUtils.getString(UIUtils.getContext(), 3 + "", "19:00"));
+        OkGo
+                .post(AppUrl.APPSEND)
+                .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                .cacheKey("APPSEND")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .execute(new StringDialogCallback(NewsSendActivity.this) {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        SendBean sendBean = new Gson().fromJson(s, SendBean.class);
+                        if (sendBean.appsend_pl.equals("1")) {
+                            mNewsSendSwitchComment.setChecked(true);
+                        } else {
+                            mNewsSendSwitchComment.setChecked(false);
+
+                        }
+
+
+                        if (sendBean.appsend_zan.equals("1")) {
+                            mNewsSendSwitchZan.setChecked(true);
+                        } else {
+                            mNewsSendSwitchZan.setChecked(false);
+
+                        }
+
+                        if (sendBean.appsend_tz.equals("1")) {
+                            mNewsSendSwitchSms.setChecked(true);
+                        } else {
+                            mNewsSendSwitchSms.setChecked(false);
+
+                        }
+
+                        if (sendBean.appsend_zao.equals("1")) {
+                            mNewsSendSwitchTime1.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime1.setChecked(false);
+
+                        }
+                        if (sendBean.appsend_zhong.equals("1")) {
+                            mNewsSendSwitchTime2.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime2.setChecked(false);
+
+                        }
+                        if (sendBean.appsend_wan.equals("1")) {
+                            mNewsSendSwitchTime3.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime3.setChecked(false);
+
+                        }
+
+                        mNewsSendTvTime1.setText(sendBean.appsend_zaotime);
+                        mNewsSendTvTime2.setText(sendBean.appsend_wutime);
+                        mNewsSendTvTime3.setText(sendBean.appsend_wantime);
+                    }
+                });
+//        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", true));
+//        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", true));
+//        mNewsSendSwitchSms.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchSms", true));
+//        mNewsSendSwitchTime1.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime1", false));
+//        mNewsSendSwitchTime2.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime2", false));
+//        mNewsSendSwitchTime3.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchTime3", false));
+//        mNewsSendTvTime1.setText();
+//        mNewsSendTvTime2.setText(SPUtils.getString(UIUtils.getContext(), 2 + "", "14:00"));
+//        mNewsSendTvTime3.setText(SPUtils.getString(UIUtils.getContext(), 3 + "", "19:00"));
         mNewsSendSwitchComment.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchComment", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchComment", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_pl", isChecked ? "1" : "0")
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                            }
+                        });
             }
         });
         mNewsSendSwitchZan.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchZan", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchZan", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_zan", isChecked ? "1" : "0")
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                            }
+                        });
 
             }
         });
         mNewsSendSwitchSms.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchSms", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchSms", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_tz", isChecked ? "1" : "0")
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                            }
+                        });
             }
         });
         mNewsSendSwitchTime1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime1", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime1", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_zao", isChecked ? "1" : "0")
+                        .params("appsend_zaotime", mNewsSendTvTime1.getText().toString())
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                LogUtils.i(s+"-------");
+                            }
+                        });
+                LogUtils.i(mNewsSendTvTime1.getText().toString() + "mNewsSendTvTime1.getText().toString()");
+
 
             }
         });
         mNewsSendSwitchTime2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime2", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime2", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_zhong", isChecked ? "1" : "0")
+                        .params("appsend_wutime", mNewsSendTvTime2.getText().toString())
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                            }
+                        });
 
             }
         });
         mNewsSendSwitchTime3.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime3", isChecked);
+//                SPUtils.saveBoolean(UIUtils.getContext(), "SwitchTime3", isChecked);
+                OkGo
+                        .post(AppUrl.APPSENDSEND)
+                        .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("appsend_wan", isChecked ? "1" : "0")
+                        .params("appsend_wantime", mNewsSendTvTime3.getText().toString())
+                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+
+                            }
+                        });
 
             }
         });
@@ -148,9 +278,56 @@ public class NewsSendActivity extends BaseActivity {
             @Override
             public void onTimePicked(String hour, String minute) {
                 view.setText(hour + ":" + minute);
-                SPUtils.saveString(UIUtils.getContext(), a + "", hour + ":" + minute);
+//                SPUtils.saveString(UIUtils.getContext(), a + "", hour + ":" + minute);
+                switch (a) {
+                    case 1:
+                        if (mNewsSendSwitchTime1.isChecked()) {
+                            OkGo
+                                    .post(AppUrl.APPSENDSEND)
+                                    .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                    .params("appsend_zao", "1")
+                                    .params("appsend_zaotime", mNewsSendTvTime1.getText().toString())
+                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
 
+                                        }
+                                    });
 
+                        }
+                        LogUtils.i(mNewsSendTvTime1.getText().toString() + "mNewsSendTvTime1.getText()");
+                        break;
+                    case 2:
+                        if (mNewsSendSwitchTime2.isChecked()) {
+                            OkGo
+                                    .post(AppUrl.APPSENDSEND)
+                                    .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                    .params("appsend_zhong", "1")
+                                    .params("appsend_wutime", mNewsSendTvTime2.getText().toString())
+                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+
+                                        }
+                                    });
+                        }
+                        break;
+                    case 3:
+                        if (mNewsSendSwitchTime3.isChecked()) {
+                            OkGo
+                                    .post(AppUrl.APPSENDSEND)
+                                    .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                    .params("appsend_wan", "1")
+                                    .params("appsend_wantime", mNewsSendTvTime3.getText().toString())
+                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                        @Override
+                                        public void onSuccess(String s, Call call, Response response) {
+
+                                        }
+                                    });
+                        }
+                        break;
+                }
             }
         });
         picker.show();

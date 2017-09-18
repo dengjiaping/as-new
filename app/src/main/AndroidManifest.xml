@@ -348,7 +348,7 @@
         </meta-data>
         <meta-data
             android:name="UMENG_CHANNEL"
-            android:value="Beta"/>
+            android:value="RuChu"/>
 
         <activity
             android:name="com.alipay.sdk.app.H5PayActivity"
@@ -373,6 +373,33 @@
         <activity
             android:name=".view.activity.my.GrowthValueActivity"
             android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.community.MoreReplyFixActivity"
+            android:launchMode="singleTask"
+
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".view.activity.community.FineMoreReplyFixActivity"
+            android:launchMode="singleTask"
+
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".view.activity.community.FineNoteDetailWebFixActivity"
+            android:launchMode="singleTask"
+
+
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.community.NoticeDetailFixActivity"
+            android:launchMode="singleTask"
+
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".view.activity.WebActivity"
+            android:screenOrientation="portrait"
+            />
 
     </application>
 

@@ -132,7 +132,8 @@
                       android:layout_height="wrap_content"/>-->
 
 
-                <LinearLayout
+                <com.google.android.flexbox.FlexboxLayout
+                    app:flexWrap="wrap"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -150,9 +151,10 @@
                         android:layout_marginLeft="5dp"
                         android:textSize="12dp"/>
 
-                </LinearLayout>
+                </com.google.android.flexbox.FlexboxLayout>
 
-                <LinearLayout
+                <com.google.android.flexbox.FlexboxLayout
+                    app:flexWrap="wrap"
                     android:id="@+id/item_notice_reply_to_0"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -173,14 +175,15 @@
                         android:layout_marginLeft="5dp"
                         android:textSize="12dp"/>
 
-                </LinearLayout>
+                </com.google.android.flexbox.FlexboxLayout>
 
 
-                <LinearLayout
+                <com.google.android.flexbox.FlexboxLayout
                     android:id="@+id/item_notice_reply_to_1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
+                    app:flexWrap="wrap"
                     android:visibility="gone">
 
                     <TextView
@@ -212,7 +215,7 @@
                         android:layout_marginLeft="5dp"
                         android:textSize="12dp"/>
 
-                </LinearLayout>
+                </com.google.android.flexbox.FlexboxLayout>
 
                 <TextView
                     android:id="@+id/item_notice_reply_to_more"

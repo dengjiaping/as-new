@@ -92,6 +92,9 @@ public class NoticeDetailReplyAdapter extends BaseQuickAdapter<NoticeDetailBean.
             }
 
         } else if (items.size() == 1) {
+            helper.setVisible(R.id.item_notice_reply_to, true);
+            helper.setVisible(R.id.item_notice_reply_to_1, false);
+            helper.setVisible(R.id.item_notice_reply_to_0, false);
             NoticeDetailBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
             helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
             helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);

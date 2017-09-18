@@ -60,11 +60,11 @@
                     android:orientation="horizontal">
 
                     <RelativeLayout
-                        android:elevation="1dp"
-
                         android:layout_width="0dp"
+
                         android:layout_height="wrap_content"
-                        android:layout_weight="1">
+                        android:layout_weight="1"
+                        android:elevation="1dp">
 
                         <LinearLayout
                             android:id="@+id/train_ll_new"
@@ -79,25 +79,25 @@
                             >
 
                             <ImageView
-                                android:layout_marginTop="7dp"
-                                android:elevation="3dp"
                                 android:layout_width="111dp"
                                 android:layout_height="75dp"
+                                android:layout_marginTop="7dp"
+                                android:elevation="3dp"
                                 android:src="@drawable/train_1"/>
 
                             <TextView
-                                android:layout_marginTop="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="5dp"
                                 android:text="入门指导"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp"/>
 
                             <TextView
-                                android:layout_marginTop="2dp"
-                                android:paddingBottom="5dp"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:paddingBottom="5dp"
                                 android:text="锻炼在此起步"/>
                         </LinearLayout>
 
@@ -115,40 +115,40 @@
                         android:background="#22000000"/>
 
                     <LinearLayout
-                        android:elevation="1dp"
-
                         android:id="@+id/train_ll_my"
-                        android:layout_width="0dp"
 
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+
                         android:layout_weight="1"
                         android:background="@drawable/ripple_with_color"
+                        android:elevation="1dp"
                         android:gravity="center"
                         android:orientation="vertical"
                         >
 
                         <ImageView
-                            android:layout_marginTop="7dp"
                             android:id="@+id/imageView3"
-                            android:elevation="3dp"
                             android:layout_width="111dp"
                             android:layout_height="75dp"
+                            android:layout_marginTop="7dp"
+                            android:elevation="3dp"
                             android:src="@drawable/train_2"/>
 
                         <TextView
-                            android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:text="全部难度"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"/>
 
                         <TextView
-                            android:paddingBottom="5dp"
-
-                            android:layout_marginTop="2dp"
                             android:layout_width="wrap_content"
+
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:paddingBottom="5dp"
                             android:text="选择适合的难度"/>
                     </LinearLayout>
 
@@ -158,14 +158,14 @@
                         android:background="#22000000"/>
 
                     <LinearLayout
-                        android:elevation="1dp"
-
                         android:id="@+id/train_ll_other"
-                        android:layout_width="0dp"
 
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+
                         android:layout_weight="1"
                         android:background="@drawable/ripple_with_color"
+                        android:elevation="1dp"
                         android:gravity="center"
                         android:orientation="vertical"
                         >
@@ -174,23 +174,23 @@
                             android:id="@+id/imageView4"
                             android:layout_width="111dp"
                             android:layout_height="75dp"
-                            android:elevation="3dp"
-
                             android:layout_marginTop="7dp"
+
+                            android:elevation="3dp"
                             android:src="@drawable/train_3"/>
 
                         <TextView
-                            android:layout_marginTop="5dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
                             android:text="拓展训练"
                             android:textColor="@android:color/black"
                             android:textSize="16sp"/>
 
                         <TextView
-                            android:layout_marginTop="2dp"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
                             android:paddingBottom="5dp"
 
                             android:text="核心肌群训练"/>
@@ -216,7 +216,7 @@
                         android:paddingLeft="22dp"
                         android:paddingRight="22dp"
                         android:paddingTop="3dp"
-                        android:text="请先完成健康测试，在进行训练哦！"
+                        android:text="请先完成健康测试，再进行训练哦！"
                         android:textSize="12sp"/>
 
                     <LinearLayout
@@ -231,6 +231,7 @@
                         <TextView
                             android:id="@+id/train_tv_level"
                             android:layout_width="0dp"
+
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:paddingBottom="3dp"
@@ -307,11 +308,13 @@
             </LinearLayout>
         </LinearLayout>
 
-        <include layout="@layout/base_retry"
+        <include
+            layout="@layout/base_retry"
             android:visibility="gone"/>
 
-        <include layout="@layout/base_loading"
-                 android:visibility="gone"/>
+        <include
+            layout="@layout/base_loading"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 </LinearLayout>

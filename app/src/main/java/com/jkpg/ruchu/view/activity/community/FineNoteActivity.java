@@ -68,7 +68,38 @@ public class FineNoteActivity extends BaseActivity {
             @Override
             public void onRefresh() {
 //                initData();
-                mFineNoteRefreshLayout.setRefreshing(false);
+//                mFineNoteRefreshLayout.setRefreshing(false);
+                OkGo
+                        .post(AppUrl.ARTICLEINFOS)
+                        .execute(new StringCallback() {
+
+                            @Override
+                            public void onBefore(BaseRequest request) {
+                                super.onBefore(request);
+                                mFineNoteRefreshLayout.setRefreshing(true);
+                            }
+
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                FineNoteBean fineNoteBean = new Gson().fromJson(s, FineNoteBean.class);
+                                if (mList != null) {
+                                    mList.clear();
+                                    mList.addAll(fineNoteBean.list);
+                                    mAdapter.notifyDataSetChanged();
+                                } else {
+                                    mList = fineNoteBean.list;
+                                    initRecyclerView();
+                                }
+
+                            }
+
+                            @Override
+                            public void onAfter(String s, Exception e) {
+                                super.onAfter(s, e);
+                                mFineNoteRefreshLayout.setRefreshing(false);
+
+                            }
+                        });
             }
         });
 
@@ -109,7 +140,7 @@ public class FineNoteActivity extends BaseActivity {
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(FineNoteActivity.this, FineNoteDetailWebActivity.class);
+                Intent intent = new Intent(FineNoteActivity.this, FineNoteDetailWebFixActivity.class);
                 intent.putExtra("art_id", mList.get(position).articleid + "");
                 startActivity(intent);
             }

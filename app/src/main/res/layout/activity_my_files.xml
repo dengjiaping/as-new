@@ -7,65 +7,73 @@
 
     <include layout="@layout/view_header"/>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingBottom="12dp"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp"
-        android:paddingTop="12dp">
-
-        <com.jkpg.ruchu.widget.CircleImageView
-            android:id="@+id/my_files_ctv_photo"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/icon_photo"
-            />
+        android:layout_height="wrap_content">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="12dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+            android:background="@android:color/white"
+            android:paddingBottom="12dp"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp"
+            android:paddingTop="12dp">
+
+            <com.jkpg.ruchu.widget.CircleImageView
+                android:id="@+id/my_files_ctv_photo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/icon_photo"
+                />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_margin="5dp">
+                android:layout_marginLeft="12dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/my_files_tv_name"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/app_name"
-                    android:textColor="@android:color/black"
-                    android:textSize="18sp"/>
+                    android:layout_margin="5dp">
 
-                <ImageView
-                    android:id="@+id/my_files_iv_vip"
-                    android:layout_width="40dp"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="10dp"
-                    android:src="@drawable/icon_vip1"/>
+                    <TextView
+                        android:id="@+id/my_files_tv_name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/app_name"
+                        android:textColor="@android:color/black"
+                        android:textSize="18sp"/>
 
+                    <ImageView
+                        android:id="@+id/my_files_iv_vip"
+                        android:layout_width="40dp"
+                        android:layout_height="20dp"
+                        android:layout_marginLeft="10dp"
+                        android:src="@drawable/icon_vip1"/>
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/my_files_tv_uid"
+                    android:layout_width="wrap_content"
+
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:text="UID: 123456"/>
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/my_files_tv_uid"
-                android:layout_width="wrap_content"
 
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:text="UID: 123456"/>
         </LinearLayout>
-
         <RelativeLayout
+            android:layout_marginTop="37dp"
+            android:layout_alignParentRight="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
-
+            android:layout_marginRight="22dp"
+            >
 
             <CheckBox
                 android:id="@+id/my_files_cb"
@@ -76,8 +84,7 @@
                 />
         </RelativeLayout>
 
-
-    </LinearLayout>
+    </RelativeLayout>
 
     <android.support.design.widget.TabLayout
         android:id="@+id/my_files_tab_layout"

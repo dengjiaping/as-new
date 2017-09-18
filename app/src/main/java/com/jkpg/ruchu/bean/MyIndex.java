@@ -39,5 +39,6 @@ public class MyIndex implements Serializable {
         public String ftiecount;
         public String mygz;
         public String fens;
+        public int uid;
     }
 }

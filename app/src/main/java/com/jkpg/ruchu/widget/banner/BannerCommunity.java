@@ -21,6 +21,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.widget.banner.listener.OnBannerClickListener;
 import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
 import com.jkpg.ruchu.widget.banner.loader.ImageLoaderInterface;
@@ -586,10 +587,30 @@ public class BannerCommunity extends FrameLayout implements OnPageChangeListener
                 bannerTitle.setText(titles.get(position - 1));
                 break;
             case BannerConfig.CIRCLE_INDICATOR_TITLE:
-                bannerTitle.setText(titles.get(position - 1));
+                String s = titles.get(position - 1);
+                if (StringUtils.isEmpty(s)){
+                    bannerTitle.setVisibility(GONE);
+                    titleView.setVisibility(GONE);
+
+                } else {
+                    bannerTitle.setVisibility(VISIBLE);
+                    bannerTitle.setText(s);
+                    titleView.setVisibility(VISIBLE);
+
+                }
                 break;
             case BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE:
-                bannerTitle.setText(titles.get(position - 1));
+                String a = titles.get(position - 1);
+                if (StringUtils.isEmpty(a)){
+                    bannerTitle.setVisibility(GONE);
+                    titleView.setVisibility(GONE);
+                } else {
+                    bannerTitle.setVisibility(VISIBLE);
+                    bannerTitle.setText(a);
+                    titleView.setVisibility(VISIBLE);
+
+                }
+//                bannerTitle.setText(titles.get(position - 1));
                 break;
         }
 

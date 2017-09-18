@@ -1,6 +1,5 @@
 package com.jkpg.ruchu.view.activity.train;
 
-import android.Manifest;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -13,10 +12,7 @@ import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
-import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
-import com.jkpg.ruchu.utils.ToastUtils;
-import com.jkpg.ruchu.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,20 +42,25 @@ public class TrainPrepareActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.train_prepare_btn:
-                PermissionUtils.requestPermissions(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE}, new PermissionUtils.OnPermissionListener() {
-                    @Override
-                    public void onPermissionGranted() {
-                        startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
-                        finish();
-                    }
-
-                    @Override
-                    public void onPermissionDenied(String[] deniedPermissions) {
-                        ToastUtils.showShort(UIUtils.getContext(), "您拒绝了,就不能来电暂停了哦,如需要,请到设置应用信息中打开.");
-                        startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
-                        finish();
-                    }
-                });
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//                    PermissionUtils.requestPermissions(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE}, new PermissionUtils.OnPermissionListener() {
+//                        @Override
+//                        public void onPermissionGranted() {
+//                            startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
+//                            finish();
+//                        }
+//
+//                        @Override
+//                        public void onPermissionDenied(String[] deniedPermissions) {
+//                            ToastUtils.showShort(UIUtils.getContext(), "您拒绝了,就不能来电暂停了哦,如需要,请到设置应用信息中打开.");
+//                            startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
+//                            finish();
+//                        }
+//                    });
+//                } else {
+                    startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
+                    finish();
+//                }
 
                 break;
             case R.id.train_prepare_tip:
@@ -69,6 +70,18 @@ public class TrainPrepareActivity extends BaseActivity {
                 popupWindow.setOutsideTouchable(true);
                 popupWindow.setFocusable(true);
                 View inflate = View.inflate(TrainPrepareActivity.this, R.layout.view_show_tip, null);
+                inflate.findViewById(R.id.view_1).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+                inflate.findViewById(R.id.view_0).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
                 popupWindow.setContentView(inflate);
                 popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
                 popupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.activity_train_prepare, null), Gravity.CENTER, 0, 0);
@@ -86,6 +99,6 @@ public class TrainPrepareActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        PermissionUtils.onRequestPermissionsResult(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE});
+//        PermissionUtils.onRequestPermissionsResult(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE});
     }
 }

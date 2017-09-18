@@ -23,6 +23,7 @@
         >
 
         <TextView
+            android:id="@+id/vip_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="44dp"
@@ -118,6 +119,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="22dp"
+                        android:textColor="@color/colorPink"
                         android:textSize="16sp"/>
                 </LinearLayout>
 

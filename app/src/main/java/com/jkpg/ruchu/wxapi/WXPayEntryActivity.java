@@ -46,7 +46,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
         if (resp.getType() == ConstantsAPI.COMMAND_PAY_BY_WX) {
             if (resp.errCode == 0) {
-                ToastUtils.showShort(UIUtils.getContext(), "支付成功");
+//                ToastUtils.showShort(UIUtils.getContext(), "支付成功");
                 EventBus.getDefault().post("wxPaySuccess");
             } else {
                 ToastUtils.showShort(UIUtils.getContext(), "支付失败 " + resp.errCode);

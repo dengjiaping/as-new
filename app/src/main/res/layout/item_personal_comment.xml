@@ -5,6 +5,7 @@
               android:layout_height="wrap_content"
               android:background="@drawable/ripple_with_color"
               android:orientation="vertical"
+              android:layout_marginBottom="8dp"
               android:paddingBottom="5dp">
 
     <LinearLayout

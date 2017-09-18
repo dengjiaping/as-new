@@ -21,7 +21,7 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.adapter.SenderRLAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -204,7 +204,7 @@ public class MyReplyFragment extends Fragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 int bbsid = mySpeak.get(position).BBSId;
-                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", bbsid + "");
                 startActivity(intent);
             }

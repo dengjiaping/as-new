@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -80,6 +81,7 @@ public class FineNoteDetailActivity extends BaseActivity {
     private int isShowImage = View.VISIBLE;
 
     private List<FineNoteBodyBean> data;
+    private PopupWindow mEditWindow;
 
 
     @Override
@@ -148,11 +150,24 @@ public class FineNoteDetailActivity extends BaseActivity {
     }
 
     private void replyLZ() {
-        View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
-        PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        editWindow.setOutsideTouchable(true);
-        editWindow.setFocusable(true);
-        editWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        View editView;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1) {
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input_22, null);
+            editView.findViewById(R.id.view_reply_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mEditWindow.dismiss();
+                }
+            });
+
+        } else {
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
+        }
+//        View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
+        mEditWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mEditWindow.setOutsideTouchable(true);
+        mEditWindow.setFocusable(true);
+        mEditWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
 
         EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
         mReplyRecyclerView = (RecyclerView) editView.findViewById(R.id.view_reply_recycler);
@@ -170,14 +185,14 @@ public class FineNoteDetailActivity extends BaseActivity {
         replyEdit.setFocusable(true);
         replyEdit.requestFocus();
         // 以下两句不能颠倒
-        editWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        editWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        editWindow.showAtLocation(FineNoteDetailActivity.this.findViewById(R.id.fine_note), Gravity.BOTTOM, 0, 0);
+        mEditWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        mEditWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mEditWindow.showAtLocation(FineNoteDetailActivity.this.findViewById(R.id.fine_note), Gravity.BOTTOM, 0, 0);
         // 显示键盘
         final InputMethodManager imm = (InputMethodManager) UIUtils.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
-        editWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        mEditWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);

@@ -95,7 +95,7 @@ public abstract class StringDialogCallback extends StringCallback {
         }
 //        if (dialog != null && dialog.isShowing()) {
             //// dialog.dismiss();
-            ToastUtils.showShort(UIUtils.getContext(), "网络异常哦");
+            ToastUtils.showShort(UIUtils.getContext(), "服务器开小差了，请稍后再试吧~");
 //        }
     }
 

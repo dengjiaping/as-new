@@ -31,11 +31,12 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.WebActivity;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
-import com.jkpg.ruchu.view.activity.community.FineNoteDetailWebActivity;
+import com.jkpg.ruchu.view.activity.community.FineNoteDetailWebFixActivity;
 import com.jkpg.ruchu.view.activity.community.HotNoteActivity;
 import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.adapter.CommunityPlateRLAdapter;
@@ -135,6 +136,7 @@ public class CommunityModuleFragment extends Fragment {
                                 mList3.clear();
                                 mList2.addAll(communityMianBean.list2);
                                 mList3.addAll(communityMianBean.list3);
+                                initBanner(mList1);
                                 mCommunityPlateRLAdapter.notifyDataSetChanged();
                                 mHotPlateRLAdapter.notifyDataSetChanged();
                                 mRefreshLayout.setRefreshing(false);
@@ -236,7 +238,7 @@ public class CommunityModuleFragment extends Fragment {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
                 int tid = list3.get(position).tid;
-                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", tid + "");
                 startActivity(intent);
             }
@@ -270,10 +272,17 @@ public class CommunityModuleFragment extends Fragment {
         mCommunityBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                int tid = list1.get(position).tid;
-                Intent intent = new Intent(getActivity(), FineNoteDetailWebActivity.class);
-                intent.putExtra("art_id", tid + "");
-                startActivity(intent);
+                if (!list1.get(position).type.equals("8")) {
+                    int tid = list1.get(position).tid;
+                    Intent intent = new Intent(getActivity(), FineNoteDetailWebFixActivity.class);
+                    intent.putExtra("art_id", tid + "");
+                    startActivity(intent);
+                } else {
+                    int tid = list1.get(position).tid;
+                    Intent intent = new Intent(getActivity(), WebActivity.class);
+                    intent.putExtra("art_id", tid + "");
+                    startActivity(intent);
+                }
 //                ToastUtils.showShort(UIUtils.getContext(), tid + "");
                 //startActivity(new Intent(getActivity(), FineNoteDetailActivity.class));
             }

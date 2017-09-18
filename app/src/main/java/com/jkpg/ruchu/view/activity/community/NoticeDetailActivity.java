@@ -133,12 +133,14 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
     private String mUserid;
     private PopupWindow mPopupWindow;
     private String mBbsid;
+    private PopupWindow mEditWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notice_detail_revise);
         ButterKnife.bind(this);
+
         mBbsid = getIntent().getStringExtra("bbsid");
         LogUtils.d(mBbsid + "bbsid");
 
@@ -434,7 +436,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                     case R.id.item_notice_reply_to_more:
                         int tid = mList2.get(position).tid;
                         mIndex = position;
-                        Intent intent = new Intent(NoticeDetailActivity.this, MoreReplyActivity.class);
+                        Intent intent = new Intent(NoticeDetailActivity.this, MoreReplyFixActivity.class);
                         intent.putExtra("replyid", tid + "");
                         intent.putExtra("bbsid", mbbsid + "");
                         startActivity(intent);
@@ -661,10 +663,10 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
             return;
         }
         View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
-        final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        editWindow.setBackgroundDrawable(null);
-        editWindow.setOutsideTouchable(true);
-        editWindow.setFocusable(true);
+        mEditWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mEditWindow.setBackgroundDrawable(null);
+        mEditWindow.setOutsideTouchable(true);
+        mEditWindow.setFocusable(true);
 
         final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
         mReplyRecyclerView = (RecyclerView) editView.findViewById(R.id.view_reply_recycler);
@@ -700,7 +702,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                 .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
-                                        editWindow.dismiss();
+                                        mEditWindow.dismiss();
                                         EventBus.getDefault().post("Community");
                                         OkGo
                                                 .post(AppUrl.BBS_DETAILS)
@@ -712,9 +714,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                                         NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
                                                         mList1.clear();
                                                         mList2.clear();
-                                                        mList1 = noticeDetailBean.list1;
-                                                        mList2 = noticeDetailBean.list2;
-                                                        initRecyclerView(mList2);
+                                                        mList1.addAll(noticeDetailBean.list1);
+                                                        mList2.addAll(noticeDetailBean.list2);
+                                                        mNoticeDetailReplyAdapter.notifyDataSetChanged();
                                                         mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
                                                         mNoticeDetailReplyRecycler.scrollToPosition(mList2.size());
                                                     }
@@ -740,7 +742,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                 .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
-                                        editWindow.dismiss();
+                                        mEditWindow.dismiss();
                                         OkGo
                                                 .post(AppUrl.BBS_DETAILS)
                                                 .params("bbsid", mbbsid)
@@ -751,9 +753,9 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                                         NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
                                                         mList1.clear();
                                                         mList2.clear();
-                                                        mList1 = noticeDetailBean.list1;
-                                                        mList2 = noticeDetailBean.list2;
-                                                        initRecyclerView(mList2);
+                                                        mList1.addAll(noticeDetailBean.list1);
+                                                        mList2.addAll(noticeDetailBean.list2);
+                                                        mNoticeDetailReplyAdapter.notifyDataSetChanged();
                                                         mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
 
                                                         mNoticeDetailReplyRecycler.scrollToPosition(mList2.size());
@@ -778,7 +780,7 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                             .execute(new StringDialogCallback(NoticeDetailActivity.this) {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
-                                    editWindow.dismiss();
+                                    mEditWindow.dismiss();
                                     OkGo
                                             .post(AppUrl.BBS_DETAILS)
                                             .params("bbsid", mbbsid)
@@ -789,9 +791,10 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
                                                     NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
                                                     mList1.clear();
                                                     mList2.clear();
-                                                    mList1 = noticeDetailBean.list1;
-                                                    mList2 = noticeDetailBean.list2;
-                                                    initRecyclerView(mList2);
+                                                    mList1.addAll(noticeDetailBean.list1);
+                                                    mList2.addAll(noticeDetailBean.list2);
+                                                    mNoticeDetailReplyAdapter.notifyDataSetChanged();
+//                                                    initRecyclerView(mList2);
 //                                                    int size = mList2.size();
 //                                                    mList2.clear();
 //                                                    mNoticeDetailReplyAdapter.notifyItemRangeRemoved(0,size);
@@ -813,14 +816,14 @@ public class NoticeDetailActivity extends BaseActivity implements View.OnClickLi
         replyEdit.setFocusable(true);
         replyEdit.requestFocus();
         // 以下两句不能颠倒
-        editWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        editWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        editWindow.showAtLocation(NoticeDetailActivity.this.findViewById(R.id.notice_detail), Gravity.BOTTOM, 0, 0);
+        mEditWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        mEditWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mEditWindow.showAtLocation(NoticeDetailActivity.this.findViewById(R.id.notice_detail), Gravity.BOTTOM, 0, 0);
         // 显示键盘
         final InputMethodManager imm = (InputMethodManager) UIUtils.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
-        editWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        mEditWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);

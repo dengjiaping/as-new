@@ -211,6 +211,18 @@ public class StartTrainActivity2 extends BaseActivity {
                 popupWindow.setOutsideTouchable(true);
                 popupWindow.setFocusable(true);
                 View inflate = View.inflate(StartTrainActivity2.this, R.layout.view_show_tip, null);
+                inflate.findViewById(R.id.view_1).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
+                inflate.findViewById(R.id.view_0).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        popupWindow.dismiss();
+                    }
+                });
                 popupWindow.setContentView(inflate);
                 popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
                 popupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.activity_train_prepare, null), Gravity.CENTER, 0, 0);

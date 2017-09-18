@@ -1,6 +1,8 @@
 package com.jkpg.ruchu.view.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,7 +24,9 @@ import com.jkpg.ruchu.bean.showBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
+import com.jkpg.ruchu.utils.PermissionUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.fragment.CommunityModuleFragment;
 import com.jkpg.ruchu.view.fragment.MyFragment;
@@ -59,6 +63,7 @@ public class MainActivity extends BaseActivity {
     private TrainFragment mTrainFragment;
     private FragmentTransaction mFt;
     private int TAG = R.id.menu_train;
+    private String[] mMPermissionList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -80,6 +85,26 @@ public class MainActivity extends BaseActivity {
 //        initSms();
 //        Intent startIntent = new Intent(this, SmsService.class);
 //        startService(startIntent);
+
+        mMPermissionList = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.CALL_PHONE,
+                Manifest.permission.READ_LOGS, Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.SET_DEBUG_APP,
+                Manifest.permission.SYSTEM_ALERT_WINDOW, Manifest.permission.GET_ACCOUNTS,
+                Manifest.permission.WRITE_APN_SETTINGS};
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            PermissionUtils.requestPermissions(this, 333, mMPermissionList, new PermissionUtils.OnPermissionListener() {
+                @Override
+                public void onPermissionGranted() {
+
+                }
+
+                @Override
+                public void onPermissionDenied(String[] deniedPermissions) {
+                    ToastUtils.showShort(UIUtils.getContext(), "拒绝后,App部分功能将受影响,请到应用设置中打开");
+                }
+            });
+        }
 
     }
 
@@ -279,6 +304,12 @@ public class MainActivity extends BaseActivity {
         super.onResume();
         initSms();
         EventBus.getDefault().post(new ExperienceBean());
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        PermissionUtils.onRequestPermissionsResult(this,333,mMPermissionList);
     }
 }
 

@@ -2,6 +2,7 @@ package com.jkpg.ruchu.view.activity.community;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -57,6 +58,8 @@ public class FineMoreReplyActivity extends BaseActivity {
     private FineMoreReplyAdapter mMoreReplyAdapter;
     private String mArt_id;
     private String mCommentid;
+    private PopupWindow mEditWindow;
+    private List<MoreReplyBean.ItemsBean> mItems;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,9 +88,9 @@ public class FineMoreReplyActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         MoreReplyBean moreReplyBean = new Gson().fromJson(s, MoreReplyBean.class);
-                        List<MoreReplyBean.ItemsBean> items = moreReplyBean.items;
-                        initRecyclerView(items);
-                        mHeaderTvTitle.setText("共有" + items.size() + "条回复");
+                        mItems = moreReplyBean.items;
+                        initRecyclerView(mItems);
+                        mHeaderTvTitle.setText("共有" + mItems.size() + "条回复");
 
                     }
                 });
@@ -142,11 +145,25 @@ public class FineMoreReplyActivity extends BaseActivity {
     }
 
     private void replyLZ() {
-        View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
-        final PopupWindow editWindow = new PopupWindow(editView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        editWindow.setBackgroundDrawable(null);
-        editWindow.setOutsideTouchable(false);
-        editWindow.setFocusable(true);
+        View editView;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 ||Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input_22, null);
+            editView.findViewById(R.id.view_reply_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mEditWindow.dismiss();
+                }
+            });
+
+        } else {
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
+        }
+//        View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
+        mEditWindow = new PopupWindow(editView, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        mEditWindow.setBackgroundDrawable(null);
+        mEditWindow.setOutsideTouchable(false);
+        mEditWindow.setFocusable(true);
         final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
         editView.findViewById(R.id.view_reply_image).setVisibility(View.GONE);
         editView.findViewById(R.id.view_reply_btn).setOnClickListener(new View.OnClickListener() {
@@ -165,7 +182,7 @@ public class FineMoreReplyActivity extends BaseActivity {
                         .execute(new StringDialogCallback(FineMoreReplyActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                editWindow.dismiss();
+                                mEditWindow.dismiss();
                                 conunt++;
                                 OkGo
                                         .post(AppUrl.ARTICLELOOKMOREREPLIES)
@@ -176,7 +193,10 @@ public class FineMoreReplyActivity extends BaseActivity {
                                             public void onSuccess(String s, Call call, Response response) {
                                                 MoreReplyBean moreReplyBean = new Gson().fromJson(s, MoreReplyBean.class);
                                                 List<MoreReplyBean.ItemsBean> items = moreReplyBean.items;
-                                                initRecyclerView(items);
+                                                mItems.clear();
+                                                mItems.addAll(items);
+                                                mMoreReplyAdapter.notifyDataSetChanged();
+//                                                initRecyclerView(items);
                                                 mMoreReplyRecyclerView.scrollToPosition(items.size() - 1);
 
                                                 //// TODO: 2017/9/2  
@@ -192,14 +212,14 @@ public class FineMoreReplyActivity extends BaseActivity {
         replyEdit.setFocusable(true);
         replyEdit.requestFocus();
         // 以下两句不能颠倒
-        editWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        editWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        editWindow.showAtLocation(FineMoreReplyActivity.this.findViewById(R.id.more_reply), Gravity.BOTTOM, 0, 0);
+        mEditWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        mEditWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mEditWindow.showAtLocation(FineMoreReplyActivity.this.findViewById(R.id.more_reply), Gravity.BOTTOM, 0, 0);
         // 显示键盘
         final InputMethodManager imm = (InputMethodManager) UIUtils.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
-        editWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        mEditWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);

@@ -20,7 +20,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
 import com.jkpg.ruchu.view.adapter.MyCommentAdapter;
 import com.lzy.okgo.OkGo;
@@ -156,7 +156,7 @@ public class MySmsReplyFragment extends Fragment {
         mMyCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(getActivity(), NoticeDetailActivity.class);
+                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", backMess.get(position).BBSId);
                 startActivity(intent);
             }

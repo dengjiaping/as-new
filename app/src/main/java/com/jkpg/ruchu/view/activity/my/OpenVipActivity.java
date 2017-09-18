@@ -107,6 +107,8 @@ public class OpenVipActivity extends BaseActivity {
     TextView mOpenVipTvOld3;
     @BindView(R.id.vip_image)
     ImageView mVipImage;
+    @BindView(R.id.vip_tip)
+    TextView mVipTip;
     private PopupWindow mPopupWindowPay;
     private PopupWindow mPopupWindowPaySuccess;
     String day;
@@ -187,7 +189,6 @@ public class OpenVipActivity extends BaseActivity {
                             mHeaderTvTitle.setText("会员续期");
                         }
                         cardid = mOpenVipBean.list.get(0).cardid;
-
                     }
                 });
     }
@@ -378,6 +379,8 @@ public class OpenVipActivity extends BaseActivity {
                                 SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                                 if (successBean.success) {
                                     mOpenVipLlWx.setVisibility(View.GONE);
+//                                    EventBus.getDefault().post(new MessageEvent("MyFragment"));
+                                    EventBus.getDefault().post(new MessageEvent("Vip"));
                                     if (successBean.giveVIP) {
 //                                        Notification.Builder builder = new Notification.Builder(OpenVipActivity.this);
 //                                        Intent intent = new Intent(OpenVipActivity.this, VipManageActivity.class);  //需要跳转指定的页面
@@ -523,7 +526,7 @@ public class OpenVipActivity extends BaseActivity {
                     // 判断resultStatus 为9000则代表支付成功
                     if (TextUtils.equals(resultStatus, "9000")) {
                         // 该笔订单是否真实支付成功，需要依赖服务端的异步通知。
-                        ToastUtils.showShort(UIUtils.getContext(), "支付成功");
+//                        ToastUtils.showShort(UIUtils.getContext(), "支付成功");
                         showPaySuccess();
 
                     } else {

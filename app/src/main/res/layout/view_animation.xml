@@ -9,6 +9,7 @@
 
 
     <ProgressBar
+        android:progressTint="@color/colorPink"
         android:id="@+id/progressBar"
         style="?android:attr/progressBarStyle"
         android:layout_width="wrap_content"

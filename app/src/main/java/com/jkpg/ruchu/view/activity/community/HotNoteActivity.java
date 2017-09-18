@@ -127,7 +127,7 @@ public class HotNoteActivity extends BaseActivity {
         hotPlateDetailRVAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                Intent intent = new Intent(HotNoteActivity.this, NoticeDetailActivity.class);
+                Intent intent = new Intent(HotNoteActivity.this, NoticeDetailFixActivity.class);
                 intent.putExtra("bbsid", list.get(position).tid + "");
                 startActivity(intent);
             }

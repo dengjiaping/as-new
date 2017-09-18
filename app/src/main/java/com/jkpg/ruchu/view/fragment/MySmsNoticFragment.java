@@ -122,7 +122,7 @@ public class MySmsNoticFragment extends Fragment {
 
     private void initRecyclerView(List<MySmsNoticeBean.ListBean> list) {
         LinearLayoutManager layoutManager = new LinearLayoutManager(UIUtils.getContext());
-        layoutManager.setStackFromEnd(true);
+        layoutManager.setStackFromEnd(false);
 
         try {
             mRecyclerView.setLayoutManager(layoutManager);

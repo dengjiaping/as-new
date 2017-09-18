@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.MySmsReplyBean;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 
 import java.util.List;
@@ -37,7 +38,11 @@ public class MyCommentAdapter extends BaseQuickAdapter<MySmsReplyBean.BackMessBe
                     .into((ImageView) helper.getView(R.id.sms_image));
             helper.setText(R.id.sms_name, item.renick);
             helper.setText(R.id.sms_time, item.replytime);
-            helper.setText(R.id.sms_content, item.reply_content);
+            if (!StringUtils.isEmpty(item.reply_content)) {
+                helper.setText(R.id.sms_content, item.reply_content);
+            } else {
+                helper.setText(R.id.sms_content, "图片");
+            }
             helper.setText(R.id.sms_name, item.renick);
 
         } else {
@@ -50,8 +55,14 @@ public class MyCommentAdapter extends BaseQuickAdapter<MySmsReplyBean.BackMessBe
                     .into((ImageView) helper.getView(R.id.sms_image));
             helper.setText(R.id.sms_name, item.nick3);
             helper.setText(R.id.sms_time, item.replytime);
+
             helper.setText(R.id.sms_content, item.content3);
-            helper.setText(R.id.sms_reply, item.reply_content);
+//            helper.setText(R.id.sms_reply, item.reply_content);
+            if (!StringUtils.isEmpty(item.reply_content)) {
+                helper.setText(R.id.sms_reply, item.reply_content);
+            } else {
+                helper.setText(R.id.sms_reply, "图片");
+            }
         }
 
         helper.setText(R.id.sms_content2, item.fttitle);

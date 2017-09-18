@@ -41,7 +41,6 @@ public class FineNoteDetailWebRVAdapter extends BaseQuickAdapter<FineNoteWebBean
         helper.addOnClickListener(R.id.item_notice_reply_name);
         helper.addOnClickListener(R.id.item_notice_reply_body);
         helper.addOnClickListener(R.id.item_notice_reply_cb_love);
-
         Glide
                 .with(UIUtils.getContext())
                 .load(item.headimg)
@@ -61,8 +60,6 @@ public class FineNoteDetailWebRVAdapter extends BaseQuickAdapter<FineNoteWebBean
             helper.setVisible(R.id.item_notice_reply_to, false);
         } else if (items.size() >= 2) {
             helper.setVisible(R.id.item_notice_reply_to, true);
-
-
             FineNoteWebBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
             helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
             helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);
@@ -79,9 +76,8 @@ public class FineNoteDetailWebRVAdapter extends BaseQuickAdapter<FineNoteWebBean
                 helper.addOnClickListener(R.id.item_notice_reply_to_body0);
 
             } else {
-                helper.setVisible(R.id.item_notice_reply_to_1, true);
                 helper.setVisible(R.id.item_notice_reply_to_0, false);
-
+                helper.setVisible(R.id.item_notice_reply_to_1, true);
                 helper.setText(R.id.item_notice_reply_to_name1, itemsBean1.nick);
                 helper.setText(R.id.item_notice_reply_to_name2, itemsBean1.nick2 + ":");
                 helper.setText(R.id.item_notice_reply_to_body1, itemsBean1.content);
@@ -92,6 +88,9 @@ public class FineNoteDetailWebRVAdapter extends BaseQuickAdapter<FineNoteWebBean
             }
 
         } else if (items.size() == 1) {
+            helper.setVisible(R.id.item_notice_reply_to, true);
+            helper.setVisible(R.id.item_notice_reply_to_0, false);
+            helper.setVisible(R.id.item_notice_reply_to_1, false);
             FineNoteWebBean.List2Bean.ItemsBean itemsBean0 = items.get(0);
             helper.setText(R.id.item_notice_reply_to_name, itemsBean0.nick + ":");
             helper.setText(R.id.item_notice_reply_to_body, itemsBean0.content);

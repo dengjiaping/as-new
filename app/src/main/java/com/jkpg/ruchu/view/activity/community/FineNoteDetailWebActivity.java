@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -111,6 +112,9 @@ public class FineNoteDetailWebActivity extends BaseActivity {
     private RecyclerView mReplyRecyclerView;
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
+    private PopupWindow mEditWindow;
+    private TextView mNoticeDetailTvReply;
+    private TextView mNoticeDetailTvNum;
 
 
     @Override
@@ -188,21 +192,29 @@ public class FineNoteDetailWebActivity extends BaseActivity {
         final View inflate = View.inflate(this, R.layout.view_web_view, null);
         mFineNoteDetailWebRVAdapter.addHeaderView(inflate);
         WebView webView = (WebView) inflate.findViewById(R.id.web_view);
-        webView.setWebViewClient(new WebViewClient(){
+        webView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageFinished(WebView view, String url) {
                 mList2.addAll(fineNoteWebBean.list2);
+
                 mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
+//                if (mList2.size() == 0) {
+//                    ImageView imageView = new ImageView(FineNoteDetailWebActivity.this);
+//                imageView.setAdjustViewBounds(true);
+//                    imageView.setImageResource(R.drawable.no_reply);
+//                    mFineNoteDetailWebRVAdapter.addHeaderView(imageView, 1);
+//                mFineNoteDetailWebRVAdapter.setEmptyView(imageView);
+//                }
                 inflate.findViewById(R.id.web_view_ll).setVisibility(View.VISIBLE);
             }
         });
         webView.loadData(mList1.Content, "text/html; charset=UTF-8", null);
         mNoticeDetailTvDz = (CheckBox) inflate.findViewById(R.id.notice_detail_tv_dz);
         initZan();
-        TextView noticeDetailTvNum = (TextView) inflate.findViewById(R.id.notice_detail_tv_num);
+        mNoticeDetailTvNum = (TextView) inflate.findViewById(R.id.notice_detail_tv_num);
 
-        TextView noticeDetailTvReply = (TextView) inflate.findViewById(R.id.notice_detail_tv_reply);
-        noticeDetailTvReply.setOnClickListener(new View.OnClickListener() {
+        mNoticeDetailTvReply = (TextView) inflate.findViewById(R.id.notice_detail_tv_reply);
+        mNoticeDetailTvReply.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
@@ -221,12 +233,10 @@ public class FineNoteDetailWebActivity extends BaseActivity {
         }
         mNoticeDetailTvDz.setText(mList1.zan);
         mNoticeDetailTvDz.setChecked(mList1.iszan.equals("1"));
-        noticeDetailTvReply.setText(mList2.size() + "");
-        if (mList2.size() > 0) {
-            noticeDetailTvNum.setText("全部回复");
-        } else {
-            noticeDetailTvNum.setText("暂无回复");
-        }
+        mNoticeDetailTvReply.setText(mList1.reply);
+
+        mNoticeDetailTvNum.setText("全部回复");
+
 
         mFineNoteDetailWebRVAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
@@ -289,7 +299,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                     case R.id.item_notice_reply_to_more:
                         int tid = mList2.get(position).tid;
                         mIndex = position;
-                        Intent intent = new Intent(FineNoteDetailWebActivity.this, FineMoreReplyActivity.class);
+                        Intent intent = new Intent(FineNoteDetailWebActivity.this, FineMoreReplyFixActivity.class);
                         intent.putExtra("commentid", tid + "");
                         intent.putExtra("art_id", mArt_id + "");
                         startActivity(intent);
@@ -347,11 +357,24 @@ public class FineNoteDetailWebActivity extends BaseActivity {
             startActivity(new Intent(FineNoteDetailWebActivity.this, LoginActivity.class));
             return;
         }
-        View editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
-        final PopupWindow editWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        editWindow.setBackgroundDrawable(null);
-        editWindow.setOutsideTouchable(true);
-        editWindow.setFocusable(true);
+        View editView;
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 ||Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input_22, null);
+            editView.findViewById(R.id.view_reply_view).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mEditWindow.dismiss();
+                }
+            });
+
+        } else {
+            editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input, null);
+        }
+        mEditWindow = new PopupWindow(editView, ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        mEditWindow.setBackgroundDrawable(null);
+        mEditWindow.setOutsideTouchable(true);
+        mEditWindow.setFocusable(true);
 
         final EditText replyEdit = (EditText) editView.findViewById(R.id.view_reply_et);
         mReplyRecyclerView = (RecyclerView) editView.findViewById(R.id.view_reply_recycler);
@@ -387,7 +410,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                                 .execute(new StringDialogCallback(FineNoteDetailWebActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
-                                        editWindow.dismiss();
+                                        mEditWindow.dismiss();
                                         EventBus.getDefault().post("Community");
                                         OkGo
                                                 .post(AppUrl.ARTICLEDETAIL)
@@ -430,7 +453,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                                 .execute(new StringDialogCallback(FineNoteDetailWebActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
-                                        editWindow.dismiss();
+                                        mEditWindow.dismiss();
                                         OkGo
                                                 .post(AppUrl.ARTICLEDETAIL)
                                                 .params("art_id", mArt_id)
@@ -439,9 +462,11 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                                                     @Override
                                                     public void onSuccess(String s, Call call, Response response) {
                                                         FineNoteWebBean fineNoteWebBean = new Gson().fromJson(s, FineNoteWebBean.class);
+
                                                         mList2.clear();
                                                         mList2.addAll(fineNoteWebBean.list2);
                                                         mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
+                                                        mNoticeDetailTvReply.setText(fineNoteWebBean.list2.size());
                                                     }
 
                                                     @Override
@@ -469,7 +494,7 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                             .execute(new StringDialogCallback(FineNoteDetailWebActivity.this) {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
-                                    editWindow.dismiss();
+                                    mEditWindow.dismiss();
                                     OkGo
                                             .post(AppUrl.ARTICLEDETAIL)
                                             .params("art_id", mArt_id)
@@ -479,8 +504,10 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     FineNoteWebBean fineNoteWebBean = new Gson().fromJson(s, FineNoteWebBean.class);
                                                     mList2.clear();
-                                                    mList2 = fineNoteWebBean.list2;
-                                                    initRecyclerView(fineNoteWebBean);
+//                                                    mList2 = fineNoteWebBean.list2;
+                                                    mList2.addAll(fineNoteWebBean.list2);
+                                                    mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
+//                                                    initRecyclerView(fineNoteWebBean);
                                                     mNoticeDetailReplyRecycler.getItemAnimator().setChangeDuration(0);
                                                     mNoticeDetailReplyRecycler.scrollToPosition(mIndex + 1);
                                                 }
@@ -494,14 +521,14 @@ public class FineNoteDetailWebActivity extends BaseActivity {
         replyEdit.setFocusable(true);
         replyEdit.requestFocus();
         // 以下两句不能颠倒
-        editWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
-        editWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
-        editWindow.showAtLocation(FineNoteDetailWebActivity.this.findViewById(R.id.notice_detail), Gravity.BOTTOM, 0, 0);
+        mEditWindow.setInputMethodMode(PopupWindow.INPUT_METHOD_NEEDED);
+        mEditWindow.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
+        mEditWindow.showAtLocation(FineNoteDetailWebActivity.this.findViewById(R.id.notice_detail), Gravity.BOTTOM, 0, 0);
         // 显示键盘
         final InputMethodManager imm = (InputMethodManager) UIUtils.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
-        editWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+        mEditWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
             @Override
             public void onDismiss() {
                 if (imm.isActive()) imm.toggleSoftInput(0, InputMethodManager.RESULT_SHOWN);
@@ -896,4 +923,6 @@ public class FineNoteDetailWebActivity extends BaseActivity {
                     });
         }
     }
+
+
 }
