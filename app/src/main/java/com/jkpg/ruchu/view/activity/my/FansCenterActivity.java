@@ -119,7 +119,7 @@ public class FansCenterActivity extends BaseActivity {
         } else {
             initData(mFansId);
         }
-        LogUtils.i("mFansId"+mFansId);
+        LogUtils.i("mFansId" + mFansId);
     }
 
     @Override

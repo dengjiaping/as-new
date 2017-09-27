@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
@@ -17,18 +19,28 @@ import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 /**
  * Created by qindi on 2017/5/10.
  */
 
 public class WelcomeActivity extends BaseActivity {
+    @BindView(R.id.welcome)
+    ImageView mWelcome;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getWindow().setBackgroundDrawable(null);//背景置为空
         setContentView(R.layout.activity_welcome);
+        ButterKnife.bind(this);
+        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+        alphaAnimation.setDuration(500);
+        mWelcome.setAnimation(alphaAnimation);
         initBar();
 
-        getWindow().setBackgroundDrawable(null);//背景置为空
 //        ImageView imageView = (ImageView) findViewById(R.id.welcome_iv);
 //        imageView.setBackgroundResource(R.drawable.welcome_bg);
 //        //imageView.setFitsSystemWindows(true);
@@ -39,20 +51,24 @@ public class WelcomeActivity extends BaseActivity {
             public void run() {
                 if (SPUtils.getBoolean(UIUtils.getContext(), Constants.FIRST, true)) {
                     startActivity(new Intent(WelcomeActivity.this, SplashActivity.class));
+
                     finish();
                 } else if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
                     Intent intentLogin = new Intent(WelcomeActivity.this, LoginActivity.class);
                     Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivities(new Intent[]{intentMain, intentLogin});
+
                     finish();
                 } else {
                     Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivity(intentMain);
+
                     finish();
                 }
 
+
             }
-        }, 1500);
+        }, 1200);
     }
 
     //优化用户体验，禁掉返回键
@@ -68,7 +84,7 @@ public class WelcomeActivity extends BaseActivity {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //透明导航栏
-            // getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }

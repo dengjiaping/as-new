@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:lines="1"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:textSize="16dp"/>
 
             <TextView
                 android:id="@+id/item_tv_post_body"
@@ -52,7 +52,7 @@
                 android:layout_marginTop="5dp"
                 android:lines="1"
                 android:textColor="@color/colorGray3"
-                android:textSize="14sp"/>
+                android:textSize="14dp"/>
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -64,9 +64,8 @@
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="2017-05-21 09:20"
                     android:textColor="@color/colorGray3"
-                    android:textSize="12sp"/>
+                    android:textSize="12dp"/>
 
 
                 <LinearLayout
@@ -82,12 +81,13 @@
                         android:drawableLeft="@drawable/zan"
                         android:drawablePadding="5dp"
                         android:text="0"
+                        android:textSize="14dp"
                         android:textColor="@color/colorGray3"/>
 
                     <TextView
                         android:id="@+id/item_tv_post_huifu"
                         android:layout_width="wrap_content"
-
+                        android:textSize="14dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20dp"
                         android:drawableLeft="@drawable/huifu"

@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:text="1. 请选择你的出生日期"
             android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:textSize="18dp"/>
 
         <LinearLayout
             android:id="@+id/view_test_birth"
@@ -44,7 +44,7 @@
                 android:hint="出生日期"
                 android:text=""
                 android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:textSize="16dp"/>
 
             <View
                 android:layout_width="0dp"

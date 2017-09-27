@@ -188,6 +188,7 @@ public class StartTrainActivity2 extends BaseActivity {
         }
         recordTime();
         mMediaPlayer = MediaPlayer.create(this, R.raw.start);
+        mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mMediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
             public void onCompletion(MediaPlayer mp) {
@@ -630,12 +631,12 @@ public class StartTrainActivity2 extends BaseActivity {
                         LogUtils.i("-----怎么不结束！！！！");
                         String s = DateUtil.dateFormat((timeCount + 100) + "", "mm:ss");
                         mStartTrainTvProgressTime.setText(s);
+                        showSuccess();
 //                        mStartTrainProgressBar.setProgress(timeCount + 1000);
                         mSoundPool.play(mSoundID.get("end"), 1, 1, 0, 0, 1);
                         MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                showSuccess();
                                 isTrain = false;
                                 mTask.stop();
                             }

@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:drawableLeft="@drawable/circle_void"
         android:drawablePadding="10dp"
-        android:textSize="12sp"/>
+        android:textSize="12dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +43,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorGray3"
 
-                android:textSize="16sp"
+                android:textSize="16dp"
                 />
 
             <TextView
@@ -55,6 +55,7 @@
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/icon_time"
                 android:drawablePadding="5dp"
+                android:textSize="14dp"
                 android:gravity="center_vertical"
                 />
 

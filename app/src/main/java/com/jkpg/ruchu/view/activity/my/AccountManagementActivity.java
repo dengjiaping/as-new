@@ -26,6 +26,8 @@ import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.callback.StringCallback;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -74,12 +76,41 @@ public class AccountManagementActivity extends BaseActivity {
     private void initData() {
         OkGo
                 .post(AppUrl.ACCOUNT_MANAGE)
+                .cacheKey("ACCOUNT_MANAGE")
+                .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .execute(new StringDialogCallback(this) {
+                .execute(new StringCallback() {
 
 
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
+                        mAccountManagementBean = new Gson().fromJson(s, AccountManagementBean.class);
+                        if (mAccountManagementBean.telflag) {
+                            String tele = mAccountManagementBean.tele;
+                            tele = tele.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
+                            mAccountManageTvPhone.setText(tele);
+                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorBlack));
+
+                        } else {
+                            mAccountManageTvPhone.setText("点击绑定手机号");
+                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorPink));
+                        }
+                        isQQ = mAccountManagementBean.qqflag;
+                        if (mAccountManagementBean.qqflag) {
+                            mAccountManageRbQq.setChecked(false);
+                            mAccountManageRbQq.setText("已绑定");
+
+                        }
+                        isWX = mAccountManagementBean.wxflag;
+                        if (mAccountManagementBean.wxflag) {
+                            mAccountManageRbWx.setChecked(false);
+                            mAccountManageRbWx.setText("已绑定");
+                        }
+                    }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
                         mAccountManagementBean = new Gson().fromJson(s, AccountManagementBean.class);
                         if (mAccountManagementBean.telflag) {
                             String tele = mAccountManagementBean.tele;

@@ -279,12 +279,14 @@ public class PersonalInfoActivity extends BaseActivity {
             public List<String> provideSecondData(int firstIndex) {
                 ArrayList<String> secondList = new ArrayList<>();
                 if (firstIndex < 12) {
-                    for (int i = 0; i <= 30; i++) {
+                    secondList.add("");
+                    for (int i = 1; i <= 30; i++) {
                         String str = DateUtils.fillZero(i);
                         secondList.add(str + "天");
                     }
                 } else if (firstIndex < 16) {
-                    for (int i = 0; i <= 12; i++) {
+                    secondList.add("");
+                    for (int i = 1; i <= 11; i++) {
                         String str = DateUtils.fillZero(i);
                         secondList.add(str + "月");
                     }
@@ -340,7 +342,7 @@ public class PersonalInfoActivity extends BaseActivity {
         picker.setOnStringPickListener(new LinkagePicker.OnStringPickListener() {
             @Override
             public void onPicked(String first, String second, String third) {
-                if (first.equals("0个月") && second.equals("00天")) {
+                if (first.equals("0个月") && second.equals("")) {
                     mPersonalTvTime.setText("无");
 
                 } else {
@@ -401,7 +403,6 @@ public class PersonalInfoActivity extends BaseActivity {
                     });
         }
 
-        // TODO: 2017/5/16
         OkGo
                 .post(AppUrl.UPDATE_INFO)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -418,7 +419,7 @@ public class PersonalInfoActivity extends BaseActivity {
                     public void onSuccess(String s, Call call, Response response) {
                         SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                         if (!successBean.success) {
-                            ToastUtils.showShort(UIUtils.getContext(), "昵称已存在");
+                            ToastUtils.showShort(UIUtils.getContext(), "昵称已存在了哦");
                         } else {
 //                            EventBus.getDefault().post();
                             EventBus.getDefault().post(new MessageEvent("MyFragment"));

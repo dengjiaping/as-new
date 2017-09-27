@@ -323,7 +323,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                     case 0:
                                         LogUtils.i("----------0");
                                         mUserid = mList2.get(position).items.get(0).userid;
-                                        LogUtils.i("mUserid"+mUserid);
+                                        LogUtils.i("mUserid" + mUserid);
                                         toUserMain(mUserid);
                                         break;
                                     case 1:
@@ -346,7 +346,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                     case 0:
                                         mUserid = mList2.get(position).items.get(1).userid;
                                         toUserMain(mUserid);
-                                        LogUtils.i("mUserid"+mUserid);
+                                        LogUtils.i("mUserid" + mUserid);
 
                                         break;
                                     case 1:
@@ -368,13 +368,13 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                     case 0:
                                         mUserid = mList2.get(position).items.get(1).userid;
                                         toUserMain(mUserid);
-                                        LogUtils.i("mUserid"+mUserid);
+                                        LogUtils.i("mUserid" + mUserid);
 
                                         break;
                                     case 1:
                                         mUserid = mList2.get(position).items.get(1).userid2;
                                         toUserMain(mUserid);
-                                        LogUtils.i("mUserid"+mUserid);
+                                        LogUtils.i("mUserid" + mUserid);
 
                                         break;
                                     case 2:
@@ -432,7 +432,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
             return;
         }
         View editView;
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 ||Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
 
             editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input_22, null);
             editView.findViewById(R.id.view_reply_view).setOnClickListener(new View.OnClickListener() {
@@ -763,7 +763,11 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
 //        } else {
 //        mWeb.setThumb(new UMImage(UIUtils.getContext(), AppUrl.BASEURL + mList1.get(0).images.get(0)));
 //        }
-        mWeb.setDescription(mList1.simplecontent);//描述
+        if (StringUtils.isEmpty(mList1.simplecontent)) {
+            mWeb.setDescription(" ");//描述
+        } else {
+            mWeb.setDescription(mList1.simplecontent);//描述
+        }
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

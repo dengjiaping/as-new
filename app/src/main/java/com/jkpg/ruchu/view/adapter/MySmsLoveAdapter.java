@@ -52,7 +52,7 @@ public class MySmsLoveAdapter extends BaseQuickAdapter<MySmsLoveBean.BackMessBea
                     .crossFade()
                     .into((ImageView) helper.getView(R.id.sms_image));
             helper.setText(R.id.sms_name, item.nick3);
-            helper.setText(R.id.sms_time, item.retime);
+            helper.setText(R.id.sms_time, item.retime3);
             helper.setText(R.id.sms_content, item.text);
             if (StringUtils.isEmpty(item.replycontent)) {
                 helper.setText(sms_reply, "图片");

@@ -132,11 +132,7 @@ public class RegisterPhoneActivity extends BaseActivity {
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mRegisterLlOne.getVisibility() == View.GONE && mRegisterLlTwo.getVisibility() == View.VISIBLE) {
-                startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
-                finish();
-                return true;
-            }
+
             if (mRegisterLlOne.getVisibility() == View.VISIBLE) {
                 startActivity(new Intent(RegisterPhoneActivity.this, LoginPhoneActivity.class));
                 finish();
@@ -248,13 +244,19 @@ public class RegisterPhoneActivity extends BaseActivity {
                                             mPopupWindowSuccess.dismiss();
                                             startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
                                             finish();
-
                                         }
                                     });
                                     mPopupWindowSuccess.setContentView(viewPay);
                                     mPopupWindowSuccess.setBackgroundDrawable(new ColorDrawable(0x00000000));
-                                    mPopupWindowSuccess.setOutsideTouchable(false);
-                                    mPopupWindowSuccess.setFocusable(false);
+                                    mPopupWindowSuccess.setOutsideTouchable(true);
+                                    mPopupWindowSuccess.setFocusable(true);
+                                    mPopupWindowSuccess.setOnDismissListener(new PopupWindow.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss() {
+                                            startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
+                                            finish();
+                                        }
+                                    });
                                     mPopupWindowSuccess.showAtLocation(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.CENTER, 0, 0);
                                     PopupWindowUtils.darkenBackground(RegisterPhoneActivity.this, .4f);
                                 }

@@ -20,7 +20,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/black"
-            android:textSize="20sp"/>
+            android:textSize="20dp"/>
 
         <TextView
             android:id="@+id/test_more_tv_title"
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="20dp"
             />
     </LinearLayout>
 
@@ -40,13 +40,12 @@
         android:layout_gravity="center"
         android:layout_marginTop="5dp"
         android:textColor="@android:color/black"
-        android:textSize="16sp"/>
+        android:textSize="16dp"/>
 
     <LinearLayout
         android:id="@+id/test_more_ll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="22dp"
         android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical"
@@ -62,7 +61,7 @@
             android:gravity="center"
             android:padding="12dp"
             android:textColor="@color/selector_cb_text_color"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:visibility="gone"/>
 
         <CheckBox
@@ -76,7 +75,7 @@
             android:gravity="center"
             android:padding="12dp"
             android:textColor="@color/selector_cb_text_color"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:visibility="gone"/>
 
         <CheckBox
@@ -90,7 +89,7 @@
             android:gravity="center"
             android:padding="12dp"
             android:textColor="@color/selector_cb_text_color"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:visibility="gone"/>
 
         <CheckBox
@@ -104,14 +103,14 @@
             android:gravity="center"
             android:padding="12dp"
             android:textColor="@color/selector_cb_text_color"
-            android:textSize="16sp"
+            android:textSize="16dp"
             android:visibility="gone"/>
 
 
     </LinearLayout>
 
     <!-- <Button
-         android:id="@+id/test_detail_btn"
+         android:id="@+id/test_detail_btn"s
 
          style="@style/btn_pink"
          android:layout_width="match_parent"

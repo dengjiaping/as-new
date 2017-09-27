@@ -111,6 +111,8 @@ public class MyFragment extends Fragment {
     @BindView(R.id.center_tv_uid)
     TextView mCenterTvUid;
 
+    private String imgUrl;
+
 
     @Nullable
     @Override
@@ -208,13 +210,16 @@ public class MyFragment extends Fragment {
 
 
     private void initMess(MyIndex.MymessBean mymess) {
-        Glide
-                .with(UIUtils.getContext())
-                .load(AppUrl.BASEURL + mymess.uImgurl)
-                .error(R.drawable.icon_photo)
-                .centerCrop()
-                .crossFade()
-                .into(mCenterCivPhoto);
+        if (StringUtils.isEmpty(imgUrl) || !imgUrl.equals(mymess.uImgurl)) {
+            Glide
+                    .with(UIUtils.getContext())
+                    .load(AppUrl.BASEURL + mymess.uImgurl)
+                    .error(R.drawable.icon_photo)
+                    .centerCrop()
+                    .crossFade()
+                    .into(mCenterCivPhoto);
+            imgUrl = mymess.uImgurl;
+        }
         mCenterTvName.setText(mymess.uNick);
         mCenterTvEmpiric.setText(mymess.experience);
         mCenterTvMark.setText(mymess.amount);

@@ -63,7 +63,7 @@ public class NewTrainActivity extends BaseActivity {
                 .post(AppUrl.NEWHANDINTRODUCTION)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("type", 1)
-                .cacheKey("NEWHANDINTRODUCTION")
+                .cacheKey("NEWHANDINTRODUCTION-1")
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringDialogCallback(NewTrainActivity.this) {
                     @Override

@@ -13,7 +13,6 @@ import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.SendBean;
-import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -21,6 +20,7 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
+import com.lzy.okgo.callback.StringCallback;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,7 +74,7 @@ public class NewsSendActivity extends BaseActivity {
                 .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .cacheKey("APPSEND")
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
-                .execute(new StringDialogCallback(NewsSendActivity.this) {
+                .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         SendBean sendBean = new Gson().fromJson(s, SendBean.class);
@@ -123,6 +123,57 @@ public class NewsSendActivity extends BaseActivity {
                         mNewsSendTvTime2.setText(sendBean.appsend_wutime);
                         mNewsSendTvTime3.setText(sendBean.appsend_wantime);
                     }
+
+                    @Override
+                    public void onCacheSuccess(String s, Call call) {
+                        super.onCacheSuccess(s, call);
+                        SendBean sendBean = new Gson().fromJson(s, SendBean.class);
+                        if (sendBean.appsend_pl.equals("1")) {
+                            mNewsSendSwitchComment.setChecked(true);
+                        } else {
+                            mNewsSendSwitchComment.setChecked(false);
+
+                        }
+
+
+                        if (sendBean.appsend_zan.equals("1")) {
+                            mNewsSendSwitchZan.setChecked(true);
+                        } else {
+                            mNewsSendSwitchZan.setChecked(false);
+
+                        }
+
+                        if (sendBean.appsend_tz.equals("1")) {
+                            mNewsSendSwitchSms.setChecked(true);
+                        } else {
+                            mNewsSendSwitchSms.setChecked(false);
+
+                        }
+
+                        if (sendBean.appsend_zao.equals("1")) {
+                            mNewsSendSwitchTime1.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime1.setChecked(false);
+
+                        }
+                        if (sendBean.appsend_zhong.equals("1")) {
+                            mNewsSendSwitchTime2.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime2.setChecked(false);
+
+                        }
+                        if (sendBean.appsend_wan.equals("1")) {
+                            mNewsSendSwitchTime3.setChecked(true);
+                        } else {
+                            mNewsSendSwitchTime3.setChecked(false);
+
+                        }
+
+                        mNewsSendTvTime1.setText(sendBean.appsend_zaotime);
+                        mNewsSendTvTime2.setText(sendBean.appsend_wutime);
+                        mNewsSendTvTime3.setText(sendBean.appsend_wantime);
+
+                    }
                 });
 //        mNewsSendSwitchComment.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchComment", true));
 //        mNewsSendSwitchZan.setChecked(SPUtils.getBoolean(UIUtils.getContext(), "SwitchZan", true));
@@ -141,7 +192,7 @@ public class NewsSendActivity extends BaseActivity {
                         .post(AppUrl.APPSENDSEND)
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_pl", isChecked ? "1" : "0")
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
 
@@ -157,7 +208,7 @@ public class NewsSendActivity extends BaseActivity {
                         .post(AppUrl.APPSENDSEND)
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_zan", isChecked ? "1" : "0")
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
 
@@ -174,7 +225,7 @@ public class NewsSendActivity extends BaseActivity {
                         .post(AppUrl.APPSENDSEND)
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_tz", isChecked ? "1" : "0")
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
 
@@ -191,10 +242,10 @@ public class NewsSendActivity extends BaseActivity {
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_zao", isChecked ? "1" : "0")
                         .params("appsend_zaotime", mNewsSendTvTime1.getText().toString())
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                LogUtils.i(s+"-------");
+                                LogUtils.i(s + "-------");
                             }
                         });
                 LogUtils.i(mNewsSendTvTime1.getText().toString() + "mNewsSendTvTime1.getText().toString()");
@@ -211,7 +262,7 @@ public class NewsSendActivity extends BaseActivity {
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_zhong", isChecked ? "1" : "0")
                         .params("appsend_wutime", mNewsSendTvTime2.getText().toString())
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
 
@@ -229,7 +280,7 @@ public class NewsSendActivity extends BaseActivity {
                         .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .params("appsend_wan", isChecked ? "1" : "0")
                         .params("appsend_wantime", mNewsSendTvTime3.getText().toString())
-                        .execute(new StringDialogCallback(NewsSendActivity.this) {
+                        .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
 
@@ -287,7 +338,7 @@ public class NewsSendActivity extends BaseActivity {
                                     .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                                     .params("appsend_zao", "1")
                                     .params("appsend_zaotime", mNewsSendTvTime1.getText().toString())
-                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                    .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(String s, Call call, Response response) {
 
@@ -304,7 +355,7 @@ public class NewsSendActivity extends BaseActivity {
                                     .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                                     .params("appsend_zhong", "1")
                                     .params("appsend_wutime", mNewsSendTvTime2.getText().toString())
-                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                    .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(String s, Call call, Response response) {
 
@@ -319,7 +370,7 @@ public class NewsSendActivity extends BaseActivity {
                                     .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                                     .params("appsend_wan", "1")
                                     .params("appsend_wantime", mNewsSendTvTime3.getText().toString())
-                                    .execute(new StringDialogCallback(NewsSendActivity.this) {
+                                    .execute(new StringCallback() {
                                         @Override
                                         public void onSuccess(String s, Call call, Response response) {
 

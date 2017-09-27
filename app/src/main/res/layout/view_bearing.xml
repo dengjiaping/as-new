@@ -35,7 +35,7 @@
                     android:gravity="center_vertical"
                     android:text="胎次"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_tc"
@@ -45,7 +45,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 
@@ -74,7 +74,7 @@
                     android:gravity="center_vertical"
                     android:text="分娩方式"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_fmfs"
@@ -85,7 +85,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 
@@ -114,7 +114,7 @@
                     android:gravity="center_vertical"
                     android:text="分娩时体重"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_fmtz"
@@ -125,7 +125,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 
@@ -155,7 +155,7 @@
                     android:gravity="center_vertical"
                     android:text="生产时长"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_scsc"
@@ -166,7 +166,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 
@@ -195,7 +195,7 @@
                     android:gravity="center_vertical"
                     android:text="外阴损伤"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_fmss"
@@ -206,7 +206,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 
@@ -235,7 +235,7 @@
                     android:gravity="center_vertical"
                     android:text="新生儿体重"
                     android:textColor="@color/colorGray3"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
                 <TextView
                     android:id="@+id/view_bearing_tv_xstz"
@@ -246,7 +246,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginRight="50dp"
                     android:textColor="#343434"
-                    android:textSize="15sp"/>
+                    android:textSize="15dp"/>
 
             </RelativeLayout>
 

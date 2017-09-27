@@ -143,7 +143,7 @@ public class VipManageActivity extends BaseActivity {
             mVipManagerIvVip.setImageResource(R.drawable.icon_vip1);
             mVipManagerTvNotOpen.setVisibility(View.GONE);
             mVipManagerTvRenew.setVisibility(View.VISIBLE);
-            mVipManagerTvRenew.setText("有效期至" + vipManageBean.VIPTime);
+            mVipManagerTvRenew.setText("有效期至 " + vipManageBean.VIPTime);
             mVipManagerBtnOpenVip.setText("会员续期");
             mVipImage.setImageResource(R.drawable.vip_privilege);
             mVipTitle.setText("您已开通如初会员，赶快加入训练吧！");

@@ -50,7 +50,12 @@ public class NoticeDetailReplyFixAdapter extends BaseQuickAdapter<NoticeDetailBe
                 .crossFade()
                 .into((ImageView) helper.getView(R.id.item_notice_reply_civ));
         helper.setText(R.id.item_notice_reply_name, item.nick);
-        helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
+        if (item.taici.equals("无")) {
+            helper.setText(R.id.item_notice_reply_baby, item.taici);
+
+        } else {
+            helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
+        }
         helper.setText(R.id.item_notice_reply_body, item.content);
         helper.setText(R.id.item_notice_reply_floor, (helper.getPosition()) + "楼");
         helper.setText(R.id.item_notice_reply_time, item.replytime);

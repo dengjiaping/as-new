@@ -9,6 +9,7 @@
         android:id="@+id/notice_iv_rule_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="14dp"
         android:textColor="@color/colorGray3"/>
 
     <TextView
@@ -16,5 +17,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
+        android:textSize="14dp"
         android:textColor="@android:color/black"/>
 </LinearLayout>

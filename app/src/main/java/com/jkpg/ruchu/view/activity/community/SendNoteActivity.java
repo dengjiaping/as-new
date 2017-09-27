@@ -135,60 +135,60 @@ public class SendNoteActivity extends BaseActivity {
         initCheckBox();
         initPhotoPicker();
 
-        initShare();
+//        initShare();
     }
 
-    private void initShare() {
-        // Get intent, action and MIME type
-        Intent intent = getIntent();
-        String action = intent.getAction();
-        String type = intent.getType();
+//    private void initShare() {
+//        // Get intent, action and MIME type
+//        Intent intent = getIntent();
+//        String action = intent.getAction();
+//        String type = intent.getType();
+//
+//        if (Intent.ACTION_SEND.equals(action) && type != null) {
+//            if ("text/plain".equals(type)) {
+//                handleSendText(intent); // Handle text being sent
+//            } else if (type.startsWith("image/")) {
+//                handleSendImage(intent); // Handle single image being sent
+//            }
+//        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
+//            if (type.startsWith("image/")) {
+//                handleSendMultipleImages(intent); // Handle multiple images being sent
+//            }
+//        } else {
+//            // Handle other intents, such as being started from the home screen
+//        }
+//    }
 
-        if (Intent.ACTION_SEND.equals(action) && type != null) {
-            if ("text/plain".equals(type)) {
-                handleSendText(intent); // Handle text being sent
-            } else if (type.startsWith("image/")) {
-                handleSendImage(intent); // Handle single image being sent
-            }
-        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-            if (type.startsWith("image/")) {
-                handleSendMultipleImages(intent); // Handle multiple images being sent
-            }
-        } else {
-            // Handle other intents, such as being started from the home screen
-        }
-    }
-
-    void handleSendText(Intent intent) {
-        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-        String sharedTitle = intent.getStringExtra(Intent.EXTRA_TITLE);
-        if (sharedText != null) {
-            // Update UI to reflect text being shared
-            mSendNoteEtTitle.setText(sharedTitle);
-            mSendNoteEtBody.setText(sharedText);
-        }
-    }
-
-    void handleSendImage(Intent intent) {
-        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-        if (imageUri != null) {
-            // Update UI to reflect image being shared
-            selectedPhotos.add(imageUri.getPath());
-        }
-    }
-
-    void handleSendMultipleImages(Intent intent) {
-        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-        if (imageUris != null) {
-            // Update UI to reflect multiple images being shared
-            for (int i = 0; i < imageUris.size(); i++) {
-                if (i > 8) {
-                    return;
-                }
-                selectedPhotos.add(imageUris.get(i).getPath());
-            }
-        }
-    }
+//    void handleSendText(Intent intent) {
+//        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
+//        String sharedTitle = intent.getStringExtra(Intent.EXTRA_TITLE);
+//        if (sharedText != null) {
+//            // Update UI to reflect text being shared
+//            mSendNoteEtTitle.setText(sharedTitle);
+//            mSendNoteEtBody.setText(sharedText);
+//        }
+//    }
+//
+//    void handleSendImage(Intent intent) {
+//        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
+//        if (imageUri != null) {
+//            // Update UI to reflect image being shared
+//            selectedPhotos.add(imageUri.getPath());
+//        }
+//    }
+//
+//    void handleSendMultipleImages(Intent intent) {
+//        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
+//        if (imageUris != null) {
+//            // Update UI to reflect multiple images being shared
+//            for (int i = 0; i < imageUris.size(); i++) {
+//                if (i > 8) {
+//                    return;
+//                }
+//                selectedPhotos.add(imageUris.get(i).getPath());
+//            }
+//        }
+//    }
 
     private void initPhotoPicker() {
         photoAdapter = new PhotoAdapter(this, selectedPhotos);
@@ -496,9 +496,16 @@ public class SendNoteActivity extends BaseActivity {
                             + "&title=" + mSendNoteEtTitle.getText().toString()
                             + "&content=" + mSendNoteEtBody.getText().toString()
                             + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                            + "&issite=" + (mSendNoteCbPosition.isChecked() ? 1 : 0)
+                            + "&issite=" + (StringUtils.isEmpty(mLocality) ? 0 : 1)
                             + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
                             + "&site=" + mLocality)
+//                    .params("plateid",mPlateid)
+//                    .params("title",mSendNoteEtTitle.getText().toString())
+//                    .params("content",mSendNoteEtBody.getText().toString())
+//                    .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+//                    .params("issite",(mSendNoteCbPosition.isChecked() ? 1 : 0))
+//                    .params("ishidename",(mSendNoteCbNoName.isChecked() ? 1 : 0))
+//                    .params("site",mLocality)
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
@@ -544,9 +551,16 @@ public class SendNoteActivity extends BaseActivity {
                             + "&title=" + mSendNoteEtTitle.getText().toString()
                             + "&content=" + mSendNoteEtBody.getText().toString()
                             + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                            + "&issite=" + (mSendNoteCbPosition.isChecked() ? 1 : 0)
+                            + "&issite=" + (StringUtils.isEmpty(mLocality) ? 0 : 1)
                             + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
                             + "&site=" + mLocality)
+//                    .params("plateid",mPlateid)
+//                    .params("title",mSendNoteEtTitle.getText().toString())
+//                    .params("content",mSendNoteEtBody.getText().toString())
+//                    .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+//                    .params("issite",(mSendNoteCbPosition.isChecked() ? 1 : 0))
+//                    .params("ishidename",(mSendNoteCbNoName.isChecked() ? 1 : 0))
+//                    .params("site",mLocality)
                     .isMultipart(true)
                     .addFileParams("upload", files)
                     .execute(new StringDialogCallback(SendNoteActivity.this) {

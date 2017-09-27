@@ -31,7 +31,10 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:resizeableActivity="false"
         android:theme="@style/AppTheme">
+        <meta-data android:name="android.max_aspect"
+                   android:value="2.1"/>
         <activity
             android:name=".view.activity.WelcomeActivity"
             android:screenOrientation="portrait"
@@ -188,27 +191,27 @@
         <activity
             android:name=".view.activity.community.SendNoteActivity"
             android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND"/>-->
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
 
-                <data android:mimeType="image/*"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
+                <!--<data android:mimeType="image/*"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND"/>-->
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
 
-                <data android:mimeType="text/plain"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.intent.action.SEND_MULTIPLE"/>
+                <!--<data android:mimeType="text/plain"/>-->
+            <!--</intent-filter>-->
+            <!--<intent-filter>-->
+                <!--<action android:name="android.intent.action.SEND_MULTIPLE"/>-->
 
-                <category android:name="android.intent.category.DEFAULT"/>
+                <!--<category android:name="android.intent.category.DEFAULT"/>-->
 
-                <data android:mimeType="image/*"/>
-            </intent-filter>
+                <!--<data android:mimeType="image/*"/>-->
+            <!--</intent-filter>-->
         </activity>
 
         <activity

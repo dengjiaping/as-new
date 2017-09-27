@@ -18,7 +18,7 @@
             android:layout_gravity="center"
             android:text="2. 请选择你的身高"
             android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:textSize="18dp"/>
 
         <LinearLayout
             android:id="@+id/view_test_height"
@@ -43,7 +43,7 @@
                 android:layout_marginRight="16dp"
                 android:hint="身高"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:textSize="16dp"/>
 
             <View
                 android:layout_width="0dp"
@@ -58,7 +58,7 @@
             android:layout_gravity="center"
             android:text="3. 请选择你的体重"
             android:textColor="@android:color/black"
-            android:textSize="18sp"/>
+            android:textSize="18dp"/>
 
         <LinearLayout
             android:id="@+id/view_test_weight"
@@ -85,7 +85,7 @@
                 android:layout_marginRight="16dp"
                 android:hint="体重"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 />
 
             <View

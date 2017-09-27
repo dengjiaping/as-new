@@ -337,16 +337,17 @@ public class PerfectInfoActivity extends BaseActivity {
             public List<String> provideSecondData(int firstIndex) {
                 ArrayList<String> secondList = new ArrayList<>();
                 if (firstIndex < 12) {
-                    for (int i = 0; i <= 30; i++) {
+                    secondList.add("");
+                    for (int i = 1; i <= 30; i++) {
                         String str = DateUtils.fillZero(i);
                         secondList.add(str + "天");
                     }
                 } else if (firstIndex < 16) {
-                    for (int i = 0; i <= 12; i++) {
+                    secondList.add("");
+                    for (int i = 1; i <= 11; i++) {
                         String str = DateUtils.fillZero(i);
                         secondList.add(str + "月");
                     }
-
                 } else {
                     secondList.add("及以上");
 
@@ -398,7 +399,7 @@ public class PerfectInfoActivity extends BaseActivity {
         picker.setOnStringPickListener(new LinkagePicker.OnStringPickListener() {
             @Override
             public void onPicked(String first, String second, String third) {
-                if (first.equals("0个月") && second.equals("00天")) {
+                if (first.equals("0个月") && second.equals("")) {
                     mPerfectTvWeight.setText("无");
 
                 } else {
@@ -430,7 +431,7 @@ public class PerfectInfoActivity extends BaseActivity {
         picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
             public void onDatePicked(String year, String month, String day) {
-                mPerfectTvBirth.setText(year + "年" + month + "月" + day + "日");
+                mPerfectTvBirth.setText(year + "-" + month + "-" + day + "-");
             }
         });
         picker.show();
@@ -552,7 +553,7 @@ public class PerfectInfoActivity extends BaseActivity {
                 public void onGranted() {
                     Intent intent = new Intent(Intent.ACTION_PICK, null);
                     intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                            "image");
+                            "image/*");
                     startActivityForResult(intent, REQ_ALBUM);
                 }
 
@@ -564,7 +565,7 @@ public class PerfectInfoActivity extends BaseActivity {
         } else {
             Intent intent = new Intent(Intent.ACTION_PICK, null);
             intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-                    "image");
+                    "image/*");
             startActivityForResult(intent, REQ_ALBUM);
         }
 

@@ -2,6 +2,8 @@ package com.jkpg.ruchu.base;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.widget.ImageView;
@@ -62,7 +64,7 @@ public class MyApplication extends Application {
         OkGo.init(this);
         OkGo
                 .getInstance()
-                .debug("OkGo", Level.INFO, false)
+                .debug("OkGo", Level.ALL, false)
 //                 .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)
                 //可以全局统一设置超时重连次数,默认为三次,那么最差的情况会请求4次(一次原始请求,三次重连请求),不需要可以设置为0
                 .setRetryCount(3)
@@ -123,8 +125,18 @@ public class MyApplication extends Application {
 
         MiPushRegistar.register(this, Constants.XIAOMI_ID, Constants.XIAOMI_KEY);
         HuaWeiRegister.register(this);
-
         YouzanSDK.init(this, Constants.YZ_CLIENT_ID);
+
+//        YouzanSDK.init(this, Constants.YZ_CLIENT_ID,new YouzanHybridSDKAdapter());
+
+
+        Resources res = super.getResources();
+        Configuration c = new Configuration();
+//        c.setToDefaults();
+        c.fontScale = 1f;
+        res.updateConfiguration(c, res.getDisplayMetrics());
+//        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
+//        displayMetrics.scaledDensity = displayMetrics.density;
 
 
     }

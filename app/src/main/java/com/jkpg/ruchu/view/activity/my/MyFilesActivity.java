@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -277,17 +278,18 @@ public class MyFilesActivity extends BaseActivity {
                                     final AlertDialog dialog = new AlertDialog.Builder(MyFilesActivity.this)
                                             .setView(View.inflate(MyFilesActivity.this, R.layout.view_save_success, null))
                                             .show();
-//                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-//                                        @Override
-//                                        public void onDismiss(DialogInterface dialog) {
-//                                            MyFilesActivity.this.finish();
-//                                        }
-//                                    });
+                                    dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                        @Override
+                                        public void onDismiss(DialogInterface dialog) {
+                                            finish();
+                                        }
+                                    });
 
                                     MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
                                         @Override
                                         public void run() {
-                                            dialog.dismiss();
+//                                            dialog.dismiss();
+                                            finish();
                                         }
                                     }, 3000);
                                 }
@@ -340,16 +342,17 @@ public class MyFilesActivity extends BaseActivity {
                     public List<String> provideSecondData(int firstIndex) {
                         ArrayList<String> secondList = new ArrayList<>();
                         if (firstIndex < 12) {
-                            for (int i = 0; i <= 30; i++) {
+                            secondList.add("");
+                            for (int i = 1; i <= 30; i++) {
                                 String str = DateUtils.fillZero(i);
-                                secondList.add(str+"天");
+                                secondList.add(str + "天");
                             }
-                        } else if (firstIndex < 16){
-                            for (int i = 0; i <= 12; i++) {
+                        } else if (firstIndex < 16) {
+                            secondList.add("");
+                            for (int i = 1; i <= 11; i++) {
                                 String str = DateUtils.fillZero(i);
-                                secondList.add(str+"月");
+                                secondList.add(str + "月");
                             }
-
                         } else {
                             secondList.add("及以上");
 
@@ -401,7 +404,7 @@ public class MyFilesActivity extends BaseActivity {
                 picker.setOnStringPickListener(new LinkagePicker.OnStringPickListener() {
                     @Override
                     public void onPicked(String first, String second, String third) {
-                        if (first.equals("0个月") && second.equals("00天")) {
+                        if (first.equals("0个月") && second.equals("")) {
                             mView_bearing_tv_chsj.setText("无");
 
                         } else {

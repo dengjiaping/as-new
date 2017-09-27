@@ -342,7 +342,11 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
         } else {
             mNoticeDetailIvFine.setVisibility(View.VISIBLE);
         }
-        mNoticeDetailTvTc.setText(list1Bean.taici + " " + list1Bean.chanhoutime);
+        if (!list1Bean.taici.equals("无")) {
+            mNoticeDetailTvTc.setText(list1Bean.taici + " " + list1Bean.chanhoutime);
+        } else {
+            mNoticeDetailTvTc.setText(list1Bean.taici);
+        }
         if (StringUtils.isEmpty(list1Bean.site)) {
             mNoticeDetailTvAddress.setVisibility(View.GONE);
         } else {

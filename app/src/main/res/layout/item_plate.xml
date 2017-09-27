@@ -35,7 +35,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:textColor="@color/colorPink"
-                android:textSize="16sp"
+                android:textSize="16dp"
                 />
 
 
@@ -50,7 +50,7 @@
                 android:paddingRight="4dp"
                 android:paddingTop="2dp"
                 android:textColor="@android:color/white"
-                android:textSize="10sp"/>
+                android:textSize="10dp"/>
         </LinearLayout>
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/colorGray3"
-            android:textSize="14sp"/>
+            android:textSize="14dp"/>
 
     </LinearLayout>
 

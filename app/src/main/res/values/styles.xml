@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
@@ -6,28 +6,31 @@
         <item name="colorPrimary">@color/colorAccent</item>
         <item name="colorPrimaryDark">@color/colorAccent</item>
         <item name="colorAccent">@color/colorAccent</item>
+
         <!-- <item name="android:windowIsTranslucent">true</item>
          <item name="android:windowNoTitle">true</item>-->
 
     </style>
     <!--启动优化，消除黑屏-->
     <style name="LauncherTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/welcome_bg</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="windowActionBar">false</item>
-    </style>
+        <item name="colorPrimaryDark">@color/yzappsdk_white</item>
+        <item name="android:windowBackground">@drawable/layout_list_start_pic</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <!--<item name="android:windowIsTranslucent">true</item>-->
+        <!--<item name="android:windowNoTitle">true</item>-->
+   </style>
 
-    <style name="btn_pink">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">22dp</item>
-        <item name="android:background">@drawable/selector_btn_enable_bg</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
+   <style name="btn_pink">
+       <item name="android:layout_width">match_parent</item>
+       <item name="android:layout_height">wrap_content</item>
+       <item name="android:layout_marginTop">22dp</item>
+       <item name="android:background">@drawable/selector_btn_enable_bg</item>
+       <item name="android:textColor">@android:color/white</item>
+   </style>
 
-    <style name="mypopwindow_anim_style">
-        <item name="android:windowEnterAnimation">@animator/popshow_anim</item>
-        <!-- 指定显示的动画xml -->
+   <style name="mypopwindow_anim_style">
+       <item name="android:windowEnterAnimation">@animator/popshow_anim</item>
+       <!-- 指定显示的动画xml -->
 
         <item name="android:windowExitAnimation">@animator/pophidden_anim</item>
         <!-- 指定消失的动画xml -->
