@@ -16,6 +16,7 @@ public class SuccessBean {
     public int error;
     public String msg;
     public int state;
+    public String code;
 
 
 }

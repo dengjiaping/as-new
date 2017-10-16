@@ -20,7 +20,6 @@ import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.ExperienceBean;
 import com.jkpg.ruchu.bean.MyMessageBean;
 import com.jkpg.ruchu.bean.SmsEvent;
-import com.jkpg.ruchu.bean.showBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
@@ -34,10 +33,16 @@ import com.jkpg.ruchu.view.fragment.TrainFragment;
 import com.jkpg.ruchu.widget.BottomNavigationViewEx;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.lzy.okgo.request.BaseRequest;
+import com.vector.update_app.HttpManager;
+import com.vector.update_app.UpdateAppManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.io.File;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +111,9 @@ public class MainActivity extends BaseActivity {
             });
         }
 
+        initUpdate();
     }
+
 
     private void initSms() {
         OkGo
@@ -119,20 +126,6 @@ public class MainActivity extends BaseActivity {
                         MyMessageBean myMessageBean = new Gson().fromJson(s, MyMessageBean.class);
                         if (myMessageBean.notice || myMessageBean.reply || myMessageBean.zan) {
                             EventBus.getDefault().post(new SmsEvent(true));
-//                            Notification.Builder builder = new Notification.Builder(MainActivity.this);
-//                            Intent intent = new Intent(MainActivity.this, MySMSActivity.class);  //需要跳转指定的页面
-//                            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                            builder.setContentIntent(pendingIntent);
-//                            builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-//                            builder.setContentTitle("我的消息");// 设置通知的标题
-//                            builder.setContentText("你有未读消息");// 设置通知的内容
-//                            builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-//                            builder.setAutoCancel(true); //自己维护通知的消失
-//                            builder.setTicker("你有未读消息");// 第一次提示消失的时候显示在通知栏上的
-//                            builder.setOngoing(true);
-//                            Notification notification = builder.build();
-//                            notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-//                            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
                         } else {
                             EventBus.getDefault().post(new SmsEvent(false));
                         }
@@ -279,26 +272,6 @@ public class MainActivity extends BaseActivity {
 
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEventMainThread(showBean mess) {
-        if (mess.mess.equals("showMess")) {
-//            Notification.Builder builder = new Notification.Builder(MainActivity.this);
-//            Intent intent = new Intent(MainActivity.this, VipManageActivity.class);  //需要跳转指定的页面
-//            PendingIntent pendingIntent = PendingIntent.getActivity(MainActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//            builder.setContentIntent(pendingIntent);
-//            builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-//            builder.setContentTitle("恭喜你");// 设置通知的标题
-//            builder.setContentText("增送您15天体验会员");// 设置通知的内容
-//            builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-//            builder.setAutoCancel(true); //自己维护通知的消失
-//            builder.setTicker("增送您3天体验会员");// 第一次提示消失的时候显示在通知栏上的
-//            builder.setOngoing(true);
-//            Notification notification = builder.build();
-//            notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
-        }
-    }
-
     @Override
     public void onResume() {
         super.onResume();
@@ -309,7 +282,76 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        PermissionUtils.onRequestPermissionsResult(this,333,mMPermissionList);
+        PermissionUtils.onRequestPermissionsResult(this, 333, mMPermissionList);
+    }
+
+    private void initUpdate() {
+        new UpdateAppManager
+                .Builder()
+                //当前Activity
+                .setActivity(this)
+                //更新地址
+                .setUpdateUrl(AppUrl.UPDATEAPP)
+                //实现httpManager接口的对象
+                .setHttpManager(new UpdateAppHttpUtil())
+                .build()
+                .update();
+
+    }
+
+
+    private class UpdateAppHttpUtil implements HttpManager {
+        @Override
+        public void asyncGet(@NonNull String url, @NonNull Map<String, String> params, @NonNull final Callback callBack) {
+            OkGo
+                    .post(url)
+                    .params(params)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            LogUtils.d(s+"---------");
+                            callBack.onResponse(s);
+                        }
+                    });
+        }
+
+        @Override
+        public void asyncPost(@NonNull String url, @NonNull Map<String, String> params, @NonNull final Callback callBack) {
+            OkGo
+                    .post(url)
+                    .params(params)
+                    .execute(new StringCallback() {
+                        @Override
+                        public void onSuccess(String s, Call call, Response response) {
+                            LogUtils.d(s+"----------");
+                            callBack.onResponse(s);
+                        }
+                    });
+        }
+
+        @Override
+        public void download(@NonNull String url, @NonNull String path, @NonNull String fileName, @NonNull final FileCallback callback) {
+            OkGo
+                    .get(url)
+                    .execute(new com.lzy.okgo.callback.FileCallback(path, fileName) {
+                        @Override
+                        public void onSuccess(File file, Call call, Response response) {
+                            callback.onResponse(file);
+                        }
+
+                        @Override
+                        public void downloadProgress(long currentSize, long totalSize, float progress, long networkSpeed) {
+                            super.downloadProgress(currentSize, totalSize, progress, networkSpeed);
+                            callback.onProgress(progress, totalSize);
+                        }
+
+                        @Override
+                        public void onBefore(BaseRequest request) {
+                            super.onBefore(request);
+                            callback.onBefore();
+                        }
+                    });
+        }
     }
 }
 

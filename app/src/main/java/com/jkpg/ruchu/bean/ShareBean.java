@@ -8,4 +8,5 @@ public class ShareBean {
     public String url;
     public String content;
     public String content2;
+    public String day;
 }

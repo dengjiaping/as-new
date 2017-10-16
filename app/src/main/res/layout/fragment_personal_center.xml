@@ -409,6 +409,33 @@
                 android:textSize="15sp"/>
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="12dp"
+            android:id="@+id/center_ll_invitation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ripple_with_color">
+
+            <ImageView
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:src="@drawable/icon_invitation"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="22dp"
+                android:layout_marginRight="22dp"
+                android:drawableRight="@drawable/icon_next"
+                android:gravity="center_vertical"
+                android:text="邀请有礼"
+                android:textColor="#343434"
+                android:textSize="15sp"/>
+
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"

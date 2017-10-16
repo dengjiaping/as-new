@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="default_radius">15dp</dimen>
-
-    <color name="default_circular_color">#4c99d9</color>
-    <color name="default_circular_progress_color">#ffffff</color>
-    <dimen name="default_circular_width">3.5dp</dimen>
-    <dimen name="edge">10dp</dimen>
-    <dimen name="default_text_size">10sp</dimen>
+    <dimen name="photoWH">40dp</dimen>
+    <dimen name="sp12">12sp</dimen>
+    <dimen name="sp14">14sp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp18">18sp</dimen>
+    <dimen name="sp20">20sp</dimen>
+    <dimen name="sp22">22sp</dimen>
 </resources>

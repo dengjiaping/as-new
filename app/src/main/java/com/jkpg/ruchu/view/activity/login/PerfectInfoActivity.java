@@ -431,7 +431,7 @@ public class PerfectInfoActivity extends BaseActivity {
         picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
             public void onDatePicked(String year, String month, String day) {
-                mPerfectTvBirth.setText(year + "-" + month + "-" + day + "-");
+                mPerfectTvBirth.setText(year + "-" + month + "-" + day);
             }
         });
         picker.show();

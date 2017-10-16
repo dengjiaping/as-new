@@ -64,7 +64,8 @@ public class SetUpAboutActivity extends BaseActivity {
         mHeaderTvTitle.setText("关于如初");
     }
 
-    @OnClick({R.id.set_up_about_serve, R.id.set_up_about_conceal, R.id.header_iv_left, R.id.set_up_about_phone, R.id.set_up_about_email, R.id.set_up_about_wx})
+    @OnClick({R.id.set_up_about_serve, R.id.set_up_about_conceal, R.id.header_iv_left,
+            R.id.set_up_about_phone, R.id.set_up_about_email, R.id.set_up_about_wx,R.id.set_up_about_qq})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.set_up_about_serve:
@@ -136,6 +137,9 @@ public class SetUpAboutActivity extends BaseActivity {
                 startActivity(Intent.createChooser(i,
                         "请选择您的邮箱"));
                 break;
+            case R.id.set_up_about_qq:
+                joinQQGroup("t9SC2IY9CvOyA4MvJMdGq_dB5lmx2nVZ");
+                break;
         }
     }
 
@@ -144,4 +148,37 @@ public class SetUpAboutActivity extends BaseActivity {
 //        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 //        PermissionUtils.onRequestPermissionsResult(SetUpAboutActivity.this, 100, new String[]{Manifest.permission.CALL_PHONE});
 //    }
+    /****************
+     *
+     * @param key 由官网生成的key
+     * @return 返回true表示呼起手Q成功，返回fals表示呼起失败
+     ******************/
+    public boolean joinQQGroup(String key) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse("mqqopensdkapi://bizAgent/qm/qr?url=http%3A%2F%2Fqm.qq.com%2Fcgi-bin%2Fqm%2Fqr%3Ffrom%3Dapp%26p%3Dandroid%26k%3D" + key));
+        // 此Flag可根据具体产品需要自定义，如设置，则在加群界面按返回，返回手Q主界面，不设置，按返回会返回到呼起产品界面
+        // intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        try {
+            startActivity(intent);
+            return true;
+        } catch (Exception e) {
+            // 未安装手Q或安装的版本不支持
+            new AlertDialog.Builder(this)
+                    .setTitle("如初康复")
+                    .setMessage("欢迎加入如初康复QQ群: 345893235")
+                    .setPositiveButton("复制", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            ClipboardManager cm1 = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                            cm1.setPrimaryClip(ClipData.newPlainText(null, "345893235"));
+                            ToastUtils.showShort(UIUtils.getContext(), "已复制到剪切板,欢迎加入");
+                            dialog.dismiss();
+                        }
+                    })
+                    .show();
+
+            return false;
+        }
+    }
+
 }

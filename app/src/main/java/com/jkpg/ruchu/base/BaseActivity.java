@@ -25,6 +25,9 @@ public class BaseActivity extends AppCompatActivity {
         res.updateConfiguration(c, res.getDisplayMetrics());
 //        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 //        displayMetrics.scaledDensity = displayMetrics.density;
+
+
+
     }
 
 
@@ -54,4 +57,7 @@ public class BaseActivity extends AppCompatActivity {
 //        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
 //        displayMetrics.scaledDensity = displayMetrics.density;
     }
+
+
+
 }

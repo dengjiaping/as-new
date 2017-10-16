@@ -39,7 +39,6 @@ import com.jkpg.ruchu.view.activity.WebViewActivity;
 import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
 import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.adapter.FeedBackRLAdapter;
-import com.jkpg.ruchu.widget.FreshDownloadView;
 import com.jkpg.ruchu.widget.JCVideoPlayerStandard;
 import com.lzy.okgo.OkGo;
 
@@ -77,8 +76,6 @@ public class VideoDetailActivity extends BaseActivity {
     EditText mVideoEtFeedbackBody;
     @BindView(R.id.video_btn_feedback)
     Button mVideoBtnFeedback;
-    @BindView(R.id.download)
-    FreshDownloadView mDownload;
     @BindView(R.id.download_text)
     TextView mDownloadText;
     @BindView(R.id.view_start)
@@ -104,12 +101,6 @@ public class VideoDetailActivity extends BaseActivity {
         mPosition = getIntent().getStringExtra("position");
 
         initData();
-        mDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ToastUtils.showShort(UIUtils.getContext(), "边缓存边播哦");
-            }
-        });
         mMyRunnable = new MyRunnable();
     }
 
@@ -216,11 +207,9 @@ public class VideoDetailActivity extends BaseActivity {
         String proxyUrl = proxy.getProxyUrl(AppUrl.BASEURLHTTP + videoMS.videourl);
         if (proxy.isCached(AppUrl.BASEURLHTTP + videoMS.videourl)) {
             mDownloadText.setText("已缓存");
-            mDownload.showDownloadOk();
             mVideoPlayer.bottomProgressBar.setSecondaryProgress(100);
 
         } else {
-            mDownload.reset();
         }
         mVideoPlayer.setUp(proxyUrl
                 , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, videoMS.title);
@@ -235,9 +224,7 @@ public class VideoDetailActivity extends BaseActivity {
                 if (percentsAvailable == 1) {
 //                    ToastUtils.showShort(UIUtils.getContext(), "边播边缓存");
 
-                    mDownload.startDownload();
                 }
-                mDownload.upDateProgress(percentsAvailable);
                 mVideoPlayer.bottomProgressBar.setSecondaryProgress(percentsAvailable);
                 if (percentsAvailable == 100) {
                     mDownloadText.setText("已经缓存");
@@ -251,9 +238,7 @@ public class VideoDetailActivity extends BaseActivity {
                 mViewStart.setVisibility(View.GONE);
                 if (proxy.isCached(AppUrl.BASEURLHTTP + videoMS.videourl)) {
                     mDownloadText.setText("已缓存");
-                    mDownload.showDownloadOk();
                 } else {
-                    mDownload.startDownload();
                 }
             }
         });

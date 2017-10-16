@@ -65,17 +65,10 @@ public class LoginActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-//        regToWx();
         initBar();
 
         UMShareAPI.get(LoginActivity.this).fetchAuthResultWithBundle(LoginActivity.this, savedInstanceState, umAuthListener);
     }
-
-    /* private void regToWx() {
-         api = WXAPIFactory.createWXAPI(this, APP_ID, true);
-         api.registerApp(APP_ID);
-     }
- */
     private void initBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
@@ -102,8 +95,6 @@ public class LoginActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.login_btn_random:
-//                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "587a253d-3d07-11e7-aebf-fa163e547655");
-//                SPUtils.saveString(UIUtils.getContext(), Constants.USERID, "d523f793-3ee1-11e7-aebf-fa163e534242");
                 finish();
 
                 overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
@@ -111,23 +102,6 @@ public class LoginActivity extends BaseActivity {
         }
     }
 
-
-    private long firstTime = 0;
-
-   /* @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            if (System.currentTimeMillis() - firstTime > 2000) {
-                Toast.makeText(UIUtils.getContext(), "再按一次退出程序", Toast.LENGTH_SHORT).show();
-                firstTime = System.currentTimeMillis();
-            } else {
-                finish();
-                System.exit(0);
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }*/
 
     private void LoginQQ() {
         UMShareAPI mShareAPI = UMShareAPI.get(LoginActivity.this);

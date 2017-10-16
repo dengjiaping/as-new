@@ -149,12 +149,13 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="0.5dp"
+        android:visibility="gone"
         android:background="#22000000"/>
 
 
     <TextView
         android:id="@+id/my_set_up_tv_friend"
-
+android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/ripple_with_color"

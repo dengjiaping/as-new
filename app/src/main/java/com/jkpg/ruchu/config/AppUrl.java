@@ -16,6 +16,9 @@ public class AppUrl {
     public static final String YOUZANINITTOKEN = BASEURL + "YouZanInitTokenServlet";
     public static final String YOUZAN = BASEURL + "YouzanServlet";
     public static final String DOWNLOAD = BASEURL + "DownLoadServlet";
+    public static final String GETFENXIANGDAY = BASEURL + "GetFenXiangDayServlet";
+    public static final String GETFENXIANGMESS = BASEURL + "GetFenXiangMessServlet";
+    public static final String UPDATEAPP = BASEURL + "UpdateAPPServlet";
 
     public static final String SMS = BASEURL + "SmsServlet";
     public static final String LOGIN = BASEURL + "Login_telServlet";
@@ -29,6 +32,7 @@ public class AppUrl {
     public static final String SELECTINTEGRAL = BASEURL + "SelectIntegralServlet";
     public static final String APPSEND = BASEURL + "AppSendSelectServlet";
     public static final String APPSENDSEND = BASEURL + "AppSendServlet";
+    public static final String INVITECODE = BASEURL + "InviteCodeServlet";
 
 
     public static final String QQLOGIN = BASEURL + "QQLoginServlet";

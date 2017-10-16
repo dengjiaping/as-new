@@ -5,8 +5,18 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:background="#11888888"
               android:orientation="vertical">
-
     <include layout="@layout/view_header"/>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+
+
 
 
     <LinearLayout
@@ -133,6 +143,36 @@
                     android:text="@string/wx"
                     android:textSize="16sp"/>
             </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="12dp"
+                android:background="#22000000"/>
+
+            <RelativeLayout
+                android:id="@+id/set_up_about_qq"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_with_color"
+                android:paddingBottom="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="12dp"
+                    android:text="QQ群"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingRight="22dp"
+                    android:text="345893235"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -177,6 +217,9 @@
         </LinearLayout>
 
         <LinearLayout
+            android:visibility="gone"
+            android:layout_marginTop="22dp"
+            android:layout_marginBottom="22dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -194,6 +237,8 @@
         </LinearLayout>
 
     </LinearLayout>
+    </LinearLayout>
+    </ScrollView>
 
 
 </LinearLayout>

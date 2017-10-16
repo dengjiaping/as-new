@@ -2,6 +2,8 @@ package com.jkpg.ruchu.view.adapter;
 
 import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
+import android.text.Html;
+import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
@@ -21,8 +23,13 @@ public class NoticeDetailRVAdapter extends BaseQuickAdapter<NoticeBean.ListBean,
 
     @Override
     protected void convert(BaseViewHolder helper, NoticeBean.ListBean item) {
-        helper
-                .setText(R.id.notice_iv_rule_title, "" + item.title + " ")
-                .setText(R.id.notice_iv_rule_body, item.notice);
+//        helper
+//                .setText(R.id.notice_iv_rule_title, "" + item.title + " ")
+//                .setText(R.id.notice_iv_rule_body, item.notice);
+        TextView view = helper.getView(R.id.notice_iv_rule_title);
+//        view.setText(Html.fromHtml("<font color='#ff5070'>" + item.title + "</font>  " + item.notice));
+        view.setText(Html.fromHtml("<font color='#ff5070'>" + item.title + "</font> <font color='#767676'> " + item.notice + "</font>"));
+
     }
+
 }

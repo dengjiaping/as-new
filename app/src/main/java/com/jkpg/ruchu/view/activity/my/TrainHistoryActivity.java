@@ -18,6 +18,7 @@ import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.TrainHistoryAdapter;
 import com.lzy.okgo.OkGo;
@@ -48,6 +49,7 @@ public class TrainHistoryActivity extends BaseActivity {
     TextView mNoDataText;
     @BindView(R.id.no_data)
     LinearLayout mNoData;
+    private List<TrainHistoryBean.ItemsBean> mItems;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -68,9 +70,9 @@ public class TrainHistoryActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         TrainHistoryBean trainHistoryBean = new Gson().fromJson(s, TrainHistoryBean.class);
-                        List<TrainHistoryBean.ItemsBean> items = trainHistoryBean.items;
-                        initRecyclerView(items);
-                        if (items == null || items.size() == 0) {
+                        mItems = trainHistoryBean.items;
+                        initRecyclerView(mItems);
+                        if (mItems == null || mItems.size() == 0) {
                             mNoData.setVisibility(View.VISIBLE);
                             mNoDataText.setText("你还没有训练哦!");
                         } else {
@@ -108,6 +110,10 @@ public class TrainHistoryActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.header_iv_right:
+                if (mItems == null || mItems.size() == 0) {
+                    ToastUtils.showShort(UIUtils.getContext(), "你还没有训练哦!");
+                    return;
+                }
                 startActivity(new Intent(TrainHistoryActivity.this, TrainCountActivity.class));
                 break;
         }

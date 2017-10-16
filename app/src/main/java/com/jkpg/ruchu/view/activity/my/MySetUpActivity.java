@@ -12,17 +12,12 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MessageEvent;
-import com.jkpg.ruchu.bean.ShareBean;
-import com.jkpg.ruchu.callback.StringDialogCallback;
-import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.lzy.okgo.OkGo;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
@@ -37,8 +32,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import okhttp3.Call;
-import okhttp3.Response;
 
 /**
  * Created by qindi on 2017/5/24.
@@ -80,20 +73,6 @@ public class MySetUpActivity extends BaseActivity {
         setContentView(R.layout.activity_my_set_up);
         ButterKnife.bind(this);
         initHeader();
-
-        OkGo
-                .post(AppUrl.DOWNLOAD)
-                .execute(new StringDialogCallback(MySetUpActivity.this) {
-
-
-                    @Override
-                    public void onSuccess(String s, Call call, Response response) {
-                        ShareBean shareBean = new Gson().fromJson(s, ShareBean.class);
-                        mUrl = shareBean.url;
-                        mContent = shareBean.content;
-                        mContent2 = shareBean.content2;
-                    }
-                });
 
     }
 

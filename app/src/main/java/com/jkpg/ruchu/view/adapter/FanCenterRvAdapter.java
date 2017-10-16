@@ -22,7 +22,7 @@ public class FanCenterRvAdapter extends BaseQuickAdapter<FansCenterBean.BbslistB
     @Override
     protected void convert(BaseViewHolder helper, FansCenterBean.BbslistBean item) {
         helper.setText(R.id.item_tv_post_title, item.title);
-        helper.setText(R.id.item_tv_post_body, item.nick);
+        helper.setText(R.id.item_tv_post_body, item.content);
         helper.setText(R.id.item_tv_post_time, item.createtime);
         helper.setText(R.id.item_tv_post_zan, item.zan + "");
         helper.setText(R.id.item_tv_post_huifu, item.reply + "");

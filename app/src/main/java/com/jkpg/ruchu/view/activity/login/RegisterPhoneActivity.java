@@ -180,6 +180,7 @@ public class RegisterPhoneActivity extends BaseActivity {
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
+                                LogUtils.d("sms_code="+s);
                                 CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                 if (!codeBean.success) {
                                     ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,明天重试");
@@ -242,8 +243,6 @@ public class RegisterPhoneActivity extends BaseActivity {
                                         @Override
                                         public void onClick(View v) {
                                             mPopupWindowSuccess.dismiss();
-                                            startActivity(new Intent(RegisterPhoneActivity.this, PerfectInfoActivity.class));
-                                            finish();
                                         }
                                     });
                                     mPopupWindowSuccess.setContentView(viewPay);

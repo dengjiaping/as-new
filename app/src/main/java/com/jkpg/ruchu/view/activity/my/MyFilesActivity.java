@@ -170,7 +170,11 @@ public class MyFilesActivity extends BaseActivity {
     private void init(MyFilesBean myFilesBean) {
         Glide
                 .with(UIUtils.getContext())
+
                 .load(AppUrl.BASEURL + myFilesBean.headImg)
+                .crossFade()
+                .centerCrop()
+                .error(R.drawable.icon_default)
                 .into(mMyFilesCtvPhoto);
         mMyFilesTvName.setText(myFilesBean.nick);
         if (myFilesBean.isVIP.equals("1"))

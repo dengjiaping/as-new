@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -228,6 +229,15 @@ public class MyCollectEditActivity extends BaseActivity {
                 }
                 LogUtils.i(s);
                 if (StringUtils.isEmpty(s)) {
+                    mHeaderIvLeft.setVisibility(View.VISIBLE);
+                    mHeaderTvLeft.setVisibility(View.GONE);
+                    mHeaderIvRight.setVisibility(View.VISIBLE);
+                    mHeaderTvRight.setVisibility(View.GONE);
+                    mHeaderTvLeft.setText("全选");
+                    isSelectAll = false;
+                    mAdapter.setShowBox();
+                    mAdapter.notifyDataSetChanged();
+                    isEdit = false;
                     return;
                 }
 
@@ -319,4 +329,22 @@ public class MyCollectEditActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK){
+            if (isEdit){
+                mHeaderIvLeft.setVisibility(View.VISIBLE);
+                mHeaderTvLeft.setVisibility(View.GONE);
+                mHeaderIvRight.setVisibility(View.VISIBLE);
+                mHeaderTvRight.setVisibility(View.GONE);
+                mHeaderTvLeft.setText("全选");
+                isSelectAll = false;
+                mAdapter.setShowBox();
+                mAdapter.notifyDataSetChanged();
+                isEdit = false;
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -24,12 +25,14 @@ import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SmsEvent;
+import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.bean.TrainMainBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.WebViewActivity;
@@ -116,6 +119,7 @@ public class TrainFragment extends Fragment {
     ImageView mTrainImage1;
 
     private TrainMainBean mTrainMainBean;
+    private AlertDialog mShow;
 
     @Nullable
     @Override
@@ -146,7 +150,7 @@ public class TrainFragment extends Fragment {
     private void initData() {
         OkGo
                 .post(AppUrl.HEADERLUNBOIMAGE)
-                .params("devicetoken", SPUtils.getString(UIUtils.getContext(), Constants.DEVICETOKEN, ""))
+                .params("devicetoken", MyApplication.getDeviceToken())
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .cacheKey("HEADERLUNBOIMAGE")
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
@@ -206,6 +210,44 @@ public class TrainFragment extends Fragment {
             mTrainLlTrain.setVisibility(View.GONE);
         }
         initBanner();
+//        if (mTrainMainBean.userInfos.isfirst.equals("1") && mShow == null) {
+////            initInvitation();
+//        }
+    }
+
+    private void initInvitation() {
+
+        View view = View.inflate(getActivity(), R.layout.view_invitation, null);
+        mShow = new AlertDialog.Builder(getActivity(), R.style.dialog_invitation)
+                .setView(view)
+                .show();
+
+        final EditText viewById = (EditText) view.findViewById(R.id.invitation_et);
+
+        view.findViewById(R.id.invitation_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (StringUtils.isEmpty(viewById.getText().toString())) {
+                    ToastUtils.showShort(UIUtils.getContext(), "请输入优惠码,在领取哦!");
+                    return;
+                }
+                OkGo
+                        .post(AppUrl.INVITECODE)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("invitecode", viewById.getText().toString())
+                        .execute(new StringDialogCallback(getActivity()) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                if (successBean.state == 200) {
+                                    mShow.dismiss();
+                                } else {
+                                    ToastUtils.showShort(UIUtils.getContext(), successBean.msg);
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     //初始化训练按钮状态 + 新手提示

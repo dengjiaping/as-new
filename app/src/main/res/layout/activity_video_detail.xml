@@ -58,15 +58,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true">
 
-                <com.jkpg.ruchu.widget.FreshDownloadView
-                    android:id="@+id/download"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-
-                    app:circular_color="@color/colorGray2"
-                    app:circular_progress_color="@color/colorPink"
-                    app:circular_width="2dp"
-                    app:progress_text_size="@dimen/dp_10"/>
 
                 <TextView
                     android:id="@+id/download_text"

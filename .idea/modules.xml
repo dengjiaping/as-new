@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/PhotoPicker/PhotoPicker.iml" filepath="$PROJECT_DIR$/PhotoPicker/PhotoPicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/Push/Push.iml" filepath="$PROJECT_DIR$/Push/Push.iml" />
       <module fileurl="file://$PROJECT_DIR$/RuChu.iml" filepath="$PROJECT_DIR$/RuChu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/Update/Update.iml" filepath="$PROJECT_DIR$/Update/Update.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

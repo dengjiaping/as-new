@@ -11,9 +11,12 @@
     <color name="colorGray4">#22BDBDBD</color>
     <color name="colorGrayBG">#44000000</color>
     <color name="colorGray3">#767676</color>
+    <color name="colorGray5">#c8c5c6</color>
+    <color name="colorGray6">#e7e4e5</color>
     <color name="colorXmlBg">#F6F4F5</color>
     <color name="colorBlack">#000</color>
     <color name="colorYellow">#F8DC2C</color>
     <color name="ic_default_bg_color">#00000000</color>
+    <color name="colorPink5">#f5dce1</color>
 
 </resources>

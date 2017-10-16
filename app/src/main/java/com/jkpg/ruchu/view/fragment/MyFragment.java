@@ -32,6 +32,7 @@ import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.GrowthValueActivity;
+import com.jkpg.ruchu.view.activity.my.InvitationActivity;
 import com.jkpg.ruchu.view.activity.my.MyFansActivity;
 import com.jkpg.ruchu.view.activity.my.MyFilesActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
@@ -245,6 +246,7 @@ public class MyFragment extends Fragment {
 
     @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans,
             R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test,
+            R.id.center_ll_invitation,
             R.id.center_ll_history, R.id.center_ll_setup, R.id.center_ll_on1, R.id.center_ll_on2})
     public void onViewClicked(View view) {
         if (!NetworkUtils.isConnected()) {
@@ -307,6 +309,10 @@ public class MyFragment extends Fragment {
             case R.id.center_ll_on2:
                 startActivity(new Intent(getActivity(), GrowthValueActivity.class));
                 break;
+            case R.id.center_ll_invitation:
+                startActivity(new Intent(getActivity(), InvitationActivity.class));
+
+                break;
         }
     }
 
@@ -359,18 +365,7 @@ public class MyFragment extends Fragment {
     public void newnewMess(ExperienceBean sms) {
         if (!StringUtils.isEmpty(SPUtils.getString(UIUtils
                 .getContext(), Constants.USERID, ""))) {
-//                OkGo
-//                        .post(AppUrl.SELECTINTEGRAL)
-//                        .params("userid",SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))
-//                        .execute(new StringCallback() {
-//                            @Override
-//                            public void onSuccess(String s, Call call, Response response) {
-//                                ExperienceBean experienceBean = new Gson().fromJson(s, ExperienceBean.class);
-//                                mCenterTvEmpiric.setText(experienceBean.experience);
-//                                mCenterTvGrade.setText(experienceBean.levelname);
-//                                mCenterTvMark.setText(experienceBean.amount);
-//                            }
-//                        });
+//
             initData();
 
         }

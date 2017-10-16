@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
 import android.view.WindowManager;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.jkpg.ruchu.R;
@@ -33,12 +32,11 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getWindow().setBackgroundDrawable(null);//背景置为空
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
-        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
-        alphaAnimation.setDuration(500);
-        mWelcome.setAnimation(alphaAnimation);
+//        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
+//        alphaAnimation.setDuration(500);
+//        mWelcome.setAnimation(alphaAnimation);
         initBar();
 
 //        ImageView imageView = (ImageView) findViewById(R.id.welcome_iv);
@@ -62,8 +60,10 @@ public class WelcomeActivity extends BaseActivity {
                 } else {
                     Intent intentMain = new Intent(WelcomeActivity.this, MainActivity.class);
                     startActivity(intentMain);
-
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                     finish();
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+
                 }
 
 

@@ -55,12 +55,12 @@ public class UIUtils {
     public static String getPackageName() {
         return getContext().getPackageName();
     }
-    public static String getVersionName() throws Exception
-    {
+
+    public static String getVersionName() throws Exception {
         // 获取packagemanager的实例
         PackageManager packageManager = getContext().getPackageManager();
         // getPackageName()是你当前类的包名，0代表是获取版本信息
-        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(),0);
+        PackageInfo packInfo = packageManager.getPackageInfo(getPackageName(), 0);
         String version = packInfo.versionName;
         return version;
     }

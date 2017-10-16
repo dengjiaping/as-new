@@ -15,8 +15,6 @@ import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.Md5Utils;
-import com.jkpg.ruchu.utils.SPUtils;
-import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.lzy.okgo.OkGo;
 import com.umeng.commonsdk.UMConfigure;
@@ -41,6 +39,7 @@ public class MyApplication extends Application {
     private static Context mContext;
     private static Handler mMainThreadHandler;
     private static String userId;
+    private static String deviceToken;
 
 
     @Override
@@ -104,8 +103,10 @@ public class MyApplication extends Application {
 
             @Override
             public void onSuccess(String deviceToken) {
+                MyApplication.deviceToken = deviceToken;
                 //注册成功会返回device token
-                SPUtils.saveString(UIUtils.getContext(), Constants.DEVICETOKEN, deviceToken);
+
+//                SPUtils.saveString(UIUtils.getContext(), Constants.DEVICETOKEN, deviceToken);
                 LogUtils.i("deviceToken" + deviceToken);
             }
 
@@ -208,4 +209,7 @@ public class MyApplication extends Application {
         }
     }
 
+    public static String getDeviceToken() {
+        return deviceToken;
+    }
 }

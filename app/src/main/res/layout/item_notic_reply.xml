@@ -7,16 +7,23 @@
               android:orientation="vertical"
               android:paddingTop="12dp">
 
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp">
+        android:layout_marginLeft="12dp"
+        android:orientation="vertical"
+        android:layout_marginRight="12dp">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
 
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/item_notice_reply_civ"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_width="@dimen/photoWH"
+            android:layout_height="@dimen/photoWH"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -43,6 +50,8 @@
                     android:textColor="@color/colorGray3"
                     android:textSize="14sp"/>
             </RelativeLayout>
+        </LinearLayout>
+
 
             <TextView
                 android:id="@+id/item_notice_reply_baby"

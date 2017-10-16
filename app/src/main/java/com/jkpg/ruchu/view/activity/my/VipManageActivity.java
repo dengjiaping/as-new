@@ -159,6 +159,8 @@ public class VipManageActivity extends BaseActivity {
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + vipManageBean.headImg)
                 .crossFade()
+                .centerCrop()
+                .error(R.drawable.icon_default)
                 .into(mVipManagerCivPhoto);
     }
 

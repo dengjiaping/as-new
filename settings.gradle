@@ -1,1 +1,1 @@
-include ':app', ':PhotoPicker', ':Push'
+include ':app', ':PhotoPicker', ':Push', ':Update'

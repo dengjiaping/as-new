@@ -15,8 +15,8 @@
 
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/item_notice_reply_civ"
-            android:layout_width="50dp"
-            android:layout_height="50dp"/>
+            android:layout_width="@dimen/photoWH"
+            android:layout_height="@dimen/photoWH"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -58,7 +58,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+                android:textSize="14sp"/>
 
             <com.jkpg.ruchu.widget.nineview.NineGridView
                 android:id="@+id/item_notice_reply_nine_view"
@@ -254,9 +254,10 @@
 
                 <TextView
                     android:id="@+id/item_notice_reply_time"
-
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorGray2"
+                    android:textSize="12dp"
                     />
 
 
@@ -280,6 +281,7 @@
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="0"
+                            android:textSize="12dp"
                             android:textColor="@color/select_bd_text_color"/>
 
                         <TextView
@@ -292,6 +294,7 @@
                             android:drawablePadding="5dp"
                             android:gravity="center"
                             android:text="1"
+                            android:textSize="12dp"
                             android:textColor="@color/colorGray2"/>
                     </LinearLayout>
                 </RelativeLayout>

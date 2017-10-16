@@ -79,13 +79,15 @@ public class MySmsReplyFragment extends Fragment {
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mRefreshLayout.setRefreshing(false);
+                        if (mRefreshLayout != null)
+                            mRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
                     public void onBefore(BaseRequest request) {
                         super.onBefore(request);
-                        mRefreshLayout.setRefreshing(true);
+                        if (mRefreshLayout != null)
+                            mRefreshLayout.setRefreshing(true);
                     }
                 });
         mRefreshLayout.setColorSchemeResources(R.color.colorPink, R.color.colorPink2);
@@ -114,16 +116,20 @@ public class MySmsReplyFragment extends Fragment {
                             @Override
                             public void onAfter(String s, Exception e) {
                                 super.onAfter(s, e);
-                                mRefreshLayout.setRefreshing(false);
-                                mMyCommentAdapter.setEnableLoadMore(true);
+                                if (mRefreshLayout != null) {
+                                    mRefreshLayout.setRefreshing(false);
+                                    mMyCommentAdapter.setEnableLoadMore(true);
+                                }
 
                             }
 
                             @Override
                             public void onBefore(BaseRequest request) {
                                 super.onBefore(request);
-                                mRefreshLayout.setRefreshing(true);
-                                mMyCommentAdapter.setEnableLoadMore(false);
+                                if (mRefreshLayout != null) {
+                                    mRefreshLayout.setRefreshing(true);
+                                    mMyCommentAdapter.setEnableLoadMore(false);
+                                }
                             }
                         });
             }
