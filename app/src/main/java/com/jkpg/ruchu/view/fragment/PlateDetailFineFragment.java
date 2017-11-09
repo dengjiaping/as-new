@@ -127,7 +127,9 @@ public class PlateDetailFineFragment extends Fragment {
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mPlateDetailRefresh.setRefreshing(false);
+                        if (mPlateDetailRefresh != null && mPlateDetailRefresh.isRefreshing())
+
+                            mPlateDetailRefresh.setRefreshing(false);
                         mAdapter.setEnableLoadMore(true);
 
                     }

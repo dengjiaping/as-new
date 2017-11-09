@@ -1,18 +1,14 @@
 package com.jkpg.ruchu.view.activity.train;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,32 +60,21 @@ public class TrainPrepareActivity extends BaseActivity {
 
                 break;
             case R.id.train_prepare_tip:
-                final PopupWindow popupWindow = new PopupWindow(TrainPrepareActivity.this);
-                popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
+
                 View inflate = View.inflate(TrainPrepareActivity.this, R.layout.view_show_tip, null);
-                inflate.findViewById(R.id.view_1).setOnClickListener(new View.OnClickListener() {
+                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupWindow.dismiss();
+
                     }
                 });
-                inflate.findViewById(R.id.view_0).setOnClickListener(new View.OnClickListener() {
+                final AlertDialog show = new AlertDialog.Builder(TrainPrepareActivity.this, R.style.dialog_invitation)
+                        .setView(inflate)
+                        .show();
+                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupWindow.dismiss();
-                    }
-                });
-                popupWindow.setContentView(inflate);
-                popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-                popupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.activity_train_prepare, null), Gravity.CENTER, 0, 0);
-                PopupWindowUtils.darkenBackground(TrainPrepareActivity.this, .4f);
-                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        PopupWindowUtils.darkenBackground(TrainPrepareActivity.this, 1f);
+                        show.dismiss();
                     }
                 });
                 break;

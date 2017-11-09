@@ -5,10 +5,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.design.widget.BottomSheetDialog;
 import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -58,6 +60,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
 import okhttp3.Response;
+
 
 public class OpenVipActivity extends BaseActivity {
 
@@ -109,7 +112,7 @@ public class OpenVipActivity extends BaseActivity {
     ImageView mVipImage;
     @BindView(R.id.vip_tip)
     TextView mVipTip;
-    private PopupWindow mPopupWindowPay;
+    private BottomSheetDialog mPopupWindowPay;
     private PopupWindow mPopupWindowPaySuccess;
     String day;
     private OpenVipBean mOpenVipBean;
@@ -195,9 +198,9 @@ public class OpenVipActivity extends BaseActivity {
 
 
     private void showPay() {
-        mPopupWindowPay = new PopupWindow(this);
-        mPopupWindowPay.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindowPay.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindowPay = new PopupWindow(this);
+//        mPopupWindowPay.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindowPay.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         View viewPay = LayoutInflater.from(this).inflate(R.layout.view_pay, null);
         viewPay.findViewById(R.id.view_pay_tv_canael).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -220,18 +223,24 @@ public class OpenVipActivity extends BaseActivity {
                 mPopupWindowPay.dismiss();
             }
         });
+//        mPopupWindowPay.setContentView(viewPay);
+//        mPopupWindowPay.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindowPay.setOutsideTouchable(false);
+//        mPopupWindowPay.setFocusable(true);
+//        mPopupWindowPay.showAtLocation(getLayoutInflater().inflate(R.layout.activity_open_vip, null), Gravity.BOTTOM, 0, 0);
+//        PopupWindowUtils.darkenBackground(OpenVipActivity.this, .5f);
+//        mPopupWindowPay.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                PopupWindowUtils.darkenBackground(OpenVipActivity.this, 1f);
+//            }
+//        });
+
+
+        mPopupWindowPay = new BottomSheetDialog(OpenVipActivity.this);
         mPopupWindowPay.setContentView(viewPay);
-        mPopupWindowPay.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindowPay.setOutsideTouchable(false);
-        mPopupWindowPay.setFocusable(true);
-        mPopupWindowPay.showAtLocation(getLayoutInflater().inflate(R.layout.activity_open_vip, null), Gravity.BOTTOM, 0, 0);
-        PopupWindowUtils.darkenBackground(OpenVipActivity.this, .5f);
-        mPopupWindowPay.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(OpenVipActivity.this, 1f);
-            }
-        });
+        mPopupWindowPay.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindowPay.show();
     }
 
 

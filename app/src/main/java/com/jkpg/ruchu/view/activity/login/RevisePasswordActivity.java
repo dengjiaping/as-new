@@ -51,6 +51,7 @@ public class RevisePasswordActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_revise_password);
+        setSwipeBackEnable(false);
         ButterKnife.bind(this);
         initHeader();
     }

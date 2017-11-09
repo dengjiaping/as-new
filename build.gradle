@@ -17,6 +17,7 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
+//        maven { url 'https://maven.google.com' }
         maven { url 'https://dl.bintray.com/youzanyun/maven/' }
         gradle.projectsEvaluated {
             tasks.withType(JavaCompile) {

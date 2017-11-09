@@ -3,11 +3,11 @@ package com.jkpg.ruchu.view.activity.community;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
@@ -41,7 +41,6 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -103,7 +102,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
     private FineNoteWebBean.List1Bean mList1;
     private FineNoteDetailWebFixRVAdapter mFineNoteDetailWebRVAdapter;
     private String mArt_id;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
     private CheckBox mNoticeDetailTvDz;
     private boolean isCollect = false;
     private int isShowImage = View.VISIBLE;
@@ -155,6 +154,8 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
 
     private void initData() {
 
+        mHeaderIvRight.setEnabled(false);
+
         OkGo
                 .post(AppUrl.ARTICLEDETAIL)
                 .tag(this)
@@ -168,19 +169,22 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                         mList2 = new ArrayList<>();
 //                        mList2 = fineNoteWebBean.list2;
                         initRecyclerView(fineNoteWebBean);
+                        mHeaderIvRight.setEnabled(true);
                     }
 
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mRefreshLayout.setRefreshing(false);
+                        if (mRefreshLayout != null)
+                            mRefreshLayout.setRefreshing(false);
 
                     }
 
                     @Override
                     public void onBefore(BaseRequest request) {
                         super.onBefore(request);
-                        mRefreshLayout.setRefreshing(true);
+                        if (mRefreshLayout != null)
+                            mRefreshLayout.setRefreshing(true);
 
                     }
                 });
@@ -199,16 +203,15 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                 mList2.addAll(fineNoteWebBean.list2);
 
                 mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
-//                if (mList2.size() == 0) {
-//                    ImageView imageView = new ImageView(FineNoteDetailWebActivity.this);
-//                imageView.setAdjustViewBounds(true);
-//                    imageView.setImageResource(R.drawable.no_reply);
-//                    mFineNoteDetailWebRVAdapter.addHeaderView(imageView, 1);
-//                mFineNoteDetailWebRVAdapter.setEmptyView(imageView);
-//                }
                 inflate.findViewById(R.id.web_view_ll).setVisibility(View.VISIBLE);
             }
         });
+
+        if (mList1 == null || mList1.Content.isEmpty()) {
+            ToastUtils.showShort(UIUtils.getContext(), "帖子不存在,可能已被删除!");
+            finish();
+            return;
+        }
         webView.loadData(mList1.Content, "text/html; charset=UTF-8", null);
         mNoticeDetailTvDz = (CheckBox) inflate.findViewById(R.id.notice_detail_tv_dz);
         initZan();
@@ -734,28 +737,34 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
 
     private void showShare() {
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
-        mPopupWindow = new PopupWindow(this);
+//        mPopupWindow = new PopupWindow(this);
         view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow.setContentView(view);
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
+//        PopupWindowUtils.darkenBackground(FineNoteDetailWebFixActivity.this, .5f);
+//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                PopupWindowUtils.darkenBackground(FineNoteDetailWebFixActivity.this, 1f);
+//            }
+//        });
+        mPopupWindow = new BottomSheetDialog(FineNoteDetailWebFixActivity.this);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
-        PopupWindowUtils.darkenBackground(FineNoteDetailWebFixActivity.this, .5f);
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(FineNoteDetailWebFixActivity.this, 1f);
-            }
-        });
+        mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindow.show();
+
+
         final UMWeb mWeb = new UMWeb(AppUrl.BASEURL + mList1.shareurl);
         mWeb.setTitle(mList1.Title);//标题
 //        if (mList1.get(0).images.size() == 0) {

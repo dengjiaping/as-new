@@ -7,240 +7,311 @@
 
     <include layout="@layout/view_header"/>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="12dp"
-        android:text="消息提醒"/>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="评论"
-            android:textSize="16sp"
-            />
-
-        <Switch
-            android:id="@+id/news_send_switch_comment"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
-
-    <View
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorGray2"/>
+        android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
-
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="赞"
-            android:textSize="16sp"
-            />
+            android:orientation="vertical">
 
-        <Switch
-            android:id="@+id/news_send_switch_zan"
 
-            android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:text="消息提醒"/>
 
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorGray2"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="评论"
+                    android:textSize="16sp"
+                    />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+                <Switch
+                    android:id="@+id/news_send_switch_comment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="通知"
-            android:textSize="16sp"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
 
-        <Switch
-            android:id="@+id/news_send_switch_sms"
-            android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="赞"
+                    android:textSize="16sp"
+                    />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorGray2"/>
+                <Switch
+                    android:id="@+id/news_send_switch_zan"
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:layout_marginLeft="22dp"
-        android:layout_marginTop="12dp"
-        android:text="训练提醒"/>
+                    android:layout_width="wrap_content"
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
 
-        <TextView
-            android:id="@+id/news_send_tv_time1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="09:00"
-            android:textSize="16sp"
-            />
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
 
-        <ImageView
-            android:id="@+id/news_send_iv_time1"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/news_send_tv_time1"
-            android:paddingBottom="12dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
-            android:paddingTop="12dp"
-            android:src="@drawable/icon_refresh"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="私信"
+                    android:textSize="16sp"
+                    />
 
-        <Switch
-            android:id="@+id/news_send_switch_time1"
+                <Switch
+                    android:id="@+id/news_send_switch_im"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:checked="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorGray2"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="系统通知"
+                    android:textSize="16sp"
+                    />
 
-        <TextView
-            android:id="@+id/news_send_tv_time2"
+                <Switch
+                    android:id="@+id/news_send_switch_sms"
+                    android:layout_width="wrap_content"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="14:00"
-            android:textSize="16sp"
-            />
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/news_send_iv_time2"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/news_send_tv_time2"
-            android:paddingBottom="12dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
-            android:paddingTop="12dp"
-            android:src="@drawable/icon_refresh"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:text="训练提醒"/>
 
-        <Switch
-            android:id="@+id/news_send_switch_time2"
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
+                <TextView
+                    android:id="@+id/news_send_tv_time1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="09:00"
+                    android:textSize="16sp"
+                    />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/colorGray2"/>
+                <ImageView
+                    android:id="@+id/news_send_iv_time1"
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:paddingLeft="22dp"
-        android:paddingRight="22dp">
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/news_send_tv_time1"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="12dp"
+                    android:src="@drawable/icon_refresh"/>
 
-        <TextView
-            android:id="@+id/news_send_tv_time3"
+                <Switch
+                    android:id="@+id/news_send_switch_time1"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="19:00"
-            android:textSize="16sp"
-            />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/news_send_iv_time3"
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/news_send_tv_time3"
-            android:paddingBottom="12dp"
-            android:paddingLeft="22dp"
-            android:paddingRight="22dp"
-            android:paddingTop="12dp"
-            android:src="@drawable/icon_refresh"/>
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
 
-        <Switch
-            android:id="@+id/news_send_switch_time3"
+                <TextView
+                    android:id="@+id/news_send_tv_time2"
 
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:paddingBottom="18dp"
-            android:paddingTop="18dp"/>
-    </RelativeLayout>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="14:00"
+                    android:textSize="16sp"
+                    />
 
+                <ImageView
+                    android:id="@+id/news_send_iv_time2"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/news_send_tv_time2"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="12dp"
+                    android:src="@drawable/icon_refresh"/>
+
+                <Switch
+                    android:id="@+id/news_send_switch_time2"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height=".5dp"
+                android:background="#22000000"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/white"
+                android:paddingLeft="22dp"
+                android:paddingRight="22dp">
+
+                <TextView
+                    android:id="@+id/news_send_tv_time3"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="19:00"
+                    android:textSize="16sp"
+                    />
+
+                <ImageView
+                    android:id="@+id/news_send_iv_time3"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/news_send_tv_time3"
+                    android:paddingBottom="12dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="12dp"
+                    android:src="@drawable/icon_refresh"/>
+
+                <Switch
+                    android:id="@+id/news_send_switch_time3"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"/>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="12dp"
+                android:text="黑名单设置"/>
+
+            <RelativeLayout
+                android:id="@+id/news_send_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ripple_with_color"
+                android:paddingLeft="22dp"
+                android:layout_marginBottom="22dp"
+                android:paddingRight="22dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingBottom="18dp"
+                    android:paddingTop="18dp"
+                    android:text="黑名单"
+                    android:textSize="16sp"
+                    />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

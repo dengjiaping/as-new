@@ -90,16 +90,6 @@ public class PlateDetailAllFragment extends Fragment {
         mPlateDetailRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                if (mList == null || mList.size() == 0) {
-//                    mPlateDetailRefresh.setRefreshing(false);
-//                    return;
-//                }
-//                if (mNotice != null && mList != null) {
-//                    mNotice.clear();
-//                    mList.clear();
-//                } else {
-//                    return;
-//                }
                 refresh();
 
             }
@@ -178,9 +168,6 @@ public class PlateDetailAllFragment extends Fragment {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
-                       /* if (mList != null && mList.size() == plateDetailBean.list.size()) {
-                            return;
-                        }*/
                         mNotice = plateDetailBean.notice;
                         mList = plateDetailBean.list;
                         initPlateDetailRecyclerView(mNotice, mList);
@@ -189,38 +176,39 @@ public class PlateDetailAllFragment extends Fragment {
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mPlateDetailRefresh.setRefreshing(false);
+                        if (mPlateDetailRefresh != null && mPlateDetailRefresh.isRefreshing())
+
+                            mPlateDetailRefresh.setRefreshing(false);
                     }
 
                     @Override
                     public void onError(Call call, Response response, Exception e) {
                         super.onError(call, response, e);
-                        mPlateDetailRefresh.setRefreshing(false);
+                        if (mPlateDetailRefresh != null && mPlateDetailRefresh.isRefreshing())
+                            mPlateDetailRefresh.setRefreshing(false);
                     }
-                    //                    @Override
-//                    public void onCacheSuccess(String s, Call call) {
-//                        super.onCacheSuccess(s, call);
-//                        PlateDetailBean plateDetailBean = new Gson().fromJson(s, PlateDetailBean.class);
-//                        mNotice = plateDetailBean.notice;
-//                        mList = plateDetailBean.list;
-//                        initPlateDetailRecyclerView(mNotice, mList);
-//                    }
                 });
     }
 
     private void initPlateDetailRecyclerView(List<PlateDetailBean.NoticeBean> notice, final List<PlateDetailBean.ListBean> list) {
         mAdapter = new PlateDetailRVAdapter(R.layout.item_plate_detail, list);
         mPlateDetailRecyclerView.setAdapter(mAdapter);
-        final View view = View.inflate(UIUtils.getContext(), R.layout.view_notice, null);
-        mAdapter.addHeaderView(view);
-        view.findViewById(R.id.notice_iv_close).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAdapter.removeHeaderView(view);
-            }
-        });
-        mNoticeRecyclerView = (RecyclerView) view.findViewById(R.id.notice_recycler_view);
-        initNoticeRecyclerView(notice);
+        if (SPUtils.getBoolean(UIUtils.getContext(), "showNotice", true)) {
+            final View view = View.inflate(UIUtils.getContext(), R.layout.view_notice, null);
+            mAdapter.addHeaderView(view);
+            view.findViewById(R.id.notice_iv_close).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAdapter.removeHeaderView(view);
+                    SPUtils.saveBoolean(UIUtils.getContext(), "showNotice", false);
+                }
+            });
+            mNoticeRecyclerView = (RecyclerView) view.findViewById(R.id.notice_recycler_view);
+            initNoticeRecyclerView(notice);
+
+
+        }
+
         mAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, int position) {

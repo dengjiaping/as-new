@@ -3,16 +3,15 @@ package com.jkpg.ruchu.view.activity.test;
 import android.Manifest;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.view.Gravity;
+import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,7 +21,6 @@ import com.jkpg.ruchu.bean.TestResultBean;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PermissionUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
@@ -69,7 +67,7 @@ public class TestReportActivity extends BaseActivity {
     LinearLayout mRegisterView;
     @BindView(R.id.report_code)
     LinearLayout mReportCode;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -157,23 +155,27 @@ public class TestReportActivity extends BaseActivity {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow = new PopupWindow(this);
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow = new BottomSheetDialog(TestReportActivity.this);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_report, null), Gravity.BOTTOM, 0, 0);
-        PopupWindowUtils.darkenBackground(TestReportActivity.this, .5f);
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-//                mReportCode.setVisibility(View.GONE);
-                PopupWindowUtils.darkenBackground(TestReportActivity.this, 1f);
-            }
-        });
+        mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindow.show();
+//        mPopupWindow = new PopupWindow(this);
+//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow.setContentView(view);
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_report, null), Gravity.BOTTOM, 0, 0);
+//        PopupWindowUtils.darkenBackground(TestReportActivity.this, .5f);
+//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+////                mReportCode.setVisibility(View.GONE);
+//                PopupWindowUtils.darkenBackground(TestReportActivity.this, 1f);
+//            }
+//        });
         final UMImage image = new UMImage(TestReportActivity.this, pic);
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override

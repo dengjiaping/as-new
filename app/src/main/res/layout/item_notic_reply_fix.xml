@@ -46,7 +46,7 @@
 
             <TextView
                 android:id="@+id/item_notice_reply_baby"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:textColor="@color/colorGray3"
@@ -54,9 +54,13 @@
 
             <TextView
                 android:id="@+id/item_notice_reply_body"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:lineSpacingExtra="4dp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp"
                 android:textColor="@android:color/black"
                 android:textSize="14sp"/>
 
@@ -78,59 +82,6 @@
                 android:orientation="vertical"
                 android:padding="12dp">
 
-                <!-- <LinearLayout
-                     android:layout_width="wrap_content"
-                     android:layout_height="wrap_content"
-                     >
-
-                     <TextView
-                         android:id="@+id/item_notice_reply_to_name"
-
-                         android:layout_width="wrap_content"
-
-                         android:layout_height="wrap_content"
-                         android:text="你是小可爱"
-                         android:textColor="@color/colorGray3"
-                         android:textSize="12sp"/>
-
-                     <TextView
-                         android:id="@+id/item_notice_reply_to_floor"
-
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-                         android:layout_marginLeft="12dp"
-                         android:text="1楼"
-                         android:textColor="@color/colorGray3"
-                         android:textSize="12sp"/>
-
-                     <TextView
-                         android:id="@+id/item_notice_reply_to_time"
-
-                         android:layout_width="wrap_content"
-                         android:layout_height="wrap_content"
-
-                         android:layout_marginLeft="12dp"
-                         android:text="2017-05-21"
-                         android:textColor="@color/colorGray3"
-                         android:textSize="12sp"/>
-                 </LinearLayout>-->
-
-                <!-- <TextView
-                     android:id="@+id/item_notice_reply_to_body"
-
-                     android:layout_width="match_parent"
-                     android:layout_height="wrap_content"
-                     android:layout_marginTop="5dp"
-                     android:textColor="@android:color/black"
-                     android:textSize="14sp"/>-->
-
-                <!--  <com.jkpg.ruchu.widget.nineview.NineGridView
-                      android:id="@+id/item_notice_reply_to_nine_view"
-                      android:layout_width="match_parent"
-                      app:ngv_singleImageSize="50dp"
-                      app:ngv_gridSpacing="8dp"
-                      android:layout_height="wrap_content"/>-->
-
 
                 <com.google.android.flexbox.FlexboxLayout
                     android:visibility="gone"
@@ -139,6 +90,7 @@
                     android:layout_height="wrap_content">
 
                     <TextView
+
                         android:id="@+id/item_notice_reply_to_name"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -146,6 +98,7 @@
                         android:textSize="12sp"/>
 
                     <TextView
+
                         android:id="@+id/item_notice_reply_to_body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -155,18 +108,31 @@
                 </com.google.android.flexbox.FlexboxLayout>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
                     android:id="@+id/view_0"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:textSize="12sp"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
                     android:textSize="12sp"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginTop="5dp"
+                    android:lineSpacingExtra="4dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+
                     android:id="@+id/view_1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:textSize="12sp"
                     android:layout_marginTop="5dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:lineSpacingExtra="4dp"
                     android:id="@+id/view_2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
@@ -241,6 +207,7 @@
                     android:id="@+id/item_notice_reply_to_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginTop="5dp"
                     android:textColor="@color/colorPink"
                     android:textSize="12dp"/>

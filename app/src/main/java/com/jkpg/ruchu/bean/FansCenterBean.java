@@ -30,7 +30,9 @@ public class FansCenterBean {
     public String isAtt;
     public String isVIP;
     public String levelname;
+    public String nameid;
     public String bbsnum;
+    public String userid;
     public List<BbslistBean> bbslist;
 
     public static class BbslistBean {

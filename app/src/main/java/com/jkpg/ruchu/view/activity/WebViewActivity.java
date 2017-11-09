@@ -104,7 +104,14 @@ public class WebViewActivity extends BaseActivity {
 
                 return true;
             }
+//
+//            @Override
+//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+////                super.onReceivedSslError(view, handler, error);
+//                handler.proceed();//这里校验失败的时候放过
+//            }
         });
+
 
     }
 

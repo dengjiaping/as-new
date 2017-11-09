@@ -61,7 +61,6 @@ public class MyFansActivity extends BaseActivity {
     private List<FansBean.list> mList;
     private MyFansRVAdapter mFansRVAdapter;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -134,8 +133,6 @@ public class MyFansActivity extends BaseActivity {
                                 }
                             });
                 } else {
-                    checkBox.setText("已关注");
-                    mMap.put(position, "1");
                     OkGo
                             .post(AppUrl.ATTENTION)
                             .params("followUserid", mList.get(position).userid)
@@ -150,8 +147,18 @@ public class MyFansActivity extends BaseActivity {
                                         mMap.put(position, "0");
 
                                     } else {
-                                        checkBox.setText("已关注");
-                                        mMap.put(position, "1");
+                                        if (mFlag == 2){
+                                            checkBox.setText("互相关注");
+                                            mMap.put(position, "2");
+
+                                        } else {
+                                            if (mList.get(position).flag.equals("1")) {
+                                                checkBox.setText("已关注");
+                                            } else if (mList.get(position).flag.equals("2")) {
+                                                checkBox.setText("互相关注");
+                                            }
+                                            mMap.put(position, mList.get(position).flag);
+                                        }
                                         EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     }
                                     mFansRVAdapter.notifyDataSetChanged();

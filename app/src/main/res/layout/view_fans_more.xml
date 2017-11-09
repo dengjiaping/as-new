@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:background="@drawable/dialog_box"
+              android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view_black"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="加入黑名单"
+        android:padding="12dp"
+        android:textColor="@color/colorGray3"
+        android:textSize="16sp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
+
+    <TextView
+        android:id="@+id/text_view_report"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:gravity="center"
+        android:text="举报该用户"
+        android:textColor="@color/colorGray3"
+        android:textSize="16sp"/>
+
+</LinearLayout>

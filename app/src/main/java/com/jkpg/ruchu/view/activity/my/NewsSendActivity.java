@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -62,13 +63,24 @@ public class NewsSendActivity extends BaseActivity {
     ImageView mNewsSendIvTime3;
     @BindView(R.id.news_send_switch_time3)
     Switch mNewsSendSwitchTime3;
+    @BindView(R.id.news_send_switch_im)
+    Switch mNewsSendSwitchIM;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_send);
         ButterKnife.bind(this);
-        mHeaderTvTitle.setText("消息推送");
+        mHeaderTvTitle.setText("消息和隐私");
+
+
+        mNewsSendSwitchIM.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SPUtils.saveBoolean(UIUtils.getContext(),"IMSend",isChecked);
+            }
+        });
+
         OkGo
                 .post(AppUrl.APPSEND)
                 .params("user_id", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -291,7 +303,7 @@ public class NewsSendActivity extends BaseActivity {
         });
     }
 
-    @OnClick({R.id.news_send_iv_time1, R.id.news_send_iv_time2, R.id.news_send_iv_time3, R.id.header_iv_left})
+    @OnClick({R.id.news_send_iv_time1, R.id.news_send_iv_time2, R.id.news_send_iv_time3, R.id.header_iv_left, R.id.news_send_delete})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.news_send_iv_time1:
@@ -305,6 +317,10 @@ public class NewsSendActivity extends BaseActivity {
                 break;
             case R.id.header_iv_left:
                 finish();
+                break;
+            case R.id.news_send_delete:
+                startActivity(new Intent(NewsSendActivity.this, BlackListActivity.class));
+
                 break;
         }
     }

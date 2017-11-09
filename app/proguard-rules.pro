@@ -737,3 +737,14 @@ public void xxxxxx(**);
    public static *** i(...);
    public static *** w(...);
  }
+
+
+
+ -keep class com.tencent.**{*;}
+ -dontwarn com.tencent.**
+
+ -keep class tencent.**{*;}
+ -dontwarn tencent.**
+
+ -keep class qalsdk.**{*;}
+ -dontwarn qalsdk.**

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:elevation="2dp"
+              android:background="@android:color/white"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/chat_delete"
+        android:layout_width="wrap_content"
+        android:text="加入黑名单"
+        android:background="@drawable/ripple_with_color"
+        android:padding="12dp"
+
+        android:textSize="16sp"
+        android:textColor="@android:color/black"
+
+        android:layout_height="wrap_content"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
+
+    <TextView
+        android:padding="12dp"
+        android:id="@+id/chat_report"
+        android:background="@drawable/ripple_with_color"
+        android:textSize="16sp"
+        android:layout_width="wrap_content"
+        android:text="举报该用户"
+        android:textColor="@android:color/black"
+        android:layout_height="wrap_content"/>
+
+</LinearLayout>

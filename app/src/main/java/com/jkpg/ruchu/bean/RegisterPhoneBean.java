@@ -18,5 +18,7 @@ public class RegisterPhoneBean {
     public String userid;
     public String error;
     public String username;
+    public String nameid;
+    public String usersign;
     public boolean success;
 }

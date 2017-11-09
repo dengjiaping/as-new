@@ -19,6 +19,8 @@ public class LoginQQBean {
     public String mess;
     public String u_id;
     public BackMessBean backMess;
+    public String nameid;
+    public String usersign;
 
     public static class BackMessBean {
         /**

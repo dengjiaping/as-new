@@ -162,6 +162,7 @@ public class StartTrainActivity2 extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_train2);
         ButterKnife.bind(this);
+        setSwipeBackEnable(false);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
@@ -206,32 +207,20 @@ public class StartTrainActivity2 extends BaseActivity {
         mStartTrainTip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final PopupWindow popupWindow = new PopupWindow(StartTrainActivity2.this);
-                popupWindow.setWidth(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-                popupWindow.setOutsideTouchable(true);
-                popupWindow.setFocusable(true);
                 View inflate = View.inflate(StartTrainActivity2.this, R.layout.view_show_tip, null);
-                inflate.findViewById(R.id.view_1).setOnClickListener(new View.OnClickListener() {
+                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupWindow.dismiss();
+
                     }
                 });
-                inflate.findViewById(R.id.view_0).setOnClickListener(new View.OnClickListener() {
+                final AlertDialog show = new AlertDialog.Builder(StartTrainActivity2.this, R.style.dialog_invitation)
+                        .setView(inflate)
+                        .show();
+                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        popupWindow.dismiss();
-                    }
-                });
-                popupWindow.setContentView(inflate);
-                popupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-                popupWindow.showAtLocation(getLayoutInflater().inflate(R.layout.activity_train_prepare, null), Gravity.CENTER, 0, 0);
-                PopupWindowUtils.darkenBackground(StartTrainActivity2.this, .4f);
-                popupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        PopupWindowUtils.darkenBackground(StartTrainActivity2.this, 1f);
+                        show.dismiss();
                     }
                 });
             }
@@ -305,7 +294,6 @@ public class StartTrainActivity2 extends BaseActivity {
                                 public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
                                     if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
                                         if (System.currentTimeMillis() - firstTime[0] > 2000) {
-//                        Toast.makeText(UIUtils.getContext(), "再按一次", Toast.LENGTH_SHORT).show();
                                             firstTime[0] = System.currentTimeMillis();
                                         } else {
                                             finish();
@@ -373,7 +361,6 @@ public class StartTrainActivity2 extends BaseActivity {
         mSoundID.put("y13", mSoundPool.load(this, R.raw.y13, 1));
         mSoundID.put("y14", mSoundPool.load(this, R.raw.y14, 1));
         mSoundID.put("y15", mSoundPool.load(this, R.raw.y15, 1));
-//        mSoundID.put("y16", mSoundPool.load(this, R.raw.y16, 1));
         mSoundID.put("y17", mSoundPool.load(this, R.raw.y17, 1));
         mSoundID.put("y18", mSoundPool.load(this, R.raw.y18, 1));
         mSoundID.put("y19", mSoundPool.load(this, R.raw.y19, 1));
@@ -387,7 +374,6 @@ public class StartTrainActivity2 extends BaseActivity {
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
                 }
-//                ToastUtils.showShort(UIUtils.getContext(),"------");
             }
         });
     }

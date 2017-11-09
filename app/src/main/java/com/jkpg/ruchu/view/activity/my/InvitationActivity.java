@@ -1,15 +1,14 @@
 package com.jkpg.ruchu.view.activity.my;
 
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.Snackbar;
-import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -20,7 +19,6 @@ import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.SpannableBuilder;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -54,7 +52,7 @@ public class InvitationActivity extends BaseActivity {
     Button mInvitationBtn;
     @BindView(R.id.invitation_root)
     LinearLayout mInvitationRoot;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
     private String mUrl;
     private String mContent;
     private String mContent2;
@@ -127,23 +125,27 @@ public class InvitationActivity extends BaseActivity {
     private void showInviteFriend() {
 
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
-        mPopupWindow = new PopupWindow(this);
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow = new PopupWindow(this);
+        mPopupWindow = new BottomSheetDialog(InvitationActivity.this);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+        mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindow.show();
+//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow.setContentView(view);
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
 //        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null));
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.BOTTOM, 0, 0);
-        PopupWindowUtils.darkenBackground(InvitationActivity.this, .5f);
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(InvitationActivity.this, 1f);
-            }
-        });
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.BOTTOM, 0, 0);
+//        PopupWindowUtils.darkenBackground(InvitationActivity.this, .5f);
+//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                PopupWindowUtils.darkenBackground(InvitationActivity.this, 1f);
+//            }
+//        });
         view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

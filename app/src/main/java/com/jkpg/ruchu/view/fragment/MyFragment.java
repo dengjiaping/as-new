@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
@@ -45,6 +46,9 @@ import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
+import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMValueCallBack;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -171,7 +175,9 @@ public class MyFragment extends Fragment {
     }
 
     private void initData() {
-        mCenterNoLogin.setVisibility(View.VISIBLE);
+        if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
+            mCenterNoLogin.setVisibility(View.VISIBLE);
+        }
         OkGo
                 .post(AppUrl.MYINDEX)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -211,16 +217,18 @@ public class MyFragment extends Fragment {
 
 
     private void initMess(MyIndex.MymessBean mymess) {
-        if (StringUtils.isEmpty(imgUrl) || !imgUrl.equals(mymess.uImgurl)) {
-            Glide
-                    .with(UIUtils.getContext())
-                    .load(AppUrl.BASEURL + mymess.uImgurl)
-                    .error(R.drawable.icon_photo)
-                    .centerCrop()
-                    .crossFade()
-                    .into(mCenterCivPhoto);
-            imgUrl = mymess.uImgurl;
-        }
+//        if (StringUtils.isEmpty(imgUrl) || !imgUrl.equals(mymess.uImgurl)) {
+        Glide
+                .with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + mymess.uImgurl)
+                .error(R.drawable.icon_photo)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.ALL)//
+                .dontAnimate()
+                .placeholder(R.drawable.gray_bg)
+                .into(mCenterCivPhoto);
+        imgUrl = mymess.uImgurl;
+//        }
         mCenterTvName.setText(mymess.uNick);
         mCenterTvEmpiric.setText(mymess.experience);
         mCenterTvMark.setText(mymess.amount);
@@ -330,6 +338,17 @@ public class MyFragment extends Fragment {
                 @Override
                 public void run() {
                     initData();
+                    //获取自己的资料
+                    TIMFriendshipManager.getInstance().getSelfProfile(new TIMValueCallBack<TIMUserProfile>() {
+                        @Override
+                        public void onError(int code, String desc) {
+                        }
+
+                        @Override
+                        public void onSuccess(TIMUserProfile result) {
+                            SPUtils.saveString(UIUtils.getContext(), Constants.IMIMAGE, result.getFaceUrl());
+                        }
+                    });
                 }
             }, 500);
         }

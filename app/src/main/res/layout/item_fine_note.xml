@@ -5,21 +5,19 @@
               android:layout_height="wrap_content"
               android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="22dp"
-        android:layout_marginRight="22dp"
-        android:layout_marginTop="12dp"
-        android:elevation="1dp"
-        app:cardCornerRadius="4dp">
 
         <LinearLayout
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="2dp"
+            android:elevation="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/ripple_with_color"
             android:orientation="vertical"
-            android:padding="12dp">
+            android:paddingRight="22dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:paddingLeft="22dp">
 
             <TextView
                 android:id="@+id/item_fine_note_tv_title"
@@ -81,11 +79,12 @@
             <ImageView
                 android:id="@+id/item_fine_note_tv_image"
                 android:layout_width="match_parent"
-                android:layout_height="130dp"
+                android:layout_height="150dp"
                 android:scaleType="fitXY"
                 />
 
             <TextView
+                android:lineSpacingExtra="4dp"
                 android:id="@+id/item_fine_note_iv_body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -94,6 +93,5 @@
                 android:maxLines="2"
                 />
         </LinearLayout>
-    </android.support.v7.widget.CardView>
 
 </LinearLayout>

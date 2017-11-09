@@ -32,7 +32,6 @@
                 android:id="@+id/item_fans_tv_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/app_name"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"/>
 
@@ -42,21 +41,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="@string/app_name"
                 android:textColor="@color/colorGray3"/>
         </LinearLayout>
 
         <CheckBox
             android:id="@+id/item_fans_cb_follow"
-            android:layout_width="wrap_content"
+            android:layout_width="70dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:background="@drawable/select_bd_bg"
             android:button="@null"
+            android:gravity="center"
             android:checked="true"
             android:paddingBottom="5dp"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
             android:paddingTop="5dp"
             android:text="加关注"
             android:textColor="@color/select_bd_text_color"

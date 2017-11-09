@@ -41,14 +41,20 @@ public class MyFansRVAdapter extends BaseQuickAdapter<FansBean.list, BaseViewHol
         if (map.get(position).equals("0")) {
             helper.setText(R.id.item_fans_cb_follow, "加关注");
             helper.setChecked(R.id.item_fans_cb_follow, true);
-        } else {
+        } else if (map.get(position).equals("1")) {
             helper.setText(R.id.item_fans_cb_follow, "已关注");
+            helper.setChecked(R.id.item_fans_cb_follow, false);
+        } else if (map.get(position).equals("2")) {
+            helper.setText(R.id.item_fans_cb_follow, "互相关注");
             helper.setChecked(R.id.item_fans_cb_follow, false);
         }
         Glide
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + item.imgurl)
                 .crossFade()
+                .placeholder(R.drawable.gray_bg)
+                .error(R.drawable.gray_bg)
+                .dontAnimate()
                 .into((ImageView) helper.getView(R.id.item_fans_civ_photo));
         helper.addOnClickListener(R.id.item_fans_cb_follow);
 

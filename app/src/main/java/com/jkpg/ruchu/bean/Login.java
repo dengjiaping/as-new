@@ -39,5 +39,7 @@ public class Login {
     public String headImg;
     public String nick;
     public String address;
+    public String nameid;
+    public String usersign;
     public boolean success;
 }

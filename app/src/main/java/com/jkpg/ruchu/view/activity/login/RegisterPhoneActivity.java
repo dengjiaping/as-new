@@ -117,6 +117,8 @@ public class RegisterPhoneActivity extends BaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_phone);
+        setSwipeBackEnable(false);
+
 
         ButterKnife.bind(this);
 
@@ -232,6 +234,8 @@ public class RegisterPhoneActivity extends BaseActivity {
                                     imm.hideSoftInputFromWindow(RegisterPhoneActivity.this.getCurrentFocus().getWindowToken(), 0);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, registerPhoneBean.userid);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, registerPhoneBean.username);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMID, registerPhoneBean.nameid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, registerPhoneBean.usersign);
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     mRegisterLlThree.setVisibility(View.GONE);
                                     mHeaderIvLeft.setClickable(false);

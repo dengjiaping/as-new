@@ -14,6 +14,11 @@
     <string name="_xml_vip">绑定微信，即送3天会员叠加包</string>
     <string name="wx">ruchukangfu</string>
 
+    <!--IM  Tiem-->
+    <string name="time_yesterday">昨天</string>
+    <string name="time_day">日</string>
+    <string name="time_month">月</string>
+    <string name="time_year">年</string>
 
 
 </resources>

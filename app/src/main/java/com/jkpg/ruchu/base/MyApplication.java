@@ -5,7 +5,9 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.os.Environment;
 import android.os.Handler;
+import android.support.multidex.MultiDex;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -17,6 +19,20 @@ import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.Md5Utils;
 import com.jkpg.ruchu.widget.nineview.NineGridView;
 import com.lzy.okgo.OkGo;
+import com.tencent.imsdk.TIMConnListener;
+import com.tencent.imsdk.TIMConversation;
+import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMFriendshipSettings;
+import com.tencent.imsdk.TIMGroupReceiveMessageOpt;
+import com.tencent.imsdk.TIMLogLevel;
+import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.TIMOfflinePushListener;
+import com.tencent.imsdk.TIMOfflinePushNotification;
+import com.tencent.imsdk.TIMRefreshListener;
+import com.tencent.imsdk.TIMSdkConfig;
+import com.tencent.imsdk.TIMUserConfig;
+import com.tencent.imsdk.TIMUserStatusListener;
+import com.tencent.qalsdk.sdk.MsfSdkUtils;
 import com.umeng.commonsdk.UMConfigure;
 import com.umeng.message.IUmengRegisterCallback;
 import com.umeng.message.PushAgent;
@@ -27,7 +43,9 @@ import com.youzan.sdk.YouzanSDK;
 
 import org.android.agoo.huawei.HuaWeiRegister;
 import org.android.agoo.xiaomi.MiPushRegistar;
+import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
 import java.util.logging.Level;
 
 /**
@@ -41,17 +59,8 @@ public class MyApplication extends Application {
     private static String userId;
     private static String deviceToken;
 
-
     @Override
     public void onCreate() {
-      /*  if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return;
-        }
-        LeakCanary.install(this);
-        // Normal app init code...*/
-//        BlockCanary.install(this, new AppBlockCanaryContext()).start();
         //上下文
         mContext = getApplicationContext();
 
@@ -78,24 +87,6 @@ public class MyApplication extends Application {
         UMShareConfig config = new UMShareConfig();
         config.isNeedAuthOnGetUserInfo(true);
         UMShareAPI.get(this).setShareConfig(config);
-//        Config.isJumptoAppStore = true;
-//        PushAgent mPushAgent = PushAgent.getInstance(this);
-//        //通知栏可以设置最多显示通知的条数，当有新通知到达时，会把旧的通知隐藏。
-//        mPushAgent.setDisplayNotificationNumber(0);
-//        mPushAgent.setPushCheck(true);
-//        //注册推送服务，每次调用register方法都会回调该接口
-//        mPushAgent.register(new IUmengRegisterCallback() {
-//
-//            @Override
-//            public void onSuccess(String deviceToken) {
-//                //注册成功会返回device token
-//            }
-//
-//            @Override
-//            public void onFailure(String s, String s1) {
-//
-//            }
-//        });
         PushAgent mPushAgent = PushAgent.getInstance(this);
 
 //注册推送服务，每次调用register方法都会回调该接口
@@ -104,8 +95,6 @@ public class MyApplication extends Application {
             @Override
             public void onSuccess(String deviceToken) {
                 MyApplication.deviceToken = deviceToken;
-                //注册成功会返回device token
-
 //                SPUtils.saveString(UIUtils.getContext(), Constants.DEVICETOKEN, deviceToken);
                 LogUtils.i("deviceToken" + deviceToken);
             }
@@ -117,29 +106,109 @@ public class MyApplication extends Application {
         });
         mPushAgent.setPushCheck(true);
         mPushAgent.setDisplayNotificationNumber(1);
-//        mPushAgent.addAlias("", "", new UTrack.ICallBack() {
-//            @Override
-//            public void onMessage(boolean b, String s) {
-//
-//            }
-//        });
-
         MiPushRegistar.register(this, Constants.XIAOMI_ID, Constants.XIAOMI_KEY);
         HuaWeiRegister.register(this);
+
         YouzanSDK.init(this, Constants.YZ_CLIENT_ID);
-
-//        YouzanSDK.init(this, Constants.YZ_CLIENT_ID,new YouzanHybridSDKAdapter());
-
 
         Resources res = super.getResources();
         Configuration c = new Configuration();
-//        c.setToDefaults();
         c.fontScale = 1f;
         res.updateConfiguration(c, res.getDisplayMetrics());
-//        DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
-//        displayMetrics.scaledDensity = displayMetrics.density;
 
 
+        if (MsfSdkUtils.isMainProcess(this)) {
+            TIMManager.getInstance().setOfflinePushListener(new TIMOfflinePushListener() {
+                @Override
+                public void handleNotification(TIMOfflinePushNotification notification) {
+                    if (notification.getGroupReceiveMsgOpt() == TIMGroupReceiveMessageOpt.ReceiveAndNotify) {
+                        //消息被设置为需要提醒
+                        notification.doNotify(getApplicationContext(), R.mipmap.ic_launcher);
+                    }
+                }
+            });
+        }
+        //TIM初始化SDK基本配置
+        TIMSdkConfig timConfig = new TIMSdkConfig(Constants.sdkAppid);
+        timConfig.enableLogPrint(true)
+                .setLogLevel(TIMLogLevel.DEBUG)
+                .setLogPath(Environment.getExternalStorageDirectory().getPath() + "/RuChu/");
+
+        //初始化SDK
+        boolean init = TIMManager.getInstance().init(getApplicationContext(), timConfig);
+        LogUtils.d("TIMManager init = " + init);
+
+
+        //设置资料关系链拉取字段，这里只关心好友验证类型、头像URL、昵称和自定义字段"Tag_Profile_Custom_Test"
+        TIMFriendshipSettings settings = new TIMFriendshipSettings();
+        long flags = 0;
+        flags |= TIMFriendshipManager.TIM_PROFILE_FLAG_NICK
+                | TIMFriendshipManager.TIM_PROFILE_FLAG_FACE_URL;
+        settings.setFlags(flags);
+        settings.addCustomTag("Tag_Profile_Custom_ruchuxzs");
+
+        TIMUserConfig userConfig = new TIMUserConfig()
+                .setFriendshipSettings(settings)
+                .setUserStatusListener(new TIMUserStatusListener() {
+                    @Override
+                    public void onForceOffline() {
+                        //被其他终端踢下线
+                        LogUtils.i("onForceOffline");
+                        EventBus.getDefault().post("onForceOffline");
+
+                    }
+
+                    @Override
+                    public void onUserSigExpired() {
+                        //用户签名过期了，需要刷新userSig重新登录SDK
+                        LogUtils.i("onUserSigExpired");
+                        EventBus.getDefault().post("onUserSigExpired");
+
+
+                    }
+                })
+                //设置连接状态事件监听器
+                .setConnectionListener(new TIMConnListener() {
+                    @Override
+                    public void onConnected() {
+                        LogUtils.i("onConnected");
+
+                    }
+
+                    @Override
+                    public void onDisconnected(int code, String desc) {
+                        LogUtils.i("onDisconnected--" + code + "--" + desc);
+
+                    }
+
+                    @Override
+                    public void onWifiNeedAuth(String name) {
+                        LogUtils.i("onWifiNeedAuth--" + name);
+
+                    }
+                })
+                //设置会话刷新监听器
+                .setRefreshListener(new TIMRefreshListener() {
+                    @Override
+                    public void onRefresh() {
+                        LogUtils.i(" 会话刷新监听器  onRefresh");
+                    }
+
+                    @Override
+                    public void onRefreshConversation(List<TIMConversation> conversations) {
+                        LogUtils.i("onRefreshConversation, conversation size: " + conversations.size());
+                    }
+                });
+
+
+        //将用户配置与通讯管理器进行绑定
+        TIMManager.getInstance().setUserConfig(userConfig);
+
+    }
+
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     /**

@@ -46,8 +46,9 @@
 
             <TextView
                 android:id="@+id/item_tv_content"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:foreground="?android:attr/selectableItemBackground"
                 android:padding="5dp"
                 android:textColor="@android:color/black"/>
 
@@ -88,7 +89,8 @@
                 android:id="@+id/item_other"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:lineSpacingExtra="3dp"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:lineSpacingExtra="4dp"
                 android:padding="5dp"/>
 
 

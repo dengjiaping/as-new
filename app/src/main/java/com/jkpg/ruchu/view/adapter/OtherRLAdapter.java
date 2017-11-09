@@ -47,8 +47,9 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
         Glide
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + vedioMS2Bean.imageUrl)
+//                .placeholder(R.drawable.photo_error)
+//                .error(R.drawable.photo_error)
                 .crossFade()
-                .centerCrop()
                 .into(holder.mItemTrainRlBg);
         boolean cached = MyApplication.getProxy(UIUtils.getContext())
                 .isCached(AppUrl.BASEURLHTTP + vedioMS2Bean.video_url);

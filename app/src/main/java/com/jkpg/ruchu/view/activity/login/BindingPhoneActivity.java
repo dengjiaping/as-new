@@ -99,6 +99,8 @@ public class BindingPhoneActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_binding_phone);
         ButterKnife.bind(this);
+        setSwipeBackEnable(false);
+
         initHeader();
         mUid = getIntent().getStringExtra("uid");
         mName = getIntent().getStringExtra("name");
@@ -122,7 +124,7 @@ public class BindingPhoneActivity extends BaseActivity {
                             .post(AppUrl.WXLOGIN)
                             .params("unionid", mUnionid)
                             .params("phoneflag", 1)
-
+                            .params("devicetoken",MyApplication.getDeviceToken())
                             .params("appwxnikename", mName)
                             .params("appwxurlimage", mIconurl)
                             .params("tele", "")
@@ -141,6 +143,8 @@ public class BindingPhoneActivity extends BaseActivity {
                                     }
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, loginWxBean.backMess.uNick);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginWxBean.nameid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginWxBean.usersign);
 //                                    SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, loginWxBean.backMess.uImgurl);
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     startActivity(new Intent(BindingPhoneActivity.this, PerfectInfoActivity.class));
@@ -164,6 +168,8 @@ public class BindingPhoneActivity extends BaseActivity {
                                     LoginQQBean loginQqBean = new Gson().fromJson(s, LoginQQBean.class);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQqBean.backMess.userId);
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, loginQqBean.backMess.uNick);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginQqBean.nameid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginQqBean.usersign);
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     startActivity(new Intent(BindingPhoneActivity.this, PerfectInfoActivity.class));
                                     finish();
@@ -220,6 +226,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                         .params("appwxnikename", mName)
                                         .params("appwxurlimage", mIconurl)
                                         .params("tele", phone)
+                                        .params("devicetoken",MyApplication.getDeviceToken())
                                         .params("password", password)
                                         .params("flag", flag)
                                         .execute(new StringDialogCallback(BindingPhoneActivity.this) {
@@ -234,6 +241,8 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 }
                                                 SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
                                                 SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, loginWxBean.backMess.uNick);
+                                                SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginWxBean.nameid);
+                                                SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginWxBean.usersign);
                                                 EventBus.getDefault().post(new MessageEvent("Login"));
                                                 showDialogSuccess();
                                             }
@@ -256,6 +265,8 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 LoginQQBean loginQqBean = new Gson().fromJson(s, LoginQQBean.class);
                                                 SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQqBean.backMess.userId);
                                                 SPUtils.saveString(UIUtils.getContext(), Constants.USERNANE, loginQqBean.backMess.uNick);
+                                                SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginQqBean.nameid);
+                                                SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginQqBean.usersign);
                                                 EventBus.getDefault().post(new MessageEvent("Login"));
                                                 showDialogSuccess();
                                             }

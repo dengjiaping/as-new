@@ -33,6 +33,7 @@ public class AppUrl {
     public static final String APPSEND = BASEURL + "AppSendSelectServlet";
     public static final String APPSENDSEND = BASEURL + "AppSendServlet";
     public static final String INVITECODE = BASEURL + "InviteCodeServlet";
+    public static final String JUBAO = BASEURL + "JuBaoServlet";
 
 
     public static final String QQLOGIN = BASEURL + "QQLoginServlet";
@@ -88,9 +89,9 @@ public class AppUrl {
     public static final String FEEDBACK = BASEURL + "FeedBackServlet";
     public static final String MYSPEAK = BASEURL + "MyspeakServlet";
     public static final String MYREPLY = BASEURL + "MyreplyServlet";
-    public static final String FANS = BASEURL + "FansServlet";
+    public static final String FANS = BASEURL + "FansServlet_V2";
     public static final String CANCLEATT = BASEURL + "CancleAttServlet";
-    public static final String ATTENTION = BASEURL + "AttentionServlet";
+    public static final String ATTENTION = BASEURL + "AttentionServlet_V2";
     public static final String VIPMANAGE = BASEURL + "VIPManageServlet";
     public static final String VIPCARDSLIST = BASEURL + "VIPCardsListServlet";
     public static final String MYTEST = BASEURL + "MytestServlet";
@@ -105,8 +106,9 @@ public class AppUrl {
     public static final String CANCELBIND_QQ = BASEURL + "CancelBind_QQServlet";
     public static final String CANCELBIND_WECHAT = BASEURL + "CancelBind_WeChatServlet";
     public static final String MYPINGLUN = BASEURL + "MyPingLunServlet";
-    public static final String MYNOTICE = BASEURL + "MyNoticeServlet";
+    public static final String MYNOTICE = BASEURL + "MyNoticeServlet_V2";
     public static final String MYDIANZAN = BASEURL + "MyDianZanServlet";
+    public static final String ADDHEIMINGDAN = BASEURL + "AddHeiMingDanServlet";
 
 
 

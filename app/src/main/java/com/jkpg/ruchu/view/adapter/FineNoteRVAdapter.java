@@ -38,6 +38,11 @@ public class FineNoteRVAdapter extends BaseQuickAdapter<FineNoteBean.ListBean, B
             helper.setVisible(R.id.item_fine_note_iv_body, true);
         }
 
-        Glide.with(UIUtils.getContext()).load(AppUrl.BASEURL + item.images).crossFade().centerCrop().into((ImageView) helper.getView(R.id.item_fine_note_tv_image));
+        Glide.with(UIUtils.getContext())
+                .load(AppUrl.BASEURL + item.images)
+                .crossFade().centerCrop()
+                .placeholder(R.drawable.gray_bg)
+                .error(R.drawable.gray_bg)
+                .into((ImageView) helper.getView(R.id.item_fine_note_tv_image));
     }
 }

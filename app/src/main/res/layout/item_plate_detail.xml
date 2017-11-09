@@ -16,13 +16,14 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="14dp"
             android:orientation="horizontal">
 
             <com.jkpg.ruchu.widget.CircleImageView
                 android:id="@+id/plate_detail_civ_photo"
                 android:layout_width="@dimen/photoWH"
                 android:layout_height="@dimen/photoWH"
+                android:layout_gravity="center_vertical"
                 android:layout_marginLeft="22dp"
                 />
 
@@ -43,22 +44,16 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:lines="1"
-                        android:text="@string/app_name"
-                        android:textColor="@color/colorPink"
-                        android:textSize="16sp"/>
+                        android:textColor="@android:color/black"
+                        android:textSize="14sp"/>
 
-                    <ImageView
-                        android:id="@+id/plate_detail_iv_fine"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:src="@drawable/icon_fine"/>
+
                 </LinearLayout>
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp">
+                    >
 
                     <TextView
                         android:id="@+id/plate_detail_tv_time"
@@ -84,6 +79,7 @@
                             android:textColor="@color/colorGray2"
                             android:textSize="12sp"/>
 
+
                         <TextView
                             android:id="@+id/plate_detail_tv_reply"
                             android:layout_width="wrap_content"
@@ -102,31 +98,37 @@
             </LinearLayout>
         </LinearLayout>
 
-            <TextView
-                android:id="@+id/plate_detail_tv_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:lines="1"
-                android:layout_marginTop="5dp"
-                android:layout_marginLeft="22dp"
-                android:layout_marginRight="22dp"
-                android:textColor="@android:color/black"
-                android:textSize="16sp"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp">
 
             <TextView
-                android:id="@+id/plate_detail_tv_body"
-                android:layout_width="match_parent"
+                android:id="@+id/plate_detail_tv_title"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:layout_marginTop="5dp"
-                android:layout_marginBottom="12dp"
-                android:maxLines="2"
-                android:lineSpacingExtra="2dp"
-                android:layout_marginRight="22dp"
                 android:layout_marginLeft="22dp"
-                android:textColor="@color/colorGray3"
-                android:textSize="14sp"/>
+                android:layout_marginRight="22dp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@android:color/black"
+                android:textSize="18sp"/>
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/plate_detail_tv_body"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="22dp"
+            android:layout_marginRight="22dp"
+            android:layout_marginTop="14dp"
+            android:ellipsize="end"
+            android:lineSpacingExtra="5dp"
+            android:maxLines="2"
+            android:textColor="@color/colorGray3"
+            android:textSize="14sp"/>
 
 
     </LinearLayout>

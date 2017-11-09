@@ -5,11 +5,10 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -51,49 +50,82 @@ public class LoginActivity extends BaseActivity {
 
     @BindView(R.id.login_tv_wx)
     ImageView mLoginTvWx;
-    @BindView(R.id.login_ll_qq)
-    LinearLayout mLoginLlQq;
-    @BindView(R.id.login_ll_phone)
-    LinearLayout mLoginLlPhone;
+    @BindView(R.id.login_tv_other)
+    ImageView mLoginTvOther;
+    //    @BindView(R.id.login_ll_qq)
+//    LinearLayout mLoginLlQq;
+//    @BindView(R.id.login_ll_phone)
+//    LinearLayout mLoginLlPhone;
     @BindView(R.id.login_btn_random)
-    Button mLoginBtnRandom;
+    ImageView mLoginBtnRandom;
 
     private IWXAPI api;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_v2);
+        setSwipeBackEnable(false);
+
         ButterKnife.bind(this);
         initBar();
-
+        EventBus.getDefault().post(new MessageEvent("Quit"));
         UMShareAPI.get(LoginActivity.this).fetchAuthResultWithBundle(LoginActivity.this, savedInstanceState, umAuthListener);
     }
+
     private void initBar() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             //透明状态栏
             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
             //透明导航栏
-             getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.TRANSPARENT);
         }
     }
 
-    @OnClick({R.id.login_tv_wx, R.id.login_ll_qq, R.id.login_ll_phone, R.id.login_btn_random})
+    @OnClick({R.id.login_tv_wx, /*R.id.login_ll_qq, R.id.login_ll_phone,*/ R.id.login_btn_random, R.id.login_tv_other})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_tv_wx:
                 LoginWX();
                 break;
-            case R.id.login_ll_qq:
-                LoginQQ();
+            case R.id.login_tv_other:
+                View loginView = View.inflate(UIUtils.getContext(), R.layout.view_other_login, null);
+
+                final BottomSheetDialog dialog = new BottomSheetDialog(LoginActivity.this);
+                dialog.setContentView(loginView);
+                dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                dialog.show();
+                loginView.findViewById(R.id.login_tv_qq).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        LoginQQ();
+                        dialog.dismiss();
+                    }
+                });
+                loginView.findViewById(R.id.login_tv_phone).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
+                        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                        finish();
+                    }
+                });
+                loginView.findViewById(R.id.login_tv_cancel).setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialog.dismiss();
+                    }
+                });
+
+
                 break;
-            case R.id.login_ll_phone:
-                startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
-                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-                finish();
-                break;
+//            case R.id.login_ll_phone:
+//                startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
+//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+//                finish();
+//                break;
             case R.id.login_btn_random:
                 finish();
 
@@ -140,7 +172,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onComplete(SHARE_MEDIA platform, int action, final Map<String, String> data) {
-           LogUtils.d(data.toString());
+            LogUtils.d(data.toString());
             if (platform == SHARE_MEDIA.WEIXIN) {
                 OkGo
                         .post(AppUrl.SELECTUNIONIDORQQUID)
@@ -169,6 +201,8 @@ public class LoginActivity extends BaseActivity {
                                                         }
                                                         EventBus.getDefault().post(new MessageEvent("Login"));
                                                         SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginWxBean.backMess.userId);
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginWxBean.nameid);
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginWxBean.usersign);
                                                         finish();
                                                     } else {
                                                         ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
@@ -216,6 +250,8 @@ public class LoginActivity extends BaseActivity {
                                                         }
                                                         EventBus.getDefault().post(new MessageEvent("Login"));
                                                         SPUtils.saveString(UIUtils.getContext(), Constants.USERID, loginQQBean.backMess.userId);
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.IMID, loginQQBean.nameid);
+                                                        SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginQQBean.usersign);
                                                         finish();
                                                     } else {
                                                         ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
@@ -229,8 +265,8 @@ public class LoginActivity extends BaseActivity {
                                     intent.putExtra("name", data.get("name"));
                                     intent.putExtra("iconurl", data.get("iconurl"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERIMAGE, data.get("iconurl"));
-                                    LogUtils.d( data.get("name")+"");
-                                    LogUtils.d( data.get("iconurl")+"");
+                                    LogUtils.d(data.get("name") + "");
+                                    LogUtils.d(data.get("iconurl") + "");
                                     startActivity(intent);
                                     overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
                                     finish();

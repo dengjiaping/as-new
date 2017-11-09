@@ -3,7 +3,8 @@
                 android:id="@+id/errorStateRelativeLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/train_bg"
+                android:background="@color/colorXmlBg"
+
                 android:clickable="true">
 
     <LinearLayout
@@ -17,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_launcher"/>
+            android:src="@drawable/no_data"/>
 
 
         <TextView
@@ -26,7 +27,7 @@
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="56dp"
             android:layout_marginRight="56dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="16dp"
             android:gravity="center"
             android:lineSpacingExtra="5.5dp"
             android:text="没网络了，建议检查网络设置是否开启"
@@ -36,11 +37,11 @@
         <Button
             android:id="@+id/id_btn_retry"
             android:layout_width="wrap_content"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="5dp"
-            android:background="@drawable/shap_rectangle_red"
-            android:text="OK"
+            android:text="点击重试"
+            android:layout_marginBottom="100dp"
             android:textColor="@android:color/white"/>
 
     </LinearLayout>

@@ -26,6 +26,7 @@ public class FullActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setSwipeBackEnable(false);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         setContentView(R.layout.view_show_header);
         Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);

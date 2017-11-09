@@ -2,15 +2,14 @@ package com.jkpg.ruchu.view.activity;
 
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -22,7 +21,6 @@ import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
@@ -70,7 +68,7 @@ public class ShopActivity extends BaseActivity {
     SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.shop_view)
     LinearLayout mShopView;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
     private YouzanToken token;
 
     @Override
@@ -83,8 +81,8 @@ public class ShopActivity extends BaseActivity {
         ButterKnife.bind(this);
         mHeaderIvRight.setVisibility(View.GONE);
         mHeaderIvRight.setClickable(false);
-
-        mHeaderTvTitle.setText("正在拼命加载中···");
+        mHeaderTvTitle.setText("如初康复商城");
+        mRefreshLayout.setRefreshing(true);
         final String url;
         if (StringUtils.isEmpty(getIntent().getStringExtra("url"))) {
             url = AppUrl.SHOP;
@@ -250,22 +248,26 @@ public class ShopActivity extends BaseActivity {
                         mPopupWindow.dismiss();
                     }
                 });
-                mPopupWindow = new PopupWindow(ShopActivity.this);
-                mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-                mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//                mPopupWindow = new PopupWindow(ShopActivity.this);
+//                mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//                mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//                mPopupWindow.setContentView(window);
+//                mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//                mPopupWindow.setOutsideTouchable(false);
+//                mPopupWindow.setFocusable(true);
+//                mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+//                mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_shop, null), Gravity.BOTTOM, 0, 0);
+//                PopupWindowUtils.darkenBackground(ShopActivity.this, .5f);
+//                mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//                    @Override
+//                    public void onDismiss() {
+//                        PopupWindowUtils.darkenBackground(ShopActivity.this, 1f);
+//                    }
+//                });
+                mPopupWindow = new BottomSheetDialog(ShopActivity.this);
                 mPopupWindow.setContentView(window);
-                mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-                mPopupWindow.setOutsideTouchable(false);
-                mPopupWindow.setFocusable(true);
-                mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-                mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_shop, null), Gravity.BOTTOM, 0, 0);
-                PopupWindowUtils.darkenBackground(ShopActivity.this, .5f);
-                mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-                    @Override
-                    public void onDismiss() {
-                        PopupWindowUtils.darkenBackground(ShopActivity.this, 1f);
-                    }
-                });
+                mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+                mPopupWindow.show();
                 final UMWeb mWeb = new UMWeb(data.getLink());
                 mWeb.setTitle(data.getTitle());//标题
                 mWeb.setThumb(new UMImage(ShopActivity.this, data.getImgUrl()));  //缩略图

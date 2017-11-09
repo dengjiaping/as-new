@@ -17,14 +17,21 @@ import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.bean.MyMessageBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
+import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.adapter.PlateDetailVPAdapter;
+import com.jkpg.ruchu.view.fragment.MySmsHistoryFragment;
 import com.jkpg.ruchu.view.fragment.MySmsLoveFragment;
-import com.jkpg.ruchu.view.fragment.MySmsNoticFragment;
 import com.jkpg.ruchu.view.fragment.MySmsReplyFragment;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
+import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.TIMFriendshipManager;
+import com.tencent.imsdk.TIMManager;
+import com.tencent.imsdk.TIMUserProfile;
+import com.tencent.imsdk.TIMValueCallBack;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -102,16 +109,56 @@ public class MySMSActivity extends BaseActivity {
                         mMySpeakTabLayout.hideMsg(0);
                     }
                 });
+
+
+        String loginUser = TIMManager.getInstance().getLoginUser();
+        if (StringUtils.isEmpty(loginUser)){
+
+            TIMManager.getInstance().login(
+                    SPUtils.getString(UIUtils.getContext(), Constants.IMID, "")
+                    , SPUtils.getString(UIUtils.getContext(), Constants.IMSIGN, "")
+                    , new TIMCallBack() {
+                        @Override
+                        public void onError(int code, String desc) {
+                            //错误码code和错误描述desc，可用于定位请求失败原因
+                            //错误码code列表请参见错误码表
+                            LogUtils.d("login failed. code: " + code + " errmsg: " + desc);
+
+
+                        }
+
+                        @Override
+                        public void onSuccess() {
+                            LogUtils.d("login success");
+                            EventBus.getDefault().post("TIMLogin");
+                            //获取自己的资料
+                            TIMFriendshipManager.getInstance().getSelfProfile(new TIMValueCallBack<TIMUserProfile>() {
+                                @Override
+                                public void onError(int code, String desc) {
+                                }
+
+                                @Override
+                                public void onSuccess(TIMUserProfile result) {
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMIMAGE, result.getFaceUrl());
+                                }
+                            });
+                        }
+                    });
+        }
+
+
     }
 
     private void init() {
         List<Fragment> views = new ArrayList<>();
         List<String> title = new ArrayList<>();
-        title.add("通知");
+        title.add("私信");
         title.add("评论");
         title.add("赞");
-        MySmsNoticFragment mySmsPrivateFragment = new MySmsNoticFragment();
-        views.add(mySmsPrivateFragment);
+        MySmsHistoryFragment mySmsHistoryFragment = new MySmsHistoryFragment();
+        views.add(mySmsHistoryFragment);
+//        MySmsNoticFragment mySmsPrivateFragment = new MySmsNoticFragment();
+//        views.add(mySmsPrivateFragment);
         MySmsReplyFragment mySmsReplyFragment = new MySmsReplyFragment();
         views.add(mySmsReplyFragment);
         MySmsLoveFragment mySmsLoveFragment = new MySmsLoveFragment();

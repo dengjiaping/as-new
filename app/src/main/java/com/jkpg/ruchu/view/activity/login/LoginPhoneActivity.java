@@ -57,6 +57,8 @@ public class LoginPhoneActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login_phone);
+        setSwipeBackEnable(false);
+
         ButterKnife.bind(this);
         initHeader();
     }
@@ -125,6 +127,8 @@ public class LoginPhoneActivity extends BaseActivity {
                                 }*/ else {
                                     EventBus.getDefault().post(new MessageEvent("Login"));
                                     SPUtils.saveString(UIUtils.getContext(), Constants.USERID, login.userid);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, login.usersign);
+                                    SPUtils.saveString(UIUtils.getContext(), Constants.IMID, login.nameid);
 //                                    startActivity(new Intent(LoginPhoneActivity.this, MainActivity.class));
                                     finish();
                                 }

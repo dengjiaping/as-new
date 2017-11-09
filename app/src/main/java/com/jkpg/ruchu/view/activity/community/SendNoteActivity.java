@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,21 +14,21 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
-import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,7 +48,6 @@ import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PermissionUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -109,7 +107,7 @@ public class SendNoteActivity extends BaseActivity {
     @BindView(R.id.send_note_view)
     LinearLayout mSendNoteView;
     private String mTitle;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
     private List<PlateBean> data;
 
     private LocationManager mLocationManager;
@@ -639,9 +637,10 @@ public class SendNoteActivity extends BaseActivity {
 
     private void showPopupWindow() {
 
-        mPopupWindow = new PopupWindow(this);
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+
+//        mPopupWindow = new PopupWindow(this);
+//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
         View view = View.inflate(UIUtils.getContext(), R.layout.view_recycler_view, null);
         view.findViewById(R.id.view_view).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -661,19 +660,23 @@ public class SendNoteActivity extends BaseActivity {
                 mPopupWindow.dismiss();
             }
         });
+//        mPopupWindow.setContentView(view);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//        PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
+//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                PopupWindowUtils.darkenBackground(SendNoteActivity.this, 1f);
+//            }
+//        });
+        mPopupWindow = new BottomSheetDialog(SendNoteActivity.this);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-        PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(SendNoteActivity.this, 1f);
-            }
-        });
+        mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindow.show();
     }
 
     @Override

@@ -10,7 +10,6 @@ import android.widget.TextView;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.adapter.MotionDetailRLAdapter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +38,6 @@ public class MotionDetailActivity extends BaseActivity {
 
     private void initRecyclerView() {
         mMotionDetailRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mMotionDetailRecyclerView.setAdapter(new MotionDetailRLAdapter());
     }
 
     private void initHeader() {

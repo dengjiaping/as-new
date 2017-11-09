@@ -47,7 +47,8 @@ public class NoticeDetailReplyFixAdapter extends BaseQuickAdapter<NoticeDetailBe
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + item.headimg)
                 .centerCrop()
-                .crossFade()
+                .dontAnimate()
+                .placeholder(R.drawable.gray_bg)
                 .into((ImageView) helper.getView(R.id.item_notice_reply_civ));
         helper.setText(R.id.item_notice_reply_name, item.nick);
         if (item.taici.equals("无")) {

@@ -43,7 +43,11 @@ public class CommunityPlateRLAdapter extends RecyclerView.Adapter<CommunityPlate
         holder.mPlateTvTitle.setText(plateBean.platename);
         holder.mPlateTvBody.setText(plateBean.simpleremark);
         holder.mPlateTvNum.setText(plateBean.zongshu+"贴");
-        Glide.with(UIUtils.getContext()).load(AppUrl.BASEURL+plateBean.plateimg).error(R.mipmap.ic_launcher).into(holder.mPlateCivPhoto);
+        Glide.with(UIUtils.getContext())
+                .load(AppUrl.BASEURL+plateBean.plateimg)
+                .placeholder(R.drawable.gray_bg)
+                .error(R.mipmap.ic_launcher)
+                .into(holder.mPlateCivPhoto);
 
     }
 

@@ -16,6 +16,8 @@ public class LoginWxBean {
     public String mess;
     public BackMessBean backMess;
     public boolean giveVIP;
+    public String nameid;
+    public String usersign;
 
     public static class BackMessBean {
         /**

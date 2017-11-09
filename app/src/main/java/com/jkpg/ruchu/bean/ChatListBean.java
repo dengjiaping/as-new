@@ -15,10 +15,21 @@ public class ChatListBean implements MultiItemEntity {
     private int itemType;
     public String content;
     public String image;
-    public String time;
+    public long time;
+    public String msgId;
 
 
-    public ChatListBean(int itemType, String time, String image, String content) {
+    public boolean sending;
+    public boolean error;
+    public boolean isNewSend;
+
+    public long imageHeight;
+    public long imageWeidth;
+
+    public String largeImage;
+
+
+    public ChatListBean(int itemType, long time, String image, String content) {
         this.itemType = itemType;
         this.time = time;
         this.image = image;
@@ -33,5 +44,33 @@ public class ChatListBean implements MultiItemEntity {
     @Override
     public int getItemType() {
         return itemType;
+    }
+
+    public void setSending(boolean sending) {
+        this.sending = sending;
+    }
+
+    public void setError(boolean error) {
+        this.error = error;
+    }
+
+    public void setImageHeight(long imageHeight) {
+        this.imageHeight = imageHeight;
+    }
+
+    public void setImageWeidth(long imageWeidth) {
+        this.imageWeidth = imageWeidth;
+    }
+
+    public void setNewSend(boolean newSend) {
+        isNewSend = newSend;
+    }
+
+    public void setLargeImage(String largeImage) {
+        this.largeImage = largeImage;
+    }
+
+    public void setMsgId(String msgId) {
+        this.msgId = msgId;
     }
 }

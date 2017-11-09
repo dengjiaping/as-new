@@ -104,6 +104,7 @@
             android:name=".view.activity.train.StartTrainActivity2"
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
+        <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
         <activity
             android:name=".view.activity.test.TestReportActivity"
             android:screenOrientation="portrait"/>
@@ -179,9 +180,6 @@
             android:name=".view.activity.my.TrainCountActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".view.activity.my.RuChuInfoActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".view.activity.community.FineNoteActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -242,10 +240,6 @@
         </provider>
 
         <activity
-            android:name=".view.activity.community.NoticeDetailActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".view.activity.community.HotNoteActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -286,6 +280,9 @@
             android:name=".widget.nineview.preview.ImagePreviewActivity"
             />
         <activity
+            android:name=".widget.nineview.preview.ChatImagePreviewActivity"
+            />
+        <activity
             android:name=".view.activity.test.TestDetailedActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -301,10 +298,6 @@
         <activity
             android:name=".view.activity.WebViewActivity"
             android:hardwareAccelerated="true"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".view.activity.community.MoreReplyActivity"
-            android:launchMode="singleTask"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.my.BindingTeleActivity"
@@ -363,15 +356,6 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
         <service android:name=".service.SmsService"/>
-
-        <activity
-            android:name=".view.activity.community.FineNoteDetailWebActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".view.activity.community.FineMoreReplyActivity"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.train.FullActivity"
             android:screenOrientation="portrait"/>
@@ -411,6 +395,64 @@
             />
         <activity
             android:name=".view.activity.my.InvitationDetailActivity"
+            android:screenOrientation="portrait"
+            />
+
+
+        <!--IM-->
+        <!-- 【必须】消息收发service -->
+        <service
+            android:name="com.tencent.qalsdk.service.QalService"
+            android:exported="true"
+            android:process=":QALSERVICE">
+        </service>
+        <service
+            android:name="com.tencent.qalsdk.service.QalAssistService"
+            android:exported="false"
+            android:process=":QALSERVICE">
+        </service>
+
+        <!-- 【必须】 离线消息广播接收器 -->
+        <receiver
+            android:name="com.tencent.qalsdk.QALBroadcastReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.tencent.qalsdk.broadcast.qal"/>
+            </intent-filter>
+        </receiver>
+        <receiver
+            android:name="com.tencent.qalsdk.core.NetConnInfoCenter"
+            android:process=":QALSERVICE">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.TIME_SET"/>
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
+            </intent-filter>
+
+            <!-- ImSDK 3.0.2 后添加 -->
+            <intent-filter>
+                <action android:name="com.tencent.qalsdk.service.TASK_REMOVED"/>
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name=".view.activity.my.NoticeActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".view.activity.my.BlackListActivity"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".view.activity.ChatListActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             />
 

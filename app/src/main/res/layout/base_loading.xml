@@ -1,15 +1,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:id="@+id/id_loading_and_retry"
              android:layout_width="match_parent"
+             android:background="@color/colorXmlBg"
              android:layout_height="match_parent"
-             android:background="@drawable/train_bg"
              android:clickable="true"
     >
 
-    <ProgressBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+
+    <RelativeLayout
         android:layout_gravity="center"
-        />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ProgressBar
+            android:progressTint="@color/colorPink"
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:indeterminateTint="@color/colorPink"
+            />
+        <ImageView
+            android:layout_centerInParent="true"
+            android:textColor="@color/colorPink"
+            android:layout_width="14dp"
+            android:src="@drawable/icon_r"
+            android:layout_height="14dp"/>
+    </RelativeLayout>
 
 </FrameLayout>

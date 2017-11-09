@@ -19,6 +19,10 @@ public class Constants {
     public static final String USERID = "user_id";
     public static final String USERNANE = "user_name";
     public static final String USERIMAGE = "user_image";
+
+    public static final String IMID = "im_id";
+    public static final String IMSIGN = "im_sign";
+    public static final String IMIMAGE = "im_image";
     public static final String SEARCHHISTORY = "search_history";
 
 
@@ -42,4 +46,9 @@ public class Constants {
     public static final String XIEYI = "file:///android_asset/xieyi.html";
 
 
+    public static final int sdkAppid = 1400043374;
+
+
 }
+
+

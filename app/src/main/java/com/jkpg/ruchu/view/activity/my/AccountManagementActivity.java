@@ -28,6 +28,8 @@ import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
+import com.tencent.imsdk.TIMCallBack;
+import com.tencent.imsdk.TIMManager;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
@@ -243,8 +245,25 @@ public class AccountManagementActivity extends BaseActivity {
                 SPUtils.clear();
                 startActivity(new Intent(AccountManagementActivity.this, LoginActivity.class));
                 SPUtils.saveBoolean(UIUtils.getContext(), Constants.FIRST, false);
+                SPUtils.saveBoolean(UIUtils.getContext(), "needLogin", false);
                 EventBus.getDefault().post(new MessageEvent("Quit"));
                 EventBus.getDefault().post(new MessageEvent("Login"));
+                //登出
+                TIMManager.getInstance().logout(new TIMCallBack() {
+                    @Override
+                    public void onError(int code, String desc) {
+
+                        //错误码code和错误描述desc，可用于定位请求失败原因
+                        //错误码code列表请参见错误码表
+                        LogUtils.d( "logout failed. code: " + code + " errmsg: " + desc);
+                    }
+
+                    @Override
+                    public void onSuccess() {
+                        //登出成功
+                        LogUtils.d("logout success");
+                    }
+                });
                 finish();
                 break;
         }

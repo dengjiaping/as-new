@@ -14,7 +14,7 @@ import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.DoctorCollectBean;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.adapter.DoctorCollectRVAdapter;
 
 import java.util.ArrayList;
@@ -71,7 +71,7 @@ public class DoctorCollectActivity extends AppCompatActivity {
                 if (isEdit) {
                     mAdapter.setSelectItem(position);
                 } else {
-                    startActivity(new Intent(DoctorCollectActivity.this, NoticeDetailActivity.class));
+                    startActivity(new Intent(DoctorCollectActivity.this, NoticeDetailFixActivity.class));
                 }
             }
         });

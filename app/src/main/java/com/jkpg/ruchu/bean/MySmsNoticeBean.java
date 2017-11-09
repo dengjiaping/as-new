@@ -26,5 +26,8 @@ public class MySmsNoticeBean {
         public String createtime;
         public String content;
         public String title;
+        public String nick;
+        public String userid;
+        public String type;
     }
 }

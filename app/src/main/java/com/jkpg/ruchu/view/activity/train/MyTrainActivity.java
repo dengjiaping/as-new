@@ -138,12 +138,6 @@ public class MyTrainActivity extends BaseActivity {
                 } else {
                     new AlertDialog.Builder(MyTrainActivity.this)
                             .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
                             .setPositiveButton("确定", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

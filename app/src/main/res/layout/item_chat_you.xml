@@ -6,7 +6,7 @@
 
     >
     <TextView
-        android:id="@+id/chat_time_you"
+        android:id="@+id/chat_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -23,7 +23,6 @@
 
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/chat_image_you"
-
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginLeft="22dp"/>
@@ -33,6 +32,7 @@
             android:linksClickable="true"
             android:textIsSelectable="true"
             android:id="@+id/chat_sms_you"
+            android:lineSpacingExtra="3dp"
             android:textColorHighlight="@color/colorYellow"
             android:textColorLink="@android:color/holo_blue_light"
             android:layout_width="wrap_content"

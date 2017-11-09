@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.MySmsNoticeBean;
@@ -17,6 +19,7 @@ import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
 import com.jkpg.ruchu.view.adapter.MySmsNoticeAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -71,7 +74,9 @@ public class MySmsNoticFragment extends Fragment {
                     @Override
                     public void onAfter(String s, Exception e) {
                         super.onAfter(s, e);
-                        mRefreshLayout.setRefreshing(false);
+                        if (mRefreshLayout != null) {
+                            mRefreshLayout.setRefreshing(false);
+                        }
                     }
 
                     @Override
@@ -128,6 +133,26 @@ public class MySmsNoticFragment extends Fragment {
             mRecyclerView.setLayoutManager(layoutManager);
             mMyCommentAdapter = new MySmsNoticeAdapter(R.layout.item_sms_notic, list);
             mRecyclerView.setAdapter(mMyCommentAdapter);
+            mMyCommentAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+                @Override
+                public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+                    if (mList.get(position).type.equals("1")) {
+                        Intent i = new Intent(getActivity(), FansCenterActivity.class);
+                        i.putExtra("fansId", mList.get(position).userid);
+                        startActivity(i);
+                    }
+                }
+            });
+//            mMyCommentAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+//                @Override
+//                public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+//                    if (mList.get(position).type.equals("1")) {
+//                        Intent i = new Intent(getActivity(), FansCenterActivity.class);
+//                        i.putExtra("fansId", mList.get(position).userid);
+//                        startActivity(i);
+//                    }
+//                }
+//            });
         } catch (Exception e) {
             e.printStackTrace();
         }

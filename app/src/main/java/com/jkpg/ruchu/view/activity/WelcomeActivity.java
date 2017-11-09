@@ -34,15 +34,12 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
         ButterKnife.bind(this);
-//        AlphaAnimation alphaAnimation = new AlphaAnimation(0f, 1f);
-//        alphaAnimation.setDuration(500);
-//        mWelcome.setAnimation(alphaAnimation);
         initBar();
+        if (SPUtils.getBoolean(UIUtils.getContext(), "needLogin", true)) {
+            SPUtils.clear();
+            SPUtils.saveBoolean(UIUtils.getContext(), "needLogin", false);
+        }
 
-//        ImageView imageView = (ImageView) findViewById(R.id.welcome_iv);
-//        imageView.setBackgroundResource(R.drawable.welcome_bg);
-//        //imageView.setFitsSystemWindows(true);
-//        //imageView.setCropToPadding(true);
 
         MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
             @Override

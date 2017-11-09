@@ -7,7 +7,7 @@
     >
 
     <TextView
-        android:id="@+id/chat_time_my"
+        android:id="@+id/chat_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -17,11 +17,11 @@
         android:visibility="visible"/>
 
     <LinearLayout
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="right"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
         >
 
         <RelativeLayout
@@ -29,22 +29,44 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="72dp"
             android:layout_marginRight="5dp"
-
             android:layout_weight="1">
 
             <TextView
                 android:id="@+id/chat_sms_my"
-                android:autoLink="all"
-                android:linksClickable="true"
-                android:textIsSelectable="true"
-                android:textColorHighlight="@color/colorYellow"
-                android:textColorLink="@android:color/holo_blue_light"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:autoLink="all"
+                android:lineSpacingExtra="3dp"
                 android:background="@drawable/reply_my"
                 android:gravity="center_vertical"
-                android:textColor="@android:color/white"/>
+                android:linksClickable="true"
+                android:textColor="@android:color/white"
+                android:textColorHighlight="@color/colorYellow"
+                android:textColorLink="@android:color/holo_blue_light"
+                android:textIsSelectable="true"/>
+
+            <RelativeLayout
+                android:id="@+id/sendStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@id/chat_sms_my">
+
+                <ProgressBar
+                    android:id="@+id/sending"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:visibility="gone"/>
+
+                <ImageView
+                    android:id="@+id/sendError"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:src="@drawable/ic_error"
+                    android:visibility="gone"/>
+
+            </RelativeLayout>
         </RelativeLayout>
 
         <com.jkpg.ruchu.widget.CircleImageView

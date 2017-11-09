@@ -3,15 +3,17 @@ package com.jkpg.ruchu.view.activity.community;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +41,6 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.ImageTools;
 import com.jkpg.ruchu.utils.LogUtils;
-import com.jkpg.ruchu.utils.PopupWindowUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
@@ -122,7 +123,6 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
     private TextView mNoticeDetailTvReply;
     private TextView mNoticeDetailTvName;
     private ImageView mNoticeDetailIvLz;
-    private ImageView mNoticeDetailIvFine;
     private TextView mNoticeDetailTvTc;
     private TextView mNoticeDetailTvAddress;
     private TextView mNoticeDetailTvTitle;
@@ -133,7 +133,7 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
     private NineGridView mNoticeDetailNineView;
     private int mIndex;
     private String mUserid;
-    private PopupWindow mPopupWindow;
+    private BottomSheetDialog mPopupWindow;
     private String mBbsid;
     private PopupWindow mEditWindow;
     private ImageView mImageView;
@@ -193,30 +193,6 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
         super.onNewIntent(intent);
         mBbsid = intent.getStringExtra("bbsid");
         LogUtils.d(mBbsid + "bbsid");
-//        OkGo
-//                .post(AppUrl.BBS_DETAILS)
-//                .params("bbsid", mBbsid)
-//                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-//                .execute(new StringCallback() {
-//
-//
-//                    @Override
-//                    public void onSuccess(String s, Call call, Response response) {
-//                        NoticeDetailBean noticeDetailBean = new Gson().fromJson(s, NoticeDetailBean.class);
-//                        mList1.clear();
-//                        mList2.clear();
-//                        mList1.addAll(noticeDetailBean.list1);
-//                        mList2.addAll(noticeDetailBean.list2);
-//                        mNoticeDetailReplyAdapter.notifyDataSetChanged();
-//
-//                    }
-//
-//                    @Override
-//                    public void onAfter(@Nullable String s, @Nullable Exception e) {
-//                        super.onAfter(s, e);
-//                        mRefreshLayout.setRefreshing(false);
-//                    }
-//                });
         initData(mBbsid);
 
 
@@ -296,6 +272,9 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
     }
 
     private void initData(String bbsid) {
+        mHeaderIvRight.setEnabled(false);
+        mHeaderIvRight2.setEnabled(false);
+
         OkGo
                 .post(AppUrl.BBS_DETAILS)
                 .params("bbsid", bbsid)
@@ -312,6 +291,8 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
                         mList1 = noticeDetailBean.list1;
                         mList2 = noticeDetailBean.list2;
                         initRecyclerView(mList2);
+                        mHeaderIvRight.setEnabled(true);
+                        mHeaderIvRight2.setEnabled(true);
                     }
 
                     @Override
@@ -337,11 +318,6 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
                 .centerCrop()
                 .into(mNoticeDetailCivPhoto);
         mNoticeDetailTvName.setText(list1Bean.nick);
-        if (!list1Bean.isGood.equals("1")) {
-            mNoticeDetailIvFine.setVisibility(View.GONE);
-        } else {
-            mNoticeDetailIvFine.setVisibility(View.VISIBLE);
-        }
         if (!list1Bean.taici.equals("无")) {
             mNoticeDetailTvTc.setText(list1Bean.taici + " " + list1Bean.chanhoutime);
         } else {
@@ -356,7 +332,21 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
         mNoticeDetailTvDz.setChecked(list1Bean.iszan);
 
         mNoticeDetailTvReply.setText(mList2.size() + "");
-        mNoticeDetailTvTitle.setText(list1Bean.title);
+        if ((list1Bean.isGood).equals("1")) {
+            String html = list1Bean.title +" "+ "<img src='" + R.drawable.icon_fine + "'>";
+            mNoticeDetailTvTitle.setText(Html.fromHtml(html, new Html.ImageGetter() {
+                @Override
+                public Drawable getDrawable(String source) {
+                    int id = Integer.parseInt(source);
+                    Drawable drawable = UIUtils.getResources().getDrawable(id, null);
+                    drawable.setBounds(0, 0, drawable.getIntrinsicWidth(),
+                            drawable.getIntrinsicHeight());
+                    return drawable;
+                }
+            }, null));
+        } else {
+            mNoticeDetailTvTitle.setText(list1Bean.title);
+        }
         mNoticeDetailTvTime.setText(list1Bean.createtime);
         mNoticeDetailTvContent.setText(list1Bean.content);
 
@@ -545,7 +535,6 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
         mNoticeDetailTvName = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_name);
         mNoticeDetailTvName.setOnClickListener(this);
         mNoticeDetailIvLz = (ImageView) mHeaderView.findViewById(R.id.notice_detail_iv_lz);
-        mNoticeDetailIvFine = (ImageView) mHeaderView.findViewById(R.id.notice_detail_iv_fine);
         mNoticeDetailTvTc = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_tc);
         mNoticeDetailTvAddress = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_address);
         mNoticeDetailTvTitle = (TextView) mHeaderView.findViewById(R.id.notice_detail_tv_title);
@@ -574,7 +563,6 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
     }
 
     private void toUserMain(String userid) {
-        // TODO: 2017/8/11
         if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
             startActivity(new Intent(NoticeDetailFixActivity.this, LoginActivity.class));
             return;
@@ -988,28 +976,32 @@ public class NoticeDetailFixActivity extends BaseActivity implements View.OnClic
 
     private void showShare() {
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
-        mPopupWindow = new PopupWindow(this);
+//        mPopupWindow = new PopupWindow(this);
         view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 mPopupWindow.dismiss();
             }
         });
-        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        mPopupWindow = new BottomSheetDialog(NoticeDetailFixActivity.this);
         mPopupWindow.setContentView(view);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-        mPopupWindow.setOutsideTouchable(true);
-        mPopupWindow.setFocusable(true);
-        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
-        PopupWindowUtils.darkenBackground(NoticeDetailFixActivity.this, .5f);
-        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-            @Override
-            public void onDismiss() {
-                PopupWindowUtils.darkenBackground(NoticeDetailFixActivity.this, 1f);
-            }
-        });
+        mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        mPopupWindow.show();
+//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        mPopupWindow.setContentView(view);
+//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
+//        mPopupWindow.setOutsideTouchable(true);
+//        mPopupWindow.setFocusable(true);
+//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
+//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_notice_detail_revise, null), Gravity.BOTTOM, 0, 0);
+//        PopupWindowUtils.darkenBackground(NoticeDetailFixActivity.this, .5f);
+//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
+//            @Override
+//            public void onDismiss() {
+//                PopupWindowUtils.darkenBackground(NoticeDetailFixActivity.this, 1f);
+//            }
+//        });
         final UMWeb mWeb = new UMWeb(AppUrl.BASEURL + mList1.get(0).shareurl + "?bbsid=" + mbbsid);
         mWeb.setTitle(mList1.get(0).title);//标题
         if (mList1.get(0).images.size() == 0) {

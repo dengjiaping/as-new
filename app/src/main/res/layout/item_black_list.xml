@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        android:paddingBottom="12dp"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="12dp">
+
+        <com.jkpg.ruchu.widget.CircleImageView
+            android:id="@+id/black_image"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/gray_bg"/>
+
+        <TextView
+            android:id="@+id/black_name"
+
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_weight="1"
+            android:ellipsize="marquee"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"/>
+
+        <TextView
+            android:id="@+id/black_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/select_bd_bg"
+            android:paddingBottom="5dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:text="解除"
+            android:textColor="@color/select_bd_text_color"
+            />
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height=".5dp"
+        android:background="#22000000"/>
+</LinearLayout>

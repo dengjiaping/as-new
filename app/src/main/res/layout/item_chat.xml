@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+
+    >
+
+    <TextView
+        android:id="@+id/chat_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:textColor="@color/colorGray3"
+        android:textSize="12sp"
+        android:visibility="visible"/>
+
+    <RelativeLayout
+        android:id="@+id/chat_1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/chat_you"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:visibility="visible">
+
+            <RelativeLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginLeft="22dp">
+
+                <com.jkpg.ruchu.widget.CircleImageView
+                    android:id="@+id/chat_image_you"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:src="@drawable/gray_bg"/>
+
+                <ImageView
+                    android:id="@+id/item_v"
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/v"
+                    android:visibility="gone"/>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="72dp">
+
+                <TextView
+                    android:id="@+id/chat_sms_you"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:autoLink="all"
+                    android:background="@drawable/reply_you"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="3dp"
+                    android:linksClickable="true"
+                    android:textColor="@android:color/black"
+                    android:textColorHighlight="@color/colorYellow"
+                    android:textColorLink="@android:color/holo_blue_light"
+                    android:textIsSelectable="false"/>
+
+                <RelativeLayout
+                    android:id="@+id/chat_photo_you"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:id="@+id/chat_custom_ll"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/reply_you"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:orientation="vertical"
+                        android:background="@drawable/ripple_with_color"
+                        android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/chat_custom_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/black"/>
+
+                    <ImageView
+                        android:id="@+id/chat_custom_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:adjustViewBounds="true"
+                        />
+
+                    <TextView
+                        android:id="@+id/chat_custom_look"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="12dp"
+                        android:text="点击查看详情 >"
+                        android:textColor="@color/colorGray3"
+                        android:textSize="10sp"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/chat_my"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:gravity="right"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="72dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight="1"
+                android:gravity="end">
+
+                <RelativeLayout
+                    android:id="@+id/sendStatus"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="5dp"
+                    >
+
+                    <ProgressBar
+                        android:id="@+id/sending"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:visibility="gone"/>
+
+                    <ImageView
+                        android:id="@+id/sendError"
+                        android:layout_width="15dp"
+                        android:layout_height="15dp"
+                        android:src="@drawable/ic_error"
+                        android:visibility="gone"/>
+                </RelativeLayout>
+
+
+                <RelativeLayout
+                    android:id="@+id/chat_photo_my"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    />
+
+                <TextView
+                    android:id="@+id/chat_sms_my"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:autoLink="all"
+                    android:background="@drawable/reply_my"
+                    android:gravity="center_vertical"
+                    android:lineSpacingExtra="3dp"
+                    android:linksClickable="true"
+                    android:textColor="@android:color/white"
+                    android:textColorHighlight="@color/colorYellow"
+                    android:textColorLink="@android:color/holo_blue_light"
+                    android:textIsSelectable="false"/>
+
+            </LinearLayout>
+
+            <com.jkpg.ruchu.widget.CircleImageView
+                android:id="@+id/chat_image_my"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="22dp"
+                android:src="@drawable/gray_bg"
+                />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>
