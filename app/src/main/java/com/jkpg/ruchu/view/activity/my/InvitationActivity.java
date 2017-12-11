@@ -154,7 +154,7 @@ public class InvitationActivity extends BaseActivity {
         });
         final UMWeb mWeb = new UMWeb(mUrl);
         mWeb.setTitle(mContent);//标题
-        mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.logo));  //缩略图
+        mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.ic_logo));  //缩略图
         mWeb.setDescription(mContent2);//描述
         view.findViewById(R.id.share_qq)/*.setOnClickListener(new View.OnClickListener() {
             @Override

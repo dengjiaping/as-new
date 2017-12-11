@@ -52,7 +52,6 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
 import com.jkpg.ruchu.view.adapter.PhotoAdapter;
 import com.jkpg.ruchu.view.adapter.PlateNameRVAdapter;
 import com.jkpg.ruchu.view.adapter.RecyclerItemClickListener;
@@ -63,6 +62,7 @@ import com.lzy.okgo.request.BaseRequest;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,8 +111,6 @@ public class SendNoteActivity extends BaseActivity {
     private List<PlateBean> data;
 
     private LocationManager mLocationManager;
-    private String provider;
-    private PersonalInfoActivity.PermissionListener permissionListener;
 
     private PhotoAdapter photoAdapter;
     private ArrayList<String> selectedPhotos = new ArrayList<>();
@@ -133,60 +131,8 @@ public class SendNoteActivity extends BaseActivity {
         initCheckBox();
         initPhotoPicker();
 
-//        initShare();
     }
 
-//    private void initShare() {
-//        // Get intent, action and MIME type
-//        Intent intent = getIntent();
-//        String action = intent.getAction();
-//        String type = intent.getType();
-//
-//        if (Intent.ACTION_SEND.equals(action) && type != null) {
-//            if ("text/plain".equals(type)) {
-//                handleSendText(intent); // Handle text being sent
-//            } else if (type.startsWith("image/")) {
-//                handleSendImage(intent); // Handle single image being sent
-//            }
-//        } else if (Intent.ACTION_SEND_MULTIPLE.equals(action) && type != null) {
-//            if (type.startsWith("image/")) {
-//                handleSendMultipleImages(intent); // Handle multiple images being sent
-//            }
-//        } else {
-//            // Handle other intents, such as being started from the home screen
-//        }
-//    }
-
-//    void handleSendText(Intent intent) {
-//        String sharedText = intent.getStringExtra(Intent.EXTRA_TEXT);
-//        String sharedTitle = intent.getStringExtra(Intent.EXTRA_TITLE);
-//        if (sharedText != null) {
-//            // Update UI to reflect text being shared
-//            mSendNoteEtTitle.setText(sharedTitle);
-//            mSendNoteEtBody.setText(sharedText);
-//        }
-//    }
-//
-//    void handleSendImage(Intent intent) {
-//        Uri imageUri = intent.getParcelableExtra(Intent.EXTRA_STREAM);
-//        if (imageUri != null) {
-//            // Update UI to reflect image being shared
-//            selectedPhotos.add(imageUri.getPath());
-//        }
-//    }
-//
-//    void handleSendMultipleImages(Intent intent) {
-//        ArrayList<Uri> imageUris = intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM);
-//        if (imageUris != null) {
-//            // Update UI to reflect multiple images being shared
-//            for (int i = 0; i < imageUris.size(); i++) {
-//                if (i > 8) {
-//                    return;
-//                }
-//                selectedPhotos.add(imageUris.get(i).getPath());
-//            }
-//        }
-//    }
 
     private void initPhotoPicker() {
         photoAdapter = new PhotoAdapter(this, selectedPhotos);
@@ -231,18 +177,6 @@ public class SendNoteActivity extends BaseActivity {
 
     private void initPermission() {
         mPermissions = new String[]{Manifest.permission.ACCESS_COARSE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION};
-//        if (Build.VERSION.SDK_INT >= M) {
-           /* requestRuntimePermission(permissions, new PersonalInfoActivity.PermissionListener() {
-                @Override
-                public void onGranted() {
-                    initLocation();
-                }
-
-                @Override
-                public void onDenied(List<String> deniedPermissions) {
-                }
-            });
-            return;*/
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             PermissionUtils.requestPermissions(this, 200, mPermissions, new PermissionUtils.OnPermissionListener() {
                 @Override
@@ -264,74 +198,7 @@ public class SendNoteActivity extends BaseActivity {
 //        }
     }
 
-    /**
-     * 申请运行时权限
-     *//*
-    public void requestRuntimePermission(String[] permissions, PersonalInfoActivity.PermissionListener listener) {
-        permissionListener = listener;
-        List<String> permissionList = new ArrayList<>();
-        for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
-                permissionList.add(permission);
-            }
-        }
-
-        if (!permissionList.isEmpty()) {
-            ActivityCompat.requestPermissions(this, permissionList.toArray(new String[permissionList.size()]), 1);
-        } else {
-            permissionListener.onGranted();
-        }
-    }*/
     private void initLocation() {
-//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        //获取当前可用的位置控制器
-//        List<String> list = locationManager.getProviders(true);
-//
-//        if (list.contains(LocationManager.GPS_PROVIDER)) {
-//            //是否为GPS位置控制器
-//            LogUtils.i("是否为GPS位置控制器");
-//            provider = LocationManager.GPS_PROVIDER;
-//        } else if (list.contains(LocationManager.NETWORK_PROVIDER)) {
-//            LogUtils.i("是否为网络位置控制器");
-//
-//            //是否为网络位置控制器
-//            provider = LocationManager.NETWORK_PROVIDER;
-//
-//        } else {
-//            Toast.makeText(this, "请检查位置权限是否打开",
-//                    LENGTH_LONG).show();
-//            return;
-//        }
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            ToastUtils.showShort(UIUtils.getContext(), "请检查位置权限是否打开");
-//
-//            return;
-//        }
-//        Location location = locationManager.getLastKnownLocation(provider);
-//
-//        if (location != null) {
-//            LogUtils.i(location.toString());
-//            //获取当前位置，这里只用到了经纬度
-//            /*String string = "纬度为：" + location.getLatitude() + ",经度为："
-//                    + location.getLongitude();*/
-//            Geocoder gc = new Geocoder(this, Locale.getDefault());
-//            List<Address> locationList = null;
-//            try {
-//                locationList = gc.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
-////                LogUtils.i(location.toString());
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            if (locationList == null) {
-//                ToastUtils.showShort(UIUtils.getContext(), "获取地址失败");
-//                return;
-//            }
-//            Address address = locationList.get(0);//得到Address实例
-//
-//            mLocality = address.getLocality();
-//            ToastUtils.showShort(UIUtils.getContext(), "你的位置:" + mLocality);
         mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // 判断网络定位是否可用，可替换成 GPS 定位。
         if (mLocationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
@@ -449,6 +316,7 @@ public class SendNoteActivity extends BaseActivity {
             case R.id.send_note_tv_plate:
                 mSendNoteEtTitle.clearFocus();
                 //隐藏键盘
+                assert ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)) != null;
                 ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE))
                         .hideSoftInputFromWindow(SendNoteActivity.this.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
                 MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
@@ -473,7 +341,7 @@ public class SendNoteActivity extends BaseActivity {
                 break;
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void send() {
         if (StringUtils.isEmpty(mSendNoteEtTitle.getText().toString())) {
             ToastUtils.showShort(UIUtils.getContext(), "请输入标题");
@@ -491,19 +359,12 @@ public class SendNoteActivity extends BaseActivity {
             OkGo
                     .post(AppUrl.BBS_POST
                             + "?plateid=" + mPlateid
-                            + "&title=" + mSendNoteEtTitle.getText().toString()
-                            + "&content=" + mSendNoteEtBody.getText().toString()
+                            + "&title=" + mSendNoteEtTitle.getText().toString().trim()
+                            + "&content=" + URLEncoder.encode(mSendNoteEtBody.getText().toString().trim())
                             + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
                             + "&issite=" + (StringUtils.isEmpty(mLocality) ? 0 : 1)
                             + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
                             + "&site=" + mLocality)
-//                    .params("plateid",mPlateid)
-//                    .params("title",mSendNoteEtTitle.getText().toString())
-//                    .params("content",mSendNoteEtBody.getText().toString())
-//                    .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-//                    .params("issite",(mSendNoteCbPosition.isChecked() ? 1 : 0))
-//                    .params("ishidename",(mSendNoteCbNoName.isChecked() ? 1 : 0))
-//                    .params("site",mLocality)
                     .execute(new StringDialogCallback(SendNoteActivity.this) {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
@@ -546,8 +407,8 @@ public class SendNoteActivity extends BaseActivity {
             OkGo
                     .post(AppUrl.BBS_POST
                             + "?plateid=" + mPlateid
-                            + "&title=" + mSendNoteEtTitle.getText().toString()
-                            + "&content=" + mSendNoteEtBody.getText().toString()
+                            + "&title=" + mSendNoteEtTitle.getText().toString().trim()
+                            + "&content=" +URLEncoder.encode(mSendNoteEtBody.getText().toString().trim())
                             + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
                             + "&issite=" + (StringUtils.isEmpty(mLocality) ? 0 : 1)
                             + "&ishidename=" + (mSendNoteCbNoName.isChecked() ? 1 : 0)
@@ -660,19 +521,6 @@ public class SendNoteActivity extends BaseActivity {
                 mPopupWindow.dismiss();
             }
         });
-//        mPopupWindow.setContentView(view);
-//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-//        mPopupWindow.setOutsideTouchable(true);
-//        mPopupWindow.setFocusable(true);
-//        PopupWindowUtils.darkenBackground(SendNoteActivity.this, .5f);
-//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_send_note, null), Gravity.BOTTOM, 0, 0);
-//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                PopupWindowUtils.darkenBackground(SendNoteActivity.this, 1f);
-//            }
-//        });
         mPopupWindow = new BottomSheetDialog(SendNoteActivity.this);
         mPopupWindow.setContentView(view);
         mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -682,25 +530,6 @@ public class SendNoteActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        /*switch (requestCode) {
-            case 1:
-                if (grantResults.length > 0) {
-                    List<String> deniedPermissions = new ArrayList<>();
-                    for (int i = 0; i < grantResults.length; i++) {
-                        int grantResult = grantResults[i];
-                        String permission = permissions[i];
-                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            deniedPermissions.add(permission);
-                        }
-                    }
-                    if (deniedPermissions.isEmpty()) {
-                        permissionListener.onGranted();
-                    } else {
-                        permissionListener.onDenied(deniedPermissions);
-                    }
-                }
-                break;
-        }*/
         PermissionUtils.onRequestPermissionsResult(this, 200, mPermissions);
     }
 

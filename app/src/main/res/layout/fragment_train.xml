@@ -24,13 +24,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-                <com.jkpg.ruchu.widget.banner.Banner
-                    android:id="@+id/train_banner"
-                    android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:visibility="gone"
-                    />
-
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="150dp">

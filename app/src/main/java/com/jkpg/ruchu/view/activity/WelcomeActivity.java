@@ -6,6 +6,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.KeyEvent;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -66,6 +68,17 @@ public class WelcomeActivity extends BaseActivity {
 
             }
         }, 1200);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewGroup contentFrameLayout = (ViewGroup) findViewById(android.R.id.content);
+        View parentView = contentFrameLayout.getChildAt(0);
+        if (parentView != null && Build.VERSION.SDK_INT >= 19) {
+            parentView.setFitsSystemWindows(false);
+            parentView.setBackgroundColor(UIUtils.getColor(R.color.colorWhite));
+        }
     }
 
     //优化用户体验，禁掉返回键

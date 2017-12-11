@@ -1,0 +1,401 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+    >
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/view_header"/>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/include2"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:descendantFocusability="blocksDescendants"
+            android:orientation="vertical">
+            <LinearLayout
+                android:background="@color/colorWhite"
+                android:elevation="1dp"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:background="@drawable/bg_header"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="#55ffffff"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="不知道怎么做盆底肌锻炼?"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/white"/>
+
+                    <TextView
+                        android:id="@+id/train_tv_new"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:drawablePadding="8dp"
+                        android:drawableRight="@drawable/icon_tain_help"
+                        android:text="寻求帮助"
+                        android:textSize="12sp"
+                        android:textColor="@color/colorYellow"/>
+
+                    <View
+                        android:id="@+id/train_view"
+                        android:layout_width="80dp"
+                        android:layout_height=".1dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingLeft="22dp"
+                    android:paddingRight="22dp"
+                    android:paddingTop="8dp">
+
+                    <TextView
+                        android:id="@+id/train_tv_now_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="今日已训练000分钟"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"/>
+
+                    <TextView
+                        android:id="@+id/train_tv_count_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="累计训练000分钟"
+                        android:textColor="@android:color/white"
+                        android:textSize="14sp"/>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:layout_width="180dp"
+                    android:layout_height="180dp"
+                    android:layout_gravity="center_horizontal"
+                    >
+
+                    <com.jkpg.ruchu.widget.TrainCircle.Circle2Progress
+                        android:id="@+id/train_circle_week"
+                        android:layout_width="180dp"
+                        android:layout_height="180dp"
+                        android:layout_centerInParent="true"
+                        app:antiAlias="true"
+                        app:arcWidth="5dp"
+                        app:bgArcWidth="5dp"
+                        />
+
+                    <RelativeLayout
+                        android:layout_width="130dp"
+                        android:layout_centerInParent="true"
+                        android:layout_height="130dp">
+                    <com.jkpg.ruchu.widget.TrainCircle.CircleProgress
+                        android:id="@+id/train_circle_day"
+                        android:layout_width="130dp"
+                        android:layout_height="130dp"
+                        app:antiAlias="true"
+                        app:arcWidth="5dp"
+                        app:bgArcColor="@color/colorGray6"
+                        app:bgArcWidth="5dp"
+                        app:hintSize="12sp"
+                        app:startAngle="270"
+                        app:sweepAngle="360"
+                        app:unitSize="12sp"
+                        app:valueSize="30sp"
+                        />
+                        <TextView
+                            android:id="@+id/train_test_text"
+                            android:layout_width="match_parent"
+                            android:text="开始测试"
+                            android:visibility="gone"
+                            android:textStyle="bold"
+                            android:textColor="@color/colorPink"
+                            android:gravity="center"
+                            android:textSize="20sp"
+                            android:layout_height="match_parent"/>
+                    </RelativeLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginBottom="5dp"
+                        android:text="    周目标"
+                        android:textColor="#ccffffff"
+                        android:textSize="12sp"/>
+
+                    <TextView
+                        android:id="@+id/train_tv_prize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginBottom="5dp"
+                        android:drawableTop="@drawable/icon_star_end1"
+                        android:gravity="bottom"
+                        android:text="目标完成"
+                        android:textColor="#ccffffff"
+                        android:textSize="12sp"/>
+
+
+                </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/train_tv_target"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:lineSpacingExtra="5dp"
+                    android:lines="2"
+                    android:textColor="@android:color/white"
+                    android:textSize="12sp"/>
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_train_center"/>
+            </LinearLayout>
+
+
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="128dp">
+
+                    <LinearLayout
+                        android:id="@+id/train_start"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@android:color/white"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+
+                        <TextView
+                            android:id="@+id/train_tv_info"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:textColor="@android:color/black"
+                            android:textSize="16sp"/>
+
+                        <TextView
+                            android:id="@+id/train_tv_change"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="8dp"
+                            android:gravity="center"
+                            android:text="更改难度 >"
+                            android:textColor="@color/colorPink"
+                            android:textSize="14sp"/>
+
+                        <Button
+                            android:id="@+id/train_btn_start"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginBottom="14dp"
+                            android:layout_marginTop="14dp"
+                            android:background="@drawable/gradlient_train_bg"
+                            android:drawableLeft="@drawable/icon_train_btn"
+                            android:drawablePadding="10dp"
+                            android:paddingBottom="12dp"
+                            android:paddingLeft="42dp"
+                            android:paddingRight="42dp"
+                            android:paddingTop="12dp"
+                            android:text="快速开始训练"
+                            android:textColor="@android:color/white"
+                            android:textSize="20dp"
+                            android:textStyle="bold"
+                            />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/train_test"
+                        android:visibility="gone"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/colorWhite">
+
+                        <ImageView
+                            android:scaleType="fitXY"
+                            android:layout_gravity="center"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="22dp"
+                            android:adjustViewBounds="true"
+                            android:layout_marginRight="22dp"
+                            android:src="@drawable/train_test_bg"
+                            />
+                    </LinearLayout>
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
+                android:elevation="1dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="22dp"
+                    android:paddingTop="5dp"
+                    android:text="拓展训练---核心肌群训练"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/train_recycler_other"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"/>
+                </RelativeLayout>
+
+
+                <TextView
+                    android:id="@+id/train_btn_other"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginBottom="8dp"
+                    android:background="@drawable/shap_rectangle_pink_void"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="12dp"
+                    android:paddingRight="12dp"
+                    android:paddingTop="5dp"
+                    android:text="更多精彩训练"
+                    android:textColor="@color/colorPink"
+                    android:textSize="14sp"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/train_ll_article"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ripple_with_color"
+                android:elevation="1dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/train_article_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="22dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <ImageView
+                    android:id="@+id/train_article_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:scaleType="fitXY"
+                    android:background="@drawable/gray_bg"/>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/train_ll_shop"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/ripple_with_color"
+                android:elevation="1dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/train_shop_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="22dp"
+                    android:paddingTop="5dp"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"/>
+
+                <ImageView
+                    android:id="@+id/train_shop_image"
+                    android:scaleType="fitXY"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="110dp"
+                    android:layout_marginBottom="5dp"
+                    android:layout_marginLeft="22dp"
+                    android:layout_marginRight="22dp"
+                    android:background="@drawable/gray_bg"/>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/train_img_new"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="350dp"
+        android:src="@drawable/icon_train_new"/>
+    <RelativeLayout
+        android:layout_below="@+id/include2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <include
+        layout="@layout/base_retry"
+        android:visibility="gone"/>
+
+    <include
+        layout="@layout/base_loading"
+        android:visibility="gone"/>
+    </RelativeLayout>
+
+</RelativeLayout>

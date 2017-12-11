@@ -1,17 +1,21 @@
 package com.jkpg.ruchu.view.activity.train;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.transition.Transition;
+import android.transition.TransitionInflater;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.Base2Activity;
 import com.jkpg.ruchu.bean.VideoBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -39,7 +43,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/18.
  */
 
-public class NewTrainActivity extends BaseActivity {
+public class NewTrainActivity extends Base2Activity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -51,16 +55,25 @@ public class NewTrainActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
+        }
         setContentView(R.layout.activity_other_train);
+        Transition explode = TransitionInflater.from(this).inflateTransition(R.transition.explode);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setExitTransition(explode);
+        }
         ButterKnife.bind(this);
         initData();
         initHeader();
+
     }
 
     private void initData() {
 
         OkGo
                 .post(AppUrl.NEWHANDINTRODUCTION)
+                .tag(this)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .params("type", 1)
                 .cacheKey("NEWHANDINTRODUCTION-1")
@@ -94,9 +107,6 @@ public class NewTrainActivity extends BaseActivity {
         newRLAdapter.setOnItemClickListener(new NewRLAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, VideoBean.ItemBean data) {
-//                Intent intent = new Intent(NewTrainActivity.this, NewVideoDetailActivity.class);
-//                intent.putExtra("VediomessBean", data);
-//                startActivity(intent);
                 Intent intent = new Intent(NewTrainActivity.this, WebViewActivity.class);
                 intent.putExtra("URL", data.details_url);
                 startActivity(intent);
@@ -121,5 +131,11 @@ public class NewTrainActivity extends BaseActivity {
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {
         finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        OkGo.getInstance().cancelTag(this);
     }
 }

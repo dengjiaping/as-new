@@ -18,41 +18,4 @@
             android:layout_height="match_parent"/>
     </android.support.v4.widget.SwipeRefreshLayout>
 
-    <LinearLayout
-        android:id="@+id/reply_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/white"
-        android:visibility="gone"
-        android:padding="12dp">
-
-        <EditText
-            android:id="@+id/view_reply_et"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/shap_rectangle_white_grayline"
-            android:hint="输入内容..."
-            android:maxLines="5"
-            android:padding="8dp"
-            android:textColor="@android:color/black"
-            android:textColorHint="@color/colorGray3"
-            android:textSize="14sp"/>
-
-        <TextView
-            android:id="@+id/view_reply_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-
-            android:layout_gravity="center"
-            android:background="@drawable/shap_rectangle_pink_void"
-            android:paddingBottom="5dp"
-            android:paddingLeft="15dp"
-            android:paddingRight="15dp"
-            android:paddingTop="5dp"
-            android:text="回复"
-            android:textColor="@color/colorPink"/>
-    </LinearLayout>
-
 </LinearLayout>

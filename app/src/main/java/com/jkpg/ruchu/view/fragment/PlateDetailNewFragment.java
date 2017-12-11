@@ -189,10 +189,16 @@ public class PlateDetailNewFragment extends Fragment {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == 1)
-                    mPlateDetailFab.hide();
-                else if (newState == 0)
-                    mPlateDetailFab.show();
+                try {
+                    if (newState == 1)
+                        mPlateDetailFab.hide();
+                    else if (newState == 0)
+                        mPlateDetailFab.show();
+
+                } catch (Exception ignored){
+
+                }
+
             }
         });
         mAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
@@ -272,6 +278,7 @@ public class PlateDetailNewFragment extends Fragment {
         if (mess.equals("send"))
             refresh();
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void send(SendNoteMess mess) {
         if (mess.mess.equals("sendSkip")) {

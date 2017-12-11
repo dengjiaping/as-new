@@ -1,6 +1,8 @@
 package com.jkpg.ruchu.view.activity.train;
 
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -13,12 +15,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.MyTrainBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
 import com.jkpg.ruchu.view.adapter.MyTrainRVAdapter;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
@@ -105,36 +109,85 @@ public class MyTrainActivity extends BaseActivity {
             @Override
             public void onItemClick(BaseQuickAdapter adapter, View view, final int position) {
                 if (!list.get(position).isSelect) {
-                    new AlertDialog.Builder(MyTrainActivity.this)
-                            .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
-                            .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    OkGo
+                            .post(AppUrl.SELECTISVIP)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .execute(new StringDialogCallback(MyTrainActivity.this) {
                                 @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    dialog.dismiss();
-                                }
-                            })
-                            .setPositiveButton("启用", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    OkGo
-                                            .post(AppUrl.OPENMYPRACTICE)
-                                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                                            .params("level", (position + 1 + ""))
-                                            .execute(new StringDialogCallback(MyTrainActivity.this) {
-                                                @Override
-                                                public void onSuccess(String s, Call call, Response response) {
-                                                    for (int i = 0; i < 5; i++) {
-                                                        list.get(i).isSelect = false;
+                                public void onSuccess(String s, Call call, Response response) {
+                                    IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+
+                                    if (isVipBean.isVIP) {
+                                        AlertDialog show = new AlertDialog.Builder(MyTrainActivity.this)
+                                                .setMessage(mMyTrainBean.advisemsg + "\n\n" + list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)
+                                                .setPositiveButton("取消", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
                                                     }
-                                                    list.get(position).isSelect = true;
-                                                    myTrainRVAdapter.notifyDataSetChanged();
-                                                    EventBus.getDefault().post("TrainFragment");
-                                                }
-                                            });
+                                                })
+                                                .setNegativeButton("启用", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        OkGo
+                                                                .post(AppUrl.OPENMYPRACTICE)
+                                                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                                .params("level", (position + 1 + ""))
+                                                                .execute(new StringDialogCallback(MyTrainActivity.this) {
+                                                                    @Override
+                                                                    public void onSuccess(String s, Call call, Response response) {
+                                                                        for (int i = 0; i < 5; i++) {
+                                                                            list.get(i).isSelect = false;
+                                                                        }
+                                                                        list.get(position).isSelect = true;
+                                                                        myTrainRVAdapter.notifyDataSetChanged();
+                                                                        EventBus.getDefault().post("TrainFragment");
+
+                                                                        new AlertDialog.Builder(MyTrainActivity.this)
+                                                                                .setTitle("更改成功，要立即开始训练吗？")
+                                                                                .setNegativeButton("再去逛逛", new DialogInterface.OnClickListener() {
+                                                                                    @Override
+                                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                                        dialog.dismiss();
+                                                                                        finish();
+                                                                                    }
+                                                                                })
+                                                                                .setPositiveButton("立即训练", new DialogInterface.OnClickListener() {
+                                                                                    @Override
+                                                                                    public void onClick(DialogInterface dialog, int which) {
+                                                                                        startActivity(new Intent(MyTrainActivity.this, TrainPrepareActivity.class));
+                                                                                        finish();
+                                                                                    }
+                                                                                })
+                                                                                .show();
+                                                                    }
+                                                                });
+                                                    }
+                                                })
+                                                .setTitle("确认启用 " + list.get(position).level + " 吗？")
+                                                .show();
+                                        show.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                                    } else {
+                                        AlertDialog show = new AlertDialog.Builder(MyTrainActivity.this)
+                                                .setMessage("小仙女，非常遗憾的告诉你，训练方案为会员专享，升级会员为盆底康复加速吧！")
+                                                .setPositiveButton("加速康复", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        startActivity(new Intent(MyTrainActivity.this, OpenVipActivity.class));
+                                                    }
+                                                })
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        dialog.dismiss();
+                                                    }
+                                                })
+                                                .show();
+                                        show.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.GRAY);
+                                    }
+
                                 }
-                            })
-                            .setTitle("要启用 " + list.get(position).level + " 训练吗？")
-                            .show();
+                            });
                 } else {
                     new AlertDialog.Builder(MyTrainActivity.this)
                             .setMessage(list.get(position).introduction + "\n\n建议强度: " + list.get(position).advise)

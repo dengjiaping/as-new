@@ -107,6 +107,7 @@ public abstract class TagAdapter<V extends BaseTagView<T>, T> {
     /**
      * 设置标签组
      */
+    @SuppressWarnings("unchecked")
     public void addTags() {
         if (source == null || source.size() <= 0) return;
         rootView.removeAllViews();
@@ -159,6 +160,7 @@ public abstract class TagAdapter<V extends BaseTagView<T>, T> {
     /**
      * 单选操作模式
      */
+    @SuppressWarnings("unchecked")
     private void singleSelectMode(T item) {
         if (!isShowHighlight) return;
         for (BaseTagView<T> view : viewMap.keySet()) {

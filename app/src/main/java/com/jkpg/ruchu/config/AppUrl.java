@@ -13,6 +13,20 @@ public class AppUrl {
     //测试环境
     public static final String BASEURL = "https://www.ruchu.club/AppServer/";
     public static final String BASEURLHTTP = "https://www.ruchu.club/AppServer/";
+
+
+
+    //v2
+    public static final String KANGFUINDEX = BASEURL + "KangFuIndexServlet";
+    public static final String DIANJIHUANYIH = BASEURL + "DianJiHuanYiHServlet";
+    public static final String XLMINLUNBO = BASEURL + "XLminLunboServlet";
+    public static final String XUNLIAN2TENMUI = BASEURL + "XunLian2TenMuiServlet";
+    public static final String GETGIFTLIST = BASEURL + "GetGiftListServlet_V2";
+    public static final String CLOSEWINDOW = BASEURL + "CloseWindowServlet";
+
+
+
+
     public static final String YOUZANINITTOKEN = BASEURL + "YouZanInitTokenServlet";
     public static final String YOUZAN = BASEURL + "YouzanServlet";
     public static final String DOWNLOAD = BASEURL + "DownLoadServlet";
@@ -48,12 +62,12 @@ public class AppUrl {
     public static final String NEWHANDVEDIO = BASEURL + "NewComerVideosServlet";
     public static final String ISFIRST = BASEURL + "IsFirstServlet";
     public static final String TEST = BASEURL + "TestServlet";
-    public static final String OPENMYPRACTICE = BASEURL + "OpenMyPracticeServlet ";
+    public static final String OPENMYPRACTICE = BASEURL + "OpenMyPracticeServlet_V2";
     public static final String BACKDOCTOR = BASEURL + "BackDoctorServlet ";
     public static final String SELECTISVIP = BASEURL + "SelectIsVIPServlet ";
     public static final String RESTARTTHISLEVEL = BASEURL + "RestartThisLevelServlet ";
 
-    public static final String BBS_INFOS = BASEURL + "BBS_InfosServlet";
+    public static final String BBS_INFOS = BASEURL + "BBS_InfosServlet_V2";
     public static final String BBS_LOOKCOLLECTION = BASEURL + "BBS_LookCollectionServlet";
     public static final String BBS_DELCOLLECTION = BASEURL + "BBS_DelCollection";
     public static final String BBS_DETAILS = BASEURL + "BBS_DetailsServlet";
@@ -70,7 +84,6 @@ public class AppUrl {
 
     public static final String BBS_REPLY = BASEURL + "BBS_ReplyServlet";
     public static final String BBS_NOTICEDETAIL = BASEURL + "BBS_NoticeDetailServlet";
-    public static final String BBS_LOOKGOOD = BASEURL + "BBS_LookGoodServlet";
     public static final String BBS_LOOKHOT = BASEURL + "BBS_LookHotServlet";
     public static final String BBS_LOOKMOREREPLIES = BASEURL + "BBS_LookMoreRepliesServlet";
     public static final String ARTICLEINFOS = BASEURL + "ArticleInfosServlet";
@@ -116,7 +129,7 @@ public class AppUrl {
 
 
     public static final String STARTEXERCISE = BASEURL + "StartExerciseServlet";
-    public static final String EXERCISEEND = BASEURL + "ExerciseEndServlet";
+    public static final String EXERCISEEND = BASEURL + "ExerciseEndServlet_V2";
     public static final String EXERCISECOUNT = BASEURL + "ExerciseCountServlet";
     public static final String EXERCISEYEAR = BASEURL + "ExerciseYearServlet";
 

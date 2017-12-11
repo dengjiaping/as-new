@@ -56,14 +56,14 @@ public class InvitationDetailActivity extends BaseActivity {
         mHeaderTvTitle.setText("邀请详情");
 
         mInvitationDetailTv1.setText(SpannableBuilder.create(InvitationDetailActivity.this)
-                .append("邀请人数 ", R.dimen.sp14, R.color.yzappsdk_white)
-                .append("0", R.dimen.sp18, R.color.yzappsdk_white)
-                .append(" 人", R.dimen.sp14, R.color.yzappsdk_white)
+                .append("邀请人数 ", R.dimen.sp14, R.color.colorWhite)
+                .append("0", R.dimen.sp18, R.color.colorWhite)
+                .append(" 人", R.dimen.sp14, R.color.colorWhite)
                 .build());
         mInvitationDetailTv2.setText(SpannableBuilder.create(InvitationDetailActivity.this)
-                .append("已注册人数 ", R.dimen.sp14, R.color.yzappsdk_white)
-                .append("0", R.dimen.sp18, R.color.yzappsdk_white)
-                .append(" 人", R.dimen.sp14, R.color.yzappsdk_white)
+                .append("已注册人数 ", R.dimen.sp14, R.color.colorWhite)
+                .append("0", R.dimen.sp18, R.color.colorWhite)
+                .append(" 人", R.dimen.sp14, R.color.colorWhite)
                 .build());
         OkGo
                 .post(AppUrl.GETFENXIANGDAY)
@@ -86,14 +86,14 @@ public class InvitationDetailActivity extends BaseActivity {
                     public void onSuccess(String s, Call call, Response response) {
                         InvitationBean invitationBean = new Gson().fromJson(s, InvitationBean.class);
                         mInvitationDetailTv1.setText(SpannableBuilder.create(InvitationDetailActivity.this)
-                                .append("邀请人数 ", R.dimen.sp14, R.color.yzappsdk_white)
-                                .append(invitationBean.zfx, R.dimen.sp18, R.color.yzappsdk_white)
-                                .append(" 人", R.dimen.sp14, R.color.yzappsdk_white)
+                                .append("邀请人数 ", R.dimen.sp14, R.color.colorWhite)
+                                .append(invitationBean.zfx, R.dimen.sp18, R.color.colorWhite)
+                                .append(" 人", R.dimen.sp14, R.color.colorWhite)
                                 .build());
                         mInvitationDetailTv2.setText(SpannableBuilder.create(InvitationDetailActivity.this)
-                                .append("已注册人数 ", R.dimen.sp14, R.color.yzappsdk_white)
-                                .append(invitationBean.zzc, R.dimen.sp18, R.color.yzappsdk_white)
-                                .append(" 人", R.dimen.sp14, R.color.yzappsdk_white)
+                                .append("已注册人数 ", R.dimen.sp14, R.color.colorWhite)
+                                .append(invitationBean.zzc, R.dimen.sp18, R.color.colorWhite)
+                                .append(" 人", R.dimen.sp14, R.color.colorWhite)
                                 .build());
 
                         initRecyclerView(invitationBean.array);

@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Paint;
@@ -682,6 +683,7 @@ public class BottomNavigationViewEx extends BottomNavigationView {
      *
      * @attr ref android.R.styleable#TextView_typeface
      */
+    @SuppressLint("RestrictedApi")
     public void setTypeface(Typeface typeface) {
         int count = getItemCount();
         for (int i = 0; i < count; i++) {
@@ -700,14 +702,13 @@ public class BottomNavigationViewEx extends BottomNavigationView {
      * @param <T>
      * @return field if success, null otherwise.
      */
+    @SuppressWarnings("unchecked")
     private <T> T getField(Class targetClass, Object instance, String fieldName) {
         try {
             Field field = targetClass.getDeclaredField(fieldName);
             field.setAccessible(true);
             return (T) field.get(instance);
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
         return null;

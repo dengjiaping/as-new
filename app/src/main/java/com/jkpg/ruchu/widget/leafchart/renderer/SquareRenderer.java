@@ -24,7 +24,7 @@ public class SquareRenderer extends AbsRenderer {
     public void drawSquares(Canvas canvas, Square square, Axis axisX, int i) {
         if (square != null) {
             //1.画直方图边界
-            linePaint.setColor(Color.parseColor("#FF5070"));
+            linePaint.setColor(Color.parseColor("#F87C86"));
             if (!square.isFill()) {
                 linePaint.setStrokeWidth(LeafUtil.dp2px(mContext, square.getBorderWidth()));
                 linePaint.setStyle(Paint.Style.STROKE);

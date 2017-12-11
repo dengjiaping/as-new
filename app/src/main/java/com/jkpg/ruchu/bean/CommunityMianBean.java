@@ -16,6 +16,7 @@ public class CommunityMianBean implements Serializable {
     public List<List2Bean> list2;
     public List<List3Bean> list3;
     public List<List1Bean> list1;
+    public List<DarenBean> daren;
 
     public static class List2Bean implements Parcelable, Serializable {
         /**
@@ -105,5 +106,12 @@ public class CommunityMianBean implements Serializable {
         public String images;
         public String type;
         public int tid;
+    }
+
+    public static class DarenBean implements Serializable{
+        public String drisgz;
+        public String drimgurl;
+        public String drnick;
+        public String druserid;
     }
 }

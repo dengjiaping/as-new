@@ -329,7 +329,8 @@ public class MyFilesActivity extends BaseActivity {
                     @Override
                     public List<String> provideFirstData() {
                         ArrayList<String> firstList = new ArrayList<>();
-                        for (int i = 0; i < 12; i++) {
+                        firstList.add("");
+                        for (int i = 1; i < 12; i++) {
                             firstList.add(i + "个月");
                         }
                         firstList.add("1年");
@@ -346,7 +347,6 @@ public class MyFilesActivity extends BaseActivity {
                     public List<String> provideSecondData(int firstIndex) {
                         ArrayList<String> secondList = new ArrayList<>();
                         if (firstIndex < 12) {
-                            secondList.add("");
                             for (int i = 1; i <= 30; i++) {
                                 String str = DateUtils.fillZero(i);
                                 secondList.add(str + "天");
@@ -388,32 +388,19 @@ public class MyFilesActivity extends BaseActivity {
                 picker.setShadowColor(Color.WHITE, 80);
                 picker.setSelectedIndex(2, 1);
                 picker.setCanceledOnTouchOutside(true);
-                picker.setTextColor(getResources().getColor(R.color.colorPink));
+                picker.setTextColor(UIUtils.getColor(R.color.colorPink));
                 picker.setDividerColor(Color.parseColor("#ffffff"));
                 picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
                 picker.setSubmitTextColor(Color.parseColor("#000000"));
                 picker.setCancelTextColor(Color.parseColor("#000000"));
                 picker.setTopLineColor(Color.parseColor("#ffffff"));
-                picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
-//                picker.setOnPickListener(new DoublePicker.OnPickListener() {
-//                    @Override
-//                    public void onPicked(int selectedFirstIndex, int selectedSecondIndex) {
-//                        if (firstData.get(selectedFirstIndex).equals("0个月") && secondData.get(selectedSecondIndex).equals("0天")) {
-//                            mView_bearing_tv_chsj.setText("无");
-//                        } else {
-//                            mView_bearing_tv_chsj.setText(firstData.get(selectedFirstIndex) + " " + secondData.get(selectedSecondIndex));
-//                        }
-//                    }
-//                });
+                picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
+//
                 picker.setOnStringPickListener(new LinkagePicker.OnStringPickListener() {
                     @Override
                     public void onPicked(String first, String second, String third) {
-                        if (first.equals("0个月") && second.equals("")) {
-                            mView_bearing_tv_chsj.setText("无");
 
-                        } else {
                             mView_bearing_tv_chsj.setText(first + " " + second);
-                        }
 
                     }
                 });
@@ -455,12 +442,12 @@ public class MyFilesActivity extends BaseActivity {
 
                 picker.setCycleDisable(true);
                 picker.setTextSize(14);
-                picker.setTextColor(getResources().getColor(R.color.colorPink));
+                picker.setTextColor(UIUtils.getColor(R.color.colorPink));
                 picker.setDividerColor(Color.parseColor("#ffffff"));
                 picker.setSubmitTextColor(Color.parseColor("#000000"));
                 picker.setCancelTextColor(Color.parseColor("#000000"));
                 picker.setTopLineColor(Color.parseColor("#ffffff"));
-                picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
                 picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
                     @Override
                     public void onOptionPicked(int index, String item) {
@@ -508,12 +495,12 @@ public class MyFilesActivity extends BaseActivity {
                 picker.setShadowColor(Color.WHITE, 40);
                 picker.setTextSize(14);
                 picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
-                picker.setTextColor(getResources().getColor(R.color.colorPink));
+                picker.setTextColor(UIUtils.getColor(R.color.colorPink));
                 picker.setDividerColor(Color.parseColor("#ffffff"));
                 picker.setSubmitTextColor(Color.parseColor("#000000"));
                 picker.setCancelTextColor(Color.parseColor("#000000"));
                 picker.setTopLineColor(Color.parseColor("#ffffff"));
-                picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
                 picker.setOnPickListener(new MultiSelectPicker.OnPickListener() {
                     @Override
                     public void onPicked(int selectedFirstIndex, int selectedSecondIndex, int selectedThirdIndex) {
@@ -533,7 +520,7 @@ public class MyFilesActivity extends BaseActivity {
         mView_bearing_tc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showSinglePicker(new String[]{"无", "头胎", "二胎", "三胎及以上"}, mView_bearing_tv_tc);
+                showSinglePicker(new String[]{ "头胎", "二胎", "三胎及以上"}, mView_bearing_tv_tc);
             }
         });
 
@@ -594,12 +581,12 @@ public class MyFilesActivity extends BaseActivity {
         picker.setTextSize(14);
         picker.setCanceledOnTouchOutside(true);
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
-        picker.setTextColor(getResources().getColor(R.color.colorPink));
+        picker.setTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
-        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+        picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setOnOptionPickListener(new OptionPicker.OnOptionPickListener() {
             @Override
             public void onOptionPicked(int index, String item) {
@@ -621,12 +608,12 @@ public class MyFilesActivity extends BaseActivity {
         picker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 
         picker.setLabel(label);
-        picker.setTextColor(getResources().getColor(R.color.colorPink));
+        picker.setTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
-        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+        picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
             @Override
             public void onNumberPicked(int index, Number item) {

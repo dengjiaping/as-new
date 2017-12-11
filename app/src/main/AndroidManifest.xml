@@ -103,27 +103,17 @@
         <activity
             android:name=".view.activity.train.StartTrainActivity2"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="landscape"/>
         <!--android:configChanges="keyboardHidden|orientation|screenSize"-->
         <activity
             android:name=".view.activity.test.TestReportActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".view.activity.test.TestResultActivity"
             android:screenOrientation="portrait"/>
         <activity
             android:name=".view.activity.train.VideoDetailActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
-        <activity
-            android:name=".view.activity.train.MotionDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".view.activity.train.NewVideoDetailActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustUnspecified|stateHidden"/>
+
         <activity
             android:name=".view.activity.my.VipManageActivity"
             android:screenOrientation="portrait"/>
@@ -271,9 +261,6 @@
             android:name=".view.activity.consult.DoctorPayActivity"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".view.activity.community.FineNoteDetailActivity"
-            android:screenOrientation="portrait"/>
-        <activity
             android:name=".view.activity.ChatActivity"
             android:screenOrientation="portrait"/>
         <activity
@@ -356,9 +343,7 @@
             android:windowSoftInputMode="adjustResize|stateHidden">
         </activity>
         <service android:name=".service.SmsService"/>
-        <activity
-            android:name=".view.activity.train.FullActivity"
-            android:screenOrientation="portrait"/>
+
         <activity
             android:name=".view.activity.my.GrowthValueActivity"
             android:screenOrientation="portrait"/>
@@ -453,6 +438,10 @@
         <activity
             android:name=".view.activity.ChatListActivity"
             android:launchMode="singleTask"
+            android:screenOrientation="portrait"
+            />
+        <activity
+            android:name=".view.activity.train.LookRewardDetailsActivity"
             android:screenOrientation="portrait"
             />
 

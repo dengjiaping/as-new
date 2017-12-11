@@ -422,6 +422,7 @@ public class ChatListActivity extends BaseActivity {
                 String text = ((TIMTextElem) timMessage.getElement(0))
                         .getText();
                 ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                assert cm != null;
                 cm.setPrimaryClip(ClipData.newPlainText(null, text));
 
                 break;

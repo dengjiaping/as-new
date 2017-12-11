@@ -145,14 +145,14 @@ public class VipManageActivity extends BaseActivity {
             mVipManagerTvRenew.setVisibility(View.VISIBLE);
             mVipManagerTvRenew.setText("有效期至 " + vipManageBean.VIPTime);
             mVipManagerBtnOpenVip.setText("会员续期");
-            mVipImage.setImageResource(R.drawable.vip_privilege);
+            mVipImage.setImageResource(R.drawable.open_vip);
             mVipTitle.setText("您已开通如初会员，赶快加入训练吧！");
         }
         if (vipManageBean.isoverdue) {
             mVipManagerBtnOpenVip.setText("会员续期");
             mVipTitle.setText("您的会员已经过期，赶快续费吧!");
             mVipManagerTvNotOpenText.setText("已过期");
-            mVipImage.setImageResource(R.drawable.expired_vip);
+            mVipImage.setImageResource(R.drawable.open_vip);
         }
 
         Glide

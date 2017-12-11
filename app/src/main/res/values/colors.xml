@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF5070</color>
-    <color name="colorAccent">#FF5070</color>
-    <color name="colorPink">#FF5070</color>
+    <color name="colorPrimary">#F87C86</color>
+    <color name="colorAccent">#F87C86</color>
+    <color name="colorPink">#F87C86</color>
     <color name="colorPinkTop">#fc6cab</color>
-    <color name="colorPinkTran">#44FF5070</color>
+    <color name="colorPinkTran">#44F87C86</color>
+    <color name="colorPinkLeft">#f68b80</color>
+    <color name="colorPinkRight">#f96f8e</color>
     <color name="colorPinkShallow">#f5d2d9</color>
     <color name="colorPink2">#FCA29A</color>
     <color name="colorGray2">#BDBDBD</color>
@@ -16,7 +18,10 @@
     <color name="colorXmlBg">#F6F4F5</color>
     <color name="colorBlack">#000</color>
     <color name="colorYellow">#F8DC2C</color>
+    <color name="colorYellow1">#fff638</color>
+    <color name="colorYellow2">#ffcc00</color>
     <color name="ic_default_bg_color">#00000000</color>
-    <color name="colorPink5">#f5dce1</color>
+    <color name="colorWhite">#ffffff</color>
+    <color name="colorWhite2">#ccFFFFFF</color>
 
 </resources>

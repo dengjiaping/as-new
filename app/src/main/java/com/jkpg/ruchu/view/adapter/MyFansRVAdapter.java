@@ -29,24 +29,22 @@ public class MyFansRVAdapter extends BaseQuickAdapter<FansBean.list, BaseViewHol
 
     @Override
     protected void convert(BaseViewHolder helper, FansBean.list item) {
-        helper.setText(R.id.item_fans_tv_name, item.nike);
-        if (item.taici.equals("无")) {
-            helper.setText(R.id.item_fans_tv_body, item.taici);
-
+        if (item.taici == null) {
+            helper.setText(R.id.item_fans_tv_name, "用户已注销");
         } else {
+            helper.setText(R.id.item_fans_tv_name, item.nike);
             helper.setText(R.id.item_fans_tv_body, item.taici + "    " + item.chanhoutime);
-        }
-
-        int position = helper.getLayoutPosition();
-        if (map.get(position).equals("0")) {
-            helper.setText(R.id.item_fans_cb_follow, "加关注");
-            helper.setChecked(R.id.item_fans_cb_follow, true);
-        } else if (map.get(position).equals("1")) {
-            helper.setText(R.id.item_fans_cb_follow, "已关注");
-            helper.setChecked(R.id.item_fans_cb_follow, false);
-        } else if (map.get(position).equals("2")) {
-            helper.setText(R.id.item_fans_cb_follow, "互相关注");
-            helper.setChecked(R.id.item_fans_cb_follow, false);
+            int position = helper.getLayoutPosition();
+            if (map.get(position).equals("0")) {
+                helper.setText(R.id.item_fans_cb_follow, "加关注");
+                helper.setChecked(R.id.item_fans_cb_follow, true);
+            } else if (map.get(position).equals("1")) {
+                helper.setText(R.id.item_fans_cb_follow, "已关注");
+                helper.setChecked(R.id.item_fans_cb_follow, false);
+            } else if (map.get(position).equals("2")) {
+                helper.setText(R.id.item_fans_cb_follow, "互相关注");
+                helper.setChecked(R.id.item_fans_cb_follow, false);
+            }
         }
         Glide
                 .with(UIUtils.getContext())

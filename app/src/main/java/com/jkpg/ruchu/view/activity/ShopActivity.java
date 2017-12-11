@@ -1,15 +1,16 @@
 package com.jkpg.ruchu.view.activity;
 
 import android.content.ActivityNotFoundException;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -32,15 +33,14 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
-import com.youzan.sdk.YouzanHybrid;
-import com.youzan.sdk.YouzanSDK;
-import com.youzan.sdk.YouzanToken;
-import com.youzan.sdk.event.AbsAuthEvent;
-import com.youzan.sdk.event.AbsChooserEvent;
-import com.youzan.sdk.event.AbsShareEvent;
-import com.youzan.sdk.event.AbsStateEvent;
-import com.youzan.sdk.model.goods.GoodsShareModel;
-import com.youzan.sdk.web.plugin.YouzanClient;
+import com.youzan.androidsdk.YouzanToken;
+import com.youzan.androidsdk.basic.YouzanBrowser;
+import com.youzan.androidsdk.event.AbsAuthEvent;
+import com.youzan.androidsdk.event.AbsChooserEvent;
+import com.youzan.androidsdk.event.AbsShareEvent;
+import com.youzan.androidsdk.event.AbsStateEvent;
+import com.youzan.androidsdk.model.goods.GoodsShareModel;
+import com.youzan.androidsdk.ui.YouzanClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -62,14 +62,16 @@ public class ShopActivity extends BaseActivity {
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
     @BindView(R.id.view)
-    YouzanHybrid mView;
+    YouzanBrowser mView;
+    @BindView(R.id.progressBar)
+    RelativeLayout mViewProgress;
     private static final int CODE_REQUEST_LOGIN = 0x101;
-    @BindView(R.id.refresh_layout)
-    SwipeRefreshLayout mRefreshLayout;
     @BindView(R.id.shop_view)
     LinearLayout mShopView;
     private BottomSheetDialog mPopupWindow;
     private YouzanToken token;
+    private int num = 0;
+    private String mTitle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -82,41 +84,32 @@ public class ShopActivity extends BaseActivity {
         mHeaderIvRight.setVisibility(View.GONE);
         mHeaderIvRight.setClickable(false);
         mHeaderTvTitle.setText("如初康复商城");
-        mRefreshLayout.setRefreshing(true);
         final String url;
         if (StringUtils.isEmpty(getIntent().getStringExtra("url"))) {
             url = AppUrl.SHOP;
         } else {
             url = getIntent().getStringExtra("url");
         }
-
         LogUtils.i("url=" + url);
 
-        //if (mView.isFromInternal()) {
-        //  mView.getInternalUrl();
-        //} else {
         mView.loadUrl(url);
-        //}
         setupYouzanView(mView);
 
-        mRefreshLayout.setColorSchemeResources(R.color.colorPink, R.color.colorPink2);
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mView.reload();
-            }
-        });
+
         mView.subscribe(new AbsStateEvent() {
             @Override
-            public void call(View view) {
-                mRefreshLayout.setRefreshing(false);
+            public void call(Context context) {
+                mViewProgress.setVisibility(View.GONE);
                 if (mView.getPageType() == YouzanClient.PAGE_TYPE_NATIVE_GOODS) {
                     mHeaderTvTitle.setText("商品");
                 } else {
                     mHeaderTvTitle.setText(mView.getTitle());
+                    if (num == 0) {
+                        mTitle = mView.getTitle();
+                        num++;
+                    }
                 }
-                if (mView.getPageType() != YouzanClient.PAGE_TYPE_NATIVE_GOODS
-                        ) {
+                if (mView.getPageType() != YouzanClient.PAGE_TYPE_NATIVE_GOODS) {
                     mHeaderIvRight.setVisibility(View.GONE);
                     mHeaderIvRight.setClickable(false);
                 } else {
@@ -137,29 +130,43 @@ public class ShopActivity extends BaseActivity {
 
     @OnClick(R.id.header_iv_left)
     public void onViewClicked() {
-        if (!mView.pageGoBack()) {
-            super.onBackPressed();
-//        } else {
-//            finish();
-//            overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//        }
+        if (mView.getTitle().equals(mTitle)) {
+            finish();
+        } else {
+            if (!mView.pageGoBack()) {
+                super.onBackPressed();
+            }
+            if (mView.getPageType() == YouzanClient.PAGE_TYPE_NATIVE_GOODS) {
+                mHeaderTvTitle.setText("商品");
+            } else {
+                mHeaderTvTitle.setText(mView.getTitle());
+            }
+            if (mView.getPageType() != YouzanClient.PAGE_TYPE_NATIVE_GOODS
+                    ) {
+                mHeaderIvRight.setVisibility(View.GONE);
+                mHeaderIvRight.setClickable(false);
+            } else {
+                mHeaderIvRight.setVisibility(View.VISIBLE);
+                mHeaderIvRight.setClickable(true);
+            }
         }
     }
 
     private void setupYouzanView(YouzanClient client) {
         //订阅认证事件
         client.subscribe(new AbsAuthEvent() {
+
             /**
              * 有赞SDK认证回调.
              * 在加载有赞的页面时, SDK相应会回调该方法.
              *
              * 从自己的服务器上请求同步认证后组装成{@link YouzanToken}, 调用{code view.sync(token);}同步信息.
              *
-             * @param view 发起回调的视图
+             * @param context 发起回调的视图
              * @param needLogin 表示当下行为是否需要需要用户角色的认证信息, True需要.
              */
             @Override
-            public void call(final View view, boolean needLogin) {
+            public void call(Context context, boolean needLogin) {
                 /**
                  * <pre>
                  *     建议代码逻辑:
@@ -187,20 +194,16 @@ public class ShopActivity extends BaseActivity {
                                         token.setAccessToken(youZanBean.data.access_token);
                                         token.setCookieKey(youZanBean.data.cookie_key);
                                         token.setCookieValue(youZanBean.data.cookie_value);
+                                        mView.sync(token);
+
                                     }
 
-                                    @Override
-                                    public void onAfter(@Nullable String s, @Nullable Exception e) {
-                                        super.onAfter(s, e);
-                                        mView.sync(token);
-                                    }
                                 });
                     }
                 } else {
                     OkGo
                             .post(AppUrl.YOUZAN)
                             .tag(UIUtils.getContext())
-
 //                            .params("client_id", Constants.YZ_CLIENT_ID)
 //                            .params("client_secret", Constants.YZ_CLIENT_SECRET)
                             .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
@@ -212,13 +215,9 @@ public class ShopActivity extends BaseActivity {
                                     token.setAccessToken(youZanBean.data.access_token);
                                     token.setCookieKey(youZanBean.data.cookie_key);
                                     token.setCookieValue(youZanBean.data.cookie_value);
-                                }
-
-                                @Override
-                                public void onAfter(@Nullable String s, @Nullable Exception e) {
-                                    super.onAfter(s, e);
                                     mView.sync(token);
                                 }
+
                             });
                 }
             }
@@ -227,16 +226,16 @@ public class ShopActivity extends BaseActivity {
         //订阅文件选择事件
         client.subscribe(new AbsChooserEvent() {
             @Override
-            public void call(View view, Intent intent, int requestCode) throws ActivityNotFoundException {
-                //调用系统图片选择器
-                startActivity(intent);
-            }
-        });
+            public void call(Context context, Intent intent, int requestCode) throws ActivityNotFoundException {
+                startActivityForResult(intent, requestCode);
 
+            }
+
+        });
         //订阅分享事件
         client.subscribe(new AbsShareEvent() {
             @Override
-            public void call(View view, GoodsShareModel data) {
+            public void call(Context context, GoodsShareModel data) {
                 /**
                  * 在获取数据后, 可以使用其他分享SDK来提高分享体验.
                  * 这里调用系统分享来简单演示分享的过程.
@@ -248,22 +247,6 @@ public class ShopActivity extends BaseActivity {
                         mPopupWindow.dismiss();
                     }
                 });
-//                mPopupWindow = new PopupWindow(ShopActivity.this);
-//                mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-//                mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-//                mPopupWindow.setContentView(window);
-//                mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-//                mPopupWindow.setOutsideTouchable(false);
-//                mPopupWindow.setFocusable(true);
-//                mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-//                mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_shop, null), Gravity.BOTTOM, 0, 0);
-//                PopupWindowUtils.darkenBackground(ShopActivity.this, .5f);
-//                mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//                    @Override
-//                    public void onDismiss() {
-//                        PopupWindowUtils.darkenBackground(ShopActivity.this, 1f);
-//                    }
-//                });
                 mPopupWindow = new BottomSheetDialog(ShopActivity.this);
                 mPopupWindow.setContentView(window);
                 mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -313,6 +296,7 @@ public class ShopActivity extends BaseActivity {
             }
         });
 
+
     }
 
     @Override
@@ -335,8 +319,25 @@ public class ShopActivity extends BaseActivity {
 
     @Override
     public void onBackPressed() {
-        if (!mView.pageGoBack()) {
-            super.onBackPressed();
+        if (mView.getTitle().equals(mTitle)) {
+            finish();
+        } else {
+            if (!mView.pageGoBack()) {
+                super.onBackPressed();
+            }
+            if (mView.getPageType() == YouzanClient.PAGE_TYPE_NATIVE_GOODS) {
+                mHeaderTvTitle.setText("商品");
+            } else {
+                mHeaderTvTitle.setText(mView.getTitle());
+            }
+            if (mView.getPageType() != YouzanClient.PAGE_TYPE_NATIVE_GOODS
+                    ) {
+                mHeaderIvRight.setVisibility(View.GONE);
+                mHeaderIvRight.setClickable(false);
+            } else {
+                mHeaderIvRight.setVisibility(View.VISIBLE);
+                mHeaderIvRight.setClickable(true);
+            }
         }
     }
 
@@ -372,10 +373,12 @@ public class ShopActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        OkGo.getInstance().cancelTag(this);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
         }
-        YouzanSDK.userLogout(this);
+//        YouzanSDK.userLogout(this);
+        mView.destroy();
     }
 
     private UMShareListener umShareListener = new UMShareListener() {

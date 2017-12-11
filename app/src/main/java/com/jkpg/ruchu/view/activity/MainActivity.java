@@ -38,7 +38,8 @@ import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.fragment.CommunityModuleFragment;
 import com.jkpg.ruchu.view.fragment.MyFragment;
-import com.jkpg.ruchu.view.fragment.TrainFragment;
+import com.jkpg.ruchu.view.fragment.ShopFragment;
+import com.jkpg.ruchu.view.fragment.TrainFragmentV2;
 import com.jkpg.ruchu.widget.BottomNavigationViewEx;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
@@ -85,10 +86,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_view_shop)
     View mMainViewShop;
     private MyFragment mMyFragment;
-    //    private CommunityFragment mCommunityFragment;
     private CommunityModuleFragment mCommunityFragment;
-    //    private ShopFragment mShopFragment;
-    private TrainFragment mTrainFragment;
+    private ShopFragment mShopFragment;
+    private TrainFragmentV2 mTrainFragment;
     private FragmentTransaction mFt;
     private int TAG = R.id.menu_train;
     private String[] mMPermissionList;
@@ -104,8 +104,9 @@ public class MainActivity extends BaseActivity {
         }
         initBottomNavigationView();
         if (savedInstanceState != null) {
-            mTrainFragment = (TrainFragment) getSupportFragmentManager().findFragmentByTag("mTrainFragment");
+            mTrainFragment = (TrainFragmentV2) getSupportFragmentManager().findFragmentByTag("mTrainFragment");
             mCommunityFragment = (CommunityModuleFragment) getSupportFragmentManager().findFragmentByTag("mCommunityFragment");
+            mShopFragment = (ShopFragment) getSupportFragmentManager().findFragmentByTag("mShopFragment");
             mMyFragment = (MyFragment) getSupportFragmentManager().findFragmentByTag("mMyFragment");
         }
         initShop();
@@ -186,19 +187,38 @@ public class MainActivity extends BaseActivity {
             mFt.hide(mTrainFragment);
         if (mCommunityFragment != null)
             mFt.hide(mCommunityFragment);
-        mFt.commit();
+        if (mShopFragment != null)
+            mFt.hide(mShopFragment);
+        mFt.commitAllowingStateLoss();
         switch (tag) {
             case R.id.menu_train:
                 if (mTrainFragment == null) {
-                    mTrainFragment = new TrainFragment();
+                    mTrainFragment = new TrainFragmentV2();
                     mFt.add(R.id.main_frame_layout, mTrainFragment, "mTrainFragment");
                 } else {
                     mFt.show(mTrainFragment);
-                    LogUtils.i("mTrainFragment");
                 }
                 TAG = R.id.menu_train;
                 break;
             case R.id.menu_shop:
+                if (mShopFragment == null) {
+                    mShopFragment = new ShopFragment();
+                    mFt.add(R.id.main_frame_layout, mShopFragment, "mShopFragment");
+                } else {
+                    mFt.show(mShopFragment);
+                }
+
+                startActivity(new Intent(MainActivity.this, ShopActivity.class));
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
+                MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventBus.getDefault().post("Train");
+                    }
+                }, 500);
+
+
+                TAG = R.id.menu_shop;
                 break;
             case R.id.menu_group:
                 if (mCommunityFragment == null) {
@@ -206,7 +226,6 @@ public class MainActivity extends BaseActivity {
                     mFt.add(R.id.main_frame_layout, mCommunityFragment, "mCommunityFragment");
                 } else {
                     mFt.show(mCommunityFragment);
-                    LogUtils.i("mCommunityFragment");
                 }
 
                 TAG = R.id.menu_group;
@@ -218,8 +237,6 @@ public class MainActivity extends BaseActivity {
                     mFt.add(R.id.main_frame_layout, mMyFragment, "mMyFragment");
                 } else {
                     mFt.show(mMyFragment);
-                    LogUtils.i("mMyFragment");
-
                 }
                 TAG = R.id.menu_my;
 
@@ -507,10 +524,11 @@ public class MainActivity extends BaseActivity {
             }, 500);
         }
     }
-
+    @SuppressWarnings("deprecation")
     private String getTopActivityInfo() {
         String activity = "";
         ActivityManager manager = ((ActivityManager) UIUtils.getContext().getSystemService(Context.ACTIVITY_SERVICE));
+        assert manager != null;
         List localList = manager.getRunningTasks(1);
         ActivityManager.RunningTaskInfo localRunningTaskInfo = (ActivityManager.RunningTaskInfo) localList.get(0);
         activity = localRunningTaskInfo.topActivity.getClassName();
@@ -536,6 +554,7 @@ public class MainActivity extends BaseActivity {
                 .setSmallIcon(R.mipmap.ic_launcher);//设置通知小ICON
         Notification notify = mBuilder.build();
         notify.flags |= Notification.FLAG_AUTO_CANCEL;
+        assert mNotificationManager != null;
         mNotificationManager.notify(1, notify);
     }
 }

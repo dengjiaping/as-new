@@ -50,7 +50,7 @@ public class SpannableBuilder {
             textSpan.append(text);
 
             AbsoluteSizeSpan sizeSpan = new AbsoluteSizeSpan(getContext().getResources().getDimensionPixelSize(wrapper.getTextSize()));
-            ForegroundColorSpan colorSpan = new ForegroundColorSpan(getContext().getResources().getColor(wrapper.getTextColor()));
+            ForegroundColorSpan colorSpan = new ForegroundColorSpan(UIUtils.getColor(wrapper.getTextColor()));
 
             textSpan.setSpan(sizeSpan, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
             textSpan.setSpan(colorSpan, start, end, Spannable.SPAN_INCLUSIVE_INCLUSIVE);

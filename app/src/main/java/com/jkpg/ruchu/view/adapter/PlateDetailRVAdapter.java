@@ -27,6 +27,7 @@ public class PlateDetailRVAdapter extends BaseQuickAdapter<PlateDetailBean.ListB
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void convert(BaseViewHolder helper, PlateDetailBean.ListBean item) {
 
         helper

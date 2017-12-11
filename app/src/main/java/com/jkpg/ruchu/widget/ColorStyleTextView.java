@@ -27,7 +27,7 @@ public class ColorStyleTextView extends TextView {
     }
 
     private static String DEFAULT_TEXT_VALUE = null;
-    private static int DEFAULT_COLOR = Color.parseColor("#ff5070");
+    private static int DEFAULT_COLOR = Color.parseColor("#F87C86");
     private static int LAST_COLOR = Color.parseColor("#767676");
     private static boolean HAS_UNDER_LINE = false;
 
@@ -59,11 +59,10 @@ public class ColorStyleTextView extends TextView {
     private void addStyle() {
         if (!TextUtils.isEmpty(DEFAULT_TEXT_VALUE) && DEFAULT_TEXT_VALUE.contains(",")) {
             final String[] values = DEFAULT_TEXT_VALUE.split(",");
-            SpannableString spannableString = new SpannableString(getText().toString().trim());
+            SpannableString spannableString = new SpannableString(getText().toString()/*.trim()*/);
             for (int i = 0; i < values.length - 1; i++) {
                 final int position = i;
                 if (i == 1){
-
                     spannableString.setSpan(new ClickableSpan() {
                         @Override
                         public void onClick(View widget) {
@@ -76,7 +75,7 @@ public class ColorStyleTextView extends TextView {
                             ds.setColor(DEFAULT_COLOR);
                             ds.setUnderlineText(HAS_UNDER_LINE);
                         }
-                    }, getText().toString().trim().indexOf(values[i],values[0].length() + 3), getText().toString().trim().indexOf(values[i],values[0].length() + 3) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    }, getText().toString()/*.trim()*/.indexOf(values[i],values[0].length() + 3), getText().toString()/*.trim()*/.indexOf(values[i],values[0].length() + 3) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 }
                 spannableString.setSpan(new ClickableSpan() {
                     @Override
@@ -90,7 +89,7 @@ public class ColorStyleTextView extends TextView {
                         ds.setColor(DEFAULT_COLOR);
                         ds.setUnderlineText(HAS_UNDER_LINE);
                     }
-                }, getText().toString().trim().indexOf(values[i]), getText().toString().trim().indexOf(values[i]) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }, getText().toString()/*.trim()*/.indexOf(values[i]), getText().toString()/*.trim()*/.indexOf(values[i]) + values[i].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             }
             spannableString.setSpan(new ClickableSpan() {
                 @Override
@@ -104,7 +103,7 @@ public class ColorStyleTextView extends TextView {
                     ds.setColor(LAST_COLOR);
                     ds.setUnderlineText(HAS_UNDER_LINE);
                 }
-            }, getText().toString().trim().lastIndexOf(values[values.length - 1]), getText().toString().trim().lastIndexOf(values[values.length - 1]) + values[values.length - 1].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }, getText().toString()/*.trim()*/.lastIndexOf(values[values.length - 1]), getText().toString()/*.trim()*/.lastIndexOf(values[values.length - 1]) + values[values.length - 1].length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
             setText(spannableString);
             setMovementMethod(LinkMovementMethod.getInstance());
 

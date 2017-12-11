@@ -66,6 +66,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -427,7 +428,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                     });
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void replyLZ() {
         selectedPhotos.clear();
         if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
@@ -479,11 +480,11 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                             return;
                         }
                         OkGo
-                                .post(AppUrl.ArticleReply
-                                        + "?art_id=" + mArt_id
-                                        + "&parentid=" + "-1"
-                                        + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                                        + "&content=" + string)
+                                .post(AppUrl.ArticleReply)
+                                .params("art_id",mArt_id)
+                                .params("parentid","-1")
+                                .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                .params("content",string)
                                 .execute(new StringDialogCallback(FineNoteDetailWebFixActivity.this) {
                                     @Override
                                     public void onSuccess(String s, Call call, Response response) {
@@ -524,7 +525,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                         + "?art_id=" + mArt_id
                                         + "&parentid=" + "-1"
                                         + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                                        + "&content=" + string)
+                                        + "&content=" + URLEncoder.encode(string))
                                 .isMultipart(true)
                                 .addFileParams("upload", files)
                                 .execute(new StringDialogCallback(FineNoteDetailWebFixActivity.this) {
@@ -543,7 +544,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                                         mList2.clear();
                                                         mList2.addAll(fineNoteWebBean.list2);
                                                         mFineNoteDetailWebRVAdapter.notifyDataSetChanged();
-                                                        mNoticeDetailTvReply.setText(fineNoteWebBean.list2.size());
+//                                                        mNoticeDetailTvReply.setText(fineNoteWebBean.list2.size());
                                                     }
 
                                                     @Override
@@ -567,7 +568,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
                                     + "?art_id=" + mArt_id
                                     + "&parentid=" + mTid
                                     + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                                    + "&content=" + string)
+                                    + "&content=" + URLEncoder.encode(string))
                             .execute(new StringDialogCallback(FineNoteDetailWebFixActivity.this) {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
@@ -603,6 +604,7 @@ public class FineNoteDetailWebFixActivity extends BaseActivity {
         mEditWindow.showAtLocation(FineNoteDetailWebFixActivity.this.findViewById(R.id.notice_detail), Gravity.BOTTOM, 0, 0);
         // 显示键盘
         final InputMethodManager imm = (InputMethodManager) UIUtils.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        assert imm != null;
         imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
 
         mEditWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {

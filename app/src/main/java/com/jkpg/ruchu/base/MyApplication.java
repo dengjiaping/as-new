@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.base;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -39,14 +40,14 @@ import com.umeng.message.PushAgent;
 import com.umeng.socialize.PlatformConfig;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareConfig;
-import com.youzan.sdk.YouzanSDK;
+import com.youzan.androidsdk.YouzanSDK;
+import com.youzan.androidsdk.basic.YouzanBasicSDKAdapter;
 
 import org.android.agoo.huawei.HuaWeiRegister;
 import org.android.agoo.xiaomi.MiPushRegistar;
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * Created by qindi on 2017/4/25.
@@ -54,12 +55,13 @@ import java.util.logging.Level;
 
 public class MyApplication extends Application {
 
+    @SuppressLint("StaticFieldLeak")
     private static Context mContext;
     private static Handler mMainThreadHandler;
-    private static String userId;
     private static String deviceToken;
 
     @Override
+    @SuppressWarnings("deprecation")
     public void onCreate() {
         //上下文
         mContext = getApplicationContext();
@@ -72,7 +74,7 @@ public class MyApplication extends Application {
         OkGo.init(this);
         OkGo
                 .getInstance()
-                .debug("OkGo", Level.ALL, false)
+//                .debug("OkGo", Level.INFO, true)
 //                 .setCacheTime(CacheEntity.CACHE_NEVER_EXPIRE)
                 //可以全局统一设置超时重连次数,默认为三次,那么最差的情况会请求4次(一次原始请求,三次重连请求),不需要可以设置为0
                 .setRetryCount(3)
@@ -101,7 +103,7 @@ public class MyApplication extends Application {
 
             @Override
             public void onFailure(String s, String s1) {
-
+                LogUtils.d(s+"onFailure"+ s1);
             }
         });
         mPushAgent.setPushCheck(true);
@@ -109,7 +111,8 @@ public class MyApplication extends Application {
         MiPushRegistar.register(this, Constants.XIAOMI_ID, Constants.XIAOMI_KEY);
         HuaWeiRegister.register(this);
 
-        YouzanSDK.init(this, Constants.YZ_CLIENT_ID);
+//        YouzanSDK.init(this, Constants.YZ_CLIENT_ID);
+        YouzanSDK.init(this, Constants.YZ_CLIENT_ID, new  YouzanBasicSDKAdapter());
 
         Resources res = super.getResources();
         Configuration c = new Configuration();
@@ -130,8 +133,8 @@ public class MyApplication extends Application {
         }
         //TIM初始化SDK基本配置
         TIMSdkConfig timConfig = new TIMSdkConfig(Constants.sdkAppid);
-        timConfig.enableLogPrint(true)
-                .setLogLevel(TIMLogLevel.DEBUG)
+        timConfig.enableLogPrint(false)
+                .setLogLevel(TIMLogLevel.OFF)
                 .setLogPath(Environment.getExternalStorageDirectory().getPath() + "/RuChu/");
 
         //初始化SDK
@@ -220,13 +223,6 @@ public class MyApplication extends Application {
         return mContext;
     }
 
-    public static String getUserId() {
-        return userId;
-    }
-
-    public static void setUserId(String userId) {
-        MyApplication.userId = userId;
-    }
 
     /**
      * 得到主线程里面的创建的一个hanlder

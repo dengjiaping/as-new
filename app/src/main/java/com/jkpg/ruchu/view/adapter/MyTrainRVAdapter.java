@@ -23,9 +23,9 @@ public class MyTrainRVAdapter extends BaseQuickAdapter<MyTrainBean.ListBean, Bas
     @Override
     protected void convert(BaseViewHolder helper, MyTrainBean.ListBean item) {
         helper.setBackgroundRes(R.id.item_my_train, item.backgroundRes);
-        helper.setText(R.id.item_my_train_difficulty, "训练强度"+item.level);
-        helper.setText(R.id.item_my_train_difficulty_num, "训练难度 "+item.strength);
-        helper.setText(R.id.item_my_train_time, item.totaltime);
+//        helper.setText(R.id.item_my_train_difficulty, "训练强度"+item.level);
+//        helper.setText(R.id.item_my_train_difficulty_num, "训练难度 "+item.strength);
+//        helper.setText(R.id.item_my_train_time, item.totaltime);
         helper.setVisible(R.id.item_my_train_now, item.isSelect);
     }
 }

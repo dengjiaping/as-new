@@ -13,14 +13,18 @@
          <item name="android:windowNoTitle">true</item>-->
 
     </style>
-    <style name="LauncherTheme" parent="AppTheme">
-        <item name="colorPrimaryDark">@color/yzappsdk_white</item>
-        <!--<item name="android:windowBackground">@drawable/layout_list_start_pic</item>-->
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:navigationBarColor">@android:color/transparent</item>
-        <!--<item name="android:windowIsTranslucent">true</item>-->
-        <!--<item name="android:windowNoTitle">true</item>-->
-   </style>
+    <style name="Full" parent="Theme.AppCompat.Light.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorAccent</item>
+        <item name="colorPrimaryDark">@color/colorAccent</item>
+        <item name="android:windowIsTranslucent">false</item>
+
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <!-- <item name="android:windowIsTranslucent">true</item>
+         <item name="android:windowNoTitle">true</item>-->
+
+    </style>
 
    <style name="btn_pink">
        <item name="android:layout_width">match_parent</item>
@@ -58,12 +62,4 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="transparent_" parent="AppTheme">
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:backgroundDimAmount">0.5</item>
-        <item name="android:windowNoTitle">true</item>
-        <item name="android:windowIsTranslucent">true</item>
-
-        <!--<item name="android:windowAnimationStyle">@android:style/Animation.Translucent</item>-->
-    </style>
 </resources>

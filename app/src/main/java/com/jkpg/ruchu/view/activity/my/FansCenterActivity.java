@@ -191,9 +191,15 @@ public class FansCenterActivity extends BaseActivity {
                 .dontAnimate()
                 .centerCrop()
                 .into(mFansCivPhoto);
-        mFansTvTime.setText(fansCenterBean.chanhoutime);
+        if (StringUtils.isEmpty(fansCenterBean.chanhoutime)){
+            mFansTvTime.setVisibility(View.GONE);
+
+        } else {
+            mFansTvTime.setVisibility(View.VISIBLE);
+            mFansTvTime.setText(fansCenterBean.chanhoutime);
+        }
         mFansTvName.setText(fansCenterBean.nick);
-        if (fansCenterBean.isVIP.equals("2")) {
+        if (!fansCenterBean.isVIP.equals("0")) {
             mFansIvVip.setImageResource(R.drawable.icon_vip1);
         } else {
             mFansIvVip.setImageResource(R.drawable.icon_vip2);
@@ -380,7 +386,7 @@ public class FansCenterActivity extends BaseActivity {
         view.measure(View.MeasureSpec.UNSPECIFIED, View.MeasureSpec.UNSPECIFIED);
         popupWindow.setFocusable(true);
         popupWindow.setOutsideTouchable(true);
-        popupWindow.setBackgroundDrawable(new BitmapDrawable());
+//        popupWindow.setBackgroundDrawable(new BitmapDrawable());
 
         view.findViewById(R.id.text_view_black).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -455,7 +461,7 @@ public class FansCenterActivity extends BaseActivity {
         popupWindow.showAtLocation(mFansTvMore, Gravity.NO_GRAVITY, (location[0] + mFansTvMore.getWidth() / 2) - popupWidth / 2,
                 location[1] - popupHeight);
     }
-
+    @SuppressWarnings("deprecation")
     private void showPopupWindow() {
         final View view = View.inflate(UIUtils.getContext(), R.layout.view_cancel_follow, null);
         final PopupWindow popupWindow = new PopupWindow(view, LinearLayoutCompat.LayoutParams.WRAP_CONTENT,

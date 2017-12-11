@@ -1,9 +1,7 @@
 package com.jkpg.ruchu.view.fragment;
 
-import android.app.ActivityOptions;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,31 +22,22 @@ import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SmsEvent;
-import com.jkpg.ruchu.bean.SuccessBean;
 import com.jkpg.ruchu.bean.TrainMainBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
-import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.WebViewActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
-import com.jkpg.ruchu.view.activity.train.FullActivity;
 import com.jkpg.ruchu.view.activity.train.MyTrainActivity;
 import com.jkpg.ruchu.view.activity.train.NewTrainActivity;
 import com.jkpg.ruchu.view.activity.train.OtherTrainActivity;
 import com.jkpg.ruchu.view.activity.train.TestTrainActivity;
 import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
-import com.jkpg.ruchu.widget.banner.Banner;
-import com.jkpg.ruchu.widget.banner.BannerConfig;
-import com.jkpg.ruchu.widget.banner.Transformer;
-import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
-import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
@@ -58,9 +46,6 @@ import com.lzy.okgo.request.BaseRequest;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -74,11 +59,7 @@ import okhttp3.Response;
  */
 
 public class TrainFragment extends Fragment {
-    @BindView(R.id.train_banner)
-    Banner mTrainBanner;
     Unbinder unbinder;
-    List<String> images;
-    List<String> titles;
     @BindView(R.id.header_tv_title)
     TextView mHeaderTvTitle;
     @BindView(R.id.header_iv_right)
@@ -119,7 +100,6 @@ public class TrainFragment extends Fragment {
     ImageView mTrainImage1;
 
     private TrainMainBean mTrainMainBean;
-    private AlertDialog mShow;
 
     @Nullable
     @Override
@@ -134,16 +114,6 @@ public class TrainFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initData();
         initHeader();
-        mTrainImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    startActivity(new Intent(getActivity(), FullActivity.class), ActivityOptions.makeSceneTransitionAnimation(getActivity(), mTrainImage1, "sharedView").toBundle());
-                } else {
-                    startActivity(new Intent(getActivity(), FullActivity.class));
-                }
-            }
-        });
     }
 
 
@@ -209,46 +179,9 @@ public class TrainFragment extends Fragment {
             mTrainLlTest.setVisibility(View.VISIBLE);
             mTrainLlTrain.setVisibility(View.GONE);
         }
-        initBanner();
-//        if (mTrainMainBean.userInfos.isfirst.equals("1") && mShow == null) {
-////            initInvitation();
-//        }
     }
 
-    private void initInvitation() {
 
-        View view = View.inflate(getActivity(), R.layout.view_invitation, null);
-        mShow = new AlertDialog.Builder(getActivity(), R.style.dialog_invitation)
-                .setView(view)
-                .show();
-
-        final EditText viewById = (EditText) view.findViewById(R.id.invitation_et);
-
-        view.findViewById(R.id.invitation_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (StringUtils.isEmpty(viewById.getText().toString())) {
-                    ToastUtils.showShort(UIUtils.getContext(), "请输入优惠码,在领取哦!");
-                    return;
-                }
-                OkGo
-                        .post(AppUrl.INVITECODE)
-                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                        .params("invitecode", viewById.getText().toString())
-                        .execute(new StringDialogCallback(getActivity()) {
-                            @Override
-                            public void onSuccess(String s, Call call, Response response) {
-                                SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
-                                if (successBean.state == 200) {
-                                    mShow.dismiss();
-                                } else {
-                                    ToastUtils.showShort(UIUtils.getContext(), successBean.msg);
-                                }
-                            }
-                        });
-            }
-        });
-    }
 
     //初始化训练按钮状态 + 新手提示
     private void initTestBtn() {
@@ -263,43 +196,6 @@ public class TrainFragment extends Fragment {
         mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
     }
 
-    private void initBanner() {
-        images = new ArrayList<>();
-        titles = new ArrayList<>();
-        final List<TrainMainBean.HeaderLunBoImageBean> headerLunBoImage = mTrainMainBean.headerLunBoImage;
-        if (headerLunBoImage == null) {
-            return;
-        }
-        for (int i = 0; i < headerLunBoImage.size(); i++) {
-            images.add(AppUrl.BASEURL + headerLunBoImage.get(i).imageUrl);
-            titles.add(headerLunBoImage.get(i).title);
-        }
-        //设置图片加载器
-        mTrainBanner.setImageLoader(new GlideImageLoader());
-        //设置图片集合
-        mTrainBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
-        mTrainBanner.setImages(images);
-        //设置banner动画效果
-        mTrainBanner.setBannerAnimation(Transformer.CubeOut);
-        //设置标题集合（当banner样式有显示title时）
-        mTrainBanner.setBannerTitles(titles);
-        //设置自动轮播，默认为true
-        mTrainBanner.isAutoPlay(true);
-        //设置轮播时间
-        mTrainBanner.setDelayTime(3000);
-        mTrainBanner.setOnBannerListener(new OnBannerListener() {
-            @Override
-            public void OnBannerClick(int position) {
-                String allcontent = headerLunBoImage.get(position).allcontent;
-                Intent intent = new Intent(getActivity(), WebViewActivity.class);
-                intent.putExtra("URL", allcontent);
-                startActivity(intent);
-            }
-        });
-        //设置指示器位置（当banner模式中有指示器时）
-//        mTrainBanner.setIndicatorGravity(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
-        mTrainBanner.start();
-    }
 
     @Override
     public void onDestroyView() {
@@ -318,10 +214,6 @@ public class TrainFragment extends Fragment {
                 TrainFragment.this.initData();
                 break;
             case R.id.train_ll_new:
-              /*  if (SPUtils.getString(UIUtils.getContext(),Constants.USERID,"").equals("")){
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    break;
-                }*/
                 startActivity(new Intent(getActivity(), NewTrainActivity.class));
                 break;
             case R.id.train_ll_my:
@@ -475,18 +367,6 @@ public class TrainFragment extends Fragment {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        mTrainBanner.stopAutoPlay();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        mTrainBanner.startAutoPlay();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

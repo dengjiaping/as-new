@@ -38,6 +38,7 @@ public class WebViewActivity extends BaseActivity {
     private String mUrl = "";
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
@@ -104,12 +105,6 @@ public class WebViewActivity extends BaseActivity {
 
                 return true;
             }
-//
-//            @Override
-//            public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
-////                super.onReceivedSslError(view, handler, error);
-//                handler.proceed();//这里校验失败的时候放过
-//            }
         });
 
 

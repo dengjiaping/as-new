@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
@@ -36,6 +37,8 @@ public class TrainCountActivity extends BaseActivity {
     RadioGroup mTrainCountRg;
     @BindView(R.id.train_count_content)
     FrameLayout mTrainCountContent;
+    @BindView(R.id.header_iv_right)
+    ImageView mHeaderIvRight;
     private TrainCountMountFragment mMountFragment;
 
 
@@ -49,7 +52,6 @@ public class TrainCountActivity extends BaseActivity {
     }
 
 
-
     private void initFragment() {
         mMountFragment = new TrainCountMountFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -57,10 +59,12 @@ public class TrainCountActivity extends BaseActivity {
     }
 
     private void initHeader() {
-        mHeaderTvTitle.setText("训练统计");
+        mHeaderTvTitle.setText("训练历史");
+        mHeaderIvRight.setImageResource(R.drawable.icon_data);
+
     }
 
-    @OnClick({R.id.header_iv_left, R.id.train_count_rb_moon, R.id.train_count_rb_year})
+    @OnClick({R.id.header_iv_left, R.id.header_iv_right, R.id.train_count_rb_moon, R.id.train_count_rb_year})
     public void onViewClicked(View view) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         switch (view.getId()) {
@@ -74,6 +78,11 @@ public class TrainCountActivity extends BaseActivity {
             case R.id.train_count_rb_year:
                 ft.replace(R.id.train_count_content, new TrainCountYearFragment()).commit();
                 break;
+            case R.id.header_iv_right:
+                startActivity(new Intent(TrainCountActivity.this, TrainHistoryActivity.class));
+                break;
         }
     }
+
+
 }

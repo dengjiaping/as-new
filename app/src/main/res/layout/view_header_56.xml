@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/header_view"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_header"
+                android:elevation="3dp"
+                >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_height="56dp">
+
+
+    <ImageView
+        android:id="@+id/header_iv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:padding="10dp"
+        android:src="@drawable/__picker_icon_return_white"
+        />
+
+    <TextView
+        android:id="@+id/header_tv_left"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        />
+
+    <TextView
+        android:id="@+id/header_tv_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="80dp"
+        android:layout_marginRight="80dp"
+        android:ellipsize="marquee"
+        android:singleLine="true"
+        android:layout_centerInParent="true"
+        android:gravity="center_horizontal"
+        android:textColor="@android:color/white"
+        android:textSize="18dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        >
+
+        <ImageView
+            android:id="@+id/header_iv_right2"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            />
+
+        <ImageView
+            android:id="@+id/header_iv_right"
+            android:layout_width="25dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/header_tv_right"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:gravity="center_vertical"
+        android:padding="10dp"
+        android:textColor="@android:color/white"
+        android:textSize="16dp"
+        />
+    </RelativeLayout>
+</RelativeLayout>

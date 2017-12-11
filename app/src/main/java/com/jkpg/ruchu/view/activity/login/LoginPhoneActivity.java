@@ -65,7 +65,7 @@ public class LoginPhoneActivity extends BaseActivity {
 
 
     private void initHeader() {
-        mHeaderTvTitle.setText("手机号登陆");
+        mHeaderTvTitle.setText("手机号登录");
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.bean.FineNoteWebBean;
 import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.widget.ColorStyleTextView;
 import com.jkpg.ruchu.widget.nineview.ImageInfo;
@@ -45,13 +46,36 @@ public class FineNoteDetailWebFixRVAdapter extends BaseQuickAdapter<FineNoteWebB
         Glide
                 .with(UIUtils.getContext())
                 .load(item.headimg)
+                .dontAnimate()
+                .placeholder(R.drawable.gray_bg)
+                .error(R.drawable.gray_bg)
                 .centerCrop()
-                .crossFade()
                 .into((ImageView) helper.getView(R.id.item_notice_reply_civ));
-        helper.setText(R.id.item_notice_reply_name, item.nick);
-        helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
-        helper.setText(R.id.item_notice_reply_body, item.content);
-        helper.setText(R.id.item_notice_reply_floor, (helper.getPosition()) + "楼");
+//        helper.setText(R.id.item_notice_reply_name, item.nick);
+//
+//        helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
+        if (StringUtils.isEmpty(item.nick)) {
+            helper.setText(R.id.item_notice_reply_name, "账号已注销");
+        } else {
+            helper.setText(R.id.item_notice_reply_name, item.nick);
+        }
+        if (item.taici.equals("")) {
+            helper.setVisible(R.id.item_notice_reply_baby, false);
+
+        } else {
+            helper.setVisible(R.id.item_notice_reply_baby, true);
+
+            helper.setText(R.id.item_notice_reply_baby, item.taici + " " + item.chanhoutime);
+        }
+//        helper.setText(R.id.item_notice_reply_body, item.content);
+        if (item.content.equals("")) {
+            helper.setVisible(R.id.item_notice_reply_body, false);
+        } else {
+            helper.setVisible(R.id.item_notice_reply_body, true);
+            helper.setText(R.id.item_notice_reply_body, item.content);
+        }
+
+        helper.setText(R.id.item_notice_reply_floor, (helper.getLayoutPosition()) + "楼");
         helper.setText(R.id.item_notice_reply_time, item.replytime);
         helper.setText(R.id.item_notice_reply_cb_love, item.zan + "");
         helper.setText(R.id.item_notice_reply_tv_reply, (item.items.size()) + "");

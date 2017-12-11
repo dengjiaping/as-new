@@ -70,10 +70,10 @@ public abstract class AbsLeafChart extends View implements Chart {
 
     private void initAttrs(AttributeSet attrs) {
         TypedArray ta = mContext.obtainStyledAttributes(attrs, R.styleable.AbsLeafChart);
-        try{
+        try {
             leftPadding = ta.getDimension(R.styleable.AbsLeafChart_lc_leftPadding, LeafUtil.dp2px(mContext, 20));
             topPadding = ta.getDimension(R.styleable.AbsLeafChart_lc_topPadding, LeafUtil.dp2px(mContext, 10));
-            rightPadding = ta.getDimension(R.styleable.AbsLeafChart_lc_rightPadding, LeafUtil.dp2px(mContext, 10));
+            rightPadding = ta.getDimension(R.styleable.AbsLeafChart_lc_rightPadding, LeafUtil.dp2px(mContext, 0));
             bottomPadding = ta.getDimension(R.styleable.AbsLeafChart_lc_bottomPadding, LeafUtil.dp2px(mContext, 20));
             startMarginX = (int) ta.getDimension(R.styleable.AbsLeafChart_lc_startMarginX, 0);
             startMarginY = (int) ta.getDimension(R.styleable.AbsLeafChart_lc_startMarginY, 0);
@@ -83,7 +83,7 @@ public abstract class AbsLeafChart extends View implements Chart {
         }
     }
 
-    public void setRenderer(AbsRenderer renderer){
+    public void setRenderer(AbsRenderer renderer) {
         this.absRenderer = renderer;
     }
 
@@ -96,6 +96,7 @@ public abstract class AbsLeafChart extends View implements Chart {
 
     /**
      * 不重写改方法，在布局中使用 wrap_content 显示效果是 match_parent
+     *
      * @param widthMeasureSpec
      * @param heightMeasureSpec
      */
@@ -107,12 +108,12 @@ public abstract class AbsLeafChart extends View implements Chart {
         int heightSpecMode = MeasureSpec.getMode(heightMeasureSpec);
         int heightSpecSize = MeasureSpec.getSize(heightMeasureSpec);
 
-        if(widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST){
+        if (widthSpecMode == MeasureSpec.AT_MOST && heightSpecMode == MeasureSpec.AT_MOST) {
             setMeasuredDimension((int) LeafUtil.dp2px(mContext, 300), (int) LeafUtil.dp2px(mContext, 300));
-        } else if(widthSpecMode == MeasureSpec.AT_MOST){
-            setMeasuredDimension((int)mWidth, heightSpecSize);
-        } else if(heightSpecMode == MeasureSpec.AT_MOST){
-            setMeasuredDimension(widthSpecSize, (int)mHeight);
+        } else if (widthSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension((int) mWidth, heightSpecSize);
+        } else if (heightSpecMode == MeasureSpec.AT_MOST) {
+            setMeasuredDimension(widthSpecSize, (int) mHeight);
         }
 
     }
@@ -130,7 +131,7 @@ public abstract class AbsLeafChart extends View implements Chart {
     }
 
     protected void initViewSize() {
-        mWidth = getMeasuredWidth();
+        mWidth = getMeasuredWidth() /*+ (int) LeafUtil.dp2px(mContext, 70)*/;
         mHeight = getMeasuredHeight();
         absRenderer.setWH(mWidth, mHeight);
         absRenderer.setPadding(leftPadding, topPadding, rightPadding, bottomPadding);
@@ -146,20 +147,20 @@ public abstract class AbsLeafChart extends View implements Chart {
     }
 
     private void resetAsixY() {
-        if(axisY != null){
+        if (axisY != null) {
             List<AxisValue> values = axisY.getValues();
             int sizeY = values.size(); //几条x轴
             float yStep = (mHeight - topPadding - bottomPadding - startMarginY) / sizeY;
             for (int i = 0; i < sizeY; i++) {
                 AxisValue axisValue = values.get(i);
                 axisValue.setPointX(leftPadding);
-                if(i == 0){
+                if (i == 0) {
                     axisValue.setPointY(mHeight - bottomPadding - startMarginY);
                 } else {
                     axisValue.setPointY(mHeight - bottomPadding - startMarginY - yStep * i);
                 }
             }
-            switch (coordinateMode){
+            switch (coordinateMode) {
                 case Mode.ACROSS:
                 case Mode.Y_ACROSS:
                     axisY.setStartY(mHeight - bottomPadding * 0.5f);
@@ -176,14 +177,14 @@ public abstract class AbsLeafChart extends View implements Chart {
     }
 
     private void resetAsixX() {
-        if(axisX != null){
+        if (axisX != null) {
             List<AxisValue> values = axisX.getValues();
             int sizeX = values.size(); //几条y轴
             float xStep = (mWidth - leftPadding - startMarginX) / sizeX;
             for (int i = 0; i < sizeX; i++) {
                 AxisValue axisValue = values.get(i);
                 axisValue.setPointY(mHeight);
-                if(i == 0){
+                if (i == 0) {
                     axisValue.setPointX(leftPadding + startMarginX);
                 } else {
                     axisValue.setPointX(leftPadding + startMarginX + xStep * i);
@@ -191,7 +192,7 @@ public abstract class AbsLeafChart extends View implements Chart {
             }
 
 
-            switch (coordinateMode){
+            switch (coordinateMode) {
                 case Mode.ACROSS:
                 case Mode.X_ACROSS:
                     axisX.setStartX(leftPadding /** 0.5f*/);
@@ -214,12 +215,12 @@ public abstract class AbsLeafChart extends View implements Chart {
     }
 
     protected void resetPointWeight(ChartData chartData) {
-        if(chartData != null && axisX != null && axisY != null){
+        if (chartData != null && axisX != null && axisY != null) {
             List<PointValue> values = chartData.getValues();
             int size = values.size();
 
             List<AxisValue> axisValuesX = axisX.getValues();
-            List<AxisValue> axisValuesY = axisY .getValues();
+            List<AxisValue> axisValuesY = axisY.getValues();
             float totalWidth = Math.abs(axisValuesX.get(0).getPointX() - axisValuesX.get(axisValuesX.size() - 1).getPointX());
 
             float totalHeight = Math.abs(axisValuesY.get(0).getPointY() - axisValuesY.get(axisValuesY.size() - 1).getPointY());
@@ -232,7 +233,7 @@ public abstract class AbsLeafChart extends View implements Chart {
                 pointValue.setDiffY(diffY);
 
                 float originX1 = diffX + leftPadding + startMarginX;
-                float originY1 = mHeight - bottomPadding - diffY  - startMarginY;
+                float originY1 = mHeight - bottomPadding - diffY - startMarginY;
                 pointValue.setOriginX(originX1).setOriginY(originY1);
             }
         }

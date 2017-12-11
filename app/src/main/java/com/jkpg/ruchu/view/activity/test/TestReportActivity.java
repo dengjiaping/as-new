@@ -1,6 +1,7 @@
 package com.jkpg.ruchu.view.activity.test;
 
 import android.Manifest;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -15,22 +17,35 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.TestResultBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
+import com.jkpg.ruchu.config.AppUrl;
+import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.FileUtils;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.PermissionUtils;
+import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.my.OpenVipActivity;
+import com.jkpg.ruchu.view.activity.train.TrainPrepareActivity;
+import com.lzy.okgo.OkGo;
 import com.umeng.socialize.ShareAction;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 
+import org.greenrobot.eventbus.EventBus;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Response;
 
 import static com.jkpg.ruchu.utils.ScreenUtils.getBitmapByView;
 
@@ -68,6 +83,7 @@ public class TestReportActivity extends BaseActivity {
     @BindView(R.id.report_code)
     LinearLayout mReportCode;
     private BottomSheetDialog mPopupWindow;
+    private TestResultBean mTestResultBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,15 +95,15 @@ public class TestReportActivity extends BaseActivity {
     }
 
     private void initData() {
-        TestResultBean testResultBean = getIntent().getParcelableExtra("testResultBean");
-        mReportTvGrade.setText(testResultBean.count + " 分");
-        mReportTvPlan.setText("产后康复  【" + testResultBean.level + "】");
-        mReportTvName.setText(testResultBean.usernick);
-        mReportTvAge.setText(testResultBean.age + " 岁");
-        mReportTvHeight.setText(testResultBean.height + " cm");
-        mReportTvWeight.setText(testResultBean.weight + " kg");
-        mReportTvBody.setText(testResultBean.content);
-        mReportTvTime.setText(testResultBean.testtime);
+        mTestResultBean = getIntent().getParcelableExtra("testResultBean");
+        mReportTvGrade.setText(mTestResultBean.count + " 分");
+        mReportTvPlan.setText("产后康复  【" + mTestResultBean.level + "】");
+        mReportTvName.setText(mTestResultBean.usernick);
+        mReportTvAge.setText(mTestResultBean.age + " 岁");
+        mReportTvHeight.setText(mTestResultBean.height + " cm");
+        mReportTvWeight.setText(mTestResultBean.weight + " kg");
+        mReportTvBody.setText(mTestResultBean.content);
+        mReportTvTime.setText(mTestResultBean.testtime);
     }
 
     private void initHeader() {
@@ -96,7 +112,7 @@ public class TestReportActivity extends BaseActivity {
     }
 
 
-    @OnClick({R.id.header_iv_left, R.id.header_iv_right})
+    @OnClick({R.id.header_iv_left, R.id.header_iv_right,R.id.result_btn_start})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.header_iv_left:
@@ -108,14 +124,9 @@ public class TestReportActivity extends BaseActivity {
                     PermissionUtils.requestPermissions(this, 200, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, new PermissionUtils.OnPermissionListener() {
                         @Override
                         public void onPermissionGranted() {
-//                        mReportCode.setVisibility(View.VISIBLE);
 
                             Bitmap bitmap = getBitmapByView(mRegisterScrollView);
-                            String pic = FileUtils.saveBitmap(bitmap);
-               /* Intent imageIntent = new Intent(Intent.ACTION_SEND);
-                imageIntent.setType("image/jpeg");
-                imageIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pic));
-                startActivity(Intent.createChooser(imageIntent, "分享我的报告"));*/
+                             FileUtils.saveBitmap(bitmap);
                             showShare(bitmap);
                         }
 
@@ -127,27 +138,79 @@ public class TestReportActivity extends BaseActivity {
                 } else {
 
                     Bitmap bitmap = getBitmapByView(mRegisterScrollView);
-                    String pic = FileUtils.saveBitmap(bitmap);
-               /* Intent imageIntent = new Intent(Intent.ACTION_SEND);
-                imageIntent.setType("image/jpeg");
-                imageIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(pic));
-                startActivity(Intent.createChooser(imageIntent, "分享我的报告"));*/
+                    FileUtils.saveBitmap(bitmap);
                     showShare(bitmap);
                 }
 
+                break;
+            case R.id.result_btn_start:
+                OkGo
+                        .post(AppUrl.SELECTISVIP)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(TestReportActivity.this) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                IsVipBean isVipBean = new Gson().fromJson(s, IsVipBean.class);
+                                if (isVipBean.isVIP) {
+                                    if (mTestResultBean.ischange) {
+                                        new AlertDialog.Builder(TestReportActivity.this)
+                                                .setMessage("开始训练后，您的当前难度将被调至【" + mTestResultBean.level + "】")
+                                                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        OkGo
+                                                                .post(AppUrl.OPENMYPRACTICE)
+                                                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                                                .params("level", ((mTestResultBean.levelid) + ""))
+                                                                .execute(new StringDialogCallback(TestReportActivity.this) {
+                                                                    @Override
+                                                                    public void onSuccess(String s, Call call, Response response) {
+                                                                        EventBus.getDefault().post("TrainFragment");
+//                                                                    initData();
+                                                                        startActivity(new Intent(TestReportActivity.this, TrainPrepareActivity.class));
+                                                                        finish();
+                                                                    }
+                                                                });
+
+                                                    }
+                                                })
+                                                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        startActivity(new Intent(TestReportActivity.this, TrainPrepareActivity.class));
+                                                        finish();
+                                                    }
+                                                })
+                                                .show();
+                                    } else {
+                                        startActivity(new Intent(TestReportActivity.this, TrainPrepareActivity.class));
+                                        finish();
+                                    }
+
+                                } else {
+                                    new AlertDialog.Builder(TestReportActivity.this)
+                                            .setMessage("只有会员才能训练哦")
+                                            .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    startActivity(new Intent(TestReportActivity.this, OpenVipActivity.class));
+                                                }
+                                            })
+                                            .setNegativeButton("放弃训练", new DialogInterface.OnClickListener() {
+                                                @Override
+                                                public void onClick(DialogInterface dialog, int which) {
+                                                    dialog.dismiss();
+                                                }
+                                            })
+                                            .show();
+                                }
+                            }
+                        });
                 break;
         }
     }
 
     private void showShare(Bitmap pic) {
-//        Intent share_intent = new Intent();
-//        share_intent.setAction(Intent.ACTION_SEND);//设置分享行为
-//        share_intent.setType("text/plain");//设置分享内容的类型
-//        share_intent.putExtra(Intent.EXTRA_SUBJECT, "分享如初");//添加分享内容标题
-//        share_intent.putExtra(Intent.EXTRA_TEXT, "www.ruchuapp.com");//添加分享内容
-//        //创建分享的Dialog
-//        share_intent = Intent.createChooser(share_intent, "分享如初");
-//        startActivity(share_intent);
         View view = View.inflate(UIUtils.getContext(), R.layout.view_share, null);
         view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,23 +222,6 @@ public class TestReportActivity extends BaseActivity {
         mPopupWindow.setContentView(view);
         mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         mPopupWindow.show();
-//        mPopupWindow = new PopupWindow(this);
-//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-//        mPopupWindow.setContentView(view);
-//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-//        mPopupWindow.setOutsideTouchable(true);
-//        mPopupWindow.setFocusable(true);
-//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_report, null), Gravity.BOTTOM, 0, 0);
-//        PopupWindowUtils.darkenBackground(TestReportActivity.this, .5f);
-//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-////                mReportCode.setVisibility(View.GONE);
-//                PopupWindowUtils.darkenBackground(TestReportActivity.this, 1f);
-//            }
-//        });
         final UMImage image = new UMImage(TestReportActivity.this, pic);
         view.findViewById(R.id.share_qq).setOnClickListener(new View.OnClickListener() {
             @Override

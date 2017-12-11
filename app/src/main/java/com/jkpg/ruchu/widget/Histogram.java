@@ -7,6 +7,7 @@ import android.graphics.Path;
 import android.graphics.RectF;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -113,7 +114,7 @@ public class Histogram extends View {
         }
         textPaint.setAntiAlias(true);
         textPaint.setTextSize(getWidth() / 28);
-        textPaint.setColor(getResources().getColor(R.color.colorGray3));
+        textPaint.setColor(UIUtils.getColor(R.color.colorGray3));
 
         defaultPaint.setAntiAlias(true);
     }
@@ -143,9 +144,14 @@ public class Histogram extends View {
                 .getSystemService(Context.WINDOW_SERVICE);
         Path mPath = new Path();
 
-        int width = wm.getDefaultDisplay().getWidth();
+        int width = 0;
+        if (wm != null) {
+            DisplayMetrics dm = new DisplayMetrics();
+            wm.getDefaultDisplay().getMetrics(dm);
+            width = dm.widthPixels;
+        }
         initPaint();
-        defaultPaint.setColor(0x43FF5070);
+        defaultPaint.setColor(0x43F87C86);
         defaultPaint.setStyle(Paint.Style.FILL);
 
         if (startX == XofY) {
@@ -187,7 +193,7 @@ public class Histogram extends View {
         //第二行的Y轴坐标
         // float textY2 = textY + (textPaint.getFontMetrics().bottom - textPaint.getFontMetrics().top) - UIUtils.dip2Px(6);
         //X轴日期的颜色
-        textPaint.setColor(getResources().getColor(R.color.colorGray3));
+        textPaint.setColor(UIUtils.getColor(R.color.colorGray3));
         for (int i = 0; i < mDatas.size(); i++) {
             PPHistogramBean pphb = mDatas.get(i);
             String text = pphb.getEndTime();
@@ -206,9 +212,9 @@ public class Histogram extends View {
 //        defaultPaint.setColor(0xff49c29d);
 //        canvas.drawLine(XofY, 0, XofY, YofX, defaultPaint);
         defaultPaint.setStrokeWidth(1);
-        defaultPaint.setColor(getResources().getColor(R.color.colorGray2));
+        defaultPaint.setColor(UIUtils.getColor(R.color.colorGray2));
 
-        textPaint.setColor(getResources().getColor(R.color.colorGray3));
+        textPaint.setColor(UIUtils.getColor(R.color.colorGray3));
         textPaint.setTextSize(getWidth() / 32);
 
         float step = (YofX - borderBottom) / 5;
@@ -237,7 +243,7 @@ public class Histogram extends View {
             return;
         }
         initPaint();
-        defaultPaint.setColor(getResources().getColor(R.color.colorPink));
+        defaultPaint.setColor(UIUtils.getColor(R.color.colorPink));
         float step = (getWidth() - XofY - borderLeft) / countInOne;
 
 //        LinearGradient lg;
@@ -264,10 +270,10 @@ public class Histogram extends View {
             }
             if (selectIndex != i) {
                 //正常颜色
-                defaultPaint.setColor(getResources().getColor(R.color.colorPink));
+                defaultPaint.setColor(UIUtils.getColor(R.color.colorPink));
             } else {
                 //选中颜色
-                defaultPaint.setColor(getResources().getColor(R.color.colorPink));
+                defaultPaint.setColor(UIUtils.getColor(R.color.colorPink));
 
             }
             //选择了的与其他的颜色不一样

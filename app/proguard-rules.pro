@@ -682,10 +682,11 @@ public void xxxxxx(**);
 # Retrolambda
 -dontwarn java.lang.invoke.*
 # Youzan SDK
--dontwarn com.youzan.sdk.***
--keep class com.youzan.sdk.**{*;}
+-dontwarn com.youzan.androidsdk.***
+-keep class com.youzan.androidsdk.**{*;}
 
 # OkHttp
+-dontwarn okhttp3.**
 -dontwarn okio.**
 -dontwarn com.squareup.okhttp.**
 -keep class okio.**{*;}
@@ -748,3 +749,8 @@ public void xxxxxx(**);
 
  -keep class qalsdk.**{*;}
  -dontwarn qalsdk.**
+
+ # banner 的混淆代码
+ -keep class com.youth.banner.** {
+     *;
+  }

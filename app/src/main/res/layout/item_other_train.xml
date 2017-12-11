@@ -52,13 +52,6 @@
                     android:textColor="@android:color/black"
                     android:textSize="16dp"/>
 
-                <TextView
-                    android:id="@+id/item_train_tv_2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/colorGray3"
-                    android:textSize="14dp"
-                    android:visibility="gone"/>
 
                 <TextView
                     android:id="@+id/item_train_tv_1"

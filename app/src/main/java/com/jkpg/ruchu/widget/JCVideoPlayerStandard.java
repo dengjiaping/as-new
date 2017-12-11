@@ -1,10 +1,10 @@
 package com.jkpg.ruchu.widget;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -33,7 +34,9 @@ import fm.jiecao.jcvideoplayer_lib.JCVideoPlayer;
  * Created by qindi on 2017/9/1.
  */
 
-public class JCVideoPlayerStandard extends JCVideoPlayer {
+public class JCVideoPlayerStandard extends JCVideoPlayer
+
+    {
 
     protected static Timer DISMISS_CONTROL_VIEW_TIMER;
 
@@ -45,9 +48,10 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
 
 
     protected DismissControlViewTimerTask mDismissControlViewTimerTask;
+        private LinearLayout mLl;
 
 
-    public JCVideoPlayerStandard(Context context) {
+        public JCVideoPlayerStandard(Context context) {
         super(context);
     }
 
@@ -64,7 +68,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         thumbImageView = (ImageView) findViewById(R.id.thumb);
         loadingProgressBar = (ProgressBar) findViewById(R.id.loading);
         tinyBackImageView = (ImageView) findViewById(R.id.back_tiny);
-
+        mLl = (LinearLayout) findViewById(R.id.layout_top);
         thumbImageView.setOnClickListener(this);
         backButton.setOnClickListener(this);
         tinyBackImageView.setOnClickListener(this);
@@ -76,6 +80,7 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         super.setUp(url, screen, objects);
         if (objects.length == 0) return;
         titleTextView.setText(objects[0].toString());
+        mLl.setVisibility(GONE);
         if (currentScreen == SCREEN_WINDOW_FULLSCREEN) {
             fullscreenButton.setImageResource(R.drawable.jc_shrink);
             backButton.setVisibility(View.VISIBLE);
@@ -793,6 +798,5 @@ public class JCVideoPlayerStandard extends JCVideoPlayer {
         super.onCompletion();
         cancelDismissControlViewTimer();
     }
-
 
 }

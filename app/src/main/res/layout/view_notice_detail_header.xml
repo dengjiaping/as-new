@@ -26,24 +26,43 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
+                    android:gravity="center"
                     android:id="@+id/notice_detail_tv_name"
 
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="12dp"
+                    android:drawablePadding="10dp"
                     android:textColor="@android:color/black"/>
 
                 <ImageView
+                    android:visibility="gone"
                     android:id="@+id/notice_detail_iv_lz"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:src="@drawable/icon_lz"/>
+                <CheckBox
+                    android:id="@+id/notice_detail_cb_follow"
+                    android:layout_alignParentRight="true"
+                    android:layout_width="50dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/select_bd_bg"
+                    android:button="@null"
+                    android:checked="true"
+                    android:gravity="center"
+                    android:paddingBottom="5dp"
+                    android:paddingTop="5dp"
+                    android:text="加关注"
+                    android:textColor="@color/select_bd_text_color"
+                    android:textSize="10dp"
+                    />
 
                 <!--<ImageView-->
                     <!--android:id="@+id/notice_detail_iv_fine"-->
@@ -51,7 +70,7 @@
                     <!--android:layout_height="wrap_content"-->
                     <!--android:layout_marginLeft="10dp"-->
                     <!--android:src="@drawable/icon_fine"/>-->
-            </LinearLayout>
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -63,13 +82,13 @@
                 <TextView
                     android:id="@+id/notice_detail_tv_tc"
                     android:layout_width="wrap_content"
+                    android:layout_marginRight="10dp"
                     android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/notice_detail_tv_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:drawableLeft="@drawable/icon_gps"
                     android:drawablePadding="5dp"/>
 

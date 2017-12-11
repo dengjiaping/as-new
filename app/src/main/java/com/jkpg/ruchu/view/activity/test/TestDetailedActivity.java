@@ -308,15 +308,13 @@ public class TestDetailedActivity extends BaseActivity {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
                         TestResultBean testResultBean = new Gson().fromJson(s, TestResultBean.class);
-                        Intent intent = new Intent(TestDetailedActivity.this, TestResultActivity.class);
+                        Intent intent = new Intent(TestDetailedActivity.this, TestReportActivity.class);
                         intent.putExtra("testResultBean", testResultBean);
                         startActivity(intent);
 
 
                         EventBus.getDefault().post("TrainFragment");
                         finish();
-                    /*startActivity(new Intent(TestDetailedActivity.this, TestResultActivity.class));
-                    finish();*/
                     }
                 });
     }

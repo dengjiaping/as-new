@@ -39,8 +39,9 @@ public class MySmsHistoryRvAdapter extends BaseQuickAdapter<IMUserBean, BaseView
         Glide
                 .with(UIUtils.getContext())
                 .load(item.url)
+                .dontAnimate()
+                .placeholder(R.drawable.gray_bg)
                 .centerCrop()
-                .crossFade()
                 .error(R.drawable.gray_bg)
                 .into((ImageView) helper.getView(R.id.item_photo));
         helper.setText(R.id.item_tv_title, item.name);

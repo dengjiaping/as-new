@@ -73,6 +73,7 @@
             android:drawablePadding="10dp"
             android:gravity="center"
             android:text="会员套餐"
+            android:drawableTint="@color/colorPink"
             android:textColor="@color/colorPink"
             android:textSize="18sp"
             />

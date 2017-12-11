@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 
 import com.jkpg.ruchu.base.MyApplication;
 
@@ -44,7 +46,10 @@ public class UIUtils {
      * 得到Color.xml中的颜色信息
      */
     public static int getColor(int resId) {
-        return getResources().getColor(resId);
+        return ContextCompat.getColor(MyApplication.getContext(), resId);
+    }
+    public static Drawable getDrawable(int resId) {
+        return ContextCompat.getDrawable(UIUtils.getContext(),resId);
     }
 
     /**

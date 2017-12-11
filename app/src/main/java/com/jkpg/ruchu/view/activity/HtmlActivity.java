@@ -38,6 +38,8 @@ public class HtmlActivity extends BaseActivity {
         webSettings.setUseWideViewPort(true);
         webSettings.setJavaScriptEnabled(true);//支持javascript
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setAppCacheEnabled(true);
+        webSettings.setDomStorageEnabled(true);
         String url = getIntent().getStringExtra("URL");
         mWebView.loadUrl(url);
         mWebView.setWebChromeClient(new WebChromeClient() {

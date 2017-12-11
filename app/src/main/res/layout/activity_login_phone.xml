@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/train_bg"
 
-    tools:context="com.jkpg.ruchu.view.activity.login.LoginPhoneActivity">
+    >
 
     <include
         android:id="@+id/include"
@@ -75,8 +74,8 @@
         <Button
             android:id="@+id/login_btn_ok"
             style="@style/btn_pink"
-            android:textSize="14sp"
-            android:text="登录"/>
+            android:text="登录"
+            android:textSize="14sp"/>
     </LinearLayout>
 
     <Button
@@ -89,7 +88,7 @@
         android:layout_marginTop="40dp"
         android:background="@drawable/random_bg"
         android:text="快速注册"
-        android:textColor="#ff5070"/>
+        android:textColor="@color/colorPink"/>
 
 
 </RelativeLayout>

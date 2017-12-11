@@ -198,11 +198,11 @@ public class FineMoreReplyFixActivity extends BaseActivity {
                     return;
                 }
                 OkGo
-                        .post(AppUrl.ArticleReply
-                                + "?art_id=" + mArt_id
-                                + "&parentid=" + mParentid
-                                + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                                + "&content=" + string)
+                        .post(AppUrl.ArticleReply)
+                        .params("art_id",mArt_id)
+                        .params("parentid",mParentid)
+                        .params("userid",SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("content",string)
                         .execute(new StringDialogCallback(FineMoreReplyFixActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {

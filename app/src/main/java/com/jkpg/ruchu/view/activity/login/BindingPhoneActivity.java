@@ -395,7 +395,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                                     if (!codeBean.success) {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                                         return;
                                                     }
                                                     time();
@@ -414,7 +414,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                                     if (!codeBean.success) {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                                         return;
                                                     }
                                                     time();
@@ -450,7 +450,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                                     if (!codeBean.success) {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                                         return;
                                                     }
                                                     time();
@@ -469,7 +469,7 @@ public class BindingPhoneActivity extends BaseActivity {
                                                 public void onSuccess(String s, Call call, Response response) {
                                                     CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                                     if (!codeBean.success) {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,请明天重试");
+                                                        ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                                         return;
                                                     }
                                                     time();

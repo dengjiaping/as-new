@@ -55,7 +55,6 @@
             <TextView
                 android:id="@+id/item_notice_reply_body"
                 android:layout_width="match_parent"
-                android:foreground="?android:attr/selectableItemBackground"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:lineSpacingExtra="4dp"
@@ -108,7 +107,6 @@
                 </com.google.android.flexbox.FlexboxLayout>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
                     android:id="@+id/view_0"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:textSize="12sp"
                     android:lineSpacingExtra="4dp"
                     android:paddingTop="2dp"
@@ -117,7 +115,6 @@
                     android:layout_height="wrap_content"/>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
                     android:textSize="12sp"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginTop="5dp"
                     android:lineSpacingExtra="4dp"
                     android:paddingTop="2dp"
@@ -127,7 +124,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
                 <com.jkpg.ruchu.widget.ColorStyleTextView
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:textSize="12sp"
                     android:layout_marginTop="5dp"
                     android:paddingTop="2dp"
@@ -207,7 +203,6 @@
                     android:id="@+id/item_notice_reply_to_more"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:foreground="?android:attr/selectableItemBackground"
                     android:layout_marginTop="5dp"
                     android:textColor="@color/colorPink"
                     android:textSize="12dp"/>

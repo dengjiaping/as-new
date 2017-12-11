@@ -66,8 +66,8 @@ public class NoticeActivity extends BaseActivity {
                         initRecyclerView(list);
                         String[] ns = noticeBean.json.remark.trim().split(" ");
                         String ss = "";
-                        for (int i = 0; i < ns.length; i++) {
-                            ss = ss + "        " + ns[i] + "\n\n";
+                        for (String n : ns) {
+                            ss = ss + "        " + n + "\n\n";
                             LogUtils.d(ss);
                         }
                         mNoticeTvIntroduce.setText(ss);

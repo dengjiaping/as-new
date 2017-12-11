@@ -8,7 +8,6 @@
     <include layout="@layout/view_header"/>
 
 
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -37,126 +36,286 @@
 
 
                         <LinearLayout
-                            android:elevation=".5dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@android:color/white">
+                            android:background="@android:color/white"
+                            android:elevation="1dp"
+                            android:orientation="vertical">
 
-                            <com.jkpg.ruchu.widget.banner.BannerCommunity
+                            <com.youth.banner.Banner
                                 android:id="@+id/community_banner"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="12dp"/>
-                        </LinearLayout>
+                                android:layout_height="150dp"
+                                />
 
-                        <LinearLayout
-                            android:elevation=".5dp"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:background="@android:color/white"
-                            >
 
                             <LinearLayout
                                 android:id="@+id/community_ll_fine"
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
+                                android:gravity="center_horizontal"
                                 android:background="@drawable/ripple_with_color"
-                                android:orientation="horizontal"
-                                android:paddingBottom="12dp"
-                                android:paddingLeft="22dp"
-                                android:paddingTop="12dp">
+                                android:paddingTop="12dp"
+                                android:paddingBottom="12dp">
 
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/jingxuan"/>
-
-                                <LinearLayout
+                                <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="8dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="精选文章"
-                                        android:textColor="#fe4f18"
-                                        android:textSize="16sp"
-                                        />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="为你精心推荐"
-                                        android:textColor="@color/colorGray3"
-                                        android:textSize="14sp"
-                                        />
-                                </LinearLayout>
+                                    android:text="查看更多康复干货   >"
+                                    android:textColor="@color/colorPink"
+                                    android:textSize="14sp"/>
                             </LinearLayout>
 
-                            <View
-                                android:layout_width="0.5dp"
-                                android:layout_height="match_parent"
-                                android:layout_marginBottom="12dp"
-                                android:layout_marginTop="12dp"
-                                android:background="#22000000"
-                                />
-
-                            <LinearLayout
-                                android:id="@+id/community_ll_collect"
-                                android:layout_width="0dp"
-
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:background="@drawable/ripple_with_color"
-                                android:orientation="horizontal"
-                                android:paddingBottom="12dp"
-                                android:paddingLeft="22dp"
-                                android:paddingTop="12dp">
-
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:src="@drawable/shoucang"/>
-
-                                <LinearLayout
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:layout_marginLeft="8dp"
-                                    android:layout_marginRight="22dp"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="收藏"
-                                        android:textColor="@color/colorPink"
-                                        android:textSize="16sp"
-                                        />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="我收藏的帖子"
-                                        android:textColor="@color/colorGray3"
-                                        android:textSize="14sp"
-                                        />
-                                </LinearLayout>
-                            </LinearLayout>
 
                         </LinearLayout>
 
                         <LinearLayout
-                            android:elevation="1dp"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
                             android:background="@android:color/white"
+                            android:elevation="1dp"
+                            android:orientation="vertical"
+                            >
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="22dp"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
+                                android:text="社区达人"
+                                android:textColor="@android:color/black"
+                                android:textSize="16sp"/>
+                                <TextView
+                                    android:id="@+id/tv_expert_change"
+                                    android:layout_width="wrap_content"
+                                    android:layout_alignParentRight="true"
+                                    android:layout_centerVertical="true"
+                                    android:text="换一批"
+                                    android:layout_marginRight="22dp"
+                                    android:textColor="@color/colorPink"
+                                    android:layout_height="wrap_content"/>
+                            </RelativeLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content">
+
+                                <LinearLayout
+                                    android:id="@+id/ll_expert0"
+                                    android:visibility="invisible"
+                                    android:background="@drawable/ripple_with_color"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="12dp"
+                                    android:paddingTop="12dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp">
+
+
+                                    <com.jkpg.ruchu.widget.CircleImageView
+                                        android:id="@+id/expert_image0"
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:src="@color/colorGray2"/>
+
+                                    <TextView
+                                        android:id="@+id/expert_name0"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:ellipsize="marquee"
+                                        android:singleLine="true"
+                                        android:text="我是达人"
+                                        android:textSize="12dp"/>
+
+                                    <CheckBox
+                                        android:id="@+id/expert_cb0"
+                                        android:layout_width="50dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:background="@drawable/select_bd_bg"
+                                        android:button="@null"
+                                        android:checked="true"
+                                        android:gravity="center"
+                                        android:paddingBottom="5dp"
+                                        android:paddingTop="5dp"
+                                        android:text="关注"
+                                        android:textColor="@color/select_bd_text_color"
+                                        android:textSize="10dp"
+                                        />
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:visibility="gone"
+                                    android:background="@drawable/ripple_with_color"
+                                    android:id="@+id/ll_expert1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="12dp"
+                                    android:paddingTop="12dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp">
+
+
+                                    <com.jkpg.ruchu.widget.CircleImageView
+                                        android:id="@+id/expert_image1"
+
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:src="@color/colorGray2"/>
+
+                                    <TextView
+                                        android:id="@+id/expert_name1"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:ellipsize="marquee"
+                                        android:singleLine="true"
+                                        android:textSize="12dp"/>
+
+                                    <CheckBox
+                                        android:id="@+id/expert_cb1"
+                                        android:layout_width="50dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:background="@drawable/select_bd_bg"
+                                        android:button="@null"
+                                        android:checked="true"
+                                        android:gravity="center"
+                                        android:paddingBottom="5dp"
+                                        android:paddingTop="5dp"
+                                        android:text="关注"
+                                        android:textColor="@color/select_bd_text_color"
+                                        android:textSize="10dp"
+                                        />
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:visibility="gone"
+                                    android:background="@drawable/ripple_with_color"
+                                    android:id="@+id/ll_expert2"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="12dp"
+                                    android:paddingTop="12dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp">
+
+
+                                    <com.jkpg.ruchu.widget.CircleImageView
+                                        android:id="@+id/expert_image2"
+
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:src="@color/colorGray2"/>
+
+                                    <TextView
+                                        android:id="@+id/expert_name2"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:ellipsize="marquee"
+                                        android:singleLine="true"
+                                        android:textSize="12dp"/>
+
+                                    <CheckBox
+                                        android:id="@+id/expert_cb2"
+                                        android:layout_width="50dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:background="@drawable/select_bd_bg"
+                                        android:button="@null"
+                                        android:checked="true"
+                                        android:gravity="center"
+                                        android:paddingBottom="5dp"
+                                        android:paddingTop="5dp"
+                                        android:text="关注"
+                                        android:textColor="@color/select_bd_text_color"
+                                        android:textSize="10dp"
+                                        />
+
+
+                                </LinearLayout>
+
+                                <LinearLayout
+                                    android:visibility="gone"
+                                    android:background="@drawable/ripple_with_color"
+                                    android:id="@+id/ll_expert3"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:paddingBottom="12dp"
+                                    android:paddingTop="12dp"
+                                    android:layout_weight="1"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingLeft="5dp"
+                                    android:paddingRight="5dp">
+
+
+                                    <com.jkpg.ruchu.widget.CircleImageView
+                                        android:id="@+id/expert_image3"
+
+                                        android:layout_width="45dp"
+                                        android:layout_height="45dp"
+                                        android:src="@color/colorGray2"/>
+
+                                    <TextView
+                                        android:id="@+id/expert_name3"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+
+                                        android:layout_marginTop="5dp"
+                                        android:ellipsize="marquee"
+                                        android:singleLine="true"
+                                        android:textSize="12dp"/>
+
+                                    <CheckBox
+                                        android:id="@+id/expert_cb3"
+                                        android:layout_width="50dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="5dp"
+                                        android:background="@drawable/select_bd_bg"
+                                        android:button="@null"
+                                        android:checked="true"
+                                        android:gravity="center"
+                                        android:paddingBottom="5dp"
+                                        android:paddingTop="5dp"
+                                        android:text="关注"
+                                        android:textColor="@color/select_bd_text_color"
+                                        android:textSize="10dp"
+                                        />
+
+
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="5dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@android:color/white"
+                            android:elevation="1dp"
                             android:orientation="vertical"
                             >
 
@@ -164,55 +323,24 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="22dp"
-                                android:paddingBottom="12dp"
-                                android:paddingTop="12dp"
+                                android:paddingBottom="8dp"
+                                android:paddingTop="8dp"
                                 android:text="讨论板块"
-                                android:textColor="@color/colorGray3"
+                                android:textColor="@android:color/black"
                                 android:textSize="16sp"/>
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:background="#22000000"/>
 
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/community_rl_plate"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:nestedScrollingEnabled="false"/>
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
-                            android:background="@android:color/white"
-                            android:orientation="vertical"
-                            android:visibility="gone">
-
-                            <TextView
-                                android:id="@+id/community_tv_hot"
+                            <RelativeLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_marginLeft="22dp"
-                                android:layout_marginRight="22dp"
-                                android:drawableRight="@drawable/icon_next"
-                                android:paddingBottom="12dp"
-                                android:paddingTop="12dp"
-                                android:text="热门帖子"
-                                android:textSize="16sp"/>
+                                >
 
-                            <View
-                                android:layout_width="match_parent"
-                                android:layout_height="0.5dp"
-                                android:background="#22000000"/>
-
-                            <android.support.v7.widget.RecyclerView
-                                android:id="@+id/community_rl_hot"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:nestedScrollingEnabled="false"/>
+                                <android.support.v7.widget.RecyclerView
+                                    android:id="@+id/community_rl_plate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:nestedScrollingEnabled="false"/>
+                            </RelativeLayout>
                         </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
@@ -220,11 +348,13 @@
 
         </LinearLayout>
 
-        <include layout="@layout/base_retry"
+        <include
+            layout="@layout/base_retry"
             android:visibility="gone"/>
 
 
-        <include layout="@layout/base_loading"
+        <include
+            layout="@layout/base_loading"
             android:visibility="gone"/>
     </RelativeLayout>
 </LinearLayout>

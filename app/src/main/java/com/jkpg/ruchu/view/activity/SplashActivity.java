@@ -137,4 +137,14 @@ public class SplashActivity extends BaseActivity {
         });
 
     }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewGroup contentFrameLayout = (ViewGroup) findViewById(android.R.id.content);
+        View parentView = contentFrameLayout.getChildAt(0);
+        if (parentView != null && Build.VERSION.SDK_INT >= 19) {
+            parentView.setFitsSystemWindows(false);
+//            parentView.setBackgroundResource(R.drawable.bg_layout);
+        }
+    }
 }

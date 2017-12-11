@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                >
+
+    <RelativeLayout
+        android:layout_centerInParent="true"
+        android:layout_width="230dp"
+        android:background="@drawable/train_finish_bg"
+        android:layout_height="290dp">
+
+
+        <ImageView
+            android:id="@+id/train_finish_x"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:padding="12dp"
+            android:src="@drawable/icon_x"
+            android:tint="@color/colorWhite"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="vertical"
+            android:paddingLeft="22dp"
+            android:paddingRight="22dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="一份小惊喜送给自律的你"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"/>
+
+            <Button
+                android:id="@+id/train_finish_btn"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/train_finish_btn_bg"
+                android:text="立即领取"
+                android:textColor="#ca00fc"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.activity.my;
 
+import android.annotation.SuppressLint;
 import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -294,14 +295,14 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl365.setBackgroundResource(R.drawable.rectangle_open_vip2);
-                mOpenVipTv30.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv90.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv180.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv365.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv15.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv45.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv75.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
+                mOpenVipTv30.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv90.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv180.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv365.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv15.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv45.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv75.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv135.setTextColor(UIUtils.getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_90:
                 day = mOpenVipBean.list.get(1).cardtime;
@@ -311,14 +312,14 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip1);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl365.setBackgroundResource(R.drawable.rectangle_open_vip2);
-                mOpenVipTv30.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv90.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv180.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv365.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv15.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv45.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv75.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
+                mOpenVipTv30.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv90.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv180.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv365.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv15.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv45.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv75.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv135.setTextColor(UIUtils.getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_180:
                 day = mOpenVipBean.list.get(2).cardtime;
@@ -329,14 +330,14 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip1);
                 mOpenVipRl365.setBackgroundResource(R.drawable.rectangle_open_vip2);
-                mOpenVipTv30.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv90.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv180.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv365.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv15.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv45.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv75.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorGray3));
+                mOpenVipTv30.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv90.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv180.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv365.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv15.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv45.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv75.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv135.setTextColor(UIUtils.getColor(R.color.colorGray3));
                 break;
             case R.id.open_vip_rl_365:
                 day = mOpenVipBean.list.get(3).cardtime;
@@ -346,14 +347,14 @@ public class OpenVipActivity extends BaseActivity {
                 mOpenVipRl90.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl180.setBackgroundResource(R.drawable.rectangle_open_vip2);
                 mOpenVipRl365.setBackgroundResource(R.drawable.rectangle_open_vip1);
-                mOpenVipTv30.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv90.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv180.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv365.setTextColor(getResources().getColor(R.color.colorPink));
-                mOpenVipTv15.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv45.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv75.setTextColor(getResources().getColor(R.color.colorGray3));
-                mOpenVipTv135.setTextColor(getResources().getColor(R.color.colorPink));
+                mOpenVipTv30.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv90.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv180.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv365.setTextColor(UIUtils.getColor(R.color.colorPink));
+                mOpenVipTv15.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv45.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv75.setTextColor(UIUtils.getColor(R.color.colorGray3));
+                mOpenVipTv135.setTextColor(UIUtils.getColor(R.color.colorPink));
 
                 break;
             case R.id.open_vip_wx:
@@ -390,22 +391,6 @@ public class OpenVipActivity extends BaseActivity {
                                     mOpenVipLlWx.setVisibility(View.GONE);
 //                                    EventBus.getDefault().post(new MessageEvent("MyFragment"));
                                     EventBus.getDefault().post(new MessageEvent("Vip"));
-                                    if (successBean.giveVIP) {
-//                                        Notification.Builder builder = new Notification.Builder(OpenVipActivity.this);
-//                                        Intent intent = new Intent(OpenVipActivity.this, VipManageActivity.class);  //需要跳转指定的页面
-//                                        PendingIntent pendingIntent = PendingIntent.getActivity(OpenVipActivity.this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-//                                        builder.setContentIntent(pendingIntent);
-//                                        builder.setSmallIcon(R.mipmap.ic_launcher);// 设置图标
-//                                        builder.setContentTitle(getString(R.string.vipTipHeader));// 设置通知的标题
-//                                        builder.setContentText(getString(R.string.vipTip));// 设置通知的内容
-//                                        builder.setWhen(System.currentTimeMillis());// 设置通知来到的时间
-//                                        builder.setAutoCancel(true); //自己维护通知的消失
-//                                        builder.setTicker(getString(R.string.vipTip));// 第一次提示消失的时候显示在通知栏上的
-//                                        builder.setOngoing(true);
-//                                        Notification notification = builder.build();
-//                                        notification.flags = Notification.FLAG_AUTO_CANCEL;  //只有全部清除时，Notification才会清除
-//                                        ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).notify(0, notification);
-                                    }
                                 } else {
                                     ToastUtils.showShort(UIUtils.getContext(), getString(R.string.AccounntWX));
                                 }
@@ -520,6 +505,7 @@ public class OpenVipActivity extends BaseActivity {
         }
     }
 
+    @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @SuppressWarnings("unused")
         public void handleMessage(Message msg) {

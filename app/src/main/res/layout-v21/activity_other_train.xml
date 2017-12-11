@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/colorXmlBg"
+              android:orientation="vertical">
+
+    <include layout="@layout/view_header"/>
+    <ImageView
+        android:id="@+id/image"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:src="@drawable/other_train_header"
+        android:adjustViewBounds="true"
+        android:layout_height="wrap_content"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:transitionName="share"
+        android:id="@+id/other_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

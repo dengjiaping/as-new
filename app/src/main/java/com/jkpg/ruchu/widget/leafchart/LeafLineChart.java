@@ -71,7 +71,7 @@ public class LeafLineChart extends AbsLeafChart {
 //                    if (line.isCubic()) {
 //                        leafChartRenderer.drawCubicPath(canvas, line);
 //                    } else {
-                        leafChartRenderer.drawLines(canvas, line);
+                    leafChartRenderer.drawLines(canvas, line, axisX);
 //                    }
                     if (line.isFill()) {
                         //填充

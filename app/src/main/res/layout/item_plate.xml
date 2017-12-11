@@ -42,7 +42,8 @@
             <TextView
                 android:layout_marginLeft="12dp"
                 android:id="@+id/plate_tv_num"
-                android:layout_width="wrap_content"
+                android:layout_width="40dp"
+                android:gravity="center"
                 android:layout_height="wrap_content"
                 android:background="@drawable/shap_rectangle_gray4"
                 android:paddingBottom="2dp"
@@ -55,9 +56,9 @@
 
         <TextView
             android:id="@+id/plate_tv_body"
-            android:maxLines="2"
+            android:maxLines="1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:textColor="@color/colorGray3"
             android:textSize="14dp"/>
 

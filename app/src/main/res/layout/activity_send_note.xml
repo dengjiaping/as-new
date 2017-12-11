@@ -3,7 +3,8 @@
               android:id="@+id/send_note_view"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="@android:color/white"
+              android:fitsSystemWindows="true"
+              android:background="@drawable/bg_header"
               android:orientation="vertical"
     >
 
@@ -13,7 +14,7 @@
         android:layout_weight="1"
         android:orientation="vertical">
 
-        <include layout="@layout/view_header"/>
+        <include layout="@layout/view_header_56"/>
 
         <ScrollView
             android:layout_width="match_parent"
@@ -120,14 +121,17 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
+            android:visibility="gone"
             android:background="#22000000"/>
 
 
         <ScrollView
+            android:background="@android:color/white"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
+                android:elevation="2dp"
                 android:layout_width="match_parent"
 
                 android:layout_height="wrap_content"

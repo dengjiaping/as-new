@@ -21,7 +21,7 @@ import com.danikula.videocache.CacheListener;
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.Base2Activity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.IsVipBean;
 import com.jkpg.ruchu.bean.MessageEvent;
@@ -61,7 +61,7 @@ import okhttp3.Response;
  * Created by qindi on 2017/5/20.
  */
 
-public class VideoDetailActivity extends BaseActivity {
+public class VideoDetailActivity extends Base2Activity {
     @BindView(R.id.header_iv_left)
     ImageView mHeaderIvLeft;
     @BindView(R.id.header_tv_title)
@@ -82,10 +82,8 @@ public class VideoDetailActivity extends BaseActivity {
     View mViewStart;
     private String mTid;
     private String mDetailsUrl;
-    private FeedBackRLAdapter mFeedBackRLAdapter;
     private String mPosition;
     private AlertDialog mShow;
-    private AlertDialog.Builder mBuilder;
     private MyRunnable mMyRunnable;
     private VideoDetailBean mVideoDetailBean;
 
@@ -174,7 +172,7 @@ public class VideoDetailActivity extends BaseActivity {
                 if (mShow != null && mShow.isShowing()) {
                     return;
                 }
-                mBuilder = new AlertDialog.Builder(VideoDetailActivity.this)
+                AlertDialog.Builder builder = new AlertDialog.Builder(VideoDetailActivity.this)
                         .setMessage("开会员后继续观看哦!")
                         .setPositiveButton("开通会员", new DialogInterface.OnClickListener() {
                             @Override
@@ -191,7 +189,7 @@ public class VideoDetailActivity extends BaseActivity {
                             }
                         })
                         .setCancelable(false);
-                mShow = mBuilder.show();
+                mShow = builder.show();
 //                                            mVideoPlayer.setUiWitStateAndScreen(JCVideoPlayer.NORMAL_ORIENTATION);
 //                                                            mVideoPlayer.changeUiToNormal();
                 mVideoPlayer.startButton.performClick();
@@ -209,7 +207,6 @@ public class VideoDetailActivity extends BaseActivity {
             mDownloadText.setText("已缓存");
             mVideoPlayer.bottomProgressBar.setSecondaryProgress(100);
 
-        } else {
         }
         mVideoPlayer.setUp(proxyUrl
                 , JCVideoPlayerStandard.SCREEN_LAYOUT_NORMAL, videoMS.title);
@@ -221,10 +218,6 @@ public class VideoDetailActivity extends BaseActivity {
         proxy.registerCacheListener(new CacheListener() {
             @Override
             public void onCacheAvailable(File cacheFile, String url, int percentsAvailable) {
-                if (percentsAvailable == 1) {
-//                    ToastUtils.showShort(UIUtils.getContext(), "边播边缓存");
-
-                }
                 mVideoPlayer.bottomProgressBar.setSecondaryProgress(percentsAvailable);
                 if (percentsAvailable == 100) {
                     mDownloadText.setText("已经缓存");
@@ -238,7 +231,6 @@ public class VideoDetailActivity extends BaseActivity {
                 mViewStart.setVisibility(View.GONE);
                 if (proxy.isCached(AppUrl.BASEURLHTTP + videoMS.videourl)) {
                     mDownloadText.setText("已缓存");
-                } else {
                 }
             }
         });
@@ -249,12 +241,12 @@ public class VideoDetailActivity extends BaseActivity {
 
     private void initRecyclerView(final List<VideoDetailBean.VideoMSBean.DiscussBean> discuss) {
         mVideoRecyclerView.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mFeedBackRLAdapter = new FeedBackRLAdapter(R.layout.item_feedback, discuss);
-        mVideoRecyclerView.setAdapter(mFeedBackRLAdapter);
+        FeedBackRLAdapter feedBackRLAdapter = new FeedBackRLAdapter(R.layout.item_feedback, discuss);
+        mVideoRecyclerView.setAdapter(feedBackRLAdapter);
         ImageView imageView = new ImageView(this);
         imageView.setImageResource(R.drawable.no_reply);
-        mFeedBackRLAdapter.setEmptyView(imageView);
-        mFeedBackRLAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+        feedBackRLAdapter.setEmptyView(imageView);
+        feedBackRLAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
             @Override
             public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
                 Intent intent = new Intent(VideoDetailActivity.this, FansCenterActivity.class);
@@ -343,6 +335,11 @@ public class VideoDetailActivity extends BaseActivity {
     @Override
     public void onPause() {
         super.onPause();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
         JCVideoPlayer.releaseAllVideos();
     }
 

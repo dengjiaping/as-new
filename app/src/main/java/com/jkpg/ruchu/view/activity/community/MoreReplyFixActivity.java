@@ -36,6 +36,7 @@ import com.lzy.okgo.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 import butterknife.BindView;
@@ -134,12 +135,12 @@ public class MoreReplyFixActivity extends BaseActivity {
                         startActivity(intent2);
                         break;
                 }
-                if (view instanceof ColorStyleTextView){
+                if (view instanceof ColorStyleTextView) {
                     ColorStyleTextView textView = (ColorStyleTextView) view;
                     textView.setOnClickCallBack(new ColorStyleTextView.ClickCallBack() {
                         @Override
                         public void onClick(int a) {
-                            switch (a){
+                            switch (a) {
                                 case 0:
                                     String userid2 = items.get(position).userid2;
                                     Intent intent2 = new Intent(MoreReplyFixActivity.this, FansCenterActivity.class);
@@ -170,10 +171,10 @@ public class MoreReplyFixActivity extends BaseActivity {
                 break;
         }
     }
-
+    @SuppressWarnings("deprecation")
     private void replyLZ() {
         View editView;
-        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 ||Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP_MR1 || Build.VERSION.SDK_INT == Build.VERSION_CODES.LOLLIPOP) {
             editView = View.inflate(UIUtils.getContext(), R.layout.view_reply_input_22, null);
             editView.findViewById(R.id.view_reply_view).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,15 +198,15 @@ public class MoreReplyFixActivity extends BaseActivity {
             public void onClick(View v) {
                 String string = replyEdit.getText().toString().trim();
                 if (string.length() == 0) {
-                    ToastUtils.showShort(UIUtils.getContext(),"请输入内容哦");
+                    ToastUtils.showShort(UIUtils.getContext(), "请输入内容哦");
                     return;
                 }
                 OkGo
-                        .post(AppUrl.BBS_REPLY
-                                + "?bbsid=" + mBbsid
-                                + "&parentid=" + mParentid
-                                + "&userid=" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, "")
-                                + "&content=" + string)
+                        .post(AppUrl.BBS_REPLY)
+                        .params("bbsid", mBbsid)
+                        .params("parentid", mParentid)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .params("content", URLEncoder.encode(string))
                         .execute(new StringDialogCallback(MoreReplyFixActivity.this) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {

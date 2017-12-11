@@ -1,14 +1,13 @@
 package com.jkpg.ruchu.view.activity.login;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetDialog;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -35,7 +34,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.Map;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import okhttp3.Call;
@@ -48,17 +46,6 @@ import okhttp3.Response;
 public class LoginActivity extends BaseActivity {
 
 
-    @BindView(R.id.login_tv_wx)
-    ImageView mLoginTvWx;
-    @BindView(R.id.login_tv_other)
-    ImageView mLoginTvOther;
-    //    @BindView(R.id.login_ll_qq)
-//    LinearLayout mLoginLlQq;
-//    @BindView(R.id.login_ll_phone)
-//    LinearLayout mLoginLlPhone;
-    @BindView(R.id.login_btn_random)
-    ImageView mLoginBtnRandom;
-
     private IWXAPI api;
 
     @Override
@@ -68,23 +55,22 @@ public class LoginActivity extends BaseActivity {
         setSwipeBackEnable(false);
 
         ButterKnife.bind(this);
-        initBar();
         EventBus.getDefault().post(new MessageEvent("Quit"));
         UMShareAPI.get(LoginActivity.this).fetchAuthResultWithBundle(LoginActivity.this, savedInstanceState, umAuthListener);
     }
-
-    private void initBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //透明状态栏
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //透明导航栏
-//            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(Color.TRANSPARENT);
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewGroup contentFrameLayout = (ViewGroup) findViewById(android.R.id.content);
+        View parentView = contentFrameLayout.getChildAt(0);
+        if (parentView != null && Build.VERSION.SDK_INT >= 19) {
+            parentView.setFitsSystemWindows(false);
+//            parentView.setBackgroundResource(R.drawable.bg_layout);
         }
     }
 
-    @OnClick({R.id.login_tv_wx, /*R.id.login_ll_qq, R.id.login_ll_phone,*/ R.id.login_btn_random, R.id.login_tv_other})
+
+    @OnClick({R.id.login_tv_wx, R.id.login_btn_random, R.id.login_tv_other})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.login_tv_wx:
@@ -98,10 +84,11 @@ public class LoginActivity extends BaseActivity {
                 dialog.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
                 dialog.show();
                 loginView.findViewById(R.id.login_tv_qq).setOnClickListener(new View.OnClickListener() {
+
                     @Override
                     public void onClick(View v) {
-                        LoginQQ();
                         dialog.dismiss();
+                        LoginQQ();
                     }
                 });
                 loginView.findViewById(R.id.login_tv_phone).setOnClickListener(new View.OnClickListener() {
@@ -121,11 +108,6 @@ public class LoginActivity extends BaseActivity {
 
 
                 break;
-//            case R.id.login_ll_phone:
-//                startActivity(new Intent(LoginActivity.this, LoginPhoneActivity.class));
-//                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
-//                finish();
-//                break;
             case R.id.login_btn_random:
                 finish();
 
@@ -205,7 +187,7 @@ public class LoginActivity extends BaseActivity {
                                                         SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginWxBean.usersign);
                                                         finish();
                                                     } else {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginWxBean.state);
+                                                        ToastUtils.showShort(UIUtils.getContext(), "登录失败 +" + loginWxBean.state);
                                                     }
                                                     LogUtils.i(s);
                                                 }
@@ -254,7 +236,7 @@ public class LoginActivity extends BaseActivity {
                                                         SPUtils.saveString(UIUtils.getContext(), Constants.IMSIGN, loginQQBean.usersign);
                                                         finish();
                                                     } else {
-                                                        ToastUtils.showShort(UIUtils.getContext(), "登陆失败 +" + loginQQBean.state);
+                                                        ToastUtils.showShort(UIUtils.getContext(), "登录失败 +" + loginQQBean.state);
                                                     }
                                                 }
                                             });
@@ -279,7 +261,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onError(SHARE_MEDIA platform, int action, Throwable t) {
-            Toast.makeText(getApplicationContext(), "登陆失败", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "登录失败", Toast.LENGTH_SHORT).show();
             LogUtils.i(t + "");
 //            mShow.dismiss();
 
@@ -287,7 +269,7 @@ public class LoginActivity extends BaseActivity {
 
         @Override
         public void onCancel(SHARE_MEDIA platform, int action) {
-            Toast.makeText(getApplicationContext(), "登陆取消", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "登录取消", Toast.LENGTH_SHORT).show();
 //            mShow.dismiss();
         }
     };

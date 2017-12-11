@@ -1,6 +1,7 @@
 package com.jkpg.ruchu.widget.leafchart;
 
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
@@ -35,6 +36,7 @@ public class LineChart extends AbsLeafChart {
         super(context, attrs, defStyleAttr);
     }
 
+
     @Override
     protected void initRenderer() {
         mLineRenderer = new LineRenderer(mContext, this);
@@ -68,14 +70,11 @@ public class LineChart extends AbsLeafChart {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (lines != null && lines.size() > 0) {
-            Line line;
-            line = lines.get(0);
+            Line line = lines.get(0);
             List<PointValue> values = line.getValues();
-            Point pointA = new Point(values.get(mI).getOriginX(), values.get(mI).getOriginY());
-            Point pointB = new Point(values.get(mI + 1).getOriginX(), values.get(mI + 1).getOriginY());
-            if (line != null) {
-                mLineRenderer.drawLines(canvas, line, pointA, pointB);
-            }
+            @SuppressLint("DrawAllocation") Point pointA = new Point(values.get(mI).getOriginX(), values.get(mI).getOriginY());
+            @SuppressLint("DrawAllocation") Point pointB = new Point(values.get(mI + 1).getOriginX(), values.get(mI + 1).getOriginY());
+            mLineRenderer.drawLines(canvas, line, pointA, pointB);
         }
     }
 

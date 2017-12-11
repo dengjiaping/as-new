@@ -23,11 +23,12 @@ public class MySmsNoticeAdapter extends BaseQuickAdapter<MySmsNoticeBean.ListBea
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void convert(BaseViewHolder helper, MySmsNoticeBean.ListBean item) {
         if (item.type.equals("1")) {
             TextView textView = helper.getView(R.id.sms_notice_title);
             textView.setText("");
-            textView.append(Html.fromHtml("<font color='#ff5070'>" + item.nick + "</font>"));
+            textView.append(Html.fromHtml("<font color='#F87C86'>" + item.nick + "</font>"));
             textView.append(item.title);
             helper.setText(R.id.sms_notice_time, item.createtime);
             helper.setText(R.id.sms_notice_content, item.content);

@@ -38,36 +38,12 @@ public class TrainPrepareActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.train_prepare_btn:
-//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-//                    PermissionUtils.requestPermissions(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE}, new PermissionUtils.OnPermissionListener() {
-//                        @Override
-//                        public void onPermissionGranted() {
-//                            startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
-//                            finish();
-//                        }
-//
-//                        @Override
-//                        public void onPermissionDenied(String[] deniedPermissions) {
-//                            ToastUtils.showShort(UIUtils.getContext(), "您拒绝了,就不能来电暂停了哦,如需要,请到设置应用信息中打开.");
-//                            startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
-//                            finish();
-//                        }
-//                    });
-//                } else {
                     startActivity(new Intent(TrainPrepareActivity.this, StartTrainActivity2.class));
                     finish();
-//                }
-
                 break;
             case R.id.train_prepare_tip:
 
                 View inflate = View.inflate(TrainPrepareActivity.this, R.layout.view_show_tip, null);
-                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
                 final AlertDialog show = new AlertDialog.Builder(TrainPrepareActivity.this, R.style.dialog_invitation)
                         .setView(inflate)
                         .show();
@@ -81,9 +57,4 @@ public class TrainPrepareActivity extends BaseActivity {
         }
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        PermissionUtils.onRequestPermissionsResult(TrainPrepareActivity.this, 222, new String[]{Manifest.permission.READ_PHONE_STATE});
-    }
 }

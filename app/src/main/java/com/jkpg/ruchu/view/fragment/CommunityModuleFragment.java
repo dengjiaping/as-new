@@ -1,31 +1,35 @@
 package com.jkpg.ruchu.view.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
+import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.CommunityMianBean;
+import com.jkpg.ruchu.bean.MessageEvent;
+import com.jkpg.ruchu.bean.SmsEvent;
+import com.jkpg.ruchu.bean.SuccessBean;
+import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
-import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.NetworkUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
@@ -34,22 +38,21 @@ import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.WebActivity;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
 import com.jkpg.ruchu.view.activity.community.FineNoteDetailWebFixActivity;
-import com.jkpg.ruchu.view.activity.community.HotNoteActivity;
-import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
-import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
+import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
+import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.adapter.CommunityPlateRLAdapter;
-import com.jkpg.ruchu.view.adapter.HotPlateRLAdapter;
-import com.jkpg.ruchu.widget.GridDividerItemDecoration;
-import com.jkpg.ruchu.widget.banner.BannerCommunity;
-import com.jkpg.ruchu.widget.banner.BannerConfig;
-import com.jkpg.ruchu.widget.banner.listener.OnBannerListener;
-import com.jkpg.ruchu.widget.banner.loader.GlideImageLoader;
+import com.jkpg.ruchu.widget.CircleImageView;
+import com.jkpg.ruchu.widget.GlideImageLoader;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.cache.CacheMode;
 import com.lzy.okgo.callback.StringCallback;
 import com.lzy.okgo.request.BaseRequest;
+import com.youth.banner.Banner;
+import com.youth.banner.BannerConfig;
+import com.youth.banner.Transformer;
+import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -71,17 +74,11 @@ import okhttp3.Response;
 
 public class CommunityModuleFragment extends Fragment {
     @BindView(R.id.community_banner)
-    BannerCommunity mCommunityBanner;
+    Banner mCommunityBanner;
     @BindView(R.id.community_ll_fine)
     LinearLayout mCommunityLlFine;
-    @BindView(R.id.community_ll_collect)
-    LinearLayout mCommunityLlCollect;
     @BindView(R.id.community_rl_plate)
     RecyclerView mCommunityRlPlate;
-    @BindView(R.id.community_tv_hot)
-    TextView mCommunityTvHot;
-    @BindView(R.id.community_rl_hot)
-    RecyclerView mCommunityRlHot;
     Unbinder unbinder;
     @BindView(R.id.header_tv_title)
     TextView mHeaderTvTitle;
@@ -95,12 +92,51 @@ public class CommunityModuleFragment extends Fragment {
     FrameLayout mIdLoadingAndRetry;
     @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
+    @BindView(R.id.expert_image0)
+    CircleImageView mExpertImage0;
+    @BindView(R.id.expert_name0)
+    TextView mExpertName0;
+    @BindView(R.id.expert_cb0)
+    CheckBox mExpertCb0;
+    @BindView(R.id.expert_image1)
+    CircleImageView mExpertImage1;
+    @BindView(R.id.expert_name1)
+    TextView mExpertName1;
+    @BindView(R.id.expert_cb1)
+    CheckBox mExpertCb1;
+    @BindView(R.id.expert_image2)
+    CircleImageView mExpertImage2;
+    @BindView(R.id.expert_name2)
+    TextView mExpertName2;
+    @BindView(R.id.expert_cb2)
+    CheckBox mExpertCb2;
+    @BindView(R.id.expert_image3)
+    CircleImageView mExpertImage3;
+    @BindView(R.id.expert_name3)
+    TextView mExpertName3;
+    @BindView(R.id.expert_cb3)
+    CheckBox mExpertCb3;
+    @BindView(R.id.ll_expert0)
+    LinearLayout mLlExpert0;
+    @BindView(R.id.ll_expert1)
+    LinearLayout mLlExpert1;
+    @BindView(R.id.ll_expert2)
+    LinearLayout mLlExpert2;
+    @BindView(R.id.ll_expert3)
+    LinearLayout mLlExpert3;
+    @BindView(R.id.tv_expert_change)
+    TextView mTvExpertChange;
+    @BindView(R.id.header_iv_right)
+    ImageView mHeaderIvRight;
     private CommunityMianBean mCommunityMianBean;
     private List<CommunityMianBean.List1Bean> mList1 = new ArrayList<>();
     private List<CommunityMianBean.List2Bean> mList2 = new ArrayList<>();
-    private List<CommunityMianBean.List3Bean> mList3 = new ArrayList<>();
     private CommunityPlateRLAdapter mCommunityPlateRLAdapter;
-    private HotPlateRLAdapter mHotPlateRLAdapter;
+    private List<CommunityMianBean.DarenBean> mDaren;
+    private ArrayList<View> mViewLL;
+    private ArrayList<View> mViewImage;
+    private ArrayList<View> mViewName;
+    private ArrayList<View> mViewCB;
 
 
     @Nullable
@@ -116,9 +152,55 @@ public class CommunityModuleFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         initData();
         mHeaderTvTitle.setText("互动");
+        mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
         mHeaderIvLeft.setVisibility(View.GONE);
+        mViewLL = new ArrayList<>();
+        mViewLL.add(mLlExpert0);
+        mViewLL.add(mLlExpert1);
+        mViewLL.add(mLlExpert2);
+        mViewLL.add(mLlExpert3);
+
+        mViewImage = new ArrayList<>();
+        mViewImage.add(mExpertImage0);
+        mViewImage.add(mExpertImage1);
+        mViewImage.add(mExpertImage2);
+        mViewImage.add(mExpertImage3);
+        mViewName = new ArrayList<>();
+        mViewName.add(mExpertName0);
+        mViewName.add(mExpertName1);
+        mViewName.add(mExpertName2);
+        mViewName.add(mExpertName3);
+        mViewCB = new ArrayList<>();
+        mViewCB.add(mExpertCb0);
+        mViewCB.add(mExpertCb1);
+        mViewCB.add(mExpertCb2);
+        mViewCB.add(mExpertCb3);
 
         initRefreshLayout();
+
+
+        mTvExpertChange.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                    return;
+                }
+                OkGo
+                        .post(AppUrl.DIANJIHUANYIH)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                        .execute(new StringDialogCallback(getActivity()) {
+                            @Override
+                            public void onSuccess(String s, Call call, Response response) {
+                                CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                mDaren.clear();
+                                mDaren.addAll(communityMianBean.daren);
+                                initExpert();
+                            }
+                        });
+            }
+        });
+
+
     }
 
     private void initRefreshLayout() {
@@ -128,18 +210,20 @@ public class CommunityModuleFragment extends Fragment {
             public void onRefresh() {
                 OkGo
                         .post(AppUrl.BBS_INFOS)
+                        .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
                                 CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
                                 mList2.clear();
-                                mList3.clear();
                                 mList2.addAll(communityMianBean.list2);
-                                mList3.addAll(communityMianBean.list3);
                                 initBanner(mList1);
+                                mDaren.clear();
+                                mDaren.addAll(communityMianBean.daren);
+                                initExpert();
                                 mCommunityPlateRLAdapter.notifyDataSetChanged();
-                                mHotPlateRLAdapter.notifyDataSetChanged();
                                 mRefreshLayout.setRefreshing(false);
+
                             }
                         });
             }
@@ -149,19 +233,19 @@ public class CommunityModuleFragment extends Fragment {
     private void initData() {
         OkGo
                 .post(AppUrl.BBS_INFOS)
-                .cacheKey("BBS_INFOS")
+                .cacheKey("BBS_INFOS" + SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
+                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-//                        LogUtils.i(s);
                         mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
                         mList1 = mCommunityMianBean.list1;
                         mList2 = mCommunityMianBean.list2;
-                        mList3 = mCommunityMianBean.list3;
+                        mDaren = mCommunityMianBean.daren;
                         initBanner(mList1);
                         initPlateRecyclerView(mList2);
-                        initHotRecyclerView(mList3);
+                        initExpert();
 
                         mIdLoadingAndRetry.setVisibility(View.GONE);
                         mErrorStateRelativeLayout.setVisibility(View.GONE);
@@ -174,10 +258,10 @@ public class CommunityModuleFragment extends Fragment {
                         mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
                         List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
                         List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
-                        List<CommunityMianBean.List3Bean> list3 = mCommunityMianBean.list3;
+                        mDaren = mCommunityMianBean.daren;
                         initBanner(list1);
+                        initExpert();
                         initPlateRecyclerView(list2);
-                        initHotRecyclerView(list3);
 
                         mIdLoadingAndRetry.setVisibility(View.GONE);
                         mErrorStateRelativeLayout.setVisibility(View.GONE);
@@ -189,8 +273,6 @@ public class CommunityModuleFragment extends Fragment {
 //                        mLoadingAndRetryManager.showRetry();
                         mIdLoadingAndRetry.setVisibility(View.GONE);
                         mErrorStateRelativeLayout.setVisibility(View.VISIBLE);
-
-                        LogUtils.i("onError");
                     }
 
                     @Override
@@ -199,6 +281,128 @@ public class CommunityModuleFragment extends Fragment {
                         mIdLoadingAndRetry.setVisibility(View.VISIBLE);
                     }
                 });
+    }
+
+    private void initExpert() {
+        for (int i = 0; i < 4; i++) {
+            mViewLL.get(i).setVisibility(View.INVISIBLE);
+        }
+
+
+        for (int i = 0; i < mDaren.size(); i++) {
+            if (i > 4) {
+                return;
+            }
+            mViewLL.get(i).setVisibility(View.VISIBLE);
+            Glide.with(UIUtils.getContext())
+                    .load(AppUrl.BASEURL + mDaren.get(i).drimgurl)
+                    .dontAnimate()
+                    .centerCrop()
+                    .placeholder(R.drawable.gray_bg)
+                    .error(R.drawable.gray_bg)
+                    .into((ImageView) mViewImage.get(i));
+            ((TextView) mViewName.get(i)).setText(mDaren.get(i).drnick);
+            final int finalI = i;
+            mViewLL.get(i).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    toUserMain(mDaren.get(finalI).druserid);
+                }
+            });
+            if (mDaren.get(i).drisgz.equals("0")) {
+                ((CheckBox) mViewCB.get(i)).setChecked(true);
+                ((CheckBox) mViewCB.get(i)).setText("关注");
+            } else {
+                ((CheckBox) mViewCB.get(i)).setChecked(false);
+                ((CheckBox) mViewCB.get(i)).setText("已关注");
+            }
+
+            final int finalI1 = i;
+            final int finalI2 = i;
+            (mViewCB.get(i)).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                    final CheckBox checkBox = (CheckBox) mViewCB.get(finalI2);
+                    if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals(mDaren.get(finalI2).druserid)) {
+                        ToastUtils.showShort(UIUtils.getContext(), "自己不能关注自己哦");
+                        checkBox.setChecked(false);
+                        return;
+                    }
+
+                    if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+                        checkBox.setChecked(false);
+                        startActivity(new Intent(getActivity(), LoginActivity.class));
+                        return;
+                    }
+
+                    if (checkBox.isChecked()) {
+                        OkGo
+                                .post(AppUrl.CANCLEATT)
+                                .params("fansid", mDaren.get(finalI1).druserid)
+                                .params("myuserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                .execute(new StringDialogCallback(getActivity()) {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                        if (!successBean.success) {
+                                            ToastUtils.showShort(UIUtils.getContext(), "取消关注失败");
+                                            checkBox.setText("已关注");
+                                        } else {
+                                            checkBox.setText("关注");
+                                            EventBus.getDefault().post(new MessageEvent("MyFragment"));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Call call, Response response, Exception e) {
+                                        super.onError(call, response, e);
+                                        ToastUtils.showShort(UIUtils.getContext(), "取消关注失败");
+                                        checkBox.setText("已关注");
+                                        checkBox.setChecked(true);
+                                    }
+                                });
+                    } else {
+                        OkGo
+                                .post(AppUrl.ATTENTION)
+                                .params("followUserid", mDaren.get(finalI1).druserid)
+                                .params("MyUserid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                .execute(new StringDialogCallback(getActivity()) {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+                                        SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
+                                        if (!successBean.success) {
+                                            ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
+                                            checkBox.setText("关注");
+                                        } else {
+                                            checkBox.setText("已关注");
+                                            EventBus.getDefault().post(new MessageEvent("MyFragment"));
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onError(Call call, Response response, Exception e) {
+                                        super.onError(call, response, e);
+                                        ToastUtils.showShort(UIUtils.getContext(), "关注失败,请重试");
+                                        checkBox.setText("关注");
+                                        checkBox.setChecked(false);
+                                    }
+                                });
+                    }
+                }
+            });
+        }
+
+    }
+
+    private void toUserMain(String userid) {
+        if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            return;
+        }
+        Intent intent = new Intent(getActivity(), FansCenterActivity.class);
+        intent.putExtra("fansId", userid);
+        startActivity(intent);
     }
 
 
@@ -211,40 +415,23 @@ public class CommunityModuleFragment extends Fragment {
         for (int i = 0; i < list2.size(); i++) {
             plateIdList.add(list2.get(i).tid + "");
         }
-        mCommunityRlPlate.setLayoutManager(new GridLayoutManager(UIUtils.getContext(), 1));
-//        mCommunityRlPlate.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mCommunityPlateRLAdapter = new CommunityPlateRLAdapter(list2);
+        mCommunityRlPlate.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
+        mCommunityPlateRLAdapter = new CommunityPlateRLAdapter(R.layout.item_plate, list2);
         mCommunityRlPlate.setAdapter(mCommunityPlateRLAdapter);
-        mCommunityRlPlate.addItemDecoration(new GridDividerItemDecoration(1, Color.parseColor("#22000000")));
-        mCommunityPlateRLAdapter.setOnItemClickListener(new CommunityPlateRLAdapter.OnRecyclerViewItemClickListener() {
+        mCommunityPlateRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, CommunityMianBean.List2Bean data) {
+            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
+
                 Intent intent = new Intent(getActivity(), PlateDetailActivity.class);
-                intent.putExtra("plateid", data.tid + "");
-                intent.putExtra("title", data.platename);
+                intent.putExtra("plateid", list2.get(position).tid + "");
+                intent.putExtra("title", list2.get(position).platename);
                 intent.putStringArrayListExtra("plate", plateNameList);
                 intent.putStringArrayListExtra("plateId", plateIdList);
                 startActivity(intent);
-
             }
         });
     }
 
-    private void initHotRecyclerView(final List<CommunityMianBean.List3Bean> list3) {
-        mCommunityRlHot.setLayoutManager(new LinearLayoutManager(UIUtils.getContext()));
-        mHotPlateRLAdapter = new HotPlateRLAdapter(R.layout.item_fans_post, list3);
-        mCommunityRlHot.setAdapter(mHotPlateRLAdapter);
-        mHotPlateRLAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(BaseQuickAdapter adapter, View view, int position) {
-                int tid = list3.get(position).tid;
-                Intent intent = new Intent(getActivity(), NoticeDetailFixActivity.class);
-                intent.putExtra("bbsid", tid + "");
-                startActivity(intent);
-            }
-        });
-
-    }
 
     private void initBanner(final List<CommunityMianBean.List1Bean> list1) {
         ArrayList<String> images = new ArrayList<>();
@@ -253,13 +440,13 @@ public class CommunityModuleFragment extends Fragment {
             images.add(AppUrl.BASEURL + list1Bean.images);
             titles.add(list1Bean.title);
         }
+        mCommunityBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
         //设置图片加载器
         mCommunityBanner.setImageLoader(new GlideImageLoader());
         //设置图片集合
-        mCommunityBanner.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
         mCommunityBanner.setImages(images);
         //设置banner动画效果
-//        mCommunityBanner.setBannerAnimation(Transformer.CubeOut);
+        mCommunityBanner.setBannerAnimation(Transformer.Default);
         //设置标题集合（当banner样式有显示title时）
         mCommunityBanner.setBannerTitles(titles);
         //设置自动轮播，默认为true
@@ -267,7 +454,8 @@ public class CommunityModuleFragment extends Fragment {
         //设置轮播时间
         mCommunityBanner.setDelayTime(3000);
         //设置指示器位置（当banner模式中有指示器时）
-//        mTrainBanner.setIndicatorGravity(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
+//        mCommunityBanner.setIndicatorGravity(BannerConfig.CENTER);
+        //banner设置方法全部调用完毕时最后调用
         mCommunityBanner.start();
         mCommunityBanner.setOnBannerListener(new OnBannerListener() {
             @Override
@@ -283,8 +471,6 @@ public class CommunityModuleFragment extends Fragment {
                     intent.putExtra("art_id", tid + "");
                     startActivity(intent);
                 }
-//                ToastUtils.showShort(UIUtils.getContext(), tid + "");
-                //startActivity(new Intent(getActivity(), FineNoteDetailActivity.class));
             }
         });
     }
@@ -295,7 +481,7 @@ public class CommunityModuleFragment extends Fragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.id_btn_retry, R.id.community_ll_fine, R.id.community_ll_collect, R.id.community_tv_hot})
+    @OnClick({R.id.id_btn_retry, R.id.community_ll_fine, R.id.header_iv_right})
     public void onViewClicked(View view) {
         if (!NetworkUtils.isConnected()) {
             ToastUtils.showShort(UIUtils.getContext(), "网络未连接");
@@ -308,16 +494,12 @@ public class CommunityModuleFragment extends Fragment {
             case R.id.community_ll_fine:
                 startActivity(new Intent(getActivity(), FineNoteActivity.class));
                 break;
-            case R.id.community_ll_collect:
-                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))) {
+            case R.id.header_iv_right:
+                if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                     startActivity(new Intent(getActivity(), LoginActivity.class));
                     return;
                 }
-                startActivity(new Intent(getActivity(), MyCollectEditActivity.class));
-                break;
-            case R.id.community_tv_hot:
-                startActivity(new Intent(getActivity(), HotNoteActivity.class));
-
+                startActivity(new Intent(getActivity(), MySMSActivity.class));
                 break;
         }
     }
@@ -355,18 +537,54 @@ public class CommunityModuleFragment extends Fragment {
         if (mess.equals("Community")) {
             OkGo
                     .post(AppUrl.BBS_INFOS)
+                    .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
                             CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
                             mList2.clear();
-                            mList3.clear();
                             mList2.addAll(communityMianBean.list2);
-                            mList3.addAll(communityMianBean.list3);
                             mCommunityPlateRLAdapter.notifyDataSetChanged();
-                            mHotPlateRLAdapter.notifyDataSetChanged();
+                            initExpert();
                         }
                     });
         }
     }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.message.equals("Login") || event.message.equals("Quit")) {
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+//                    initData();
+                    OkGo
+                            .post(AppUrl.BBS_INFOS)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                    mList2.clear();
+                                    mList2.addAll(communityMianBean.list2);
+                                    mCommunityPlateRLAdapter.notifyDataSetChanged();
+                                    mDaren.clear();
+                                    mDaren.addAll(communityMianBean.daren);
+                                    initExpert();
+                                }
+                            });
+                }
+            }, 500);
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onNewMess(SmsEvent sms) {
+        if (sms.sms) {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms);
+        } else {
+            mHeaderIvRight.setImageResource(R.drawable.icon_sms_write);
+        }
+    }
+
 }

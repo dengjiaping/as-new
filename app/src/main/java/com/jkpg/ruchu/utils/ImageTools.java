@@ -214,45 +214,6 @@ public final class ImageTools {
         return output;
     }
 
-    /**
-     * Resize the bitmap
-     *
-     * @param bitmap
-     * @param width
-     * @param height
-     * @return
-     */
-    public static Bitmap zoomBitmap(Bitmap bitmap, int width, int height) {
-        int w = bitmap.getWidth();
-        int h = bitmap.getHeight();
-        Matrix matrix = new Matrix();
-        float scaleWidth = ((float) width / w);
-        float scaleHeight = ((float) height / h);
-        matrix.postScale(scaleWidth, scaleHeight);
-        Bitmap newbmp = Bitmap.createBitmap(bitmap, 0, 0, w, h, matrix, true);
-        return newbmp;
-    }
-
-    /**
-     * Resize the drawable
-     *
-     * @param drawable
-     * @param w
-     * @param h
-     * @return
-     */
-    public static Drawable zoomDrawable(Drawable drawable, int w, int h) {
-        int width = drawable.getIntrinsicWidth();
-        int height = drawable.getIntrinsicHeight();
-        Bitmap oldbmp = drawableToBitmap(drawable);
-        Matrix matrix = new Matrix();
-        float sx = ((float) w / width);
-        float sy = ((float) h / height);
-        matrix.postScale(sx, sy);
-        Bitmap newbmp = Bitmap.createBitmap(oldbmp, 0, 0, width, height,
-                matrix, true);
-        return new BitmapDrawable(newbmp);
-    }
 
     /**
      * Get images from SD card by path and the name of image

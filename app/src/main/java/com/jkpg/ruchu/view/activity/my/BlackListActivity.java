@@ -58,6 +58,12 @@ public class BlackListActivity extends BaseActivity {
 
         mRefreshLayout.setColorSchemeResources(R.color.colorPink, R.color.colorPink2);
         mRefreshLayout.setRefreshing(true);
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mRefreshLayout.setRefreshing(false);
+            }
+        });
 
         TIMFriendshipManagerExt.getInstance().getBlackList(new TIMValueCallBack<List<String>>() {
             @Override

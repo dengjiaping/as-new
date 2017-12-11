@@ -31,6 +31,7 @@ import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.center.PersonalInfoActivity;
+import com.jkpg.ruchu.view.activity.community.MyCollectEditActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.GrowthValueActivity;
 import com.jkpg.ruchu.view.activity.my.InvitationActivity;
@@ -40,7 +41,7 @@ import com.jkpg.ruchu.view.activity.my.MySMSActivity;
 import com.jkpg.ruchu.view.activity.my.MySetUpActivity;
 import com.jkpg.ruchu.view.activity.my.MySpeakActivity;
 import com.jkpg.ruchu.view.activity.my.MyTestActivity;
-import com.jkpg.ruchu.view.activity.my.TrainHistoryActivity;
+import com.jkpg.ruchu.view.activity.my.TrainCountActivity;
 import com.jkpg.ruchu.view.activity.my.VipManageActivity;
 import com.jkpg.ruchu.widget.CircleImageView;
 import com.lzy.okgo.OkGo;
@@ -82,13 +83,11 @@ public class MyFragment extends Fragment {
     LinearLayout mCenterLlTest;
     @BindView(R.id.center_ll_history)
     LinearLayout mCenterLlHistory;
+    @BindView(R.id.center_login)
+    LinearLayout mCenterLogin;
     @BindView(R.id.center_ll_setup)
     LinearLayout mCenterLlSetup;
     Unbinder unbinder;
-    //    @BindView(R.id.header_iv_left)
-//    ImageView mHeaderIvLeft;
-//    @BindView(R.id.header_tv_title)
-//    TextView mHeaderTvTitle;
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
     @BindView(R.id.center_tv_empiric)
@@ -135,6 +134,7 @@ public class MyFragment extends Fragment {
         }
         if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
             mCenterNoLogin.setVisibility(View.VISIBLE);
+            mCenterLogin.setVisibility(View.GONE);
         } else {
             initData();
         }
@@ -177,11 +177,12 @@ public class MyFragment extends Fragment {
     private void initData() {
         if (SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
             mCenterNoLogin.setVisibility(View.VISIBLE);
+            mCenterLogin.setVisibility(View.GONE);
         }
         OkGo
                 .post(AppUrl.MYINDEX)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .cacheKey("MYINDEX")
+                .cacheKey("MYINDEX"+SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
                 .cacheMode(CacheMode.FIRST_CACHE_THEN_REQUEST)
                 .execute(new StringCallback() {
                     @Override
@@ -191,6 +192,8 @@ public class MyFragment extends Fragment {
                         initMess(mymess);
                         if (!SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                             mCenterNoLogin.setVisibility(View.GONE);
+                            mCenterLogin.setVisibility(View.VISIBLE);
+
                         }
 
                     }
@@ -203,6 +206,8 @@ public class MyFragment extends Fragment {
                         initMess(mymess);
                         if (!SPUtils.getString(UIUtils.getContext(), Constants.USERID, "").equals("")) {
                             mCenterNoLogin.setVisibility(View.GONE);
+                            mCenterLogin.setVisibility(View.VISIBLE);
+
                         }
                     }
                 });
@@ -254,7 +259,7 @@ public class MyFragment extends Fragment {
 
     @OnClick({R.id.header_iv_right, R.id.center_ll_speak, R.id.center_ll_follow, R.id.center_ll_fans,
             R.id.center_civ_photo, R.id.center_ll_vip, R.id.center_ll_files, R.id.center_ll_test,
-            R.id.center_ll_invitation,
+            R.id.center_ll_invitation, R.id.center_ll_collection,
             R.id.center_ll_history, R.id.center_ll_setup, R.id.center_ll_on1, R.id.center_ll_on2})
     public void onViewClicked(View view) {
         if (!NetworkUtils.isConnected()) {
@@ -278,7 +283,7 @@ public class MyFragment extends Fragment {
 
                 break;
             case R.id.center_ll_history:
-                startActivity(new Intent(getActivity(), TrainHistoryActivity.class));
+                startActivity(new Intent(getActivity(), TrainCountActivity.class));
 
                 break;
             case R.id.center_ll_setup:
@@ -320,6 +325,9 @@ public class MyFragment extends Fragment {
             case R.id.center_ll_invitation:
                 startActivity(new Intent(getActivity(), InvitationActivity.class));
 
+                break;
+            case R.id.center_ll_collection:
+                startActivity(new Intent(getActivity(), MyCollectEditActivity.class));
                 break;
         }
     }

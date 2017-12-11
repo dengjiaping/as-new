@@ -1,9 +1,7 @@
 package com.jkpg.ruchu.utils;
 
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.CharacterStyle;
 import android.text.style.ForegroundColorSpan;
@@ -65,18 +63,6 @@ public class StringUtils {
         return spannable;
     }
 
-    /**
-     * 获取链接样式的字符串，即字符串下面有下划线
-     *
-     * @param resId 文字资源
-     * @return 返回链接样式的字符串
-     */
-    public static Spanned getHtmlStyleString(int resId) {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<a href=\"\"><u><b>").append(UIUtils.getString(resId))
-                .append(" </b></u></a>");
-        return Html.fromHtml(sb.toString());
-    }
 
     /**
      * 格式化文件大小，不保留末尾的0

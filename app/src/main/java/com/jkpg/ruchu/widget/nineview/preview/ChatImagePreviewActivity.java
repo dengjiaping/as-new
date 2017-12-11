@@ -34,6 +34,7 @@ public class ChatImagePreviewActivity extends Activity {
     private int screenHeight;
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preview);

@@ -44,7 +44,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/random_bg"
             android:text="完善信息"
-            android:textColor="#ff5070"
+            android:textColor="@color/colorPink"
             android:textSize="15sp"/>
 
     </LinearLayout>

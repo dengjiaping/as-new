@@ -33,6 +33,7 @@ import com.tencent.imsdk.TIMManager;
 import com.umeng.socialize.UMAuthListener;
 import com.umeng.socialize.UMShareAPI;
 import com.umeng.socialize.bean.SHARE_MEDIA;
+import com.youzan.androidsdk.YouzanSDK;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -91,11 +92,11 @@ public class AccountManagementActivity extends BaseActivity {
                             String tele = mAccountManagementBean.tele;
                             tele = tele.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
                             mAccountManageTvPhone.setText(tele);
-                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorBlack));
+                            mAccountManageTvPhone.setTextColor(UIUtils.getColor(R.color.colorBlack));
 
                         } else {
                             mAccountManageTvPhone.setText("点击绑定手机号");
-                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorPink));
+                            mAccountManageTvPhone.setTextColor(UIUtils.getColor(R.color.colorPink));
                         }
                         isQQ = mAccountManagementBean.qqflag;
                         if (mAccountManagementBean.qqflag) {
@@ -118,11 +119,11 @@ public class AccountManagementActivity extends BaseActivity {
                             String tele = mAccountManagementBean.tele;
                             tele = tele.replaceAll("(\\d{3})\\d{4}(\\d{4})", "$1****$2");
                             mAccountManageTvPhone.setText(tele);
-                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorBlack));
+                            mAccountManageTvPhone.setTextColor(UIUtils.getColor(R.color.colorBlack));
 
                         } else {
                             mAccountManageTvPhone.setText("点击绑定手机号");
-                            mAccountManageTvPhone.setTextColor(getResources().getColor(R.color.colorPink));
+                            mAccountManageTvPhone.setTextColor(UIUtils.getColor(R.color.colorPink));
                         }
                         isQQ = mAccountManagementBean.qqflag;
                         if (mAccountManagementBean.qqflag) {
@@ -248,6 +249,7 @@ public class AccountManagementActivity extends BaseActivity {
                 SPUtils.saveBoolean(UIUtils.getContext(), "needLogin", false);
                 EventBus.getDefault().post(new MessageEvent("Quit"));
                 EventBus.getDefault().post(new MessageEvent("Login"));
+                YouzanSDK.userLogout(UIUtils.getContext());
                 //登出
                 TIMManager.getInstance().logout(new TIMCallBack() {
                     @Override

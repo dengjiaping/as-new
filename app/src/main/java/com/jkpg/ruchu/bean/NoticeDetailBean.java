@@ -101,6 +101,7 @@ public class NoticeDetailBean implements Serializable {
         public String title;
         public boolean iszan;
         public String nick;
+        public int isgz;
         public String zan;
         public String reply;
         public int tid;

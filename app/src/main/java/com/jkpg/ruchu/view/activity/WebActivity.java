@@ -33,20 +33,20 @@ public class WebActivity extends BaseActivity {
     WebView mWebView;
     @BindView(R.id.header_tv_title)
     TextView mHeaderTvTitle;
-    private String mArt_id;
 
     @Override
+    @SuppressWarnings("deprecation")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         ButterKnife.bind(this);
 
-        mArt_id = getIntent().getStringExtra("art_id");
+        String art_id = getIntent().getStringExtra("art_id");
         OkGo
                 .post(AppUrl.ARTICLEDETAIL)
                 .tag(this)
                 .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
-                .params("art_id", mArt_id)
+                .params("art_id", art_id)
                 .execute(new StringDialogCallback(this) {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {

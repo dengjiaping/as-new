@@ -43,7 +43,6 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
         holder.mItemTrainTvTitle.setText(vedioMS2Bean.title);
         holder.mItemTrainTv1.setText(/*vedioMS2Bean.level + "    " +*/ vedioMS2Bean.times + "  人参与训练");
         holder.mItemTrainTvTime.setText("时长: " + vedioMS2Bean.video_time);
-        holder.mItemTrainTv2.setText(vedioMS2Bean.content);
         Glide
                 .with(UIUtils.getContext())
                 .load(AppUrl.BASEURL + vedioMS2Bean.imageUrl)
@@ -82,8 +81,6 @@ public class OtherRLAdapter extends RecyclerView.Adapter<OtherRLAdapter.OtherTra
         TextView mItemTrainTvTime;
         @BindView(R.id.item_train_tv_1)
         TextView mItemTrainTv1;
-        @BindView(R.id.item_train_tv_2)
-        TextView mItemTrainTv2;
         @BindView(R.id.download_icon)
         ImageView mdownload;
 

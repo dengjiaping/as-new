@@ -69,12 +69,12 @@ public class BirthFragment extends NormalFragment {
         picker.setUseWeight(false);
         picker.setRangeEnd(2002, 12, 31);
         picker.setSelectedItem(1990, 5, 31);
-        picker.setTextColor(getResources().getColor(R.color.colorPink));
+        picker.setTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setDividerColor(Color.parseColor("#ffffff"));
         picker.setSubmitTextColor(Color.parseColor("#000000"));
         picker.setCancelTextColor(Color.parseColor("#000000"));
         picker.setTopLineColor(Color.parseColor("#ffffff"));
-        picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+        picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
         picker.setOnDatePickListener(new DatePicker.OnYearMonthDayPickListener() {
             @Override
             public void onDatePicked(String year, String month, String day) {

@@ -3,7 +3,6 @@ package com.jkpg.ruchu.view.activity.train;
 import android.Manifest;
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,15 +17,14 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -40,6 +38,7 @@ import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
 import com.jkpg.ruchu.base.MyApplication;
 import com.jkpg.ruchu.bean.StartTrainBean;
+import com.jkpg.ruchu.bean.TrainInfoListBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.config.Constants;
@@ -51,7 +50,7 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
 import com.jkpg.ruchu.view.activity.MainActivity;
-import com.jkpg.ruchu.view.adapter.ChartRLAdapter;
+import com.jkpg.ruchu.widget.VerticalTextView;
 import com.jkpg.ruchu.widget.leafchart.LeafLineChart;
 import com.jkpg.ruchu.widget.leafchart.LineChart;
 import com.jkpg.ruchu.widget.leafchart.bean.Axis;
@@ -59,15 +58,16 @@ import com.jkpg.ruchu.widget.leafchart.bean.AxisValue;
 import com.jkpg.ruchu.widget.leafchart.bean.Line;
 import com.jkpg.ruchu.widget.leafchart.bean.PointValue;
 import com.lzy.okgo.OkGo;
+import com.lzy.okgo.callback.StringCallback;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -80,14 +80,6 @@ import okhttp3.Response;
  */
 
 public class StartTrainActivity2 extends BaseActivity {
-    @BindView(R.id.header_iv_left)
-    ImageView mHeaderIvLeft;
-    @BindView(R.id.header_tv_title)
-    TextView mHeaderTvTitle;
-    @BindView(R.id.header_iv_right)
-    ImageView mHeaderIvRight;
-    @BindView(R.id.header_tv_right)
-    TextView mHeaderTvRight;
     @BindView(R.id.start_train_title)
     TextView mStartTrainTitle;
     @BindView(R.id.start_train_total_time)
@@ -102,8 +94,6 @@ public class StartTrainActivity2 extends BaseActivity {
     ImageView mStartTrainStart;
     @BindView(R.id.start_train)
     RelativeLayout mStartTrain;
-    @BindView(R.id.start_train_recycle_view)
-    RecyclerView mStartTrainRecycleView;
     @BindView(R.id.start_train_tv_progress_time)
     TextView mStartTrainTvProgressTime;
     @BindView(R.id.start_train_tv_progress_total)
@@ -122,6 +112,14 @@ public class StartTrainActivity2 extends BaseActivity {
     ImageView mLineStartIv;
     @BindView(R.id.line_start_tv)
     TextView mLineStartTv;
+    @BindView(R.id.start_train_ll1)
+    LinearLayout mStartTrainLl1;
+    @BindView(R.id.start_train_ll2)
+    LinearLayout mStartTrainLl2;
+    @BindView(R.id.line_tv_jump)
+    TextView mLineTvJump;
+    @BindView(R.id.start_train_vertical_text)
+    VerticalTextView mStartTrainVerticalText;
 
 
     private List<float[]> charts;       //图表集合
@@ -130,7 +128,7 @@ public class StartTrainActivity2 extends BaseActivity {
     private ArrayList<Line> mLine;    // 点的集合
     private List<LineChart> mLines;  //线的集合
     private AutoProgressTask mTask;
-    private LinearLayoutManager mLinearLayoutManager;
+//    private LinearLayoutManager mLinearLayoutManager;
 
 
     private int timeCount = -500; // 计时
@@ -142,8 +140,8 @@ public class StartTrainActivity2 extends BaseActivity {
     private boolean isTrain = true;
     private SoundPool mSoundPool;
     private int nowSound;
-    private Map<Integer, Boolean> mMap;
-    private ChartRLAdapter mAdapter;
+//    private Map<Integer, Boolean> mMap;
+//    private ChartRLAdapter mAdapter;
     private boolean isPause; //是否暂停
     private PopupWindow mPopupWindowSuccess;
     private StartTrainBean mStartTrainBean;
@@ -154,30 +152,27 @@ public class StartTrainActivity2 extends BaseActivity {
     private AlertDialog dialog;
     private MediaPlayer mMediaPlayer;
     private boolean isLoad;
-    @BindView(R.id.header_view)
-    RelativeLayout mHeaderView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_start_train2);
+        getWindow().setFlags(
+                WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.activity_start_train_landscape);
         ButterKnife.bind(this);
         setSwipeBackEnable(false);
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            mHeaderView.setElevation(0);
-        }
         initData();
-        initHeader();
         initSound();
 
         /*
          *判断音量设置音量图标
          */
         mAudioManager = (AudioManager) UIUtils.getContext().getSystemService(Context.AUDIO_SERVICE);
+        assert mAudioManager != null;
         int streamVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
         LogUtils.i("当前音量" + streamVolume);
         if (streamVolume > 0) {
@@ -199,21 +194,28 @@ public class StartTrainActivity2 extends BaseActivity {
                 mLineChart.setVisibility(View.VISIBLE);
                 mLineStartIv.setVisibility(View.GONE);
                 mLineStartTv.setVisibility(View.GONE);
+                mLineTvJump.setVisibility(View.GONE);
+                mStartTrainVerticalText.setVisibility(View.VISIBLE);
+                mStartTrainVerticalText.startAutoScroll();
 
             }
         });
+        mMediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                mMediaPlayer.start();
+                mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+//                hideView();
+            }
+        });
+
+
         mLineChart.setVisibility(View.GONE);
 
         mStartTrainTip.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 View inflate = View.inflate(StartTrainActivity2.this, R.layout.view_show_tip, null);
-                inflate.findViewById(R.id.scrollView).setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                    }
-                });
                 final AlertDialog show = new AlertDialog.Builder(StartTrainActivity2.this, R.style.dialog_invitation)
                         .setView(inflate)
                         .show();
@@ -235,6 +237,40 @@ public class StartTrainActivity2 extends BaseActivity {
                 ToastUtils.showShort(UIUtils.getContext(), "您拒绝了,就不能来电暂停了哦,如需要,请到设置应用信息中打开.");
             }
         });
+
+        mStartTrain.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideView();
+            }
+        });
+        mLineTvJump.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int duration = mMediaPlayer.getDuration();
+                mMediaPlayer.seekTo(duration - 10);
+                mMediaPlayer.start();
+                mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
+                hideView();
+            }
+        });
+
+
+    }
+
+
+    private void hideView() {
+        if (mStartTrainLl1.getVisibility() == View.INVISIBLE) {
+            mStartTrainLl1.setVisibility(View.VISIBLE);
+            mStartTrainLl2.setVisibility(View.VISIBLE);
+            mStartTrainVerticalText.setVisibility(View.GONE);
+        } else {
+            mStartTrainLl1.setVisibility(View.INVISIBLE);
+            mStartTrainLl2.setVisibility(View.INVISIBLE);
+            if (!isFirst) {
+                mStartTrainVerticalText.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     @Override
@@ -268,6 +304,26 @@ public class StartTrainActivity2 extends BaseActivity {
     }
 
     private void initData() {
+
+        OkGo
+                .post(AppUrl.XLMINLUNBO)
+                .execute(new StringCallback() {
+                    @Override
+                    public void onSuccess(String s, Call call, Response response) {
+                        TrainInfoListBean trainInfoListBean = new Gson().fromJson(s, TrainInfoListBean.class);
+                        List<TrainInfoListBean.XhtextBean> xhtext = trainInfoListBean.xhtext;
+                        Collections.shuffle(xhtext);
+                        ArrayList<String> titleList = new ArrayList<>();
+                        for (int i = 0; i < xhtext.size(); i++) {
+                            titleList.add(xhtext.get(i).content);
+                        }
+                        mStartTrainVerticalText.setTextList(titleList);
+                        mStartTrainVerticalText.setText(14, 8, Color.parseColor("#ccFFFFFF"));
+                        mStartTrainVerticalText.setTextStillTime(40000);
+                        mStartTrainVerticalText.setAnimTime(500);
+                    }
+                });
+
 
         OkGo
                 .post(AppUrl.STARTEXERCISE)
@@ -310,6 +366,12 @@ public class StartTrainActivity2 extends BaseActivity {
 
                         }
                     }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        finish();
+                    }
                 });
 
 
@@ -326,9 +388,9 @@ public class StartTrainActivity2 extends BaseActivity {
             charts.add(floatsY);
             chartsX.add(floatsX);
         }
-        initRecycleView();
+//        initRecycleView();
         initLineChart(0, (int) chartsX.get(0)[(chartsX.get(0).length) - 1] * 2); // 默认显示第一个图
-        mStartTrainNowOne.setText("当前为第1节");
+        mStartTrainNowOne.setText("1");
         mStartTrainProgressBar.setMax(Integer.parseInt(startTrainBean.totaltime) * 1000);
     }
 
@@ -337,12 +399,13 @@ public class StartTrainActivity2 extends BaseActivity {
         String dateFormat = DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm分ss秒");
         mStartTrainTotalTime.setText("共计" + dateFormat);
         mStartTrainSection.setText("第" + startTrainBean.excisedays + "天" + "  " + startTrainBean.level_2 + "级");
-        mStartTrainTotalOne.setText("共" + startTrainBean.programme.size() + "节");
+        mStartTrainTotalOne.setText(startTrainBean.programme.size() + "");
         mStartTrainTvProgressTotal.setText(DateUtil.dateFormat(Integer.parseInt(startTrainBean.totaltime) * 1000 + "", "mm:ss"));
 
     }
-
+    @SuppressWarnings("deprecation")
     private void initSound() {
+        mLineTvJump.setEnabled(false);
         mSoundID = new HashMap<>();
         mSoundPool = new SoundPool(1, AudioManager.STREAM_MUSIC, 0);
         mSoundID.put("end", mSoundPool.load(this, R.raw.end, 1));
@@ -370,6 +433,7 @@ public class StartTrainActivity2 extends BaseActivity {
         mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                mLineTvJump.setEnabled(true);
                 isLoad = true;
                 if (dialog != null && dialog.isShowing()) {
                     dialog.dismiss();
@@ -431,16 +495,16 @@ public class StartTrainActivity2 extends BaseActivity {
                 mStartTrain.removeView(mLines.get(i));
             }
             isTrain = true;
-            mMap.put(mMap.size() - 1, false);
-            mMap.put(0, true);
-            mAdapter.notifyItemChanged(mMap.size() - 1);
-            mAdapter.notifyItemChanged(0);
+//            mMap.put(mMap.size() - 1, false);
+//            mMap.put(0, true);
+//            mAdapter.notifyItemChanged(mMap.size() - 1);
+//            mAdapter.notifyItemChanged(0);
             mTask.start();
             mStartTrainStart.setBackgroundResource(R.drawable.icon_pause);
             initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
-            mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
-            scrollRecyclerView(numChart);
-            mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
+//            mLinearLayoutManager.scrollToPositionWithOffset(numChart, 0);
+//            scrollRecyclerView(numChart);
+            mStartTrainNowOne.setText((numChart + 1) + "");
         } else {
             if (isFirst) {
                 if (mMediaPlayer.isPlaying()) {
@@ -483,16 +547,13 @@ public class StartTrainActivity2 extends BaseActivity {
         }
     }
 
-    private void initHeader() {
-        mHeaderTvTitle.setText("训练中");
-    }
 
     private void initLineChart(int index, int numberX) {
         Axis axisX = new Axis(getAxisValuesX(numberX));
         axisX.setAxisColor(Color.TRANSPARENT).setTextColor(Color.WHITE)
                 .setHasLines(false).setAxisWidth(3);
         Axis axisY = new Axis(getAxisValuesY()).setAxisWidth(3);
-        axisY.setAxisColor(Color.TRANSPARENT).setTextColor(Color.WHITE).setHasLines(false);
+        axisY.setAxisColor(Color.TRANSPARENT).setTextColor(Color.WHITE).setHasLines(false).setShowText(false);
         mLineChart.setAxisX(axisX);
         mLineChart.setAxisY(axisY);
 
@@ -505,6 +566,7 @@ public class StartTrainActivity2 extends BaseActivity {
 //        for (int i = 0; i < charts.get(index).length - 1; i++) {
         for (int i = 0; i < chartsX.get(index)[(chartsX.get(index).length) - 1] * 2; i++) {
             LineChart lineChart = new LineChart(UIUtils.getContext());
+//            lineChart.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             lineChart.setLayoutParams(mStartTrain.getLayoutParams());
             mStartTrain.addView(lineChart);
             mLines.add(lineChart);
@@ -514,8 +576,6 @@ public class StartTrainActivity2 extends BaseActivity {
         } else {
             mLineText.setText("");
         }
-//        LogUtils.i("mLines = " + mLines.size());
-//        LogUtils.i("index = " + index);
     }
 
     private List<AxisValue> getAxisValuesX(int numberX) {
@@ -571,23 +631,15 @@ public class StartTrainActivity2 extends BaseActivity {
             }
         }
         Line line = new Line(pointValues);
-        line.setLineColor(Color.parseColor("#FAD719"))
+        line.setLineColor(Color.parseColor("#f98e47"))
                 .setLineWidth(3)
+                .setFill(false)
+                .setFillColor(Color.parseColor("#FFFFFF"))
                 .setHasPoints(false)
                 .setPointRadius(0);
         return line;
     }
 
-    private void initRecycleView() {
-        mLinearLayoutManager = new LinearLayoutManager(this);
-        mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mStartTrainRecycleView.setLayoutManager(mLinearLayoutManager);
-        mAdapter = new ChartRLAdapter(chartsX, charts);
-        mStartTrainRecycleView.setAdapter(mAdapter);
-        mMap = mAdapter.getMap();
-        mMap.put(0, true);
-        mAdapter.notifyItemChanged(0);
-    }
 
     private class AutoProgressTask implements Runnable {
 
@@ -634,11 +686,11 @@ public class StartTrainActivity2 extends BaseActivity {
                             mStartTrain.removeView(mLines.get(i));
                         }
                         initLineChart(numChart, (int) chartsX.get(numChart)[(chartsX.get(numChart).length - 1)] * 2);
-                        scrollRecyclerView(numChart);
-                        mMap.put(numChart, true);
-                        mMap.put(numChart - 1, false);
-                        mAdapter.notifyDataSetChanged();
-                        mStartTrainNowOne.setText("当前为第" + (numChart + 1) + "节");
+//                        scrollRecyclerView(numChart);
+//                        mMap.put(numChart, true);
+//                        mMap.put(numChart - 1, false);
+//                        mAdapter.notifyDataSetChanged();
+                        mStartTrainNowOne.setText((numChart + 1) + "");
                         lineTimeCount = 0;
                         LogUtils.d("lineTimeCount = =" + lineTimeCount);
 
@@ -675,11 +727,6 @@ public class StartTrainActivity2 extends BaseActivity {
             stop();
             mTimearr = mStartTrainBean.programme.get(numChart).timearr;
             mVideoarr = mStartTrainBean.programme.get(numChart).videoarr;
-//            if (mTimearr.contains(0f)) {
-//                nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
-//                mTimearr.remove(0);
-//                mVideoarr.remove(0);
-//            }
             if (timeCount == -500 && mTimearr.contains(0f)) {
                 nowSound = mSoundPool.play(mSoundID.get(mVideoarr.get(0)), 1, 1, 0, 0, 1);
                 mTimearr.remove(0);
@@ -703,6 +750,16 @@ public class StartTrainActivity2 extends BaseActivity {
                 .setNegativeButton("放弃本次", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
+                        OkGo
+                                .post(AppUrl.XUNLIAN2TENMUI)
+                                .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID, ""))
+                                .params("time", timeCount / 1000)
+                                .execute(new StringCallback() {
+                                    @Override
+                                    public void onSuccess(String s, Call call, Response response) {
+
+                                    }
+                                });
                         finish();
                     }
                 })
@@ -835,31 +892,60 @@ public class StartTrainActivity2 extends BaseActivity {
                             }
                         });
                     }
+
+                    @Override
+                    public void onError(Call call, Response response, Exception e) {
+                        super.onError(call, response, e);
+                        new AlertDialog.Builder(StartTrainActivity2.this)
+                                .setMessage("当前网络较差，数据上传失败，请重新上传~")
+                                .setPositiveButton("重试", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.dismiss();
+                                    }
+                                })
+                                .setNegativeButton("放弃", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        startActivity(new Intent(StartTrainActivity2.this, MainActivity.class));
+                                        finish();
+                                    }
+                                })
+                                .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                                    @Override
+                                    public void onDismiss(DialogInterface dialog) {
+//                                        startActivity(new Intent(StartTrainActivity2.this, MainActivity.class));
+                                        showSuccess();
+                                        finish();
+                                    }
+                                })
+                                .show();
+                    }
                 });
 
 
     }
 
-    public void scrollRecyclerView(final int item) {
-        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, UIUtils.dip2Px(130));
-        valueAnimator.setDuration(1000);
-        valueAnimator.setInterpolator(new LinearInterpolator());
-        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                int animatedValue = (int) animation.getAnimatedValue();
-                //调用RecyclerView的scrollBy执行滑动
-//                mStartTrainRecycleView.smoothScrollBy(item,animatedValue);
-                mLinearLayoutManager.scrollToPositionWithOffset(item, UIUtils.dip2Px(130) - animatedValue);
-
-//                LogUtils.i("animatedValue=" + animatedValue);
-            }
-
-        });
-        valueAnimator.start();
-
-    }
+//    public void scrollRecyclerView(final int item) {
+//        final ValueAnimator valueAnimator = ValueAnimator.ofInt(0, UIUtils.dip2Px(130));
+//        valueAnimator.setDuration(1000);
+//        valueAnimator.setInterpolator(new LinearInterpolator());
+//        valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                int animatedValue = (int) animation.getAnimatedValue();
+//                //调用RecyclerView的scrollBy执行滑动
+////                mStartTrainRecycleView.smoothScrollBy(item,animatedValue);
+//                mLinearLayoutManager.scrollToPositionWithOffset(item, UIUtils.dip2Px(130) - animatedValue);
+//
+////                LogUtils.i("animatedValue=" + animatedValue);
+//            }
+//
+//        });
+//        valueAnimator.start();
+//
+//    }
 
     @Override
     protected void onStop() {
@@ -889,4 +975,15 @@ public class StartTrainActivity2 extends BaseActivity {
         }
     }
 
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        ViewGroup contentFrameLayout = (ViewGroup) findViewById(android.R.id.content);
+        View parentView = contentFrameLayout.getChildAt(0);
+        if (parentView != null && Build.VERSION.SDK_INT >= 19) {
+            parentView.setFitsSystemWindows(false);
+            parentView.setBackgroundResource(R.drawable.bg_start_train);
+        }
+    }
 }

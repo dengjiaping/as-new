@@ -4,6 +4,7 @@
               android:layout_height="wrap_content"
               android:background="@android:color/white"
               android:orientation="vertical"
+              android:elevation="5dp"
               android:paddingBottom="12dp"
               android:paddingLeft="22dp"
               android:paddingRight="22dp"
@@ -17,11 +18,11 @@
 
         <ImageView
             android:id="@+id/view_reply_image"
-            android:layout_width="36dp"
-            android:layout_height="26dp"
+            android:layout_width="30dp"
+            android:layout_height="20dp"
             android:layout_gravity="center"
             android:layout_marginRight="12dp"
-            android:src="@drawable/add_photo"/>
+            android:background="@drawable/add_photo"/>
 
         <EditText
             android:id="@+id/view_reply_et"
@@ -29,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="12dp"
             android:layout_weight="1"
+            android:inputType="none"
             android:background="@drawable/shape_rectangle_white_grayline2"
             android:hint="我来说两句..."
             android:maxLines="5"

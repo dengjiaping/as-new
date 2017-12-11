@@ -2,6 +2,7 @@ package me.iwf.photopicker;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -13,7 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
+
 import java.util.List;
+
 import me.iwf.photopicker.fragment.ImagePagerFragment;
 
 import static me.iwf.photopicker.PhotoPicker.KEY_SELECTED_PHOTOS;
@@ -33,6 +37,14 @@ public class PhotoPagerActivity extends AppCompatActivity {
 
   @Override protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+      //透明状态栏
+      getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+      //透明导航栏
+//                getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION);
+    } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      getWindow().setStatusBarColor(Color.TRANSPARENT);
+    }
 
     setContentView(R.layout.__picker_activity_photo_pager);
 

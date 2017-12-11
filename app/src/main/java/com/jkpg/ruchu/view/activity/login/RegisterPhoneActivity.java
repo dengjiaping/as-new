@@ -185,7 +185,7 @@ public class RegisterPhoneActivity extends BaseActivity {
                                 LogUtils.d("sms_code="+s);
                                 CodeBean codeBean = new Gson().fromJson(s, CodeBean.class);
                                 if (!codeBean.success) {
-                                    ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,明天重试");
+                                    ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                 }
                             }
                         });
@@ -313,7 +313,7 @@ public class RegisterPhoneActivity extends BaseActivity {
                                                 mRegisterLlTwo.setVisibility(View.VISIBLE);
                                                 timer.start();
                                             } else {
-                                                ToastUtils.showShort(UIUtils.getContext(), "验证码请求超过5次,明天重试");
+                                                ToastUtils.showShort(UIUtils.getContext(), "验证码获取失败(如请求超过5次,请明天重试)");
                                             }
 
 

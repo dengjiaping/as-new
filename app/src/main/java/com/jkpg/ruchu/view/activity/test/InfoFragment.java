@@ -76,12 +76,12 @@ public class InfoFragment extends NormalFragment {
                 heightPicker.setTopPadding(ConvertUtils.toPx(UIUtils.getContext(), 20));
 
                 heightPicker.setLabel("cm");
-                heightPicker.setTextColor(getResources().getColor(R.color.colorPink));
+                heightPicker.setTextColor(UIUtils.getColor(R.color.colorPink));
                 heightPicker.setDividerColor(Color.parseColor("#ffffff"));
                 heightPicker.setSubmitTextColor(Color.parseColor("#000000"));
                 heightPicker.setCancelTextColor(Color.parseColor("#000000"));
                 heightPicker.setTopLineColor(Color.parseColor("#ffffff"));
-                heightPicker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                heightPicker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
                 heightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
                     @Override
                     public void onNumberPicked(int index, Number item) {
@@ -107,12 +107,12 @@ public class InfoFragment extends NormalFragment {
                 weightPicker.setRange(30, 120, 1);//数字范围
                 weightPicker.setSelectedItem(60);
                 weightPicker.setLabel("kg");
-                weightPicker.setTextColor(getResources().getColor(R.color.colorPink));
+                weightPicker.setTextColor(UIUtils.getColor(R.color.colorPink));
                 weightPicker.setDividerColor(Color.parseColor("#ffffff"));
                 weightPicker.setSubmitTextColor(Color.parseColor("#000000"));
                 weightPicker.setCancelTextColor(Color.parseColor("#000000"));
                 weightPicker.setTopLineColor(Color.parseColor("#ffffff"));
-                weightPicker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+                weightPicker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
                 weightPicker.setOnNumberPickListener(new NumberPicker.OnNumberPickListener() {
                     @Override
                     public void onNumberPicked(int index, Number item) {

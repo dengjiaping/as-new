@@ -9,8 +9,9 @@
 
     <ScrollView
         android:id="@+id/register_scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:layout_marginLeft="22dp"
         android:layout_marginRight="22dp"
         android:layout_marginTop="22dp"
@@ -19,7 +20,7 @@
         <RelativeLayout
             android:elevation="5dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             >
 
             <LinearLayout
@@ -247,9 +248,25 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:tint="@color/colorPink"
                 android:layout_alignParentRight="true"
                 android:src="@drawable/icon_horn"/>
         </RelativeLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/result_btn_start"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:layout_gravity="center"
+        android:layout_marginLeft="22dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="22dp"
+        android:layout_marginRight="22dp"
+        android:background="@drawable/random_bg"
+        android:text="开始我的训练"
+        android:textColor="@color/colorPink"
+        android:textSize="15sp"/>
 
 </LinearLayout>

@@ -100,7 +100,6 @@ public class TrainHistoryActivity extends BaseActivity {
 
     private void initHeader() {
         mHeaderTvTitle.setText("训练历史");
-        mHeaderIvRight.setImageResource(R.drawable.icon_data);
     }
 
     @OnClick({R.id.header_iv_left, R.id.header_iv_right})

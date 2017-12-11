@@ -45,6 +45,7 @@ public class ChatListRVAdapter extends BaseMultiItemQuickAdapter<ChatListBean, B
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void convert(BaseViewHolder helper, ChatListBean item) {
         helper.addOnClickListener(R.id.chat_image_you);
         helper.addOnClickListener(R.id.chat_image_my);

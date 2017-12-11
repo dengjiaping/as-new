@@ -107,7 +107,7 @@ public class RevisePwdActivity extends BaseActivity {
                         SuccessBean successBean = new Gson().fromJson(s, SuccessBean.class);
                         if (successBean.success) {
                             View view = View.inflate(UIUtils.getContext(), R.layout.view_show_success, null);
-                            ((TextView) view.findViewById(R.id.show_success_text)).setText("密码修改成功，请重新登陆");
+                            ((TextView) view.findViewById(R.id.show_success_text)).setText("密码修改成功，请重新登录");
                             final AlertDialog dialog = new AlertDialog.Builder(RevisePwdActivity.this)
                                     .setView(view)
                                     .show();

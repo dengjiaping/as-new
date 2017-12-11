@@ -15,8 +15,6 @@ import cn.qqtheme.framework.entity.Province;
 import cn.qqtheme.framework.picker.AddressPicker;
 import cn.qqtheme.framework.util.ConvertUtils;
 
-import static com.jkpg.ruchu.utils.UIUtils.getResources;
-
 /**
  * 获取地址数据并显示地址选择器
  *
@@ -87,12 +85,12 @@ public class AddressPickTask extends AsyncTask<String, Void, ArrayList<Province>
             AddressPicker picker = new AddressPicker(activity, result);
             picker.setHideProvince(hideProvince);
             picker.setHideCounty(hideCounty);
-            picker.setTextColor(getResources().getColor(R.color.colorPink));
+            picker.setTextColor(UIUtils.getColor(R.color.colorPink));
             picker.setDividerColor(Color.parseColor("#ffffff"));
             picker.setSubmitTextColor(Color.parseColor("#000000"));
             picker.setCancelTextColor(Color.parseColor("#000000"));
             picker.setTopLineColor(Color.parseColor("#ffffff"));
-            picker.setPressedTextColor(getResources().getColor(R.color.colorPink));
+            picker.setPressedTextColor(UIUtils.getColor(R.color.colorPink));
             //picker.setCycleDisable(false);//不禁用循环
 
             if (hideCounty) {

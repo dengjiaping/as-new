@@ -10,16 +10,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPink"
         android:paddingBottom="12dp"
+        android:background="@drawable/bg_header"
         android:paddingLeft="22dp"
         android:paddingTop="12dp">
 
         <com.jkpg.ruchu.widget.CircleImageView
             android:id="@+id/vip_manager_civ_photo"
 
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:src="@drawable/gray_bg"/>
 
         <LinearLayout
@@ -115,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
-        android:elevation="2dp"
+        android:elevation="1dp"
         android:visibility="gone"
         app:tabSelectedTextColor="@color/colorPink"
         app:tabTextColor="@color/colorGray2">
@@ -124,6 +124,7 @@
     </android.support.design.widget.TabLayout>
 
     <ScrollView
+        android:scrollbars="none"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
