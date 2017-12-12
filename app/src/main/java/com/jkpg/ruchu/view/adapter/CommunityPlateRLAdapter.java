@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.jkpg.ruchu.R;
-import com.jkpg.ruchu.bean.CommunityMianBean;
+import com.jkpg.ruchu.bean.CommunityMainBean;
 import com.jkpg.ruchu.config.AppUrl;
 import com.jkpg.ruchu.utils.UIUtils;
 
@@ -17,13 +17,13 @@ import java.util.List;
  * Created by qindi on 2017/5/18.
  */
 
-public class CommunityPlateRLAdapter extends BaseQuickAdapter<CommunityMianBean.List2Bean, BaseViewHolder> {
-    public CommunityPlateRLAdapter(int layoutResId, @Nullable List<CommunityMianBean.List2Bean> data) {
+public class CommunityPlateRLAdapter extends BaseQuickAdapter<CommunityMainBean.List2Bean, BaseViewHolder> {
+    public CommunityPlateRLAdapter(int layoutResId, @Nullable List<CommunityMainBean.List2Bean> data) {
         super(layoutResId, data);
     }
 
     @Override
-    protected void convert(BaseViewHolder helper, CommunityMianBean.List2Bean item) {
+    protected void convert(BaseViewHolder helper, CommunityMainBean.List2Bean item) {
         helper.setText(R.id.plate_tv_title, item.platename);
         helper.setText(R.id.plate_tv_body, item.simpleremark);
         helper.setText(R.id.plate_tv_num, item.zongshu + "贴");

@@ -10,11 +10,10 @@ import java.util.List;
  * Created by qindi on 2017/6/8.
  */
 
-public class CommunityMianBean implements Serializable {
+public class CommunityMainBean implements Serializable {
 
 
     public List<List2Bean> list2;
-    public List<List3Bean> list3;
     public List<List1Bean> list1;
     public List<DarenBean> daren;
 
@@ -70,48 +69,30 @@ public class CommunityMianBean implements Serializable {
         }
     }
 
-    public static class List3Bean implements Serializable {
-        /**
-         * createtime : 2017-06-22 15:35:52.0
-         * title : 测试一下
-         * nick : null
-         * zan : 0
-         * headimg : null
-         * userid : 39
-         * reply : 0
-         * tid : 9
-         * plateid : 3
-         */
-
-        public String createtime;
-        public String title;
-        public String nick;
-        public int zan;
-        public String headimg;
-        public String userid;
-        public String type;
-        public int reply;
-        public int tid;
-        public int plateid;
-    }
 
     public static class List1Bean implements Serializable {
-        /**
-         * title : 我的天老爷!!!!
-         * images : bbsImg/156484564.png
-         * tid : 5
-         */
 
         public String title;
-        public String images;
+        public String image;
         public String type;
-        public int tid;
+        public JsonBean json;
+        public String bbsid;
+        public String htmlurl;
     }
 
-    public static class DarenBean implements Serializable{
+    public static class DarenBean implements Serializable {
         public String drisgz;
         public String drimgurl;
         public String drnick;
         public String druserid;
+    }
+
+    public static class JsonBean implements Serializable {
+        public AndroidBean android;
+    }
+
+    public static class AndroidBean implements Serializable {
+        public String key;
+        public String value;
     }
 }

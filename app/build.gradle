@@ -2,7 +2,7 @@ apply plugin: 'com.android.application'
 
 android {
     compileSdkVersion 25
-    buildToolsVersion "25.0.2"
+    buildToolsVersion "25.0.3"
     defaultConfig {
         applicationId "com.jkpg.ruchu"
         minSdkVersion 19
@@ -102,5 +102,5 @@ dependencies {
     compile 'me.imid.swipebacklayout.lib:library:1.0.0'
     compile 'com.danikula:videocache:2.7.0'
 //    compile 'cn.jzvd:jiaozivideoplayer:6.2.0_preview'
-        compile 'fm.jiecao:jiecaovideoplayer:5.5.4'
+    compile 'fm.jiecao:jiecaovideoplayer:5.5.4'
 }

@@ -14,6 +14,8 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.BaseActivity;
+import com.jkpg.ruchu.base.MyApplication;
+import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.ShareBean;
 import com.jkpg.ruchu.callback.StringDialogCallback;
 import com.jkpg.ruchu.config.AppUrl;
@@ -21,7 +23,10 @@ import com.jkpg.ruchu.config.Constants;
 import com.jkpg.ruchu.utils.LogUtils;
 import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.SpannableBuilder;
+import com.jkpg.ruchu.utils.StringUtils;
+import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
+import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.lzy.okgo.OkGo;
 import com.lzy.okgo.callback.StringCallback;
 import com.umeng.socialize.ShareAction;
@@ -30,6 +35,10 @@ import com.umeng.socialize.UMShareListener;
 import com.umeng.socialize.bean.SHARE_MEDIA;
 import com.umeng.socialize.media.UMImage;
 import com.umeng.socialize.media.UMWeb;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +71,11 @@ public class InvitationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invitation);
         ButterKnife.bind(this);
+        if (!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
         mHeaderTvTitle.setText("邀请有礼");
+        initTV();
 
         OkGo
                 .post(AppUrl.DOWNLOAD)
@@ -101,7 +114,7 @@ public class InvitationActivity extends BaseActivity {
     private void initTV() {
         mInvitationTv0.setText(SpannableBuilder.create(this)
                 .append("累计获得会员 ", R.dimen.sp16, R.color.colorGray3)
-                .append("20", R.dimen.sp20, R.color.colorPink)
+                .append("0", R.dimen.sp20, R.color.colorPink)
                 .append(" 天    邀请详情 >", R.dimen.sp16, R.color.colorGray3)
                 .build());
 
@@ -114,11 +127,19 @@ public class InvitationActivity extends BaseActivity {
                 finish();
                 break;
             case R.id.invitation_btn:
-                showInviteFriend();
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))){
+                    ToastUtils.showShort(UIUtils.getContext(),"你需要先登录才能继续本操作");
+                    startActivity(new Intent(InvitationActivity.this,LoginActivity.class));
+                } else {
+                    showInviteFriend();
+                }
                 break;
             case R.id.invitation_tv0:
-                startActivity(new Intent(InvitationActivity.this,InvitationDetailActivity.class));
-
+                if (StringUtils.isEmpty(SPUtils.getString(UIUtils.getContext(),Constants.USERID,""))){
+                    startActivity(new Intent(InvitationActivity.this,LoginActivity.class));
+                } else {
+                    startActivity(new Intent(InvitationActivity.this,InvitationDetailActivity.class));
+                }
                 break;
         }
     }
@@ -130,22 +151,6 @@ public class InvitationActivity extends BaseActivity {
         mPopupWindow.setContentView(view);
         mPopupWindow.getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         mPopupWindow.show();
-//        mPopupWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
-//        mPopupWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
-//        mPopupWindow.setContentView(view);
-//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(0x00000000));
-//        mPopupWindow.setOutsideTouchable(true);
-//        mPopupWindow.setFocusable(true);
-//        mPopupWindow.setAnimationStyle(R.style.mypopwindow_anim_style);
-//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null));
-//        mPopupWindow.showAsDropDown(getLayoutInflater().inflate(R.layout.activity_start_train2, null), Gravity.BOTTOM, 0, 0);
-//        PopupWindowUtils.darkenBackground(InvitationActivity.this, .5f);
-//        mPopupWindow.setOnDismissListener(new PopupWindow.OnDismissListener() {
-//            @Override
-//            public void onDismiss() {
-//                PopupWindowUtils.darkenBackground(InvitationActivity.this, 1f);
-//            }
-//        });
         view.findViewById(R.id.view_share_white).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,16 +161,7 @@ public class InvitationActivity extends BaseActivity {
         mWeb.setTitle(mContent);//标题
         mWeb.setThumb(new UMImage(UIUtils.getContext(), R.drawable.ic_logo));  //缩略图
         mWeb.setDescription(mContent2);//描述
-        view.findViewById(R.id.share_qq)/*.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new ShareAction(InvitationActivity.this).setPlatform(SHARE_MEDIA.QQ)
-                        .withMedia(mWeb)
-                        .setCallback(umShareListener)
-                        .share();
-                mPopupWindow.dismiss();
-            }
-        });*/.setVisibility(View.GONE);
+        view.findViewById(R.id.share_qq).setVisibility(View.GONE);
         view.findViewById(R.id.share_wx).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -235,5 +231,40 @@ public class InvitationActivity extends BaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         UMShareAPI.get(this).onActivityResult(requestCode, resultCode, data);
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().unregister(this);
+        }
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        if (event.message.equals("Login") || event.message.equals("Quit")) {
+            MyApplication.getMainThreadHandler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    OkGo
+                            .post(AppUrl.GETFENXIANGDAY)
+                            .params("userid", SPUtils.getString(UIUtils.getContext(), Constants.USERID,""))
+                            .execute(new StringCallback() {
+                                @Override
+                                public void onSuccess(String s, Call call, Response response) {
+                                    ShareBean shareBean = new Gson().fromJson(s, ShareBean.class);
+                                    mUrl = shareBean.url;
+                                    String day = shareBean.day;
+                                    mInvitationTv0.setText(SpannableBuilder.create(InvitationActivity.this)
+                                            .append("累计获得会员 ", R.dimen.sp16, R.color.colorGray3)
+                                            .append(day, R.dimen.sp20, R.color.colorPink)
+                                            .append(" 天    邀请详情 >", R.dimen.sp16, R.color.colorGray3)
+                                            .build());
+                                }
+                            });
+
+                }
+            }, 500);
+        }
     }
 }

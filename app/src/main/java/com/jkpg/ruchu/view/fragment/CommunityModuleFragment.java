@@ -1,5 +1,6 @@
 package com.jkpg.ruchu.view.fragment;
 
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -23,7 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.gson.Gson;
 import com.jkpg.ruchu.R;
 import com.jkpg.ruchu.base.MyApplication;
-import com.jkpg.ruchu.bean.CommunityMianBean;
+import com.jkpg.ruchu.bean.CommunityMainBean;
 import com.jkpg.ruchu.bean.MessageEvent;
 import com.jkpg.ruchu.bean.SmsEvent;
 import com.jkpg.ruchu.bean.SuccessBean;
@@ -35,9 +36,11 @@ import com.jkpg.ruchu.utils.SPUtils;
 import com.jkpg.ruchu.utils.StringUtils;
 import com.jkpg.ruchu.utils.ToastUtils;
 import com.jkpg.ruchu.utils.UIUtils;
-import com.jkpg.ruchu.view.activity.WebActivity;
+import com.jkpg.ruchu.view.activity.HtmlActivity;
+import com.jkpg.ruchu.view.activity.ShopActivity;
 import com.jkpg.ruchu.view.activity.community.FineNoteActivity;
 import com.jkpg.ruchu.view.activity.community.FineNoteDetailWebFixActivity;
+import com.jkpg.ruchu.view.activity.community.NoticeDetailFixActivity;
 import com.jkpg.ruchu.view.activity.community.PlateDetailActivity;
 import com.jkpg.ruchu.view.activity.login.LoginActivity;
 import com.jkpg.ruchu.view.activity.my.FansCenterActivity;
@@ -128,11 +131,11 @@ public class CommunityModuleFragment extends Fragment {
     TextView mTvExpertChange;
     @BindView(R.id.header_iv_right)
     ImageView mHeaderIvRight;
-    private CommunityMianBean mCommunityMianBean;
-    private List<CommunityMianBean.List1Bean> mList1 = new ArrayList<>();
-    private List<CommunityMianBean.List2Bean> mList2 = new ArrayList<>();
+    private CommunityMainBean mCommunityMainBean;
+    private List<CommunityMainBean.List1Bean> mList1 = new ArrayList<>();
+    private List<CommunityMainBean.List2Bean> mList2 = new ArrayList<>();
     private CommunityPlateRLAdapter mCommunityPlateRLAdapter;
-    private List<CommunityMianBean.DarenBean> mDaren;
+    private List<CommunityMainBean.DarenBean> mDaren;
     private ArrayList<View> mViewLL;
     private ArrayList<View> mViewImage;
     private ArrayList<View> mViewName;
@@ -191,9 +194,9 @@ public class CommunityModuleFragment extends Fragment {
                         .execute(new StringDialogCallback(getActivity()) {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                CommunityMainBean communityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
                                 mDaren.clear();
-                                mDaren.addAll(communityMianBean.daren);
+                                mDaren.addAll(communityMainBean.daren);
                                 initExpert();
                             }
                         });
@@ -214,12 +217,12 @@ public class CommunityModuleFragment extends Fragment {
                         .execute(new StringCallback() {
                             @Override
                             public void onSuccess(String s, Call call, Response response) {
-                                CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                CommunityMainBean communityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
                                 mList2.clear();
-                                mList2.addAll(communityMianBean.list2);
+                                mList2.addAll(communityMainBean.list2);
                                 initBanner(mList1);
                                 mDaren.clear();
-                                mDaren.addAll(communityMianBean.daren);
+                                mDaren.addAll(communityMainBean.daren);
                                 initExpert();
                                 mCommunityPlateRLAdapter.notifyDataSetChanged();
                                 mRefreshLayout.setRefreshing(false);
@@ -239,10 +242,10 @@ public class CommunityModuleFragment extends Fragment {
                 .execute(new StringCallback() {
                     @Override
                     public void onSuccess(String s, Call call, Response response) {
-                        mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                        mList1 = mCommunityMianBean.list1;
-                        mList2 = mCommunityMianBean.list2;
-                        mDaren = mCommunityMianBean.daren;
+                        mCommunityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
+                        mList1 = mCommunityMainBean.list1;
+                        mList2 = mCommunityMainBean.list2;
+                        mDaren = mCommunityMainBean.daren;
                         initBanner(mList1);
                         initPlateRecyclerView(mList2);
                         initExpert();
@@ -255,10 +258,10 @@ public class CommunityModuleFragment extends Fragment {
                     @Override
                     public void onCacheSuccess(String s, Call call) {
                         super.onCacheSuccess(s, call);
-                        mCommunityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
-                        List<CommunityMianBean.List1Bean> list1 = mCommunityMianBean.list1;
-                        List<CommunityMianBean.List2Bean> list2 = mCommunityMianBean.list2;
-                        mDaren = mCommunityMianBean.daren;
+                        mCommunityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
+                        List<CommunityMainBean.List1Bean> list1 = mCommunityMainBean.list1;
+                        List<CommunityMainBean.List2Bean> list2 = mCommunityMainBean.list2;
+                        mDaren = mCommunityMainBean.daren;
                         initBanner(list1);
                         initExpert();
                         initPlateRecyclerView(list2);
@@ -406,7 +409,7 @@ public class CommunityModuleFragment extends Fragment {
     }
 
 
-    private void initPlateRecyclerView(final List<CommunityMianBean.List2Bean> list2) {
+    private void initPlateRecyclerView(final List<CommunityMainBean.List2Bean> list2) {
         final ArrayList<String> plateNameList = new ArrayList<>();
         for (int i = 0; i < list2.size(); i++) {
             plateNameList.add(list2.get(i).platename);
@@ -433,11 +436,11 @@ public class CommunityModuleFragment extends Fragment {
     }
 
 
-    private void initBanner(final List<CommunityMianBean.List1Bean> list1) {
+    private void initBanner(final List<CommunityMainBean.List1Bean> list1) {
         ArrayList<String> images = new ArrayList<>();
         ArrayList<String> titles = new ArrayList<>();
-        for (CommunityMianBean.List1Bean list1Bean : list1) {
-            images.add(AppUrl.BASEURL + list1Bean.images);
+        for (CommunityMainBean.List1Bean list1Bean : list1) {
+            images.add(list1Bean.image);
             titles.add(list1Bean.title);
         }
         mCommunityBanner.setBannerStyle(BannerConfig.NUM_INDICATOR_TITLE);
@@ -460,16 +463,44 @@ public class CommunityModuleFragment extends Fragment {
         mCommunityBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                if (!list1.get(position).type.equals("8")) {
-                    int tid = list1.get(position).tid;
-                    Intent intent = new Intent(getActivity(), FineNoteDetailWebFixActivity.class);
-                    intent.putExtra("art_id", tid + "");
-                    startActivity(intent);
-                } else {
-                    int tid = list1.get(position).tid;
-                    Intent intent = new Intent(getActivity(), WebActivity.class);
-                    intent.putExtra("art_id", tid + "");
-                    startActivity(intent);
+//                1文章,2帖子,3Html页面,4App内页面,5商城商品
+//                if (!list1.get(position).type.equals("8")) {
+//                    int tid = list1.get(position).bbsid;
+//                    Intent intent = new Intent(getActivity(), FineNoteDetailWebFixActivity.class);
+//                    intent.putExtra("art_id", tid + "");
+//                    startActivity(intent);
+//                } else {
+//                    int tid = list1.get(position).bbsid;
+//                    Intent intent = new Intent(getActivity(), WebActivity.class);
+//                    intent.putExtra("art_id", tid + "");
+//                    startActivity(intent);
+//                }
+                switch (list1.get(position).type) {
+                    case "1":
+                        Intent intent1 = new Intent(getActivity(), FineNoteDetailWebFixActivity.class);
+                        intent1.putExtra("art_id", list1.get(position).bbsid);
+                        startActivity(intent1);
+                        break;
+                    case "2":
+                        Intent intent2 = new Intent(getActivity(), NoticeDetailFixActivity.class);
+                        intent2.putExtra("bbsid", list1.get(position).bbsid);
+                        startActivity(intent2);
+                        break;
+                    case "3":
+                        Intent intent3 = new Intent(getActivity(), HtmlActivity.class);
+                        intent3.putExtra("URL", list1.get(position).htmlurl);
+                        startActivity(intent3);
+                        break;
+                    case "4":
+                        Intent intent4 = new Intent();
+                        intent4.setComponent(new ComponentName(getActivity(), list1.get(position).json.android.key));
+                        startActivity(intent4);
+                        break;
+                    case "5":
+                        Intent intent5 = new Intent(getActivity(), ShopActivity.class);
+                        intent5.putExtra("url", list1.get(position).htmlurl);
+                        startActivity(intent5);
+                        break;
                 }
             }
         });
@@ -541,9 +572,9 @@ public class CommunityModuleFragment extends Fragment {
                     .execute(new StringCallback() {
                         @Override
                         public void onSuccess(String s, Call call, Response response) {
-                            CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                            CommunityMainBean communityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
                             mList2.clear();
-                            mList2.addAll(communityMianBean.list2);
+                            mList2.addAll(communityMainBean.list2);
                             mCommunityPlateRLAdapter.notifyDataSetChanged();
                             initExpert();
                         }
@@ -564,12 +595,12 @@ public class CommunityModuleFragment extends Fragment {
                             .execute(new StringCallback() {
                                 @Override
                                 public void onSuccess(String s, Call call, Response response) {
-                                    CommunityMianBean communityMianBean = new Gson().fromJson(s, CommunityMianBean.class);
+                                    CommunityMainBean communityMainBean = new Gson().fromJson(s, CommunityMainBean.class);
                                     mList2.clear();
-                                    mList2.addAll(communityMianBean.list2);
+                                    mList2.addAll(communityMainBean.list2);
                                     mCommunityPlateRLAdapter.notifyDataSetChanged();
                                     mDaren.clear();
-                                    mDaren.addAll(communityMianBean.daren);
+                                    mDaren.addAll(communityMainBean.daren);
                                     initExpert();
                                 }
                             });

@@ -403,44 +403,43 @@ public class MainActivity extends BaseActivity {
                             || timMessage.getElement(0).getType() == TIMElemType.Image
                             || timMessage.getElement(0).getType() == TIMElemType.Custom) {
 
-                        if (timMessage.isSelf() || getTopActivityInfo().equals("com.jkpg.ruchu.view.activity.my.MySMSActivity")
-                                || getTopActivityInfo().equals("com.jkpg.ruchu.view.activity.ChatListActivity")) {
-                        } else {
-                            final String[] contentStr = {""};
-                            final String[] sender = {""};
-                            //待获取用户资料的用户列表
-                            List<String> users = new ArrayList<>();
-                            users.add(timMessage.getSender());
-                            //获取用户资料
-                            TIMFriendshipManager.getInstance().getUsersProfile(users, new TIMValueCallBack<List<TIMUserProfile>>() {
-                                @Override
-                                public void onError(int code, String desc) {
-                                }
-
-                                @Override
-                                public void onSuccess(List<TIMUserProfile> result) {
-                                    sender[0] = result.get(0).getNickName();
-                                    for (int i = 0; i < timMessage.getElementCount(); ++i) {
-                                        TIMElem elem = timMessage.getElement(i);
-
-                                        //获取当前元素的类型
-                                        TIMElemType elemType = elem.getType();
-                                        LogUtils.d("elem type: " + elemType.name());
-                                        if (elemType == TIMElemType.Text) {
-                                            contentStr[0] = ((TIMTextElem) elem).getText();
-                                            //处理文本消息
-                                        } else if (elemType == TIMElemType.Image) {
-                                            contentStr[0] = "[图片]";
-                                            //处理图片消息
-                                        } else if (elemType == TIMElemType.Custom) {
-                                            contentStr[0] = ((TIMCustomElem) elem).getDesc();
+                        if (!timMessage.isSelf() && !getTopActivityInfo().equals("com.jkpg.ruchu.view.activity.my.MySMSActivity")
+                                && !getTopActivityInfo().equals("com.jkpg.ruchu.view.activity.ChatListActivity")) {
+                                    final String[] contentStr = {""};
+                                    final String[] sender = {""};
+                                    //待获取用户资料的用户列表
+                                    List<String> users = new ArrayList<>();
+                                    users.add(timMessage.getSender());
+                                    //获取用户资料
+                                    TIMFriendshipManager.getInstance().getUsersProfile(users, new TIMValueCallBack<List<TIMUserProfile>>() {
+                                        @Override
+                                        public void onError(int code, String desc) {
                                         }
-                                    }
-                                    showPush(sender[0], contentStr[0]);
-                                }
-                            });
 
-                        }
+                                        @Override
+                                        public void onSuccess(List<TIMUserProfile> result) {
+                                            sender[0] = result.get(0).getNickName();
+                                            for (int i = 0; i < timMessage.getElementCount(); ++i) {
+                                                TIMElem elem = timMessage.getElement(i);
+
+                                                //获取当前元素的类型
+                                                TIMElemType elemType = elem.getType();
+                                                LogUtils.d("elem type: " + elemType.name());
+                                                if (elemType == TIMElemType.Text) {
+                                                    contentStr[0] = ((TIMTextElem) elem).getText();
+                                                    //处理文本消息
+                                                } else if (elemType == TIMElemType.Image) {
+                                                    contentStr[0] = "[图片]";
+                                                    //处理图片消息
+                                                } else if (elemType == TIMElemType.Custom) {
+                                                    contentStr[0] = ((TIMCustomElem) elem).getDesc();
+                                                }
+                                            }
+                                            showPush(sender[0], contentStr[0]);
+                                        }
+                                    });
+
+                                }
                     }
                 }
                 //消息的内容解析请参考消息收发文档中的消息解析说明

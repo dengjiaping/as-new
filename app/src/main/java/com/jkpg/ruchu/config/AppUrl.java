@@ -67,7 +67,7 @@ public class AppUrl {
     public static final String SELECTISVIP = BASEURL + "SelectIsVIPServlet ";
     public static final String RESTARTTHISLEVEL = BASEURL + "RestartThisLevelServlet ";
 
-    public static final String BBS_INFOS = BASEURL + "BBS_InfosServlet_V2";
+    public static final String BBS_INFOS = BASEURL + "BBS_InfosServlet_V3";
     public static final String BBS_LOOKCOLLECTION = BASEURL + "BBS_LookCollectionServlet";
     public static final String BBS_DELCOLLECTION = BASEURL + "BBS_DelCollection";
     public static final String BBS_DETAILS = BASEURL + "BBS_DetailsServlet";
